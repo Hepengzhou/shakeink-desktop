@@ -2,9 +2,9 @@ import type {RootIdentity} from '../core/data-root'
 import {RootRelocation,RootRelocationError,inspectRootRelocation,type RootRelocationPreview,type RootRelocationOutcome} from '../core/root-relocation'
 import {DirectoryAuthority} from './directory-authority'
 import {rootRelocationPreflight} from './root-relocation-preflight'
-import type {RootRelocationState,RootRelocationNotice} from '../shared/root-relocation'
-export interface RootRelocationControllerOptions{bootstrap:RootIdentity;mode:'lost'|'blocked';theme:'paper'|'ink';notice?:RootRelocationNotice;sourcePath?:string|null;assertStableLock():void;assertCold():void;assertOwner(nonce:string):void;chooseDirectory(nonce:string):Promise<string|null>;confirm(preview:Readonly<RootRelocationPreview>):Promise<boolean>;restart():Promise<void>;quit():Promise<void>}
-export class RootRelocationControllerError extends Error{constructor(readonly code:string){super(code);this.name='RootRelocationControllerError'}}
+import type {RootRelocationState,RootRelocationNotice,RootRelocationPhase} from '../shared/root-relocation'
+export interface RootRelocationControllerOptions{bootstrap:RootIdentity;mode:'lost'|'blocked';theme:'paper'|'ink';notice?:RootRelocationNotice;sourcePath?:string|null;assertStableLock():void;assertCold():void;assertOwner(nonce:string):void;chooseDirectory(nonce:string):Promise<string|null>;confirm(preview:Readonly<RootRelocationPreview>):Promise<boolean>;restart():Promise<void>;quit():Promise<void>;wipe?():Promise<void>;defaultPath?:string}
+export class RootRelocationControllerError extends Error{constructor(readonly code:string,options?:ErrorOptions){super(code,options);this.name='RootRelocationControllerError'}}
 const fail=(code:string):never=>{throw new RootRelocationControllerError(code)}
 function syncAssert(assertion:()=>void,code:string){try{const value:unknown=assertion();if(value!==undefined){void Promise.resolve(value).catch(()=>{});fail(code)}}catch{fail(code)}}
 function noticeFor(error:unknown):RootRelocationNotice{
@@ -31,6 +31,9 @@ export class RootRelocationController{
  private choiceFlight:Promise<void>|null=null
  private cancellation:Promise<void>|null=null
  private exitFlight:Promise<void>|null=null
+ private resetFlight:Promise<void>|null=null
+ private returnView:{phase:RootRelocationPhase;notice:RootRelocationNotice;canChoose:boolean}|null=null
+ private resetCompleted=false
  private ticket=0
  private preview:RootRelocationPreview|null=null
  private outcome:RootRelocationOutcome|null=null
@@ -38,7 +41,7 @@ export class RootRelocationController{
  private leaving=false
  constructor(readonly options:RootRelocationControllerOptions){
   this.recoverable=options.mode==='lost'
-  this.current={version:1,revision:0,phase:'checking',theme:options.theme,sourcePath:options.sourcePath??null,targetPath:null,notice:null,unreadResultCount:null,canChoose:false,canCancel:false,canRestart:false}
+  this.current={version:1,revision:0,phase:'checking',theme:options.theme,sourcePath:options.sourcePath??null,targetPath:null,notice:null,unreadResultCount:null,canChoose:false,canCancel:false,canRestart:false,canReset:false,defaultPath:options.defaultPath??null}
   this.core=new RootRelocation(options.bootstrap,{assertStableLock:()=>options.assertStableLock(),assertCold:()=>options.assertCold(),assertOwner:nonce=>options.assertOwner(nonce),confirm:async preview=>{
    const token=this.ticket,owner=this.owner!;this.guard(owner,token);this.publish({phase:'confirming',canChoose:false,canCancel:true})
    const accepted:unknown=await options.confirm(preview);this.guard(owner,token)
@@ -49,7 +52,7 @@ export class RootRelocationController{
  }
  state():RootRelocationState{return{...this.current}}
  subscribe(listener:(state:RootRelocationState)=>void):()=>void{this.listeners.add(listener);try{listener(this.state())}catch{};return()=>this.listeners.delete(listener)}
- private publish(update:Partial<RootRelocationState>){this.current={...this.current,...update,revision:this.current.revision+1};for(const listener of this.listeners)try{listener(this.state())}catch{/* UI observers cannot change authority. */}}
+ private publish(update:Partial<RootRelocationState>){const next:RootRelocationState={...this.current,...update,revision:this.current.revision+1};next.canReset=!!this.options.wipe&&['unavailable','cancelled','blocked'].includes(next.phase);this.current=next;for(const listener of this.listeners)try{listener(this.state())}catch{/* UI observers cannot change authority. */}}
  private host(owner?:string){syncAssert(()=>this.options.assertStableLock(),'LOCK_REQUIRED');syncAssert(()=>this.options.assertCold(),'SOURCE_NOT_CLOSED');if(owner!==undefined){if(this.owner!==owner)fail('OWNER_EXPIRED');syncAssert(()=>this.options.assertOwner(owner),'OWNER_EXPIRED')}}
  private guard(owner:string,ticket?:number){this.host(owner);if(this.exiting||this.leaving||ticket!==undefined&&ticket!==this.ticket)fail('OPERATION_CANCELLED')}
  start(owner:string):Promise<void>{
@@ -106,14 +109,62 @@ export class RootRelocationController{
  }
  cancel(owner:string):Promise<void>{
   if(this.owner!==owner)return Promise.reject(new RootRelocationControllerError('OWNER_EXPIRED'))
+  // A reset owns the ticket from its drain until the wipe settles. Cancelling
+  // mid-flight would fake a completed wipe as failed or erase the confirm view.
+  if(this.resetFlight||this.current.phase==='resetting'||this.current.phase==='reset-confirm')return Promise.reject(new RootRelocationControllerError('CANNOT_CANCEL'))
   if(this.cancellation)return this.cancellation
   ++this.ticket;this.authority.revokeOwner(owner)
   const work=Promise.resolve().then(async()=>{
    const physical=this.workFlight,coreCancel=this.preview?this.core.cancel(owner,this.preview.attemptId).catch(()=>{}):Promise.resolve()
    await Promise.allSettled([physical,coreCancel]);await this.core.flush()
-   if(!['complete','blocked'].includes(this.current.phase))this.publish({phase:'cancelled',notice:null,canChoose:this.recoverable&&!this.exiting&&!this.leaving,canCancel:false,canRestart:false})
+   if(!['complete','blocked','reset-failed'].includes(this.current.phase))this.publish({phase:'cancelled',notice:null,canChoose:this.recoverable&&!this.exiting&&!this.leaving,canCancel:false,canRestart:false})
   }).finally(()=>{if(this.cancellation===work)this.cancellation=null})
   this.cancellation=work;this.publish({canChoose:false,canCancel:false,canRestart:false});return work
+ }
+ reset(owner:string):Promise<void>{
+  if(this.owner!==owner)return Promise.reject(new RootRelocationControllerError('OWNER_EXPIRED'))
+  if(this.resetFlight)return this.resetFlight
+  if(!this.options.wipe||!this.current.canReset)return Promise.reject(new RootRelocationControllerError('CANNOT_RESET'))
+  try{this.guard(owner)}catch(error){return Promise.reject(error)}
+  // Like cancel(): invalidate any in-flight choose/confirm and physically drain
+  // it plus the core flight before the reset view is ever published.
+  const ticket=++this.ticket
+  const work=Promise.resolve().then(async()=>{
+   this.guard(owner,ticket)
+   await Promise.allSettled([this.workFlight,this.choiceFlight]);await this.core.flush()
+   this.guard(owner,ticket);if(!this.current.canReset)fail('CANNOT_RESET')
+   this.returnView={phase:this.current.phase,notice:this.current.notice,canChoose:this.current.canChoose}
+   this.publish({phase:'reset-confirm',notice:null,canChoose:false,canCancel:false,canRestart:false})
+  }).finally(()=>{if(this.resetFlight===work)this.resetFlight=null})
+  this.resetFlight=work;return work
+ }
+ resetBack(owner:string):Promise<void>{
+  if(this.owner!==owner)return Promise.reject(new RootRelocationControllerError('OWNER_EXPIRED'))
+  const view=this.returnView
+  if(this.current.phase!=='reset-confirm'||!view)return Promise.reject(new RootRelocationControllerError('CANNOT_RETURN'))
+  try{this.guard(owner)}catch(error){return Promise.reject(error)}
+  this.returnView=null;this.publish({phase:view.phase,notice:view.notice,canChoose:view.canChoose,canCancel:false,canRestart:false})
+  return Promise.resolve()
+ }
+ resetConfirm(owner:string):Promise<void>{
+  if(this.owner!==owner)return Promise.reject(new RootRelocationControllerError('OWNER_EXPIRED'))
+  if(this.resetFlight)return this.resetFlight
+  const wipe=this.options.wipe
+  if(!wipe||!['reset-confirm','reset-failed'].includes(this.current.phase))return Promise.reject(new RootRelocationControllerError('CANNOT_RESET'))
+  try{this.guard(owner)}catch(error){return Promise.reject(error)}
+  const ticket=++this.ticket
+  const work=Promise.resolve().then(async()=>{
+   this.guard(owner,ticket)
+   await Promise.allSettled([this.workFlight,this.choiceFlight]);await this.core.flush()
+   this.guard(owner,ticket)
+   this.publish({phase:'resetting',notice:null,canChoose:false,canCancel:false,canRestart:false})
+   try{this.guard(owner,ticket);await wipe();this.guard(owner,ticket)}
+   catch(cause){this.publish({phase:'reset-failed',notice:'reset-failed',canChoose:false,canCancel:false,canRestart:false});throw new RootRelocationControllerError('RESET_FAILED',{cause})}
+   this.returnView=null;this.resetCompleted=true
+   this.publish({phase:'complete',notice:'reset-complete',canChoose:false,canCancel:false,canRestart:true})
+   await this.performExit(owner,'restart')
+  }).finally(()=>{if(this.resetFlight===work)this.resetFlight=null})
+  this.resetFlight=work;return work
  }
  private performExit(owner:string,action:'restart'|'quit'):Promise<void>{
   if(this.exitFlight)return this.exitFlight
@@ -121,29 +172,60 @@ export class RootRelocationController{
   if(action==='quit'){this.leaving=true;++this.ticket;this.authority.revokeOwner(owner)}
   const work=Promise.resolve().then(async()=>{
    if(action==='restart'){
-    this.guard(owner);if(!this.current.canRestart||!this.outcome)return fail('CANNOT_RESTART')
-    const ticket=this.ticket,outcome=this.outcome
-    try{
-     // Neither completion publication nor a failed process handoff grants a
-     // reusable restart capability. Re-read the complete receipt chain here.
-     const proof=await inspectRootRelocation(this.options.bootstrap,{assertStableLock:()=>this.options.assertStableLock(),assertCold:()=>this.options.assertCold()});this.guard(owner,ticket)
-     if(!proof)return fail('DURABILITY_UNCONFIRMED')
-     if(proof.receiptId!==outcome.receiptId||JSON.stringify(proof.pointer)!==JSON.stringify(outcome.pointer))fail('DURABILITY_UNCONFIRMED')
-     proof.assertCurrent()
+    this.guard(owner);if(!this.current.canRestart)return fail('CANNOT_RESTART')
+    const ticket=this.ticket
+    if(this.resetCompleted&&!this.outcome){
+     // A completed reset has no relocation receipt; the relaunched process
+     // re-verifies itself. Only the live host/owner seal applies here.
      this.leaving=true;this.exiting=true;this.publish({canChoose:false,canCancel:false,canRestart:false})
-     // Observers run synchronously. Seal again after their last notification,
-     // with no asynchronous work before the trusted main restart closure.
-     this.host(owner);if(ticket!==this.ticket)fail('DURABILITY_UNCONFIRMED');proof.assertCurrent()
-    }catch{
-     this.exiting=false;this.publish({phase:'blocked',notice:'write-unconfirmed',canChoose:false,canCancel:false,canRestart:false});fail('DURABILITY_UNCONFIRMED')
+     this.host(owner);if(ticket!==this.ticket)fail('PROCESS_HANDOFF_FAILED')
+    }else{
+     const outcome=this.outcome
+     if(!outcome)return fail('CANNOT_RESTART')
+     try{
+      // Neither completion publication nor a failed process handoff grants a
+      // reusable restart capability. Re-read the complete receipt chain here.
+      const proof=await inspectRootRelocation(this.options.bootstrap,{assertStableLock:()=>this.options.assertStableLock(),assertCold:()=>this.options.assertCold()});this.guard(owner,ticket)
+      if(!proof)return fail('DURABILITY_UNCONFIRMED')
+      if(proof.receiptId!==outcome.receiptId||JSON.stringify(proof.pointer)!==JSON.stringify(outcome.pointer))fail('DURABILITY_UNCONFIRMED')
+      proof.assertCurrent()
+      this.leaving=true;this.exiting=true;this.publish({canChoose:false,canCancel:false,canRestart:false})
+      // Observers run synchronously. Seal again after their last notification,
+      // with no asynchronous work before the trusted main restart closure.
+      this.host(owner);if(ticket!==this.ticket)fail('DURABILITY_UNCONFIRMED');proof.assertCurrent()
+     }catch{
+      this.exiting=false;this.publish({phase:'blocked',notice:'write-unconfirmed',canChoose:false,canCancel:false,canRestart:false});fail('DURABILITY_UNCONFIRMED')
+     }
     }
-   }else{await this.cancel(owner);await this.flush();this.host();this.leaving=true;this.exiting=true;this.publish({canChoose:false,canCancel:false,canRestart:false})}
+   }else{
+    // The cancel guard rejects while a reset owns the flight; exiting is still
+    // allowed from the confirm view, but a wipe must settle first. Once the
+    // reset completed, its automatic restart owns the process handoff.
+    try{await this.cancel(owner)}catch(error){if(!(error instanceof RootRelocationControllerError&&error.code==='CANNOT_CANCEL'))throw error}
+    const wiping=this.resetFlight
+    if(wiping){await wiping.catch(()=>{});if(this.exiting)return}
+    await this.flush();this.host();this.leaving=true;this.exiting=true;this.publish({canChoose:false,canCancel:false,canRestart:false})
+   }
    try{if(action==='restart')await this.options.restart();else await this.options.quit()}
-   catch{this.exiting=false;this.publish({notice:'operation-failed',canRestart:action==='restart'&&this.current.phase==='complete'});fail('PROCESS_HANDOFF_FAILED')}
+   catch{
+    this.exiting=false
+    // A failed process handoff after a completed reset must not fall back to
+    // relocation semantics; the reset-complete view and its retry stay live.
+    if(this.resetCompleted&&!this.outcome)this.publish({canRestart:action==='restart'&&this.current.phase==='complete'})
+    else this.publish({notice:'operation-failed',canRestart:action==='restart'&&this.current.phase==='complete'})
+    fail('PROCESS_HANDOFF_FAILED')
+   }
   }).finally(()=>{if(!this.exiting)this.leaving=false;if(this.exitFlight===work)this.exitFlight=null})
   this.exitFlight=work;return work
  }
  restart(owner:string):Promise<void>{if(this.owner!==owner)return Promise.reject(new RootRelocationControllerError('OWNER_EXPIRED'));if(!this.current.canRestart)return Promise.reject(new RootRelocationControllerError('CANNOT_RESTART'));return this.performExit(owner,'restart')}
- quit(owner:string):Promise<void>{if(this.owner!==owner)return Promise.reject(new RootRelocationControllerError('OWNER_EXPIRED'));return this.performExit(owner,'quit')}
- async flush():Promise<void>{await Promise.allSettled([this.startFlight,this.workFlight]);await this.core.flush()}
+ quit(owner:string):Promise<void>{
+  if(this.owner!==owner)return Promise.reject(new RootRelocationControllerError('OWNER_EXPIRED'))
+  // A reset flight must not be truncated by process exit. The quit is
+  // registered and runs once the reset flight settles (auto-restart or failed).
+  const wiping=this.resetFlight
+  if(wiping)return wiping.then(()=>this.performExit(owner,'quit'),()=>this.performExit(owner,'quit'))
+  return this.performExit(owner,'quit')
+ }
+ async flush():Promise<void>{await Promise.allSettled([this.startFlight,this.workFlight,this.resetFlight]);await this.core.flush()}
 }

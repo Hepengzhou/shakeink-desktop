@@ -12,6 +12,7 @@ import {rootRelocationPreflight} from '../../desktop/main/root-relocation-prefli
 import {rootMaintenanceRequired} from '../../desktop/main/root-maintenance-preflight'
 import {inboxLeaseRecoveryRequired} from '../../desktop/main/inbox-lease-recovery'
 import {RootMigrationRequests} from '../../desktop/main/root-migration-request'
+import {classifyStartupRecovery} from '../../desktop/main/startup-recovery'
 import {DataRootManager} from '../../desktop/core/data-root'
 import {directoryIdentity} from '../../desktop/core/root-ownership'
 import {defaultState,stateSchema} from '../../desktop/core/settings'
@@ -29,21 +30,21 @@ async function fixture(){
 }
 async function route(boot:string,defaultRoot:string){
  const trace:string[]=[],messages:string[]=[]
- const dependencies={assertNoLegacyBackupRecovery,rootRelocationPreflight,rootMaintenanceRequired,inboxLeaseRecoveryRequired,app:{requestSingleInstanceLock:()=>true,hasSingleInstanceLock:()=>true,quit:()=>trace.push('quit'),exit:()=>trace.push('exit')},launch:async()=>{trace.push('ordinary-selected')},launchRootMaintenance:async(path:string,root:string)=>{assert.equal(path,boot);assert.equal(root,defaultRoot);trace.push('maintenance-selected')},launchRootRelocation:async()=>{trace.push('relocation-selected')},launchInboxLeaseRecovery:async()=>{throw Error('unexpected inbox recovery in independent root fixture')},bootstrapPath:boot,startupPaths:{bootstrap:boot,defaultRoot,encryptionFamily:'legacy'},startupSelectionError:null,isolatedRoot:null,join,homedir:()=>'/unused-default',failedRootBeforeSession:false,dialog:{showErrorBox:(_title:string,message:string)=>{messages.push(message);trace.push('error')}}}
+ const dependencies={assertNoLegacyBackupRecovery,rootRelocationPreflight,rootMaintenanceRequired,inboxLeaseRecoveryRequired,classifyStartupRecovery:(paths:{bootstrap:string;recoveryRoot:string},family:'legacy'|'current')=>{trace.push('classify');return classifyStartupRecovery(paths,family)},executeStartupRepair:async()=>{throw Error('unexpected repair in independent root fixture')},selectBrandStartupPaths:()=>{throw Error('unexpected reselection in independent root fixture')},launchStartupRecovery:async()=>{trace.push('recovery-window')},app:{requestSingleInstanceLock:()=>true,hasSingleInstanceLock:()=>true,quit:()=>trace.push('quit'),exit:()=>trace.push('exit')},launch:async()=>{trace.push('ordinary-selected')},launchRootMaintenance:async(path:string,root:string)=>{assert.equal(path,boot);assert.equal(root,defaultRoot);trace.push('maintenance-selected')},launchRootRelocation:async()=>{trace.push('relocation-selected')},launchInboxLeaseRecovery:async()=>{throw Error('unexpected inbox recovery in independent root fixture')},bootstrapPath:boot,startupPaths:{bootstrap:boot,defaultRoot,encryptionFamily:'legacy'},startupSelectionError:null,isolatedRoot:null,join,resolve:(path:string)=>path,homedir:()=>'/unused-default',failedRootCode:null,dialog:{showErrorBox:(_title:string,message:string)=>{messages.push(message);trace.push('error')}}}
  new Function(...Object.keys(dependencies),transformSync(branch!.getText(source),{loader:'ts'}).code)(...Object.values(dependencies));await new Promise(resolve=>setImmediate(resolve));return{trace,messages}
 }
 test('BR-IR01 actual first main branch with actual readonly preflights permits a fresh bootstrap and leaves all paths untouched',async()=>{
  const f=await fixture();await unlink(join(f.boot,'data-root.json'));const before=await readdir(f.boot),bytes=await readFile(join(f.root,'author.txt'))
- const result=await route(f.boot,f.root);assert.deepEqual(result.trace,['ordinary-selected']);assert.deepEqual(result.messages,[]);assert.deepEqual(await readdir(f.boot),before);assert.deepEqual(await readFile(join(f.root,'author.txt')),bytes)
+ const result=await route(f.boot,f.root);assert.deepEqual(result.trace,['classify','ordinary-selected']);assert.deepEqual(result.messages,[]);assert.deepEqual(await readdir(f.boot),before);assert.deepEqual(await readFile(join(f.root,'author.txt')),bytes)
 })
 test('BR-IR02 genuine armed ordinary migration plus its malformed journal remains owned by maintenance triage rather than old backup cold admission',async()=>{
  const f=await fixture(),owner=randomUUID(),manager=new DataRootManager(f.boot,f.root),requests=new RootMigrationRequests(f.boot,{resolveSource:()=>manager.resolve(),assertStableLock:()=>{},assertOwner:value=>assert.equal(value,owner),assertClosed:()=>{}})
  const prepared=await requests.prepare(owner,await directoryIdentity(f.target));await requests.arm(owner,prepared.requestId);await writeFile(join(f.boot,'root-migration.json'),'{}');const before=await readFile(join(f.boot,'root-migration-request.json')),journal=await readFile(join(f.boot,'root-migration.json'))
- assert.equal(rootMaintenanceRequired(f.boot),true);assert.doesNotThrow(()=>assertNoLegacyBackupRecovery(f.boot,()=>{}));assert.deepEqual((await route(f.boot,f.root)).trace,['maintenance-selected']);assert.deepEqual(await readFile(join(f.boot,'root-migration-request.json')),before);assert.deepEqual(await readFile(join(f.boot,'root-migration.json')),journal)
+ assert.equal(rootMaintenanceRequired(f.boot),true);assert.doesNotThrow(()=>assertNoLegacyBackupRecovery(f.boot,()=>{}));assert.deepEqual((await route(f.boot,f.root)).trace,['classify','maintenance-selected']);assert.deepEqual(await readFile(join(f.boot,'root-migration-request.json')),before);assert.deepEqual(await readFile(join(f.boot,'root-migration.json')),journal)
 })
 test('BR-IR03 actual physically lost root routes directly to strict relocation, preserving old root and exact pointer bytes',async()=>{
  const f=await fixture(),before=await readFile(join(f.boot,'data-root.json'));await rename(f.root,f.root+'-preserved')
- assert.deepEqual((await route(f.boot,f.root)).trace,['relocation-selected']);assert.deepEqual(await readFile(join(f.boot,'data-root.json')),before);assert.equal(await readFile(join(f.root+'-preserved','author.txt'),'utf8'),'independent original author bytes')
+ assert.deepEqual((await route(f.boot,f.root)).trace,['classify','relocation-selected']);assert.deepEqual(await readFile(join(f.boot,'data-root.json')),before);assert.equal(await readFile(join(f.root+'-preserved','author.txt'),'utf8'),'independent original author bytes')
 })
 test('BR-IR04 existing pending legacy work recovery blocks the actual main branch before selecting any worker/window, without rewriting files',async()=>{
  const f=await fixture(),file=join(f.root,'restore-draft-barrier.json');await writeFile(file,JSON.stringify({schemaVersion:1,revision:2,active:{token:randomUUID(),workId:randomUUID(),candidateId:randomUUID(),createdAt:new Date().toISOString(),outcome:{status:'activated'}}}));const before=await readFile(file)
@@ -62,5 +63,5 @@ test('BR-IR06 actual portable legacy settings cannot turn backup fields into sel
 })
 test('BR-IR07 completed legacy work barrier stays byte-for-byte inert through actual normal main routing',async()=>{
  const f=await fixture(),file=join(f.root,'restore-draft-barrier.json');await writeFile(file,JSON.stringify({schemaVersion:1,revision:8,active:null}));const before=await readFile(file)
- assert.deepEqual((await route(f.boot,f.root)).trace,['ordinary-selected']);assert.deepEqual(await readFile(file),before)
+ assert.deepEqual((await route(f.boot,f.root)).trace,['classify','ordinary-selected']);assert.deepEqual(await readFile(file),before)
 })

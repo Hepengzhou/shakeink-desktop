@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="zh-CN" class="paper">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>数据目录恢复 · 应用内设计</title>
+  <link rel="stylesheet" href="../assets/web-tokens.css">
+  <link rel="stylesheet" href="preview.css">
+</head>
+<body>
+  <div class="window" id="window">
+    <div class="titlebar" aria-hidden="true">
+      <span class="window-title" id="window-title">数据目录恢复 · 玄印写作</span>
+      <span class="win-controls"><i class="menu">≡</i><i>—</i><i>▢</i><i class="close">✕</i></span>
+    </div>
+    <main class="stage">
+      <section class="card" aria-labelledby="dialog-title">
+        <h1 id="dialog-title"></h1>
+        <div role="status" aria-live="polite" aria-atomic="true" class="status">
+          <h2 id="status-heading"></h2>
+          <p id="status-notice" class="notice"></p>
+        </div>
+        <dl class="paths" id="paths"></dl>
+        <div class="warning" id="warning" hidden>
+          <p class="warning-title" id="warning-title"></p>
+          <p id="warning-copy"></p>
+        </div>
+        <p class="error" id="error" role="alert" hidden></p>
+        <div class="actions" id="actions"></div>
+      </section>
+    </main>
+  </div>
+  <script src="flow.js"></script>
+</body>
+</html>

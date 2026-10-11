@@ -1,0 +1,203 @@
+{
+  "date": "2026-10-11",
+  "version": "v1",
+  "scope": "HTML design viewer only, not product tests",
+  "command": "node design/startup-recovery/capture-preview.mjs",
+  "status": "passed",
+  "checks": [
+    {
+      "name": "Repair-failed dialog shows reset and exit options",
+      "passed": true
+    },
+    {
+      "name": "Reset requires inline second confirmation with honest consequences",
+      "passed": true
+    },
+    {
+      "name": "Reset flow: confirm -> progress (disabled) -> auto relaunch notice",
+      "passed": true
+    },
+    {
+      "name": "Automatic init/repair scene has no buttons",
+      "passed": true
+    },
+    {
+      "name": "Reset failure offers retry which resumes the flow",
+      "passed": true
+    },
+    {
+      "name": "Custom-root loss keeps locate flow and gains reset escape",
+      "passed": true
+    },
+    {
+      "name": "Ink theme renders dialog and confirmation",
+      "passed": true
+    },
+    {
+      "name": "Narrow window keeps dialog usable without overflow",
+      "passed": true
+    },
+    {
+      "name": "No script errors, failed assets or HTTP requests",
+      "passed": true
+    }
+  ],
+  "captures": [
+    {
+      "name": "preview-repair-failed-paper",
+      "geometry": {
+        "width": 576,
+        "left": 71,
+        "right": 647,
+        "top": 146.40625,
+        "bottom": 475.578125,
+        "viewport": {
+          "width": 718,
+          "height": 598
+        },
+        "actionsVisible": true,
+        "look": "paper",
+        "horizontalOverflow": false
+      }
+    },
+    {
+      "name": "preview-reset-confirm-paper",
+      "geometry": {
+        "width": 576,
+        "left": 71,
+        "right": 647,
+        "top": 86.421875,
+        "bottom": 535.578125,
+        "viewport": {
+          "width": 718,
+          "height": 598
+        },
+        "actionsVisible": true,
+        "look": "paper",
+        "horizontalOverflow": false
+      }
+    },
+    {
+      "name": "preview-resetting-paper",
+      "geometry": {
+        "width": 576,
+        "left": 71,
+        "right": 647,
+        "top": 159,
+        "bottom": 462.984375,
+        "viewport": {
+          "width": 718,
+          "height": 598
+        },
+        "actionsVisible": true,
+        "look": "paper",
+        "horizontalOverflow": false
+      }
+    },
+    {
+      "name": "preview-reset-complete-paper",
+      "geometry": {
+        "width": 576,
+        "left": 71,
+        "right": 647,
+        "top": 191,
+        "bottom": 430.984375,
+        "viewport": {
+          "width": 718,
+          "height": 598
+        },
+        "actionsVisible": false,
+        "look": "paper",
+        "horizontalOverflow": false
+      }
+    },
+    {
+      "name": "preview-reset-failed-paper",
+      "geometry": {
+        "width": 576,
+        "left": 71,
+        "right": 647,
+        "top": 159,
+        "bottom": 462.984375,
+        "viewport": {
+          "width": 718,
+          "height": 598
+        },
+        "actionsVisible": true,
+        "look": "paper",
+        "horizontalOverflow": false
+      }
+    },
+    {
+      "name": "preview-lost-custom-paper",
+      "geometry": {
+        "width": 576,
+        "left": 71,
+        "right": 647,
+        "top": 146.40625,
+        "bottom": 475.578125,
+        "viewport": {
+          "width": 718,
+          "height": 598
+        },
+        "actionsVisible": true,
+        "look": "paper",
+        "horizontalOverflow": false
+      }
+    },
+    {
+      "name": "preview-repair-failed-ink",
+      "geometry": {
+        "width": 576,
+        "left": 71,
+        "right": 647,
+        "top": 146.40625,
+        "bottom": 475.578125,
+        "viewport": {
+          "width": 718,
+          "height": 598
+        },
+        "actionsVisible": true,
+        "look": "ink",
+        "horizontalOverflow": false
+      }
+    },
+    {
+      "name": "preview-reset-confirm-ink",
+      "geometry": {
+        "width": 576,
+        "left": 71,
+        "right": 647,
+        "top": 86.421875,
+        "bottom": 535.578125,
+        "viewport": {
+          "width": 718,
+          "height": 598
+        },
+        "actionsVisible": true,
+        "look": "ink",
+        "horizontalOverflow": false
+      }
+    },
+    {
+      "name": "preview-reset-confirm-narrow",
+      "geometry": {
+        "width": 576,
+        "left": 71,
+        "right": 647,
+        "top": 86.421875,
+        "bottom": 535.578125,
+        "viewport": {
+          "width": 718,
+          "height": 598
+        },
+        "actionsVisible": true,
+        "look": "paper",
+        "horizontalOverflow": false
+      }
+    }
+  ],
+  "pageErrors": [],
+  "failedRequests": [],
+  "externalRequests": []
+}

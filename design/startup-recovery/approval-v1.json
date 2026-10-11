@@ -1,0 +1,28 @@
+{
+  "approvedOn": "2026-10-11",
+  "uiVersion": "v1",
+  "authorization": "UI 设计稿通过，可以继续",
+  "scope": "配置目录丢失/损坏后的启动恢复：自动初始化、自动修复、恢复对话框（退出/重置配置数据）、重置二次确认与执行、自定义目录丢失的重置出口",
+  "files": [
+    {
+      "path": "design/startup-recovery/flow.html",
+      "sha256": "5dbb1c2b201e308b83a6935c1aa28da4e03b3b39c0206dd2ba956966329c57c6"
+    },
+    {
+      "path": "design/startup-recovery/flow.js",
+      "sha256": "651d6561f71f665ef27509a1fbd6ff593be2607689ef23dc962cff0c176b9658"
+    },
+    {
+      "path": "design/startup-recovery/preview.css",
+      "sha256": "0511fe875ec42883ad261af1b47a078743af2c57d816f772d9e3ced66a054443"
+    },
+    {
+      "path": "design/startup-recovery/index.html",
+      "sha256": "43de8c2b6bebda762b7635768b7a94d024912181c7703867e386ef852bcaf947"
+    },
+    {
+      "path": "design/startup-recovery/viewer.js",
+      "sha256": "80fa98c3292bb5f08fb973aff4cd0ab6b8cecafed55cbbfc31e4e23221e3cc9c2"
+    }
+  ]
+}

@@ -33,9 +33,9 @@ async function fixture(){
  const app=Object.assign(new EventEmitter(),{hasSingleInstanceLock:()=>true,setPath:(key:string,value:string)=>paths.set(key,value),getPath:(key:string)=>paths.get(key),whenReady:async()=>{},getAppPath:()=>base,getVersion:()=> '0.1.0',setAboutPanelOptions(){},showAboutPanel(){},relaunch(){trace.push('relaunch')},quit(){trace.push('quit')}})
  class Window extends EventEmitter{
   static getAllWindows(){return windows}
-  webContents:any
+  webContents:any;title?:string
   constructor(preferences:any){super();this.webContents=Object.assign(new EventEmitter(),{id:801,mainFrame:{url:'xaanink://app/'},session:preferences.webPreferences.session,send(){},setWindowOpenHandler(){}});windows.push(this)}
-  isDestroyed(){return false}setMenu(){}show(){}focus(){}minimize(){}async loadURL(){}
+  isDestroyed(){return false}setMenu(){}show(){}focus(){}minimize(){}setTitle(value:string){this.title=value}async loadURL(){}
  }
  const electron={app,BrowserWindow:Window,ipcMain:{handle:(key:string,run:(...args:any[])=>any)=>handlers.set(key,run)},Menu:{buildFromTemplate:()=>({popup(){}}),setApplicationMenu(){}},nativeTheme:{shouldUseDarkColors:false},session:{fromPartition:()=>memory,get defaultSession():never{throw Error('ORIGINAL_SESSION_FORBIDDEN')}},dialog:{async showOpenDialog(){entered.resolve();return picker.promise},async showMessageBox(){return{response:1}}}}
  const module={exports:{}as{launchRootRelocation(bootstrap:string,initial:ReturnType<typeof rootRelocationPreflight>):Promise<void>}}

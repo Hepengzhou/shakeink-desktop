@@ -60,14 +60,22 @@ export function selectBrandStartupPaths(input: { appData: string; home: string; 
   }
   for (const [root, names, boot] of [[join(input.home, ".xuanxiang"), LEGACY_NAMES, legacyBootstrap], [join(input.home, ".xaanink"), CURRENT_NAMES, currentBootstrap]] as const) {
     if (!exists(root)) continue
-    const identity = brandRootIdentity(root)
-    if (!readdirSync(root).length) continue
-    const brand = readApplicationBrandImmediately(identity)
-    // An owned ready marker with inboxReady=false is the existing initializer's
-    // resumable state. Only the worker may finish it and publish its pointer.
-    if (brand.names.family !== names.family || brand.value.phase !== "ready") throw new BrandStartupPathError("BRAND_DEFAULT_INVALID")
-    brand.assertCurrent()
-    return { bootstrap: boot, defaultRoot: root, encryptionFamily: names.family }
+    const recoveryPaths: BrandStartupPaths = { bootstrap: boot, defaultRoot: root, encryptionFamily: names.family }
+    try {
+      const identity = brandRootIdentity(root)
+      if (!readdirSync(root).length) continue
+      const brand = readApplicationBrandImmediately(identity)
+      // An owned ready marker with inboxReady=false is the existing initializer's
+      // resumable state. Only the worker may finish it and publish its pointer.
+      if (brand.names.family !== names.family || brand.value.phase !== "ready") throw new BrandStartupPathError("BRAND_DEFAULT_INVALID", recoveryPaths)
+      brand.assertCurrent()
+    } catch (error) {
+      // Every throw from this probe carries family-aware recovery paths so the
+      // module-load fallback never misclassifies a legacy root as current.
+      if (error instanceof BrandStartupPathError) throw error
+      throw new BrandStartupPathError("BRAND_DEFAULT_INVALID", recoveryPaths)
+    }
+    return recoveryPaths
   }
   return { bootstrap: currentBootstrap, defaultRoot: join(input.home, ".xaanink"), encryptionFamily: "current" }
 }

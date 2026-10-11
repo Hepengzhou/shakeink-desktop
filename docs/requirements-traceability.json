@@ -2907,5 +2907,67 @@
       }
     },
     "note": "18项回归用例覆盖见178；公开目录不代表当前Key已获调用权限，前轮BYOK权限结论保留。实际开发构建macOS验证；无新安装包、Windows或物理IME本轮通过声明。"
+  },
+  "startupRecovery": {
+    "date": "2026-10-12",
+    "scope": [
+      "默认配置目录 [用户目录]/.xaanink 缺失/为空 → 自动创建初始化并进入新人引导",
+      "目录存在但文件丢失 → 冷态自动修复（指针重建/marker 重建/初始化续跑）",
+      "无法修复 → 恢复对话框 [退出应用]/[重置配置数据]，二次确认后清空重建并自动重启进引导",
+      "消灭只能退出的启动死局（含自定义根丢失的重置出口与 worker 启动失败路由）"
+    ],
+    "research": "docs/reviews/2026-10-11-startup-recovery-research.md",
+    "productDesign": "docs/reviews/2026-10-11-startup-recovery-product-design.md",
+    "uiDesign": "design/startup-recovery/index.html",
+    "uiApproval": "design/startup-recovery/approval-v1.json",
+    "technicalDesign": "docs/reviews/2026-10-11-startup-recovery-technical-design.md",
+    "testCases": "docs/reviews/2026-10-11-startup-recovery-test-cases.md",
+    "status": "implemented-scoped-validated",
+    "implementation": [
+      "desktop/main/startup-recovery.ts",
+      "desktop/main/brand-startup-paths.ts",
+      "desktop/core/data-root.ts",
+      "desktop/shared/root-relocation.ts",
+      "desktop/main/root-relocation-controller.ts",
+      "desktop/main/root-relocation-window.ts",
+      "desktop/main/index.ts",
+      "src/components/desktop/RootRelocationScreen.tsx",
+      "scripts/smoke-startup-recovery.mjs",
+      "scripts/verify-packaged-startup-recovery.mjs",
+      "scripts/test-core.mjs"
+    ],
+    "testIds": {
+      "unit": "SR-U-01~33, SR-U-40~48, SR-U-60~70, SR-U-80~92, SR-U-100~110",
+      "integration": "SR-I-01~07",
+      "browser": "SR-B-01~12",
+      "native": "SR-R-01~05"
+    },
+    "reviews": {
+      "planReview": "修改后通过（阻断1/重要8已修订）",
+      "testCaseReview": "修改后通过（阻断1/重要9已修订）",
+      "codeReview": "修改后通过（重要1=台账；建议2已修复 SR-U-91/91b/92、SR-B-12）"
+    },
+    "boundaries": [
+      "BRAND_BOOTSTRAP_CONFLICT 与 LEGACY_BACKUP_RECOVERY* 维持错误框人工处理（保护恢复证据链）",
+      "不恢复已被删除的用户数据；自定义目标目录与作品目录永不删除",
+      "隔离测试根 XAANINK_TEST_ROOT 下分类/重置只作用于隔离根"
+    ],
+    "verification": {
+      "typecheck": "passed",
+      "coreSuite": {"tests": 1904, "pass": 1857, "fail": 41, "regressionsIntroduced": 0, "note": "41 失败与 HEAD 基线逐名一致（Windows 平台/环境问题）；另 3 个满载超时用例单独复跑全绿", "evidence": "docs/evidence/implementation-01/core-latest.tap"},
+      "featureTests": {"unit": "SR-U 系列 48+36 全绿", "integration": "SR-I-01~07 真实 worker 冷启动全绿", "browser": "SR-B-01~12 在内 25/25 通过"},
+      "designPreview": {"checks": 9, "passed": 9, "evidence": "design/startup-recovery/preview-checks.json"},
+      "nativeWindows": {"scenarios": ["SR-R-01", "SR-R-02", "SR-R-03", "SR-R-04", "SR-R-05"], "passed": 5, "rendererErrors": 0, "evidence": "docs/evidence/startup-recovery/startup-recovery.json"},
+      "windowsPackage": {"stage": "win-unpacked 重新打包 + 隔离根真实启动进引导", "passed": true, "evidence": "docs/evidence/startup-recovery/packaged-fresh.json"},
+      "build": "passed"
+    },
+    "validationLimits": [
+      "本机系统 Node 为 20.12.2，仓库要求 >=24（.nvmrc）；全部验证经 npx node@24 执行，证据记录实际版本 v24.21.0",
+      "scripts/smoke-root-relocation.mjs 为 darwin 限定冒烟，Windows 上以 scripts/smoke-startup-recovery.mjs 为真实验证主体",
+      "scripts/inspect-packaged-app.mjs 为 macOS .app 静态检查，不适用 Windows；Windows 侧以 win-unpacked 真实启动代替",
+      "BRAND_BOOTSTRAP_CONFLICT 与 LEGACY_BACKUP_RECOVERY* 维持错误框人工处理（书面决定，保护恢复证据链）",
+      "NSIS 安装器未本轮重打；win-unpacked 已验证"
+    ],
+    "note": "验收标准全覆盖：缺失自动初始化进引导（SR-R-01/打包件）、文件丢失先修复（SR-R-02）、无法修复对话框两选项+二次确认+重置重建进引导（SR-R-03/05）、退出保留现状（SR-R-05）、无只能退出的死局。"
   }
 }

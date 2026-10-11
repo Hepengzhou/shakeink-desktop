@@ -4,20 +4,21 @@ import {lstatSync,realpathSync} from 'node:fs'
 import {join} from 'node:path'
 import {RootRelocationController} from './root-relocation-controller'
 import {rootRelocationPreflight,type RootRelocationPreflight} from './root-relocation-preflight'
+import {executeStartupReset} from './startup-recovery'
 import {prepareSessionDirectory} from './session-directory'
 import {staticUiResponse} from './static-ui'
-import type {RootRelocationCommand} from '../shared/root-relocation'
+import type {RootRelocationCommand,RootRelocationNotice} from '../shared/root-relocation'
+import type {BrandFamily} from '../shared/brand-names'
 import {nativeWindowAppearance,syncNativeThemeSource} from './window-appearance'
 import {installWindowsCloseAccent} from './native-close-accent'
 
+export interface StartupRecoveryWindowInput{recoveryRoot:string;home:string;isolatedRoot:string|null;family:BrandFamily}
+
 /** Separate first-turn entry: never imports/constructs the service worker, model
  * vault or workbench bridge. Caller already holds the stable instance lock. */
-export async function launchRootRelocation(bootstrap:string,_initial:RootRelocationPreflight):Promise<void>{
+async function openRestrictedWindow(bootstrap:string,entry:{mode:'lost'|'blocked';notice:RootRelocationNotice;sourcePath:string|null;recovery?:StartupRecoveryWindowInput}):Promise<void>{
  const assertLock=()=>{if(!app.hasSingleInstanceLock())throw Error('LOCK_REQUIRED')}
  assertLock()
- // Recompute authority, rather than trusting a cached startup classification.
- const initial=rootRelocationPreflight(bootstrap)
- if(initial.mode==='none')throw Error('ROOT_RELOCATION_NOT_REQUIRED')
  const before=lstatSync(bootstrap,{bigint:true})
  if(!before.isDirectory()||before.isSymbolicLink()||realpathSync(bootstrap)!==bootstrap)throw Error('BOOTSTRAP_UNSAFE')
  const identity={path:bootstrap,device:String(before.dev),inode:String(before.ino)}
@@ -44,11 +45,17 @@ export async function launchRootRelocation(bootstrap:string,_initial:RootRelocat
  syncNativeThemeSource(nativeTheme,theme)
  const nativeAppearance=nativeWindowAppearance(theme,nativeTheme.shouldUseDarkColors)
  const platform=process.platform==='win32'?'win32':process.platform==='darwin'?'darwin':'linux'
+ // The constructor title is only a pre-show placeholder: the controller
+ // subscription re-titles the still-hidden window before ready-to-show.
  current=new BrowserWindow({width:680,height:540,minWidth:360,minHeight:440,show:false,title:'定位原数据目录 · 玄印写作',backgroundColor:nativeAppearance.backgroundColor,titleBarStyle:'hidden',trafficLightPosition:{x:14,y:14},...(process.platform==='win32'?{titleBarOverlay:nativeAppearance.titleBarOverlay}:{}),webPreferences:{session:isolated,preload:join(__dirname,'../preload/root-relocation.cjs'),contextIsolation:true,sandbox:true,nodeIntegration:false,webSecurity:true}})
  const owned=current,owner=randomUUID(),contentsId=owned.webContents.id
  if(process.platform==='win32')installWindowsCloseAccent(owned,{BaseWindow,ImageView,nativeImage,screen},nativeAppearance.titleBarOverlay.symbolColor)
  const assertOwner=(nonce:string)=>{assertCold();if(nonce!==owner||!ownerAlive||current!==owned||owned.isDestroyed()||owned.webContents.id!==contentsId)throw Error('OWNER_EXPIRED')}
- const controller=new RootRelocationController({bootstrap:identity,mode:initial.mode,theme,sourcePath:initial.pointer?.root.path??null,notice:'pointer-invalid',assertStableLock:assertLock,assertCold,assertOwner,
+ const controller=new RootRelocationController({bootstrap:identity,mode:entry.mode,theme,sourcePath:entry.sourcePath,notice:entry.notice??undefined,...(entry.recovery?{defaultPath:entry.recovery.recoveryRoot,wipe:async()=>{
+  const recovery=entry.recovery!
+  assertLock()
+  await executeStartupReset({bootstrap,recoveryRoot:recovery.recoveryRoot},{home:recovery.home,isolatedRoot:recovery.isolatedRoot,family:recovery.family},{assertLock})
+ }}:{}) ,assertStableLock:assertLock,assertCold,assertOwner,
   chooseDirectory:async nonce=>{
    assertOwner(nonce)
    const result=await dialog.showOpenDialog(owned,{title:'定位原数据目录',buttonLabel:'选择原目录',properties:['openDirectory']})
@@ -67,6 +74,7 @@ export async function launchRootRelocation(bootstrap:string,_initial:RootRelocat
   restart:async()=>{assertOwner(owner);exiting=true;app.relaunch();app.quit()},
   quit:async()=>{assertCold();exiting=true;app.quit()},
  })
+ const title=()=>{const state=controller.state();return state.phase.startsWith('reset')||state.phase==='blocked'&&state.notice!=='history-needs-recovery'||state.notice==='reset-complete'?'数据目录恢复 · 玄印写作':'定位原数据目录 · 玄印写作'}
  const trusted=(event:IpcMainInvokeEvent)=>{
   if(!ownerAlive||current!==owned||owned.isDestroyed()||event.sender!==owned.webContents||event.senderFrame!==owned.webContents.mainFrame||event.senderFrame.url!=='xaanink://app/')throw Error('UNTRUSTED_RELOCATION_REQUEST')
  }
@@ -75,10 +83,10 @@ export async function launchRootRelocation(bootstrap:string,_initial:RootRelocat
  ipcMain.handle('desktop:relocation-state',event=>{trusted(event);return state()})
  ipcMain.handle('desktop:relocation-command',async(event,input:unknown)=>{
   trusted(event)
-  if(typeof input!=='string'||!['choose','cancel','restart','quit','menu'].includes(input))throw Error('INVALID_RELOCATION_COMMAND')
+  if(typeof input!=='string'||!['choose','cancel','restart','quit','menu','reset','reset-confirm','reset-back'].includes(input))throw Error('INVALID_RELOCATION_COMMAND')
   const action=input as RootRelocationCommand
   if(action==='menu'){assertOwner(owner);if(platform!=='win32'||!popup||exiting)throw Error('INVALID_RELOCATION_COMMAND');popup.popup({window:owned});return}
-  try{if(action==='choose')await controller.choose(owner);else if(action==='cancel')await controller.cancel(owner);else if(action==='restart')await controller.restart(owner);else await controller.quit(owner)}
+  try{if(action==='choose')await controller.choose(owner);else if(action==='cancel')await controller.cancel(owner);else if(action==='restart')await controller.restart(owner);else if(action==='reset')await controller.reset(owner);else if(action==='reset-confirm')await controller.resetConfirm(owner);else if(action==='reset-back')await controller.resetBack(owner);else await controller.quit(owner)}
   catch{throw Error('RELOCATION_COMMAND_NOT_COMPLETED')}
  })
  const close=()=>{
@@ -99,7 +107,7 @@ export async function launchRootRelocation(bootstrap:string,_initial:RootRelocat
  })
  owned.webContents.on('render-process-gone',()=>{ownerAlive=false;close()})
  owned.on('close',event=>{if(!exiting){event.preventDefault();close()}})
- const unsubscribe=controller.subscribe(()=>{if(ownerAlive&&!owned.isDestroyed())owned.webContents.send('desktop:relocation-event',state())})
+ const unsubscribe=controller.subscribe(()=>{if(ownerAlive&&!owned.isDestroyed()){owned.setTitle(title());owned.webContents.send('desktop:relocation-event',state())}})
  owned.on('closed',()=>{ownerAlive=false;unsubscribe();current=null;if(!exiting)close()})
  app.on('before-quit',event=>{if(!exiting){event.preventDefault();close()}})
  const focus=()=>{if(!exiting&&!owned.isDestroyed()){owned.show();owned.focus()}}
@@ -125,4 +133,19 @@ export async function launchRootRelocation(bootstrap:string,_initial:RootRelocat
  const started=controller.start(owner);void started.catch(()=>{})
  await owned.loadURL('xaanink://app/');loaded=true
  await started
+}
+export async function launchRootRelocation(bootstrap:string,_initial:RootRelocationPreflight,recovery?:StartupRecoveryWindowInput):Promise<void>{
+ const assertLock=()=>{if(!app.hasSingleInstanceLock())throw Error('LOCK_REQUIRED')}
+ assertLock()
+ // Recompute authority, rather than trusting a cached startup classification.
+ const initial=rootRelocationPreflight(bootstrap)
+ if(initial.mode==='none')throw Error('ROOT_RELOCATION_NOT_REQUIRED')
+ // In-flight migration/restore history without a pointer warns that a reset
+ // also erases the recovery trail; every other blocked cause uses the new copy.
+ return openRestrictedWindow(bootstrap,{mode:initial.mode,notice:initial.code==='POINTER_REQUIRED'?'history-needs-recovery':'pointer-invalid',sourcePath:initial.pointer?.root.path??null,recovery})
+}
+/** Recovery dialog entry for startup classification dialogs and worker startup
+ * failures: no preflight gate, always blocked with the reset capability. */
+export async function launchStartupRecovery(bootstrap:string,input:{sourcePath:string|null;notice?:RootRelocationNotice}&StartupRecoveryWindowInput):Promise<void>{
+ return openRestrictedWindow(bootstrap,{mode:'blocked',notice:input.notice??'pointer-invalid',sourcePath:input.sourcePath,recovery:{recoveryRoot:input.recoveryRoot,home:input.home,isolatedRoot:input.isolatedRoot,family:input.family}})
 }

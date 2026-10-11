@@ -44,13 +44,15 @@ import {WorkLeaseHandoff} from "./work-lease-handoff"
 import {workLeaseRequestSchema} from "../shared/work-lease"
 import {ApplicationMetadataGate} from "./application-metadata-gate"
 import {rootRelocationPreflight} from "./root-relocation-preflight"
-import {launchRootRelocation} from "./root-relocation-window"
+import {launchRootRelocation,launchStartupRecovery} from "./root-relocation-window"
+import {classifyStartupRecovery,executeStartupRepair} from "./startup-recovery"
 import {inboxLeaseRecoveryRequired} from "./inbox-lease-recovery"
 import {launchInboxLeaseRecovery} from "./inbox-lease-recovery-window"
 import {ConversationDirectoryAuthorizations} from "./conversation-directory-authorizations"
 import type {ConversationRequestOrigin} from "../shared/conversation-task"
 import {workNames} from "../core/brand-names"
 import {selectBrandStartupPaths,BrandStartupPathError,legacyEncryptionName,type BrandStartupPaths} from "./brand-startup-paths"
+import {CURRENT_NAMES} from "../shared/brand-names"
 import { InputContextMenus } from "./input-context-menu"
 import { inputContextStateSchema } from "../shared/input-context-menu"
 import { OnboardingService } from "./onboarding-service"
@@ -62,7 +64,11 @@ protocol.registerSchemesAsPrivileged([{ scheme: "xaanink", privileges: { standar
 const isolatedRoot = process.env.XAANINK_TEST_ROOT ? resolve(process.env.XAANINK_TEST_ROOT) : null
 let startupPaths:BrandStartupPaths|null=null, startupSelectionError:unknown=null
 try{startupPaths=selectBrandStartupPaths({appData:app.getPath("appData"),home:homedir(),isolatedRoot})}
-catch(error){startupSelectionError=error;if(error instanceof BrandStartupPathError)startupPaths=error.recoveryPaths}
+catch(error){
+  startupSelectionError=error
+  if(error instanceof BrandStartupPathError)startupPaths=error.recoveryPaths
+  else startupPaths={bootstrap:join(app.getPath("appData"),CURRENT_NAMES.appIdentity),defaultRoot:join(homedir(),".xaanink"),encryptionFamily:"current"}
+}
 app.setName(startupPaths?.encryptionFamily==="legacy"?legacyEncryptionName:"玄印写作")
 void app.whenReady().then(()=>app.setName("玄印写作"))
 const bootstrapDirectory=startupPaths?.bootstrap??""
@@ -95,7 +101,7 @@ let workLease:WorkLeaseHandoff|null=null
 let draftJournal:DraftJournal
 let draftSession:{owner:number;id:string;ready:boolean;release:()=>void}|null=null
 let ordinaryWorkerExited=false
-let failedRootBeforeSession=false
+let failedRootCode:string|null=null
 let quitting = false
 let closingFlow:Promise<boolean>|null=null
 let closeCommitted=false
@@ -213,7 +219,7 @@ async function launch() {
   // The synchronous worker barrier validates and owns the root before Electron
   // creates caches or any UI. Legacy recovery controls are inspected above.
   const startup=createOrdinaryServiceWorker(),rootStartup=waitRootStartup(startup)
-  if(rootStartup.status!=="ready"){failedRootBeforeSession=rootStartup.code==="ROOT_INITIALIZATION_FAILED";throw new Error(rootStartup.code)}
+  if(rootStartup.status!=="ready"){failedRootCode=rootStartup.code;throw new Error(rootStartup.code)}
   dataRoot=rootStartup.root
   app.setPath("sessionData", prepareSessionDirectory(dataRoot))
   await service.call("ready")
@@ -743,23 +749,60 @@ if(!startupPaths){
 }
 else if (!app.requestSingleInstanceLock()) app.quit()
 else {
-  const start=()=>{
-    assertNoLegacyBackupRecovery(bootstrapPath,()=>{if(!app.hasSingleInstanceLock())throw Error("LOCK_REQUIRED")})
+  const recoveryRootFor=(family:BrandStartupPaths["encryptionFamily"])=>isolatedRoot?resolve(isolatedRoot):join(homedir(),family==="legacy"?".xuanxiang":".xaanink")
+  const openStartupRecovery=(sourcePath:string|null)=>{
+    const family=startupPaths!.encryptionFamily
+    return launchStartupRecovery(bootstrapPath,{recoveryRoot:recoveryRootFor(family),sourcePath,notice:"pointer-invalid",home:homedir(),isolatedRoot,family})
+  }
+  const reselectStartupPaths=()=>{
+    const selected=selectBrandStartupPaths({appData:app.getPath("appData"),home:homedir(),isolatedRoot})
+    if(selected.bootstrap!==startupPaths!.bootstrap||selected.encryptionFamily!==startupPaths!.encryptionFamily)return false
+    startupPaths=selected;startupSelectionError=null
+    return true
+  }
+  const start=async()=>{
+    const assertLock=()=>{if(!app.hasSingleInstanceLock())throw Error("LOCK_REQUIRED")}
+    assertNoLegacyBackupRecovery(bootstrapPath,assertLock)
+    const family=startupPaths!.encryptionFamily,recoveryRoot=recoveryRootFor(family)
+    const classification=classifyStartupRecovery({bootstrap:bootstrapPath,recoveryRoot},family)
+    if(classification.kind==="dialog")return openStartupRecovery(classification.sourcePath)
+    if(classification.kind==="auto-init"||classification.kind==="repair"){
+      try{
+        await executeStartupRepair({bootstrap:bootstrapPath,recoveryRoot},classification.kind==="auto-init"?"pointer":classification.repair,family,{assertLock})
+        // resume-init wrote nothing: the module-load recovery paths are already
+        // the family-correct selection, and the strict ready-marker selector
+        // must not be re-required for an interrupted initialization.
+        if(classification.kind==="repair"&&classification.repair==="resume-init")startupSelectionError=null
+        else if(!reselectStartupPaths())throw Error("STARTUP_RECOVERY_FAMILY_CHANGED")
+        if(rootRelocationPreflight(bootstrapPath).mode!=="none")throw Error("STARTUP_RECOVERY_STILL_BLOCKED")
+      }catch{return openStartupRecovery(null)}
+    }
+    else if(startupSelectionError){
+      try{if(!reselectStartupPaths())throw Error("STARTUP_RECOVERY_FAMILY_CHANGED")}
+      catch{return openStartupRecovery(null)}
+    }
     const relocation=rootRelocationPreflight(bootstrapPath)
-    if(relocation.mode!=="none")return launchRootRelocation(bootstrapPath,relocation)
+    if(relocation.mode!=="none")return launchRootRelocation(bootstrapPath,relocation,{recoveryRoot,home:homedir(),isolatedRoot,family})
     if(rootMaintenanceRequired(bootstrapPath))return launchRootMaintenance(bootstrapPath,startupPaths!.defaultRoot)
     if(inboxLeaseRecoveryRequired(relocation.pointer))return launchInboxLeaseRecovery(bootstrapPath,()=>{
       if(worker||window||repository||modelService||BrowserWindow.getAllWindows().length)throw Error("ORDINARY_HOST_ALREADY_STARTED")
-      assertNoLegacyBackupRecovery(bootstrapPath,()=>{if(!app.hasSingleInstanceLock())throw Error("LOCK_REQUIRED")})
+      assertNoLegacyBackupRecovery(bootstrapPath,assertLock)
       if(rootRelocationPreflight(bootstrapPath).mode!=="none"||rootMaintenanceRequired(bootstrapPath))throw Error("ROOT_MAINTENANCE_REQUIRED")
     })
     return launch()
   }
   const failed=async(error:unknown)=>{
-    if(failedRootBeforeSession&&worker&&BrowserWindow.getAllWindows().length===0){
-      try{await worker.terminate();if(!ordinaryWorkerExited)throw Error("WORKER_EXIT_UNCONFIRMED")}catch(cause){if(isolatedRoot)console.error(cause)}
-    }
     if (isolatedRoot) console.error(error)
+    if(failedRootCode){
+      try{
+        // A failed startup barrier can leave the worker physically writing
+        // (PGlite init); terminate and confirm exit before any reset may run.
+        if(worker&&!ordinaryWorkerExited){await worker.terminate();if(!ordinaryWorkerExited)throw Error("WORKER_EXIT_UNCONFIRMED")}
+      }catch{dialog.showErrorBox("玄印写作无法启动","本地数据未能安全打开。原文件已保留，请检查目录和权限。");app.exit(1);return}
+      failedRootCode=null
+      try{await openStartupRecovery(startupPaths!.defaultRoot);return}
+      catch{dialog.showErrorBox("玄印写作无法启动","本地数据未能安全打开。原文件已保留，请检查目录和权限。");app.exit(1);return}
+    }
     const legacy=error instanceof Error&&error.message.startsWith("LEGACY_BACKUP_RECOVERY")
     dialog.showErrorBox("玄印写作无法启动",legacy?"检测到旧版本未完成或无法确认的数据恢复记录。原文件已保留，请通过项目问题反馈寻求处理。":"本地数据未能安全打开。原文件已保留，请检查目录和权限。")
     app.exit(1)

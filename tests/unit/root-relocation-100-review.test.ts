@@ -106,7 +106,7 @@ async function windowFixture(platform:'darwin'|'win32'='darwin'){
   static getAllWindows(){return windows.filter(window=>!window.isDestroyed())}
   preferences:any;webContents:any;destroyed=false
   constructor(preferences:any){super();this.preferences=preferences;this.webContents=Object.assign(new EventEmitter(),{id:501,mainFrame:{url:'xaanink://app/'},session:preferences.webPreferences.session,send(){},setWindowOpenHandler(){}});windows.push(this)}
-  isDestroyed(){return this.destroyed}setMenu(){}show(){}focus(){}minimize(){trace.push('minimize')}async loadURL(url:string){assert.equal(url,'xaanink://app/')}
+  isDestroyed(){return this.destroyed}setMenu(){}show(){}focus(){}minimize(){trace.push('minimize')}setTitle(value:string){this.preferences.title=value}async loadURL(url:string){assert.equal(url,'xaanink://app/')}
  }
  const templates:any[][]=[],popupOwners:any[]=[],menu={buildFromTemplate(template:any[]){templates.push(template);return{items:template,popup(options:{window:unknown}){popupOwners.push(options.window);trace.push('popup')}}},setApplicationMenu(){}}
  const electron={app,BrowserWindow:Window,ipcMain:{handle:(key:string,run:(...args:any[])=>any)=>handlers.set(key,run)},Menu:menu,nativeTheme:{shouldUseDarkColors:false},session:{fromPartition:()=>memory,get defaultSession():never{throw Error('ORIGINAL_SESSION_FORBIDDEN')}},dialog:{async showOpenDialog(){entered.resolve();return picker.promise},async showMessageBox(){return{response:0}}}}

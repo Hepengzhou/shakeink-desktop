@@ -181,7 +181,11 @@ export class DataRootManager {
             const root = await directoryIdentity(this.defaultRoot);
             if ((await readdir(root.path)).length) {
                 const marker = await this.marker(root);
-                if (marker.phase !== 'ready')
+                // Pointerless only: an initializing marker is the interrupted
+                // initializer's own residue (no user writes precede 'ready'), so
+                // the worker's existing resume path may finish it. The pointer
+                // branch in validatePointer stays strict.
+                if (marker.phase !== 'ready' && marker.phase !== 'initializing')
                     failure('ROOT_MARKER_INVALID');
             }
         }

@@ -9,7 +9,9 @@ const walk = directory => readdirSync(directory, { withFileTypes: true }).flatMa
 const suites = ["tests/unit", "tests/integration"].flatMap(walk).filter(path => path.endsWith(".test.ts")).map(path => relative(root, path) || path)
 const args = ["--import", "tsx", "--test", "--test-reporter=tap", ...suites]
 const startedAt = new Date().toISOString()
-const result = spawnSync(process.execPath, args, { cwd: root, encoding: "utf8", timeout: 120_000, maxBuffer: 10_000_000 })
+// Startup-recovery integration cases spawn real PGlite workers; the suite no
+// longer fits the historical 120s envelope on modest hardware.
+const result = spawnSync(process.execPath, args, { cwd: root, encoding: "utf8", timeout: 900_000, maxBuffer: 10_000_000 })
 const sanitize = text => text.replaceAll(root, "<repo>").replaceAll(tmpdir(), "<isolated-temp>").replaceAll(homedir(), "<home>")
 const output = sanitize((result.stdout ?? "") + (result.stderr ?? ""))
 process.stdout.write(output)
