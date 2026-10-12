@@ -1,4 +1,15 @@
 /* Desktop additions use the original Web semantic tokens. */
+:root, .paper {
+  --desktop-dialog-overlay:rgba(0,0,0,.10);
+  --desktop-dialog-shadow:0 12px 32px rgba(96,74,38,.14),0 2px 8px rgba(96,74,38,.08);
+}
+.ink { --desktop-dialog-shadow:0 12px 32px rgba(0,0,0,.28),0 2px 8px rgba(0,0,0,.18); }
+/* Dialog-only styling: keep anchored popups and the shared shadow tokens intact. */
+.desktop-dialog-overlay { background:var(--desktop-dialog-overlay); backdrop-filter:none; -webkit-backdrop-filter:none; }
+.desktop-dialog-surface {
+  box-shadow:var(--tw-inset-shadow,0 0 #0000),var(--tw-inset-ring-shadow,0 0 #0000),var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--desktop-dialog-shadow);
+}
+.desktop-scenario-dialog > .sc-config { box-shadow:var(--desktop-dialog-shadow); }
 body { margin: 0; overflow: hidden; }
 .desktop-markdown-editor .markdown-body { font-family:var(--desktop-body-font); font-size:var(--desktop-body-size); line-height:var(--desktop-body-line-height); }
 .desktop-markdown-editor .markdown-body :is(h1,h2,h3,h4) { font-family:inherit; }
@@ -91,7 +102,7 @@ body[data-platform="win32"] .dashboard-shell > nav[aria-label="创作工作区"]
 .markdown-body hr { height:0; min-height:0; box-sizing:content-box; background:none; border:0; border-top:1px solid var(--border); }
 .desktop-markdown-editor .desktop-markdown-split { grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); }
 .desktop-markdown-divider { width:0; min-width:0; box-sizing:content-box; background:none; border-left:1px solid var(--border); }
-.desktop-settings { display:flex!important; gap:0!important; padding:0!important; width:min(880px,calc(100vw - 48px))!important; max-width:none!important; height:min(680px,calc(100dvh - 64px)); overflow:hidden; border:1px solid var(--border); border-radius:16px!important; box-shadow:0 30px 100px #0004,0 4px 20px #0002; }
+.desktop-settings { display:flex!important; gap:0!important; padding:0!important; width:min(880px,calc(100vw - 48px))!important; max-width:none!important; height:min(680px,calc(100dvh - 64px)); overflow:hidden; border:1px solid var(--border); border-radius:16px!important; }
 .desktop-settings-nav { flex:0 0 174px; padding:24px 12px; background:var(--sidebar); border-right:1px solid var(--border); }
 .desktop-settings-title { padding:0 12px 23px; font-size:1.1875rem!important; color:var(--foreground); font-weight:600; }
 .desktop-settings-nav nav { display:flex; flex-direction:column; gap:5px; }

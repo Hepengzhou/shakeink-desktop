@@ -1,0 +1,1014 @@
+{
+  "revision": "v2",
+  "overlayOpacity": 0.1,
+  "purpose": "UI design preview only; temporary CSS in existing compiled Electron; no product implementation or acceptance",
+  "runtime": {
+    "electron": "44.6.0",
+    "zoom": 1
+  },
+  "records": [
+    {
+      "filename": "paper-settings-current.png",
+      "theme": "paper",
+      "scene": "settings",
+      "look": "current",
+      "pngDimensions": {
+        "width": 2160,
+        "height": 1350
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "dpr": 1.5,
+      "overlays": [
+        {
+          "background": "oklab(0 0 0 / 0.1)",
+          "backdrop": "blur(4px)"
+        }
+      ],
+      "dialogs": [
+        {
+          "title": "设置",
+          "shadow": "rgba(0, 0, 0, 0.267) 0px 30px 100px 0px, rgba(0, 0, 0, 0.133) 0px 4px 20px 0px",
+          "rect": {
+            "x": 280,
+            "y": 110,
+            "width": 880,
+            "height": 680,
+            "top": 110,
+            "right": 1160,
+            "bottom": 790,
+            "left": 280
+          }
+        }
+      ]
+    },
+    {
+      "filename": "paper-settings-proposed.png",
+      "theme": "paper",
+      "scene": "settings",
+      "look": "proposed",
+      "pngDimensions": {
+        "width": 2160,
+        "height": 1350
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "dpr": 1.5,
+      "overlays": [
+        {
+          "background": "rgba(0, 0, 0, 0.1)",
+          "backdrop": "none"
+        }
+      ],
+      "dialogs": [
+        {
+          "title": "设置",
+          "shadow": "color(srgb 0.168627 0.145098 0.105882 / 0.1) 0px 0px 0px 1px, rgba(96, 74, 38, 0.14) 0px 12px 32px 0px, rgba(96, 74, 38, 0.08) 0px 2px 8px 0px",
+          "rect": {
+            "x": 280,
+            "y": 110,
+            "width": 880,
+            "height": 680,
+            "top": 110,
+            "right": 1160,
+            "bottom": 790,
+            "left": 280
+          }
+        }
+      ]
+    },
+    {
+      "filename": "paper-profile-current.png",
+      "theme": "paper",
+      "scene": "profile",
+      "look": "current",
+      "pngDimensions": {
+        "width": 2160,
+        "height": 1350
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "dpr": 1.5,
+      "overlays": [
+        {
+          "background": "oklab(0 0 0 / 0.1)",
+          "backdrop": "blur(4px)"
+        }
+      ],
+      "dialogs": [
+        {
+          "title": "设置",
+          "shadow": "rgba(0, 0, 0, 0.267) 0px 30px 100px 0px, rgba(0, 0, 0, 0.133) 0px 4px 20px 0px",
+          "rect": {
+            "x": 280,
+            "y": 110,
+            "width": 880,
+            "height": 680,
+            "top": 110,
+            "right": 1160,
+            "bottom": 790,
+            "left": 280
+          }
+        },
+        {
+          "title": "编辑用户",
+          "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.267915 0.00332831 0.0195021 / 0.1) 0px 0px 0px 1px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+          "rect": {
+            "x": 440,
+            "y": 313,
+            "width": 560,
+            "height": 274,
+            "top": 313,
+            "right": 1000,
+            "bottom": 587,
+            "left": 440
+          }
+        }
+      ]
+    },
+    {
+      "filename": "paper-profile-proposed.png",
+      "theme": "paper",
+      "scene": "profile",
+      "look": "proposed",
+      "pngDimensions": {
+        "width": 2160,
+        "height": 1350
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "dpr": 1.5,
+      "overlays": [
+        {
+          "background": "rgba(0, 0, 0, 0.1)",
+          "backdrop": "none"
+        }
+      ],
+      "dialogs": [
+        {
+          "title": "设置",
+          "shadow": "color(srgb 0.168627 0.145098 0.105882 / 0.1) 0px 0px 0px 1px, rgba(96, 74, 38, 0.14) 0px 12px 32px 0px, rgba(96, 74, 38, 0.08) 0px 2px 8px 0px",
+          "rect": {
+            "x": 280,
+            "y": 110,
+            "width": 880,
+            "height": 680,
+            "top": 110,
+            "right": 1160,
+            "bottom": 790,
+            "left": 280
+          }
+        },
+        {
+          "title": "编辑用户",
+          "shadow": "color(srgb 0.168627 0.145098 0.105882 / 0.1) 0px 0px 0px 1px, rgba(96, 74, 38, 0.14) 0px 12px 32px 0px, rgba(96, 74, 38, 0.08) 0px 2px 8px 0px",
+          "rect": {
+            "x": 440,
+            "y": 313,
+            "width": 560,
+            "height": 274,
+            "top": 313,
+            "right": 1000,
+            "bottom": 587,
+            "left": 440
+          }
+        }
+      ]
+    },
+    {
+      "filename": "paper-confirm-current.png",
+      "theme": "paper",
+      "scene": "confirm",
+      "look": "current",
+      "pngDimensions": {
+        "width": 2160,
+        "height": 1350
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "dpr": 1.5,
+      "overlays": [
+        {
+          "background": "oklab(0 0 0 / 0.1)",
+          "backdrop": "blur(4px)"
+        }
+      ],
+      "dialogs": [
+        {
+          "title": "设置",
+          "shadow": "rgba(0, 0, 0, 0.267) 0px 30px 100px 0px, rgba(0, 0, 0, 0.133) 0px 4px 20px 0px",
+          "rect": {
+            "x": 280,
+            "y": 110,
+            "width": 880,
+            "height": 680,
+            "top": 110,
+            "right": 1160,
+            "bottom": 790,
+            "left": 280
+          }
+        },
+        {
+          "title": "恢复默认快捷键",
+          "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.267915 0.00332831 0.0195021 / 0.1) 0px 0px 0px 1px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+          "rect": {
+            "x": 528,
+            "y": 384,
+            "width": 384,
+            "height": 132,
+            "top": 384,
+            "right": 912,
+            "bottom": 516,
+            "left": 528
+          }
+        }
+      ]
+    },
+    {
+      "filename": "paper-confirm-proposed.png",
+      "theme": "paper",
+      "scene": "confirm",
+      "look": "proposed",
+      "pngDimensions": {
+        "width": 2160,
+        "height": 1350
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "dpr": 1.5,
+      "overlays": [
+        {
+          "background": "rgba(0, 0, 0, 0.1)",
+          "backdrop": "none"
+        }
+      ],
+      "dialogs": [
+        {
+          "title": "设置",
+          "shadow": "color(srgb 0.168627 0.145098 0.105882 / 0.1) 0px 0px 0px 1px, rgba(96, 74, 38, 0.14) 0px 12px 32px 0px, rgba(96, 74, 38, 0.08) 0px 2px 8px 0px",
+          "rect": {
+            "x": 280,
+            "y": 110,
+            "width": 880,
+            "height": 680,
+            "top": 110,
+            "right": 1160,
+            "bottom": 790,
+            "left": 280
+          }
+        },
+        {
+          "title": "恢复默认快捷键",
+          "shadow": "color(srgb 0.168627 0.145098 0.105882 / 0.1) 0px 0px 0px 1px, rgba(96, 74, 38, 0.14) 0px 12px 32px 0px, rgba(96, 74, 38, 0.08) 0px 2px 8px 0px",
+          "rect": {
+            "x": 528,
+            "y": 384,
+            "width": 384,
+            "height": 132,
+            "top": 384,
+            "right": 912,
+            "bottom": 516,
+            "left": 528
+          }
+        }
+      ]
+    },
+    {
+      "filename": "paper-menu-current.png",
+      "theme": "paper",
+      "scene": "menu",
+      "look": "current",
+      "pngDimensions": {
+        "width": 2160,
+        "height": 1350
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "dpr": 1.5,
+      "overlays": [],
+      "dialogs": []
+    },
+    {
+      "filename": "paper-menu-proposed.png",
+      "theme": "paper",
+      "scene": "menu",
+      "look": "proposed",
+      "pngDimensions": {
+        "width": 2160,
+        "height": 1350
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "dpr": 1.5,
+      "overlays": [],
+      "dialogs": []
+    },
+    {
+      "filename": "paper-wizard-current.png",
+      "theme": "paper",
+      "scene": "wizard",
+      "look": "current",
+      "pngDimensions": {
+        "width": 2160,
+        "height": 1350
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "dpr": 1.5,
+      "overlays": [
+        {
+          "background": "oklab(0 0 0 / 0.1)",
+          "backdrop": "blur(4px)"
+        }
+      ],
+      "dialogs": [
+        {
+          "title": "创作向导",
+          "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.267915 0.00332831 0.0195021 / 0.1) 0px 0px 0px 1px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+          "rect": {
+            "x": 80,
+            "y": 36,
+            "width": 1280,
+            "height": 828,
+            "top": 36,
+            "right": 1360,
+            "bottom": 864,
+            "left": 80
+          }
+        }
+      ]
+    },
+    {
+      "filename": "paper-wizard-proposed.png",
+      "theme": "paper",
+      "scene": "wizard",
+      "look": "proposed",
+      "pngDimensions": {
+        "width": 2160,
+        "height": 1350
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "dpr": 1.5,
+      "overlays": [
+        {
+          "background": "rgba(0, 0, 0, 0.1)",
+          "backdrop": "none"
+        }
+      ],
+      "dialogs": [
+        {
+          "title": "创作向导",
+          "shadow": "color(srgb 0.168627 0.145098 0.105882 / 0.1) 0px 0px 0px 1px, rgba(96, 74, 38, 0.14) 0px 12px 32px 0px, rgba(96, 74, 38, 0.08) 0px 2px 8px 0px",
+          "rect": {
+            "x": 80,
+            "y": 36,
+            "width": 1280,
+            "height": 828,
+            "top": 36,
+            "right": 1360,
+            "bottom": 864,
+            "left": 80
+          }
+        }
+      ]
+    },
+    {
+      "filename": "paper-wizard-detail-current.png",
+      "theme": "paper",
+      "scene": "wizard-detail",
+      "look": "current",
+      "pngDimensions": {
+        "width": 2160,
+        "height": 1350
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "dpr": 1.5,
+      "overlays": [
+        {
+          "background": "oklab(0 0 0 / 0.1)",
+          "backdrop": "blur(4px)"
+        },
+        {
+          "background": "oklab(0 0 0 / 0.45)",
+          "backdrop": "none"
+        }
+      ],
+      "dialogs": [
+        {
+          "title": "创作向导",
+          "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.267915 0.00332831 0.0195021 / 0.1) 0px 0px 0px 1px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+          "rect": {
+            "x": 80,
+            "y": 36,
+            "width": 1280,
+            "height": 828,
+            "top": 36,
+            "right": 1360,
+            "bottom": 864,
+            "left": 80
+          }
+        },
+        {
+          "title": "空白模板",
+          "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(96, 74, 38, 0.14) 0px 8px 24px -8px",
+          "rect": {
+            "x": 420,
+            "y": 339.8645935058594,
+            "width": 600,
+            "height": 220.2604217529297,
+            "top": 339.8645935058594,
+            "right": 1020,
+            "bottom": 560.1250152587891,
+            "left": 420
+          }
+        }
+      ]
+    },
+    {
+      "filename": "paper-wizard-detail-proposed.png",
+      "theme": "paper",
+      "scene": "wizard-detail",
+      "look": "proposed",
+      "pngDimensions": {
+        "width": 2160,
+        "height": 1350
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "dpr": 1.5,
+      "overlays": [
+        {
+          "background": "rgba(0, 0, 0, 0.1)",
+          "backdrop": "none"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0.1)",
+          "backdrop": "none"
+        }
+      ],
+      "dialogs": [
+        {
+          "title": "创作向导",
+          "shadow": "color(srgb 0.168627 0.145098 0.105882 / 0.1) 0px 0px 0px 1px, rgba(96, 74, 38, 0.14) 0px 12px 32px 0px, rgba(96, 74, 38, 0.08) 0px 2px 8px 0px",
+          "rect": {
+            "x": 80,
+            "y": 36,
+            "width": 1280,
+            "height": 828,
+            "top": 36,
+            "right": 1360,
+            "bottom": 864,
+            "left": 80
+          }
+        },
+        {
+          "title": "空白模板",
+          "shadow": "rgba(96, 74, 38, 0.14) 0px 12px 32px 0px, rgba(96, 74, 38, 0.08) 0px 2px 8px 0px",
+          "rect": {
+            "x": 420,
+            "y": 339.8645935058594,
+            "width": 600,
+            "height": 220.2604217529297,
+            "top": 339.8645935058594,
+            "right": 1020,
+            "bottom": 560.1250152587891,
+            "left": 420
+          }
+        }
+      ]
+    },
+    {
+      "filename": "ink-settings-current.png",
+      "theme": "ink",
+      "scene": "settings",
+      "look": "current",
+      "pngDimensions": {
+        "width": 2160,
+        "height": 1350
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "dpr": 1.5,
+      "overlays": [
+        {
+          "background": "oklab(0 0 0 / 0.1)",
+          "backdrop": "blur(4px)"
+        }
+      ],
+      "dialogs": [
+        {
+          "title": "设置",
+          "shadow": "rgba(0, 0, 0, 0.267) 0px 30px 100px 0px, rgba(0, 0, 0, 0.133) 0px 4px 20px 0px",
+          "rect": {
+            "x": 280,
+            "y": 110,
+            "width": 880,
+            "height": 680,
+            "top": 110,
+            "right": 1160,
+            "bottom": 790,
+            "left": 280
+          }
+        }
+      ]
+    },
+    {
+      "filename": "ink-settings-proposed.png",
+      "theme": "ink",
+      "scene": "settings",
+      "look": "proposed",
+      "pngDimensions": {
+        "width": 2160,
+        "height": 1350
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "dpr": 1.5,
+      "overlays": [
+        {
+          "background": "rgba(0, 0, 0, 0.1)",
+          "backdrop": "none"
+        }
+      ],
+      "dialogs": [
+        {
+          "title": "设置",
+          "shadow": "color(srgb 0.92549 0.905882 0.882353 / 0.1) 0px 0px 0px 1px, rgba(0, 0, 0, 0.28) 0px 12px 32px 0px, rgba(0, 0, 0, 0.18) 0px 2px 8px 0px",
+          "rect": {
+            "x": 280,
+            "y": 110,
+            "width": 880,
+            "height": 680,
+            "top": 110,
+            "right": 1160,
+            "bottom": 790,
+            "left": 280
+          }
+        }
+      ]
+    },
+    {
+      "filename": "ink-profile-current.png",
+      "theme": "ink",
+      "scene": "profile",
+      "look": "current",
+      "pngDimensions": {
+        "width": 2160,
+        "height": 1350
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "dpr": 1.5,
+      "overlays": [
+        {
+          "background": "oklab(0 0 0 / 0.1)",
+          "backdrop": "blur(4px)"
+        }
+      ],
+      "dialogs": [
+        {
+          "title": "设置",
+          "shadow": "rgba(0, 0, 0, 0.267) 0px 30px 100px 0px, rgba(0, 0, 0, 0.133) 0px 4px 20px 0px",
+          "rect": {
+            "x": 280,
+            "y": 110,
+            "width": 880,
+            "height": 680,
+            "top": 110,
+            "right": 1160,
+            "bottom": 790,
+            "left": 280
+          }
+        },
+        {
+          "title": "编辑用户",
+          "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.930199 0.0029394 0.00929564 / 0.1) 0px 0px 0px 1px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+          "rect": {
+            "x": 440,
+            "y": 313,
+            "width": 560,
+            "height": 274,
+            "top": 313,
+            "right": 1000,
+            "bottom": 587,
+            "left": 440
+          }
+        }
+      ]
+    },
+    {
+      "filename": "ink-profile-proposed.png",
+      "theme": "ink",
+      "scene": "profile",
+      "look": "proposed",
+      "pngDimensions": {
+        "width": 2160,
+        "height": 1350
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "dpr": 1.5,
+      "overlays": [
+        {
+          "background": "rgba(0, 0, 0, 0.1)",
+          "backdrop": "none"
+        }
+      ],
+      "dialogs": [
+        {
+          "title": "设置",
+          "shadow": "color(srgb 0.92549 0.905882 0.882353 / 0.1) 0px 0px 0px 1px, rgba(0, 0, 0, 0.28) 0px 12px 32px 0px, rgba(0, 0, 0, 0.18) 0px 2px 8px 0px",
+          "rect": {
+            "x": 280,
+            "y": 110,
+            "width": 880,
+            "height": 680,
+            "top": 110,
+            "right": 1160,
+            "bottom": 790,
+            "left": 280
+          }
+        },
+        {
+          "title": "编辑用户",
+          "shadow": "color(srgb 0.92549 0.905882 0.882353 / 0.1) 0px 0px 0px 1px, rgba(0, 0, 0, 0.28) 0px 12px 32px 0px, rgba(0, 0, 0, 0.18) 0px 2px 8px 0px",
+          "rect": {
+            "x": 440,
+            "y": 313,
+            "width": 560,
+            "height": 274,
+            "top": 313,
+            "right": 1000,
+            "bottom": 587,
+            "left": 440
+          }
+        }
+      ]
+    },
+    {
+      "filename": "ink-confirm-current.png",
+      "theme": "ink",
+      "scene": "confirm",
+      "look": "current",
+      "pngDimensions": {
+        "width": 2160,
+        "height": 1350
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "dpr": 1.5,
+      "overlays": [
+        {
+          "background": "oklab(0 0 0 / 0.1)",
+          "backdrop": "blur(4px)"
+        }
+      ],
+      "dialogs": [
+        {
+          "title": "设置",
+          "shadow": "rgba(0, 0, 0, 0.267) 0px 30px 100px 0px, rgba(0, 0, 0, 0.133) 0px 4px 20px 0px",
+          "rect": {
+            "x": 280,
+            "y": 110,
+            "width": 880,
+            "height": 680,
+            "top": 110,
+            "right": 1160,
+            "bottom": 790,
+            "left": 280
+          }
+        },
+        {
+          "title": "恢复默认快捷键",
+          "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.930199 0.0029394 0.00929564 / 0.1) 0px 0px 0px 1px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+          "rect": {
+            "x": 528,
+            "y": 384,
+            "width": 384,
+            "height": 132,
+            "top": 384,
+            "right": 912,
+            "bottom": 516,
+            "left": 528
+          }
+        }
+      ]
+    },
+    {
+      "filename": "ink-confirm-proposed.png",
+      "theme": "ink",
+      "scene": "confirm",
+      "look": "proposed",
+      "pngDimensions": {
+        "width": 2160,
+        "height": 1350
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "dpr": 1.5,
+      "overlays": [
+        {
+          "background": "rgba(0, 0, 0, 0.1)",
+          "backdrop": "none"
+        }
+      ],
+      "dialogs": [
+        {
+          "title": "设置",
+          "shadow": "color(srgb 0.92549 0.905882 0.882353 / 0.1) 0px 0px 0px 1px, rgba(0, 0, 0, 0.28) 0px 12px 32px 0px, rgba(0, 0, 0, 0.18) 0px 2px 8px 0px",
+          "rect": {
+            "x": 280,
+            "y": 110,
+            "width": 880,
+            "height": 680,
+            "top": 110,
+            "right": 1160,
+            "bottom": 790,
+            "left": 280
+          }
+        },
+        {
+          "title": "恢复默认快捷键",
+          "shadow": "color(srgb 0.92549 0.905882 0.882353 / 0.1) 0px 0px 0px 1px, rgba(0, 0, 0, 0.28) 0px 12px 32px 0px, rgba(0, 0, 0, 0.18) 0px 2px 8px 0px",
+          "rect": {
+            "x": 528,
+            "y": 384,
+            "width": 384,
+            "height": 132,
+            "top": 384,
+            "right": 912,
+            "bottom": 516,
+            "left": 528
+          }
+        }
+      ]
+    },
+    {
+      "filename": "ink-menu-current.png",
+      "theme": "ink",
+      "scene": "menu",
+      "look": "current",
+      "pngDimensions": {
+        "width": 2160,
+        "height": 1350
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "dpr": 1.5,
+      "overlays": [],
+      "dialogs": []
+    },
+    {
+      "filename": "ink-menu-proposed.png",
+      "theme": "ink",
+      "scene": "menu",
+      "look": "proposed",
+      "pngDimensions": {
+        "width": 2160,
+        "height": 1350
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "dpr": 1.5,
+      "overlays": [],
+      "dialogs": []
+    },
+    {
+      "filename": "ink-wizard-current.png",
+      "theme": "ink",
+      "scene": "wizard",
+      "look": "current",
+      "pngDimensions": {
+        "width": 2160,
+        "height": 1350
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "dpr": 1.5,
+      "overlays": [
+        {
+          "background": "oklab(0 0 0 / 0.1)",
+          "backdrop": "blur(4px)"
+        }
+      ],
+      "dialogs": [
+        {
+          "title": "创作向导",
+          "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.930199 0.0029394 0.00929564 / 0.1) 0px 0px 0px 1px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+          "rect": {
+            "x": 80,
+            "y": 36,
+            "width": 1280,
+            "height": 828,
+            "top": 36,
+            "right": 1360,
+            "bottom": 864,
+            "left": 80
+          }
+        }
+      ]
+    },
+    {
+      "filename": "ink-wizard-proposed.png",
+      "theme": "ink",
+      "scene": "wizard",
+      "look": "proposed",
+      "pngDimensions": {
+        "width": 2160,
+        "height": 1350
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "dpr": 1.5,
+      "overlays": [
+        {
+          "background": "rgba(0, 0, 0, 0.1)",
+          "backdrop": "none"
+        }
+      ],
+      "dialogs": [
+        {
+          "title": "创作向导",
+          "shadow": "color(srgb 0.92549 0.905882 0.882353 / 0.1) 0px 0px 0px 1px, rgba(0, 0, 0, 0.28) 0px 12px 32px 0px, rgba(0, 0, 0, 0.18) 0px 2px 8px 0px",
+          "rect": {
+            "x": 80,
+            "y": 36,
+            "width": 1280,
+            "height": 828,
+            "top": 36,
+            "right": 1360,
+            "bottom": 864,
+            "left": 80
+          }
+        }
+      ]
+    },
+    {
+      "filename": "ink-wizard-detail-current.png",
+      "theme": "ink",
+      "scene": "wizard-detail",
+      "look": "current",
+      "pngDimensions": {
+        "width": 2160,
+        "height": 1350
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "dpr": 1.5,
+      "overlays": [
+        {
+          "background": "oklab(0 0 0 / 0.1)",
+          "backdrop": "blur(4px)"
+        },
+        {
+          "background": "oklab(0 0 0 / 0.6)",
+          "backdrop": "none"
+        }
+      ],
+      "dialogs": [
+        {
+          "title": "创作向导",
+          "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.930199 0.0029394 0.00929564 / 0.1) 0px 0px 0px 1px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+          "rect": {
+            "x": 80,
+            "y": 36,
+            "width": 1280,
+            "height": 828,
+            "top": 36,
+            "right": 1360,
+            "bottom": 864,
+            "left": 80
+          }
+        },
+        {
+          "title": "空白模板",
+          "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.6) 0px 8px 24px -8px",
+          "rect": {
+            "x": 420,
+            "y": 339.8645935058594,
+            "width": 600,
+            "height": 220.2604217529297,
+            "top": 339.8645935058594,
+            "right": 1020,
+            "bottom": 560.1250152587891,
+            "left": 420
+          }
+        }
+      ]
+    },
+    {
+      "filename": "ink-wizard-detail-proposed.png",
+      "theme": "ink",
+      "scene": "wizard-detail",
+      "look": "proposed",
+      "pngDimensions": {
+        "width": 2160,
+        "height": 1350
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "dpr": 1.5,
+      "overlays": [
+        {
+          "background": "rgba(0, 0, 0, 0.1)",
+          "backdrop": "none"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0.1)",
+          "backdrop": "none"
+        }
+      ],
+      "dialogs": [
+        {
+          "title": "创作向导",
+          "shadow": "color(srgb 0.92549 0.905882 0.882353 / 0.1) 0px 0px 0px 1px, rgba(0, 0, 0, 0.28) 0px 12px 32px 0px, rgba(0, 0, 0, 0.18) 0px 2px 8px 0px",
+          "rect": {
+            "x": 80,
+            "y": 36,
+            "width": 1280,
+            "height": 828,
+            "top": 36,
+            "right": 1360,
+            "bottom": 864,
+            "left": 80
+          }
+        },
+        {
+          "title": "空白模板",
+          "shadow": "rgba(0, 0, 0, 0.28) 0px 12px 32px 0px, rgba(0, 0, 0, 0.18) 0px 2px 8px 0px",
+          "rect": {
+            "x": 420,
+            "y": 339.8645935058594,
+            "width": 600,
+            "height": 220.2604217529297,
+            "top": 339.8645935058594,
+            "right": 1020,
+            "bottom": 560.1250152587891,
+            "left": 420
+          }
+        }
+      ]
+    }
+  ],
+  "sourceHashes": {
+    "src/components/ui/dialog.tsx": "6d35473f3a2824051b3cdf4b168a706d9101d81ef42495bde6149781a6be3d42",
+    "src/app/desktop.css": "3979770da4138812a4b4b71bdc5cf3e5de14e87ccb44420dd0fb443d91ce2fd2",
+    "src/components/content/planning/planning.module.css": "8b1ed8c7ef036ab45dd42ace35a1b199af73594a54d2b69a6c917a68cb440953",
+    "dist/main/index.cjs": "0f23f28b550020c3b13810147ff28d90e43ce484c8f60fac5289a0c8acacbfce"
+  },
+  "pageErrors": [],
+  "rendererHttpRequests": [],
+  "networkObservationScope": "firstWindow returned through capture completion; renderer only; not main/worker startup network acceptance",
+  "isolatedData": true,
+  "models": 0
+}

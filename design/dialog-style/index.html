@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>对话框轻遮罩与阴影 · 待审核设计</title>
+  <link rel="stylesheet" href="preview.css?v=2">
+</head>
+<body>
+<main>
+  <header>
+    <div class="eyebrow">玄印写作 · UI 审核稿第二版 · 2026-10-12</div>
+    <h1>背景清晰，对话框轻轻浮起</h1>
+    <p class="intro">对话框打开后，背景只轻微加深，文字与边缘保持清晰；面板周围保留一圈柔和阴影。</p>
+  </header>
+  <div class="controls" aria-label="设计预览控制">
+    <div class="group"><span>主题</span><button data-theme="paper" aria-pressed="true">宣纸</button><button data-theme="ink" aria-pressed="false">玄墨</button></div>
+    <div class="group"><label for="scene">场景</label><select id="scene">
+      <option value="settings">设置对话框</option>
+      <option value="profile">设置内用户编辑</option>
+      <option value="wizard">创作向导</option>
+      <option value="wizard-detail">向导内模板详情</option>
+      <option value="planning">规划表单 · 样式示意</option>
+      <option value="drawer">规划侧边详情 · 样式示意</option>
+      <option value="confirm">恢复默认快捷键确认</option>
+      <option value="scenario">试验场局部配置 · 样式示意</option>
+      <option value="menu">账户菜单 · 排除项</option>
+    </select></div>
+    <div class="group"><span>对照</span><button data-look="proposed" aria-pressed="true">拟议效果</button><button data-look="current" aria-pressed="false">当前效果</button></div>
+    <a id="original" href="paper-settings-proposed.png" target="_blank">打开原尺寸图 ↗</a>
+  </div>
+  <div class="preview-frame">
+    <div id="fit"><div id="canvas" class="paper proposed">
+      <img id="shot" src="paper-settings-proposed.png" width="1440" height="900" alt="宣纸主题设置框拟议效果，真实隔离 Electron 组件截图">
+      <div id="live" hidden>
+        <div class="shade"></div>
+        <section id="form-dialog" class="dialog-card" aria-label="规划表单样式示意" hidden>
+          <h2>时期设置</h2>
+          <label>名称<input placeholder="填写时期名称"></label>
+          <label>开始<input type="number" value="0"></label>
+          <label>结束（留空未定）<input type="number"></label>
+          <label class="checkbox"><input type="checkbox">持续中（结束时间保持未定）</label>
+          <div class="actions"><button class="cancel">取消</button><button class="primary">保存</button></div>
+        </section>
+        <section id="drawer-dialog" class="dialog-card drawer-card" aria-label="规划侧详情样式示意" hidden>
+          <div class="card-head"><h2>时期详情</h2><button class="cancel">关闭详情</button></div>
+          <div class="sample-note">此处只展示侧边详情框的遮罩、原有细边和轻阴影。内容按真实选中的时期显示。</div>
+        </section>
+        <section id="scenario-dialog" class="dialog-card scenario-card" aria-label="试验场局部配置样式示意" hidden>
+          <div class="card-head"><h2>试验场配置</h2><button class="cancel" aria-label="关闭配置样式示意">×</button></div>
+          <label>参演角色</label><p>这部小说还没有角色，先去角色面板建几个。</p>
+          <label>场景</label><p>配置表单的内容来自当前作品；此处只展示局部遮罩与阴影。</p>
+          <div class="actions"><button class="cancel">取消</button><button class="primary">保存配置</button></div>
+        </section>
+      </div>
+    </div></div>
+  </div>
+  <p id="caption" class="caption" aria-live="polite"></p>
+  <div class="specs">
+    <article><span class="spec-label">背景</span><strong>黑色 10% 遮罩</strong><p>比首版加深 2 个百分点，无背景虚化。手工第二层仍使用轻遮罩，局部叠加最多为 19%。</p></article>
+    <article><span class="spec-label">面板</span><strong>柔和的周边阴影</strong><p>宣纸用浅暖色阴影，玄墨用轻黑影。保留原有细描边、底色、布局及尺寸。</p></article>
+    <article><span class="spec-label">适用范围</span><strong>应用绘制的所有对话层</strong><p>通用业务框、设置与引导、嵌套编辑、规划表单和侧详情、向导内详情、试验场配置层。</p></article>
+    <article><span class="spec-label">排除范围</span><strong>各类定位弹出框</strong><p>菜单、下拉候选、工具提示、伏笔浮窗、搜索与导航展开层保持现有样式。</p></article>
+  </div>
+  <aside class="boundary">
+    <strong>随设计稿确认的系统边界</strong>
+    <p>操作系统原生确认框、启动错误框、文件与目录选择器由系统绘制，应用 CSS 无法控制其遮罩与阴影。本稿拟保留系统样式；如果这些也需要统一为应用样式，需要另行设计确认流程，不能用这份 CSS 方案声称已经覆盖。</p>
+  </aside>
+  <details>
+    <summary>样式参数与证据说明</summary>
+    <p>宣纸：<code>0 12px 32px rgba(96,74,38,.14), 0 2px 8px rgba(96,74,38,.08)</code></p>
+    <p>玄墨：<code>0 12px 32px rgba(0,0,0,.28), 0 2px 8px rgba(0,0,0,.18)</code></p>
+    <p>设置、用户编辑、快捷键确认、向导及其模板详情与账户菜单来自隔离数据目录内的现有 Windows Electron React 组件；拟议图只临时注入样式。规划与试验场配置场景是纯样式示意，使用相同背景图，不代表实际业务操作或产品验收。全部预览离线，不使用个人数据或模型 Key。</p>
+    <p>鼠标与键盘可切换主题、场景和对照。样式示意按钮不写入设置或业务数据。审核通过前不实施产品代码，也不运行全量测试。</p>
+  </details>
+  <footer>调研文档 → 当前 HTML 待审核 → 审核通过后实现 → 本目标专项测试 → 总结</footer>
+</main>
+<script src="viewer.js?v=2"></script>
+</body>
+</html>

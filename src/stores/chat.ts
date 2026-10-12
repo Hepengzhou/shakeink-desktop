@@ -80,8 +80,6 @@ interface ChatState {
   /** 对话模式（随下一条发送生效，逐轮随请求体提交） */
   mode: ChatMode
   modeExplicit: boolean
-  /** Enter 键行为（W7 输入交互）：true=Enter 发送/Shift+Enter 换行；false=反转。persist 持久化 */
-  enterToSend: boolean
   /** 当前会话的模型选择（切换/新建会话时从会话记录同步或归零），随发送请求体提交 */
   modelChoice: ModelChoice
   modelChoiceExplicit: boolean
@@ -109,7 +107,6 @@ interface ChatState {
   setDraft: (draft: string) => void
   setIsGenerating: (generating: boolean) => void
   setMode: (mode: ChatMode) => void
-  setEnterToSend: (enterToSend: boolean) => void
   setModelChoice: (choice: ModelChoice) => void
   /** 记录某模型上次选择的思考强度（选择器写入；模型重新登记换 id 后自然失效回默认） */
   rememberModelEffort: (modelId: string, effort: string) => void
@@ -149,7 +146,6 @@ const chatStore: StateCreator<ChatState> = (set) => ({
   queuePaused: false,
   mode: "standard",
   modeExplicit: false,
-  enterToSend: true,
   modelChoice: { modelId: null, effort: null },
   modelChoiceExplicit: false,
   modelEffortMemory: {},
@@ -174,7 +170,6 @@ const chatStore: StateCreator<ChatState> = (set) => ({
   setDraft: (draft) => set({ draft }),
   setIsGenerating: (isGenerating) => set({ isGenerating }),
   setMode: (mode) => set({ mode, modeExplicit: true }),
-  setEnterToSend: (enterToSend) => set({ enterToSend }),
   setModelChoice: (modelChoice) => set({ modelChoice, modelChoiceExplicit: true }),
   rememberModelEffort: (modelId, effort) =>
     set((s) => ({ modelEffortMemory: { ...s.modelEffortMemory, [modelId]: effort } })),
@@ -196,7 +191,12 @@ const chatStore: StateCreator<ChatState> = (set) => ({
 export const useChatStore = create<ChatState>()(
   persist(chatStore, {
     name: "chat-model-effort-memory",
-    partialize: (s) => ({ modelEffortMemory: s.modelEffortMemory, lastModelChoice: s.lastModelChoice, enterToSend: s.enterToSend }),
+    partialize: (s) => ({ modelEffortMemory: s.modelEffortMemory, lastModelChoice: s.lastModelChoice }),
+    merge: (persisted, current) => {
+      // Retire the old menu preference without discarding model memories.
+      const { enterToSend: _retired, ...saved } = (persisted ?? {}) as Partial<ChatState> & { enterToSend?: boolean }
+      return { ...current, ...saved }
+    },
     storage: createJSONStorage(() => localStorage),
   })
 )

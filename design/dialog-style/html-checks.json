@@ -1,0 +1,233 @@
+{
+  "revision": "v2",
+  "overlayOpacity": 0.1,
+  "purpose": "Design HTML rendering/controls only; product tests not executed",
+  "browser": "154.0.8037.98",
+  "node": "v24.19.0",
+  "captureRecordsValidated": 24,
+  "networkObservationScope": "Captured renderer observation begins after firstWindow returned; no main/worker startup network claim",
+  "checks": [
+    {
+      "theme": "paper",
+      "scene": "settings",
+      "look": "proposed",
+      "imageDecoded": true
+    },
+    {
+      "theme": "paper",
+      "scene": "settings",
+      "look": "current",
+      "imageDecoded": true
+    },
+    {
+      "theme": "paper",
+      "scene": "profile",
+      "look": "proposed",
+      "imageDecoded": true
+    },
+    {
+      "theme": "paper",
+      "scene": "profile",
+      "look": "current",
+      "imageDecoded": true
+    },
+    {
+      "theme": "paper",
+      "scene": "wizard",
+      "look": "proposed",
+      "imageDecoded": true
+    },
+    {
+      "theme": "paper",
+      "scene": "wizard",
+      "look": "current",
+      "imageDecoded": true
+    },
+    {
+      "theme": "paper",
+      "scene": "wizard-detail",
+      "look": "proposed",
+      "imageDecoded": true
+    },
+    {
+      "theme": "paper",
+      "scene": "wizard-detail",
+      "look": "current",
+      "imageDecoded": true
+    },
+    {
+      "theme": "paper",
+      "scene": "planning",
+      "look": "proposed",
+      "imageDecoded": true
+    },
+    {
+      "theme": "paper",
+      "scene": "planning",
+      "look": "current",
+      "imageDecoded": true
+    },
+    {
+      "theme": "paper",
+      "scene": "drawer",
+      "look": "proposed",
+      "imageDecoded": true
+    },
+    {
+      "theme": "paper",
+      "scene": "drawer",
+      "look": "current",
+      "imageDecoded": true
+    },
+    {
+      "theme": "paper",
+      "scene": "confirm",
+      "look": "proposed",
+      "imageDecoded": true
+    },
+    {
+      "theme": "paper",
+      "scene": "confirm",
+      "look": "current",
+      "imageDecoded": true
+    },
+    {
+      "theme": "paper",
+      "scene": "scenario",
+      "look": "proposed",
+      "imageDecoded": true
+    },
+    {
+      "theme": "paper",
+      "scene": "scenario",
+      "look": "current",
+      "imageDecoded": true
+    },
+    {
+      "theme": "paper",
+      "scene": "menu",
+      "look": "proposed",
+      "imageDecoded": true
+    },
+    {
+      "theme": "paper",
+      "scene": "menu",
+      "look": "current",
+      "imageDecoded": true
+    },
+    {
+      "theme": "ink",
+      "scene": "settings",
+      "look": "proposed",
+      "imageDecoded": true
+    },
+    {
+      "theme": "ink",
+      "scene": "settings",
+      "look": "current",
+      "imageDecoded": true
+    },
+    {
+      "theme": "ink",
+      "scene": "profile",
+      "look": "proposed",
+      "imageDecoded": true
+    },
+    {
+      "theme": "ink",
+      "scene": "profile",
+      "look": "current",
+      "imageDecoded": true
+    },
+    {
+      "theme": "ink",
+      "scene": "wizard",
+      "look": "proposed",
+      "imageDecoded": true
+    },
+    {
+      "theme": "ink",
+      "scene": "wizard",
+      "look": "current",
+      "imageDecoded": true
+    },
+    {
+      "theme": "ink",
+      "scene": "wizard-detail",
+      "look": "proposed",
+      "imageDecoded": true
+    },
+    {
+      "theme": "ink",
+      "scene": "wizard-detail",
+      "look": "current",
+      "imageDecoded": true
+    },
+    {
+      "theme": "ink",
+      "scene": "planning",
+      "look": "proposed",
+      "imageDecoded": true
+    },
+    {
+      "theme": "ink",
+      "scene": "planning",
+      "look": "current",
+      "imageDecoded": true
+    },
+    {
+      "theme": "ink",
+      "scene": "drawer",
+      "look": "proposed",
+      "imageDecoded": true
+    },
+    {
+      "theme": "ink",
+      "scene": "drawer",
+      "look": "current",
+      "imageDecoded": true
+    },
+    {
+      "theme": "ink",
+      "scene": "confirm",
+      "look": "proposed",
+      "imageDecoded": true
+    },
+    {
+      "theme": "ink",
+      "scene": "confirm",
+      "look": "current",
+      "imageDecoded": true
+    },
+    {
+      "theme": "ink",
+      "scene": "scenario",
+      "look": "proposed",
+      "imageDecoded": true
+    },
+    {
+      "theme": "ink",
+      "scene": "scenario",
+      "look": "current",
+      "imageDecoded": true
+    },
+    {
+      "theme": "ink",
+      "scene": "menu",
+      "look": "proposed",
+      "imageDecoded": true
+    },
+    {
+      "theme": "ink",
+      "scene": "menu",
+      "look": "current",
+      "imageDecoded": true
+    }
+  ],
+  "menuPixelEquality": true,
+  "narrowPageOverflow": false,
+  "keyboardControl": true,
+  "pageErrors": [],
+  "failedRequests": [],
+  "httpRequests": []
+}

@@ -24,3 +24,6 @@ runtime-licenses/
 
 # Raw native acceptance logs contain local paths and test environment metadata.
 docs/evidence/
+
+# Local Windows startup registry exports are not repository source.
+/startup-backup/

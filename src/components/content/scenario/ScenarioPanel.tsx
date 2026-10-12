@@ -218,10 +218,10 @@ export function ScenarioPanel({ novelId, refId: labId }: ContentPanelProps) {
         {/* 配置浮层（active 后经头部「配置」按钮打开；draft 态由聊天视图内联展示） */}
         {showConfig && lab.status === "active" && (
           <div
-            className="absolute inset-0 z-40 flex items-start justify-center overflow-y-auto bg-black/20 py-8"
+            className="desktop-dialog-overlay absolute inset-0 z-40 flex items-start justify-center overflow-y-auto py-8"
             onClick={() => setConfigOpen(false)}
           >
-            <div className="w-[560px] max-w-[92%]" onClick={(e) => e.stopPropagation()}>
+            <div className="desktop-scenario-dialog w-[560px] max-w-[92%]" onClick={(e) => e.stopPropagation()}>
               <ConfigForm
                 key={`${lab.id}:${lab.updatedAt}`}
                 novelId={novelId}

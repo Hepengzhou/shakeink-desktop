@@ -468,11 +468,11 @@ export function CreateNovelDialog({
         {/* 详情层：对话框内第二层覆盖；点背板只关详情、不关向导（Esc 分层见 onOpenChange） */}
         {detail !== null && (
           <div
-            className="absolute inset-0 z-10 grid place-items-center bg-black/45 p-10 dark:bg-black/60 max-[760px]:p-5"
+            className="desktop-dialog-overlay absolute inset-0 z-10 grid place-items-center p-10 max-[760px]:p-5"
             onClick={() => setDetail(null)}
           >
             <div
-              className="flex max-h-full w-[min(600px,100%)] flex-col rounded-xl border border-border bg-popover shadow-2"
+              className="desktop-dialog-surface flex max-h-full w-[min(600px,100%)] flex-col rounded-xl border border-border bg-popover"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-start gap-3 px-5 pt-[18px] pb-2.5">

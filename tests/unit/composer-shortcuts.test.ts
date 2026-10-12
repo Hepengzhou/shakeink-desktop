@@ -2,21 +2,18 @@ import test from "node:test"
 import assert from "node:assert/strict"
 import {platformCommands} from "../../desktop/shared/command-registry"
 import {bindingConflicts} from "../../desktop/core/shortcuts"
-import {composerBindingHint,composerSendPreset,setComposerSendPreset} from "../../src/lib/desktop/composer-shortcuts"
-test("composer presets use committed bindings and preserve unrelated additional bindings",()=>{
- const commands=platformCommands("darwin")
- const before={"ai.send":["Enter","Cmd+Enter"],"ai.newline":["Shift+Enter"]}
- const next=setComposerSendPreset(commands,before,false)
- assert.deepEqual(next,{"ai.send":["Shift+Enter","Cmd+Enter"],"ai.newline":["Enter"]})
- assert.equal(composerSendPreset(commands,next),"shift");assert.match(composerBindingHint(commands,next),/Shift\+Enter、Cmd\+Enter 发送/)
- assert.deepEqual(before["ai.send"],["Enter","Cmd+Enter"])
- assert.equal(composerSendPreset(commands,{"ai.send":["Cmd+Enter"]}),"custom")
- assert.match(composerBindingHint(commands,{"ai.send":[]}),/点击发送按钮/)
+import {composerBindingHint} from "../../src/lib/desktop/composer-shortcuts"
+for(const platform of ["darwin","win32"] as const)test(`CSO-06: ${platform} defaults to Enter send / Shift+Enter newline`,()=>{
+ const commands=platformCommands(platform)
+ assert.deepEqual(commands.find(command=>command.id==="ai.send")!.defaults,["Enter"])
+ assert.deepEqual(commands.find(command=>command.id==="ai.newline")!.defaults,["Shift+Enter"])
+ assert.equal(composerBindingHint(commands,{}),"Enter 发送，Shift+Enter 换行")
 })
-test("preset swaps respect other command bindings and do not silently transfer them",()=>{
- const commands=platformCommands("darwin"),overrides={"ai.clear":["Shift+Enter"]}
- assert.throws(()=>setComposerSendPreset(commands,overrides,false),/清空输入草稿/)
- assert.deepEqual(overrides,{"ai.clear":["Shift+Enter"]})
+test("CSO-06: committed custom/additional bindings remain accurate and unchanged",()=>{
+ const commands=platformCommands("darwin"),overrides={"ai.send":["Cmd+Enter","F8"],"ai.newline":["Enter"]},before=structuredClone(overrides)
+ assert.equal(composerBindingHint(commands,overrides),"Cmd+Enter、F8 发送，Enter 换行")
+ assert.deepEqual(overrides,before)
+ assert.equal(composerBindingHint(commands,{"ai.send":[],"ai.newline":[]}),"点击发送按钮，换行快捷键未设置")
 })
 test("mention selection and send/stop are distinct contexts, while same-context binding conflicts remain visible",()=>{
  const commands=platformCommands("darwin")

@@ -5,9 +5,9 @@ import { parseSceneIdentity } from "@/lib/scene-context"
 import { splitMentionToken } from "@/lib/mention-token"
 import { positionForCreation } from "@/lib/creation-wizard/position"
 import { useDesktopCommands } from "@/lib/desktop/use-command-target"
-import { useDesktopStore,updateDesktopSettings } from "@/stores/desktop"
+import { useDesktopStore } from "@/stores/desktop"
 import { ComposerHistory } from "@/lib/desktop/composer-history"
-import {composerBindingHint,composerSendPreset,setComposerSendPreset} from "@/lib/desktop/composer-shortcuts"
+import {composerBindingHint} from "@/lib/desktop/composer-shortcuts"
 import {desktopCommandCatalog} from "@/lib/desktop/command-runtime"
 import {consumeDesktopComposerPaste} from "@/lib/desktop/native-text-edits"
 
@@ -33,7 +33,6 @@ import {
   Globe,
   Hash,
   ImageIcon,
-  Keyboard,
   ListTodo,
   ListTree,
   MessageSquare,
@@ -932,16 +931,7 @@ export function ChatPanel({
   const setDraft = useChatStore((s) => s.setDraft)
   const mode = useChatStore((s) => s.mode)
   const setMode = useChatStore((s) => s.setMode)
-  const enterToSend = useChatStore((s) => s.enterToSend)
-  const setEnterToSend = useChatStore((s) => s.setEnterToSend)
   const desktopBootstrap=useDesktopStore(state=>state.bootstrap)
-  const sendPreset=desktopBootstrap?composerSendPreset(desktopCommandCatalog(desktopBootstrap.platform),desktopBootstrap.settings.shortcuts[desktopBootstrap.platform]):enterToSend?"enter":"shift"
-  const saveSendPreset=async(value:boolean)=>{
-    const desktop=useDesktopStore.getState().bootstrap
-    if(!desktop){setEnterToSend(value);return}
-    try{await updateDesktopSettings(before=>({...before,shortcuts:{...before.shortcuts,[desktop.platform]:setComposerSendPreset(desktopCommandCatalog(desktop.platform),before.shortcuts[desktop.platform],value)}}))}
-    catch(error){toast.error(error instanceof Error?error.message:"发送方式保存失败",{action:{label:"快捷键设置",onClick:()=>window.dispatchEvent(new CustomEvent("desktop:settings",{detail:"shortcuts"}))}})}
-  }
   const pendingQuestion = useChatStore((s) => s.pendingQuestion)
   const pendingRequest = useChatStore(s => s.pendingRequest)
   const pendingPlan = useChatStore(s => s.pendingPlan)
@@ -1649,8 +1639,8 @@ export function ChatPanel({
     "ai.historyNext":{enabled:()=>canSend,run:()=>historyInput(1)},
   },textareaRef)
 
-  /** W7 输入提示：随 enterToSend 设置反转（placeholder 与发送方式菜单同文案） */
-  const composerEnterHint = desktopBootstrap?composerBindingHint(desktopCommandCatalog(desktopBootstrap.platform),desktopBootstrap.settings.shortcuts[desktopBootstrap.platform]):enterToSend ? "Enter 发送，Shift+Enter 换行" : "Shift+Enter 发送，Enter 换行"
+  /** 桌面提示跟随已提交快捷键；默认 Enter 发送、Shift+Enter 换行。 */
+  const composerEnterHint = desktopBootstrap?composerBindingHint(desktopCommandCatalog(desktopBootstrap.platform),desktopBootstrap.settings.shortcuts[desktopBootstrap.platform]):"Enter 发送，Shift+Enter 换行"
 
   return (
     <div className="chatpane flex h-full flex-col bg-chat-bg" aria-busy={!canSend}>
@@ -1969,8 +1959,9 @@ export function ChatPanel({
               // Desktop bindings (including mention contexts) are dispatched
               // once by the shared capture listener, from committed settings.
               if(useDesktopStore.getState().bootstrap)return
+              if(e.nativeEvent.isComposing||e.nativeEvent.keyCode===229)return
               // @ 弹窗打开期间：↑/↓ 导航、Enter/Tab 选中（不发送）、Esc 关闭
-              if (mention && !e.nativeEvent.isComposing) {
+              if (mention) {
                 if (e.key === "ArrowDown" && flatMentionItems.length > 0) {
                   e.preventDefault()
                   setMentionIndex((i) => (i + 1) % flatMentionItems.length)
@@ -2003,13 +1994,9 @@ export function ChatPanel({
                 stop()
                 return
               }
-              if (e.key === "Enter" && !e.nativeEvent.isComposing) {
-                // W7：Enter 发送 / Shift+Enter 换行（随 enterToSend 设置反转；IME 合成中不发送）
-                const sendNow = enterToSend ? !e.shiftKey : e.shiftKey
-                if (sendNow) {
-                  e.preventDefault()
-                  handleSend()
-                }
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault()
+                handleSend()
               }
             }}
             className={cn(
@@ -2130,20 +2117,6 @@ export function ChatPanel({
                     <span className="min-w-0 flex-1">计划模式</span>
                     {mode === "plan" && <Check className="size-3.5 text-primary" />}
                   </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuGroup>
-                    <DropdownMenuLabel>发送方式</DropdownMenuLabel>
-                    <DropdownMenuItem onClick={() => {void saveSendPreset(true)}}>
-                      <Keyboard className="size-3.5" />
-                      <span className="min-w-0 flex-1">Enter 发送，Shift+Enter 换行</span>
-                      {sendPreset==="enter" && <Check className="size-3.5 text-primary" />}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => {void saveSendPreset(false)}}>
-                      <Keyboard className="size-3.5" />
-                      <span className="min-w-0 flex-1">Shift+Enter 发送，Enter 换行</span>
-                      {sendPreset==="shift" && <Check className="size-3.5 text-primary" />}
-                    </DropdownMenuItem>
-                  </DropdownMenuGroup>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
