@@ -12,3 +12,7 @@ export function modelOnboardingNeeded(state:StateSnapshot,notice:ModelRequiredNo
 export function onboardingCanShow(state:{ready:boolean;closing:boolean;migration:boolean;lease:boolean;recovery:boolean}):boolean{
  return state.ready&&!state.closing&&!state.migration&&!state.lease&&!state.recovery
 }
+// Onboarding dialogs never close on outside press (disablePointerDismissal) or Escape (this veto); only explicit flow actions exit.
+export function onboardingDialogGuard(open:boolean,details?:{cancel():void}):void{
+ if(!open)details?.cancel()
+}

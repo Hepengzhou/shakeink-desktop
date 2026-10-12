@@ -3,7 +3,7 @@ import {test} from 'node:test'
 import {readFileSync} from 'node:fs'
 import {transformSync} from 'esbuild'
 import {defaultState} from '../../desktop/core/settings'
-import {onboardingStartup} from '../../src/lib/desktop/onboarding-flow'
+import {onboardingStartup,onboardingDialogGuard} from '../../src/lib/desktop/onboarding-flow'
 // Actual controller orchestration; controlled hooks/IPC do not certify DOM focus.
 function rig(options:{request?:string;progress?:any;commit?:(payload:any,state:any)=>Promise<any>}={}){
  const bootstrap:any={revision:0,...structuredClone(defaultState),onboarding:options.progress??null},calls:any[]=[]
@@ -20,14 +20,14 @@ function rig(options:{request?:string;progress?:any;commit?:(payload:any,state:a
   if(name==='@/components/ui/button')return primitives(['Button'])
   if(name==='./ProfileSettings')return primitives(['ProfileEditorDialog'])
   if(name==='./ModelConfigurationDialog')return primitives(['ModelConfigurationDialog'])
-  if(name==='@/lib/desktop/onboarding-flow')return{onboardingStartup}
+  if(name==='@/lib/desktop/onboarding-flow')return{onboardingStartup,onboardingDialogGuard}
   if(name==='@/stores/desktop')return{useDesktopStore:(select:any)=>select({bootstrap}),createDesktopOnboardingCommit:(payload:any)=>{const captured=structuredClone(payload);return async()=>{calls.push(structuredClone(captured));return options.commit?options.commit(captured,bootstrap):{...bootstrap,onboarding:{version:1,completed:false,step:'profile',textModelId:null,imageModelId:null,receipt:null}}}}}
   throw Error(name)
  })
  function render(){for(let n=0;n<12;n++){changed=false;cursor=0;surfaces=[];const visit=(v:any)=>{if(Array.isArray(v)){v.forEach(visit);return}if(!v?.props)return;surfaces.push({...v,name:v.props['aria-label']??content(v.props.children)});if(v.props.ref)v.props.ref.current={focus(){}};visit(v.props.children)};visit(module.exports.OnboardingController(props));while(effects.length)effects.shift()!();if(!changed)return}throw Error('did not settle')}
  const find=(name:string)=>{render();const found=surfaces.find(s=>s.name===name&&['Button','button','input'].includes(s.type));assert.ok(found,name);return found}
  render()
- return{calls,bootstrap,find,closed:()=>closed,all(){render();return surfaces},click(name:string){const b=find(name);if(!b.props.disabled)b.props.onClick();render()},change(name:string){const b=find(name);if(!b.props.disabled)b.props.onChange();render()},setProps(next:any){props={...props,...next};render()},async settle(){for(let n=0;n<20;n++)await Promise.resolve();render()},finish(){hooks.forEach(h=>h.cleanup?.())}}
+ return{calls,bootstrap,find,closed:()=>closed,all(){render();return surfaces},dialog(){render();const found=surfaces.find(s=>s.type==='Dialog');assert.ok(found,'mounted Dialog');return found},click(name:string){const b=find(name);if(!b.props.disabled)b.props.onClick();render()},change(name:string){const b=find(name);if(!b.props.disabled)b.props.onChange();render()},setProps(next:any){props={...props,...next};render()},async settle(){for(let n=0;n<20;n++)await Promise.resolve();render()},finish(){hooks.forEach(h=>h.cleanup?.())}}
 }
 for(const afterRename of [false,true])test(`ONB-02b: theme failure (${afterRename?'after':'before'} replace) blocks advance and retries frozen identity`,async()=>{
  let fail=true
@@ -66,5 +66,52 @@ for(const stage of ['profile','text','image'] as const)test(`ONB-08: ${stage} co
   if(stage==='profile')await pending.props.onRetry();else await pending.props.onboarding.onRetry()
   await ui.settle();assert.deepEqual(ui.calls[1],ui.calls[0]);assert.equal(ui.calls.length,2)
   assert.equal(ui.all().some(s=>s.type===first.type),false)
+ }finally{ui.finish()}
+})
+test('ONB-12b: own-rendered dialogs veto dismiss at every step; only explicit completion exits',async()=>{
+ const user={penName:'作者',email:'',avatarAssetId:null}
+ const ui=rig({commit:async(payload,state)=>{
+  const progress=(step:string,completed=false)=>({version:1,completed,step,textModelId:null,imageModelId:null,receipt:null})
+  if(payload.type==='next-theme')return{...state,onboarding:progress('profile')}
+  if(payload.type==='profile')return{...state,onboarding:progress('text')}
+  if(payload.type==='model')return{...state,onboarding:progress('image-choice'),models:[{...payload.selection.model,id:payload.selection.creationId??'m1',kind:'TEXT',enabled:true}]}
+  if(payload.type==='image-choice')return{...state,onboarding:progress('welcome',true)}
+  throw Error(`unexpected ${payload.type}`)
+ }})
+ try{
+  const veto=async()=>{const dialog=ui.dialog();assert.equal(dialog.props.disablePointerDismissal,true);assert.equal(dialog.props.modal,undefined);dialog.props.onOpenChange(false);await ui.settle();assert.equal(ui.closed(),0);assert.equal(ui.all().some(s=>['暂时退出引导','暂时退出'].includes(s.name)),false)}
+  await veto()
+  ui.click('继续');await ui.settle()
+  const profile=ui.all().find(s=>s.type==='ProfileEditorDialog');assert.ok(profile);assert.equal(ui.all().some(s=>s.name==='暂时退出引导'),false)
+  await profile.props.onSubmit('session',user);await ui.settle()
+  const text=ui.all().find(s=>s.type==='ModelConfigurationDialog');assert.ok(text);assert.equal(ui.all().some(s=>s.name==='暂时退出引导'),false)
+  await text.props.onboarding.onSubmit({kind:'TEXT',name:'夹具',apiKey:'synthetic-only'});await ui.settle()
+  await veto()
+  ui.click('跳过');await ui.settle()
+  await veto()
+  ui.click('开始创作');assert.equal(ui.closed(),1)
+ }finally{ui.finish()}
+})
+test('ONB-12c: deleted-model prompt has no exit affordance and vetoes dismiss',()=>{
+ const id=crypto.randomUUID(),ui=rig({progress:{version:1,completed:false,step:'text',textModelId:id,imageModelId:null,receipt:null}})
+ try{
+  const dialog=ui.dialog()
+  assert.equal(dialog.props.disablePointerDismissal,true)
+  const content=ui.all().find(s=>s.type==='DialogContent');assert.ok(content);assert.equal(content.props.showCloseButton,false)
+  assert.equal(ui.all().some(s=>s.name==='暂时退出'),false)
+  dialog.props.onOpenChange(false)
+  assert.equal(ui.closed(),0)
+  ui.click('重新选择或添加');assert.ok(ui.all().some(s=>s.type==='ModelConfigurationDialog'))
+ }finally{ui.finish()}
+})
+test('ONB-12d: models entry vetoes dismiss and keeps the explicit decline action',async()=>{
+ const ui=rig({request:'models',progress:{version:1,completed:true,step:'welcome',textModelId:null,imageModelId:null,receipt:null},commit:async()=>{throw Error('未确认')}})
+ try{
+  await ui.settle()
+  const dialog=ui.dialog()
+  assert.equal(dialog.props.disablePointerDismissal,true);assert.equal(dialog.props.modal,undefined)
+  dialog.props.onOpenChange(false);await ui.settle();assert.equal(ui.closed(),0)
+  assert.equal(ui.all().some(s=>['暂时退出引导','暂时退出'].includes(s.name)),false)
+  ui.click('暂不配置');assert.equal(ui.closed(),1)
  }finally{ui.finish()}
 })

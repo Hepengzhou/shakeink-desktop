@@ -165,7 +165,6 @@ body[data-platform="win32"] .dashboard-shell > nav[aria-label="创作工作区"]
 .desktop-onboarding-head { position:relative; flex-shrink:0; padding:25px 28px 0; }
 .desktop-onboarding [data-slot="dialog-title"] { padding-right:26px; font-size:20px; font-weight:500; line-height:1.45; letter-spacing:.5px; }
 .desktop-onboarding [data-slot="dialog-description"] { margin-top:8px; color:var(--muted-foreground); font-size:12px; line-height:1.7; }
-.desktop-onboarding-close { position:absolute; right:16px; top:17px; color:var(--muted-foreground); }
 .desktop-onboarding-body { flex:1!important; min-height:0; padding:24px 28px; overflow:auto; overscroll-behavior:contain; }
 .desktop-onboarding-footer { display:flex; flex-shrink:0; align-items:center; flex-wrap:wrap; gap:8px; padding:0 28px 25px; }
 .desktop-onboarding-footer-actions { display:flex; align-items:center; flex-wrap:wrap; gap:8px; margin-left:auto; }

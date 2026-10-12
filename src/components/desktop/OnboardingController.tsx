@@ -1,12 +1,12 @@
 "use client"
 import {useEffect,useRef,useState} from 'react'
-import {ArrowRight,Check,LoaderCircle,X} from 'lucide-react'
+import {ArrowRight,Check,LoaderCircle} from 'lucide-react'
 import {Dialog,DialogContent,DialogTitle,DialogDescription} from '@/components/ui/dialog'
 import {Button} from '@/components/ui/button'
 import {ProfileEditorDialog} from './ProfileSettings'
 import {ModelConfigurationDialog} from './ModelConfigurationDialog'
 import {useDesktopStore,createDesktopOnboardingCommit} from '@/stores/desktop'
-import {onboardingStartup,type OnboardingRoute} from '@/lib/desktop/onboarding-flow'
+import {onboardingStartup,onboardingDialogGuard,type OnboardingRoute} from '@/lib/desktop/onboarding-flow'
 import type {OnboardingPayload} from '@desktop/shared/onboarding'
 import type {ModelDraft} from '@desktop/main/model-repository'
 import type {Settings} from '@desktop/core/settings'
@@ -56,7 +56,6 @@ export function OnboardingController({request,suspended,onExit,finalFocus}:{requ
   return perform({type:'model',selection:{type:'draft',model,creationId:creationIds.current[kind]}})
  }
  if(!route)return null
- const close=<Button variant="ghost" size="icon-sm" className="absolute right-4 top-4" aria-label="暂时退出引导" disabled={busy} onClick={exit}><X size={17}/></Button>
  const feedback=error?<div><p role="alert" className="text-sm text-destructive">{error}</p>{step==='theme'&&pendingTheme.current?<Button variant="outline" disabled={busy} onClick={()=>action({type:'theme',theme:pendingTheme.current!})}>重试主题保存</Button>:confirmationPending&&attempt.current?<Button variant="outline" disabled={busy} onClick={()=>action(attempt.current!.body)}>重试保存</Button>:null}</div>:null
  const next=<Button disabled={busy||themeUnconfirmed} onClick={()=>action({type:'next-theme'})}>{busy?<LoaderCircle size={16} className="animate-spin"/>:null}继续<ArrowRight size={16}/></Button>
  const open=!suspended
@@ -64,11 +63,10 @@ export function OnboardingController({request,suspended,onExit,finalFocus}:{requ
  if(step==='text'||step==='image'){
   const kind=step==='text'?'TEXT':'IMAGE',id=kind==='TEXT'?bootstrap.onboarding?.textModelId:bootstrap.onboarding?.imageModelId
   const model=id?bootstrap.models.find(item=>item.id===id):undefined
-  if(id&&!model&&missingAcknowledged!==id)return <Dialog open={open} onOpenChange={value=>{if(!value)exit()}}><DialogContent className="desktop-onboarding" finalFocus={finalFocus} initialFocus={()=>titleRef.current}><DialogTitle ref={titleRef} tabIndex={-1}>{kind==='TEXT'?'配置文本模型':'配置文生图模型'}</DialogTitle><DialogDescription>之前确认的模型已删除，请重新选择或添加模型。</DialogDescription><p role="alert">无法继续编辑已删除的模型。</p><div className="desktop-onboarding-footer-actions"><Button variant="outline" onClick={exit}>暂时退出</Button><Button onClick={()=>{setMissingAcknowledged(id);setVisit(before=>before+1)}}>重新选择或添加</Button></div></DialogContent></Dialog>
+  if(id&&!model&&missingAcknowledged!==id)return <Dialog open={open} disablePointerDismissal onOpenChange={onboardingDialogGuard}><DialogContent showCloseButton={false} className="desktop-onboarding" finalFocus={finalFocus} initialFocus={()=>titleRef.current}><DialogTitle ref={titleRef} tabIndex={-1}>{kind==='TEXT'?'配置文本模型':'配置文生图模型'}</DialogTitle><DialogDescription>之前确认的模型已删除，请重新选择或添加模型。</DialogDescription><p role="alert">无法继续编辑已删除的模型。</p><div className="desktop-onboarding-footer-actions"><Button onClick={()=>{setMissingAcknowledged(id);setVisit(before=>before+1)}}>重新选择或添加</Button></div></DialogContent></Dialog>
   return <ModelConfigurationDialog key={`${step}-${visit}`} open={open} finalFocus={finalFocus} kind={kind} model={model} onClose={exit} onboarding={{blocked:busy,confirmationPending,onRetry:retry,onDraftChanged:draftChanged,onSubmit:submitModel,onSelectExisting:id=>perform({type:'model',selection:{type:'existing',id}}),...(flow==='full'||step==='image'?{onBack:back}:{}),...(step==='image'?{onSkip:()=>action({type:'image-choice',choice:'skip'})}:{})}}/>
  }
- return <Dialog key={step} open={open} onOpenChange={value=>{if(!value)exit()}}><DialogContent showCloseButton={false} finalFocus={finalFocus} initialFocus={()=>titleRef.current} className={`desktop-onboarding desktop-onboarding-${step==='theme'?'theme':step==='image-choice'?'image-choice':step==='welcome'?'welcome':'compact'}`} onKeyDownCapture={event=>{if(event.nativeEvent.isComposing&&event.key==='Enter')event.preventDefault()}}>
-  {close}
+ return <Dialog key={step} open={open} disablePointerDismissal onOpenChange={onboardingDialogGuard}><DialogContent showCloseButton={false} finalFocus={finalFocus} initialFocus={()=>titleRef.current} className={`desktop-onboarding desktop-onboarding-${step==='theme'?'theme':step==='image-choice'?'image-choice':step==='welcome'?'welcome':'compact'}`} onKeyDownCapture={event=>{if(event.nativeEvent.isComposing&&event.key==='Enter')event.preventDefault()}}>
   <div className="desktop-onboarding-head">
    {step==='welcome'&&<img className="desktop-onboarding-welcome-mark" src={`/brand/seal-mark-${bootstrap.settings.appearance.theme==='ink'||bootstrap.settings.appearance.theme==='system'&&bootstrap.systemDark?'ink':'paper'}.svg`} alt=""/>}
    <DialogTitle ref={titleRef} tabIndex={-1}>{step==='theme'?'选择主题':step==='image-choice'?'要配置文生图模型吗？':step==='welcome'?'欢迎使用':'尚未配置文本模型'}</DialogTitle>

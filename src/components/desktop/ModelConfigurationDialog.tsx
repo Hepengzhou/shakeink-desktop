@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/compone
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { saveDesktopModel, useDesktopStore } from "@/stores/desktop"
+import { onboardingDialogGuard } from "@/lib/desktop/onboarding-flow"
 import { parseContextWindow, type PublicModel } from "@desktop/core/settings"
 import type { ModelDraft } from "@desktop/main/model-repository"
 import { presetsFor, type ConfigurationDraft, type ConfigurationProviderId, type CatalogResult, type ConnectionTestResult, type ConfigurationFailure } from "@desktop/shared/model-catalog"
@@ -141,11 +142,11 @@ export function ModelConfigurationDialog({ kind, model, onClose, finalFocus, ope
   const fieldsDisabled = disabled || !!onboarding?.confirmationPending
   const navigationDisabled = busy === "save" || !!onboarding?.blocked || !open || !!onboarding?.confirmationPending
   const existingOptions = models.filter(item => item.kind === kind && item.enabled).map(item => ({ id: item.id, label: item.name, provider: item.provider, hint: item.modelId }))
-  return <Dialog open={open} onOpenChange={value => { if (!value) close() }}><DialogContent data-desktop-settings-surface className={`desktop-model-editor${onboarding ? " desktop-onboarding desktop-onboarding-editor" : ""}`} showCloseButton={false} initialFocus={() => typeof document === "undefined" ? null : document.querySelector<HTMLElement>(useExisting ? '[aria-label="已配置模型"]' : '[aria-label="供应商"]')} finalFocus={finalFocus}>
+  return <Dialog open={open} disablePointerDismissal={!!onboarding || undefined} onOpenChange={onboarding ? onboardingDialogGuard : value => { if (!value) close() }}><DialogContent data-desktop-settings-surface className={`desktop-model-editor${onboarding ? " desktop-onboarding desktop-onboarding-editor" : ""}`} showCloseButton={false} initialFocus={() => typeof document === "undefined" ? null : document.querySelector<HTMLElement>(useExisting ? '[aria-label="已配置模型"]' : '[aria-label="供应商"]')} finalFocus={finalFocus}>
     <div className={onboarding ? "desktop-onboarding-head" : "desktop-model-head"}>
       <DialogTitle>{onboarding ? kind === "TEXT" ? "配置文本模型" : "配置文生图模型" : "配置模型"}</DialogTitle>
       <DialogDescription className={onboarding ? "desktop-onboarding-description" : "sr-only"}>{onboarding ? kind === "TEXT" ? "添加自己的文本模型，用于 AI 写作与审核。" : "选择自己的文生图模型，之后可以用于创作图片。" : `配置一个${kind === "TEXT" ? "文本" : "文生图"}模型，点击保存后生效`}</DialogDescription>
-      <Button variant="ghost" size="icon-sm" className={onboarding ? "desktop-onboarding-close" : "absolute right-3 top-3"} aria-label={onboarding ? "暂时退出引导" : "关闭配置模型"} disabled={busy === "save" || !!onboarding?.blocked || !open} onClick={close}><X size={16} /></Button>
+      {!onboarding && <Button variant="ghost" size="icon-sm" className="absolute right-3 top-3" aria-label="关闭配置模型" disabled={busy === "save" || !open} onClick={close}><X size={16} /></Button>}
     </div>
     <div className={onboarding ? "desktop-onboarding-body desktop-model-body" : "desktop-model-body"}>
       <fieldset disabled={fieldsDisabled} className="desktop-model-fields">
@@ -169,6 +170,6 @@ export function ModelConfigurationDialog({ kind, model, onClose, finalFocus, ope
         <Button disabled={disabled} onClick={() => { void save() }}>{busy === "save" && <LoaderCircle className="size-4 animate-spin" />}继续<ArrowRight size={16} /></Button>
       </div>
     </div> : <div className="flex justify-end gap-2"><Button disabled={disabled} onClick={() => { void save() }}>保存模型</Button><Button ref={testButton} variant="outline" disabled={disabled} aria-busy={busy === 'test'} onClick={() => { void test() }}>{busy === 'test' && <LoaderCircle className="size-4 animate-spin" />}{busy === 'test' ? '测试中…' : '测试连接'}</Button><Button variant="outline" disabled={busy === 'save'} onClick={close}>取消</Button></div>}
-    <Dialog open={open && result !== null} onOpenChange={value => { if (!value) setResult(null) }}><DialogContent data-desktop-settings-surface finalFocus={testButton}><DialogTitle>连接测试结果</DialogTitle><DialogDescription>{result?.ok ? `当前模型连接成功，用时 ${(result.durationMs / 1000).toFixed(1)} 秒。测试未保存模型。` : result?.message}</DialogDescription><div className="break-all text-xs text-muted-foreground"><p>{tested?.provider} · {tested?.modelId}</p><p>{tested?.endpoint}</p></div><Button onClick={() => setResult(null)}>返回配置</Button></DialogContent></Dialog>
+    <Dialog open={open && result !== null} disablePointerDismissal={!!onboarding || undefined} onOpenChange={onboarding ? onboardingDialogGuard : value => { if (!value) setResult(null) }}><DialogContent data-desktop-settings-surface showCloseButton={!onboarding} finalFocus={testButton}><DialogTitle>连接测试结果</DialogTitle><DialogDescription>{result?.ok ? `当前模型连接成功，用时 ${(result.durationMs / 1000).toFixed(1)} 秒。测试未保存模型。` : result?.message}</DialogDescription><div className="break-all text-xs text-muted-foreground"><p>{tested?.provider} · {tested?.modelId}</p><p>{tested?.endpoint}</p></div><Button onClick={() => setResult(null)}>返回配置</Button></DialogContent></Dialog>
   </DialogContent></Dialog>
 }

@@ -5,6 +5,7 @@ import { transformSync } from "esbuild"
 import { defaultState, settingsSchema, parseContextWindow, type PublicModel } from "../../desktop/core/settings"
 import { presetsFor } from "../../desktop/shared/model-catalog"
 import { modelChoices, excludedBuiltinModel } from "../../desktop/shared/builtin-model-catalog"
+import { onboardingDialogGuard } from "../../src/lib/desktop/onboarding-flow"
 
 // Executes the real editors with isolated hook instances and controlled IPC.
 // It does not stand in for Base UI focus trapping, native pickers or Electron.
@@ -42,6 +43,7 @@ function editor(file: "ProfileSettings" | "ModelConfigurationDialog", exportName
     if (name === "@desktop/core/settings") return { settingsSchema, parseContextWindow }
     if (name === "@desktop/shared/model-catalog") return { presetsFor }
     if (name === "@desktop/shared/builtin-model-catalog") return { modelChoices, excludedBuiltinModel }
+    if (name === "@/lib/desktop/onboarding-flow") return { onboardingDialogGuard }
     if (name === "@/stores/desktop") return { useDesktopStore: (select: (value: unknown) => unknown) => select({ bootstrap: state }), saveDesktopModel: async (draft: any) => { saves.push(draft) }, saveDesktopProfile: async (...args: any[]) => { saves.push(args) } }
     throw new Error(`Unexpected editor dependency: ${name}`)
   })
@@ -130,12 +132,12 @@ test("ONB editor: built-in providers put DeepSeek and domestic options first wit
 test("ONB editor: uncertain durable confirmation freezes profile fields and avatar while allowing the exact retry", async () => {
   const submissions: any[] = []
   const ui = editor("ProfileSettings", "ProfileEditorDialog", { submitLabel: "继续", confirmationPending: true, onBack() {}, onClose() {}, onRetry: async () => { submissions.push("retry") }, onSubmit: async () => { throw Error("Pending retry must not submit the avatar session again") } })
-  try { assert.equal(ui.find("笔名").disabled, true); assert.equal(ui.find("邮件").disabled, true); assert.equal(ui.find("选择头像").disabled, true); assert.equal(ui.find("返回").disabled, true); assert.equal(ui.find("暂时退出引导").disabled, false); assert.equal(ui.find("继续").disabled, false); ui.click("继续"); await ui.settle(); assert.equal(submissions.length, 1) } finally { ui.finish() }
+  try { assert.equal(ui.find("笔名").disabled, true); assert.equal(ui.find("邮件").disabled, true); assert.equal(ui.find("选择头像").disabled, true); assert.equal(ui.find("返回").disabled, true); assert.equal(ui.all().some(surface => surface.name === "暂时退出引导"), false); const dialog = ui.all().find(surface => surface.element.type === "Dialog")!; assert.equal(dialog.element.props.disablePointerDismissal, true); assert.equal(dialog.element.props.modal, undefined); assert.equal(dialog.element.props.onOpenChange, onboardingDialogGuard); ui.dismiss(); assert.equal(ui.find("继续").disabled, false); ui.click("继续"); await ui.settle(); assert.equal(submissions.length, 1) } finally { ui.finish() }
 })
 test("ONB editor: uncertain model confirmation freezes credentials and selection while Continue can reconcile the same id", async () => {
   const submissions: any[] = []
   const ui = editor("ModelConfigurationDialog", "ModelConfigurationDialog", { kind: "TEXT", model: textModel, onClose() {}, onboarding: { confirmationPending: true, onBack() {}, onSkip() {}, onRetry: async () => { submissions.push("retry") }, onSubmit: async () => { throw Error("Pending retry must bypass model validation") }, onSelectExisting: async () => {} } }, { models: [textModel] })
-  try { assert.equal(ui.find("供应商").disabled, true); assert.equal(ui.find("供应商").element.props.disabled, true); assert.equal(ui.find("API Key").disabled, true); assert.equal(ui.find("选择已有模型").disabled, true); assert.equal(ui.find("返回").disabled, true); assert.equal(ui.find("跳过").disabled, true); assert.equal(ui.find("测试连接").disabled, true); assert.equal(ui.find("暂时退出引导").disabled, false); assert.equal(ui.find("继续").disabled, false); ui.click("继续"); await ui.settle(); assert.deepEqual(submissions, ["retry"]) } finally { ui.finish() }
+  try { assert.equal(ui.find("供应商").disabled, true); assert.equal(ui.find("供应商").element.props.disabled, true); assert.equal(ui.find("API Key").disabled, true); assert.equal(ui.find("选择已有模型").disabled, true); assert.equal(ui.find("返回").disabled, true); assert.equal(ui.find("跳过").disabled, true); assert.equal(ui.find("测试连接").disabled, true); assert.equal(ui.all().some(surface => surface.name === "暂时退出引导"), false); const dialog = ui.all().find(surface => surface.element.type === "Dialog")!; assert.equal(dialog.element.props.disablePointerDismissal, true); assert.equal(dialog.element.props.onOpenChange, onboardingDialogGuard); ui.dismiss(); assert.equal(ui.find("继续").disabled, false); ui.click("继续"); await ui.settle(); assert.deepEqual(submissions, ["retry"]) } finally { ui.finish() }
 })
 test("ONB editor: a suspended old test cannot clear the busy guard or replace a newer test result", async () => {
   const old = deferred<any>(), fresh = deferred<any>(); let count = 0
@@ -169,13 +171,52 @@ for (const kind of ["TEXT", "IMAGE"] as const) test(`ONB editor: ${kind} new mod
     custom(ui); ui.click("继续"); await ui.settle(); assert.equal(attempts, 1); assert.equal(ui.state.models.length, 1); ui.setProps({ onboarding: { ...callbacks, confirmationPending: true } }); ui.click("继续"); ui.click("继续"); assert.equal(retries, 1); assert.equal(attempts, 1); retry.resolve(); await ui.settle(); assert.equal(ui.all().some(surface => surface.element.props.role === "alert"), false)
   } finally { ui.finish() }
 })
-for (const reason of ["exit", "dismiss", "back", "skip"] as const) test(`ONB editor: ${reason} remains available during a connection test and cancels late output`, async () => {
-  const pending = deferred<any>(); let exited = 0, backed = 0, skipped = 0
-  const ui = editor("ModelConfigurationDialog", "ModelConfigurationDialog", { kind: "TEXT", model: textModel, onClose: () => exited++, onboarding: { onSubmit: async () => {}, onSelectExisting: async () => {}, onBack: () => backed++, onSkip: () => skipped++ } }, { models: [textModel], test: () => pending.promise })
+for (const reason of ["back", "skip"] as const) test(`ONB editor: ${reason} remains available during a connection test and cancels late output`, async () => {
+  const pending = deferred<any>(); let navigated = 0
+  const ui = editor("ModelConfigurationDialog", "ModelConfigurationDialog", { kind: "TEXT", model: textModel, onClose() {}, onboarding: { onSubmit: async () => {}, onSelectExisting: async () => {}, onBack: () => navigated++, onSkip: () => navigated++ } }, { models: [textModel], test: () => pending.promise })
   try {
     ui.click("测试连接"); const id = ui.tests[0]; assert.equal(ui.find("继续").disabled, true)
-    if (reason === "exit") ui.click("暂时退出引导"); else if (reason === "dismiss") ui.dismiss(); else if (reason === "back") ui.click("返回"); else ui.click("跳过")
-    assert.ok(ui.canceled.includes(id)); assert.equal(exited + backed + skipped, 1); pending.resolve({ ok: true, durationMs: 1111 }); await ui.settle(); assert.equal(ui.all().some(surface => surface.element.type === "DialogTitle" && surface.name === "连接测试结果"), false)
+    if (reason === "back") ui.click("返回"); else ui.click("跳过")
+    assert.ok(ui.canceled.includes(id)); assert.equal(navigated, 1); pending.resolve({ ok: true, durationMs: 1111 }); await ui.settle(); assert.equal(ui.all().some(surface => surface.element.type === "DialogTitle" && surface.name === "连接测试结果"), false)
+  } finally { ui.finish() }
+})
+test("ONB-12e/f: onboarding editors veto dismiss and render no close affordance; ordinary editors keep both", () => {
+  let closed = 0
+  const profile = editor("ProfileSettings", "ProfileEditorDialog", { submitLabel: "继续", onClose: () => closed++, onSubmit: async () => {} })
+  try {
+    const dialog = profile.all().find(surface => surface.element.type === "Dialog")!
+    assert.equal(dialog.element.props.disablePointerDismissal, true); assert.equal(dialog.element.props.modal, undefined); assert.equal(dialog.element.props.onOpenChange, onboardingDialogGuard)
+    assert.equal(profile.all().some(surface => ["暂时退出引导", "取消"].includes(surface.name)), false)
+    profile.dismiss(); assert.equal(closed, 0); assert.ok(profile.find("笔名"))
+  } finally { profile.finish() }
+  const model = editor("ModelConfigurationDialog", "ModelConfigurationDialog", { kind: "TEXT", onClose: () => closed++, onboarding: { onSubmit: async () => {}, onSelectExisting: async () => {} } })
+  try {
+    const dialog = model.all().find(surface => surface.element.type === "Dialog")!
+    assert.equal(dialog.element.props.disablePointerDismissal, true); assert.equal(dialog.element.props.modal, undefined); assert.equal(dialog.element.props.onOpenChange, onboardingDialogGuard)
+    assert.equal(model.all().some(surface => surface.name === "暂时退出引导"), false)
+    model.dismiss(); assert.equal(closed, 0); assert.ok(model.find("API Key"))
+  } finally { model.finish() }
+  const ordinaryModel = editor("ModelConfigurationDialog", "ModelConfigurationDialog", { kind: "TEXT", onClose: () => closed++ })
+  try { assert.ok(ordinaryModel.find("关闭配置模型")); ordinaryModel.dismiss(); assert.equal(closed, 1) } finally { ordinaryModel.finish() }
+  const ordinaryProfile = editor("ProfileSettings", "ProfileEditorDialog", { onClose: () => closed++ })
+  try { assert.ok(ordinaryProfile.find("关闭编辑用户")); ordinaryProfile.dismiss(); assert.equal(closed, 2) } finally { ordinaryProfile.finish() }
+})
+test("ONB-12g/12h: dismiss during a connection test neither exits nor cancels; the result dialog is itself undismissible", async () => {
+  const pending = deferred<any>(); let closed = 0
+  const ui = editor("ModelConfigurationDialog", "ModelConfigurationDialog", { kind: "TEXT", model: textModel, onClose: () => closed++, onboarding: { onSubmit: async () => {}, onSelectExisting: async () => {} } }, { models: [textModel], test: () => pending.promise })
+  try {
+    ui.click("测试连接"); const id = ui.tests[0]; assert.equal(ui.find("继续").disabled, true)
+    ui.dismiss(); assert.equal(closed, 0); assert.ok(!ui.canceled.includes(id))
+    pending.resolve({ ok: true, durationMs: 1111 }); await ui.settle()
+    assert.ok(ui.all().some(surface => surface.element.type === "DialogTitle" && surface.name === "连接测试结果"))
+    const nested = ui.all().filter(surface => surface.element.type === "Dialog" && text(surface.element.props.children).includes("连接测试结果")).at(-1)!
+    assert.equal(nested.element.props.disablePointerDismissal, true); assert.equal(nested.element.props.onOpenChange, onboardingDialogGuard)
+    nested.element.props.onOpenChange(false); await ui.settle()
+    assert.ok(ui.all().some(surface => surface.element.type === "DialogTitle" && surface.name === "连接测试结果"))
+    const nestedContent = ui.all().filter(surface => surface.element.type === "DialogContent" && text(surface.element.props.children).includes("连接测试结果")).find(surface => !String(surface.element.props.className ?? "").includes("desktop-model-editor"))!
+    assert.equal(nestedContent.element.props.showCloseButton, false)
+    ui.click("返回配置"); await ui.settle()
+    assert.equal(ui.all().some(surface => surface.element.type === "DialogTitle" && surface.name === "连接测试结果"), false)
   } finally { ui.finish() }
 })
 test("ONB editor: a cancelled test's late finally cannot unlock a later model save", async () => {

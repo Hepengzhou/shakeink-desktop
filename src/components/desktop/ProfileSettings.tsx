@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/compone
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useDesktopStore, saveDesktopProfile } from "@/stores/desktop"
+import { onboardingDialogGuard } from "@/lib/desktop/onboarding-flow"
 import { settingsSchema, type Settings } from "@desktop/core/settings"
 import type { AvatarDraft } from "@desktop/shared/ipc"
 
@@ -91,11 +92,11 @@ export function ProfileEditorDialog({ open = true, title = "编辑用户", submi
     } catch (cause) { if (alive.current && session.current === id) setError(cause instanceof Error ? cause.message : "资料保存失败") }
     finally { locked.current = false; if (alive.current) setSaving(false) }
   }
-  return <Dialog open={open} onOpenChange={value => { if (!value) close() }}>
+  return <Dialog open={open} disablePointerDismissal={onboarding || undefined} onOpenChange={onboarding ? onboardingDialogGuard : value => { if (!value) close() }}>
     <DialogContent data-desktop-settings-surface showCloseButton={false} initialFocus={nameInput} finalFocus={finalFocus} className={`desktop-profile-editor${onboarding ? " desktop-onboarding desktop-onboarding-editor" : ""}`}>
       <div className={onboarding ? "desktop-onboarding-head" : "flex items-center justify-between"}>
         <DialogTitle>{title}</DialogTitle>
-        <Button variant="ghost" size="icon-sm" className={onboarding ? "desktop-onboarding-close" : undefined} aria-label={onboarding ? "暂时退出引导" : "关闭编辑用户"} disabled={disabled} onClick={close}><X size={17} /></Button>
+        {!onboarding && <Button variant="ghost" size="icon-sm" aria-label="关闭编辑用户" disabled={disabled} onClick={close}><X size={17} /></Button>}
         <DialogDescription className={onboarding ? "desktop-onboarding-description" : "sr-only"}>{onboarding ? "为你的创作署名。头像和邮件可以稍后补充。" : "修改本地头像、笔名与邮件，保存后生效"}</DialogDescription>
       </div>
       <div className={onboarding ? "desktop-onboarding-body" : "desktop-profile-body"}>
@@ -113,7 +114,7 @@ export function ProfileEditorDialog({ open = true, title = "编辑用户", submi
         {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
       </div>
       <div className={onboarding ? "desktop-onboarding-footer" : "flex justify-end gap-2"}>
-        {onBack ? <Button variant="ghost" disabled={fieldsDisabled} onClick={back}><ArrowLeft size={16} />返回</Button> : <Button variant="outline" disabled={disabled} onClick={close}>取消</Button>}
+        {onBack ? <Button variant="ghost" disabled={fieldsDisabled} onClick={back}><ArrowLeft size={16} />返回</Button> : onboarding ? null : <Button variant="outline" disabled={disabled} onClick={close}>取消</Button>}
         <Button className={onboarding ? "desktop-onboarding-continue" : undefined} disabled={disabled || choosing} onClick={() => { void save() }}>{saving && <LoaderCircle className="animate-spin" size={15} />}{submitLabel}{onboarding && <ArrowRight size={16} />}</Button>
       </div>
     </DialogContent>

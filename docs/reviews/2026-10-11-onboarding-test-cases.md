@@ -7,14 +7,14 @@
 | ONB-01a | 默认无模型/旧state缺标记自动完整主题入口；已有资料主题模型回填；未完成重开恢复最近步骤；已完成不完整重入 | schema/路由单元、Windows Electron |
 | ONB-01b | bootstrap未ready、启动错误、关闭/迁移/lease/恢复优先；暂停后恢复引导；设置/模板/缺模型入口不能叠加，普通原生菜单不穿透 | 门控单元、实际renderer/Electron |
 | ONB-02a | paper/ink/system即时持久化，继续等待写完；system原值保留，系统主题解析使用既有逻辑；卡片radio方向键单选、选中勾选、无步骤条/多余主题下文 | 事务单元、Electron |
-| ONB-02b | 主题beforeRename失败留页不推进，原文件/主题保持；重试成功；保存期间再次继续/返回/Escape无第二次调用 | 失败注入单元、组件/Electron |
+| ONB-02b | 主题beforeRename失败留页不推进，原文件/主题保持；重试成功；保存期间再次继续/返回无第二次调用，Escape任何时候无效（2026-10-12 修订） | 失败注入单元、组件/Electron |
 | ONB-03a | 1–80字笔名必填，可选合法邮箱；无效聚焦首字段；真实资料继续和进度同CAS；普通设置仍手动保存，取消无变更 | 事务/资料相关测试、Electron |
 | ONB-03b | 头像归一化资源先落盘再引用；CAS失败保留draft可重试；显式取消/返回/卸载清理draft，高优先级只隐藏不清draft，晚到选择不污染；无native picker权限时不把模拟称原生通过 | avatar/service单元、已保存头像回填 |
 | ONB-04a | 新建TEXT一次revision同时模型+text默认+review默认+image-choice；重新返回编辑同ID不重复，changed scope空Key拒绝；选用已有无需Key/不复制；类型错误/停用/删除准确拒绝 | repo事务、Electron |
 | ONB-04b | provider国产先：DeepSeek第一；原生单选，仅现有支持的IMAGE供应商；保存不测试/生成；mode保留，thinking兼容保留/不兼容default | provider/default单元、Electron |
 | ONB-05a | 点击图片与页脚接受均打开IMAGE；图片cursor pointer、hover/focus缩放+楷体提示，无移动光带；reduced-motion无位移；默认状态文案不遮图 | Electron真实图片/样式/键盘 |
 | ONB-05b | 图片询问skip/表单skip完成且保留既有IMAGE/default；IMAGE确认一次CAS模型+image默认+完成；完成写失败不欢迎 | repo事务、Electron |
-| ONB-05c | 欢迎标题/品牌/真实转义笔名/创作邀请；只有开始创作主动作，关闭/Escape进工作区；无摘要/虚构成果，不创建作品 | Electron |
+| ONB-05c | 欢迎标题/品牌/真实转义笔名/创作邀请；只有开始创作主动作，~~关闭/Escape进工作区~~仅“开始创作”进工作区，Escape/点遮罩不退出（2026-10-12 修订，见 ONB-12n）；无摘要/虚构成果，不创建作品 | Electron |
 | ONB-06 | 完成且TEXT数0每renderer会话提示一次；暂不配置、关闭短流程本次不重复；IMAGE-only同样；全停用TEXT不能误当零TEXT；空态、缺TEXT配置动作短流程不主题资料、不自动重发 | 路由/门控单元、Electron |
 | ONB-07 | full相邻返回、恢复；短TEXT无返回；返回图片询问/退出清空未存Key，确认TEXT返回用同ID；窗口关闭重开未完成及完成行为 | 状态单元、Electron进程重启 |
 | ONB-08a | 写前错误、CAS旧revision、加密失败、非法transition/版本/字段均不发布/不改变磁盘；重复点击锁；字段保留和固定安全alert | repo/schema单元、组件 |
@@ -22,7 +22,7 @@
 | ONB-08c | 错sender/frame/session/notready/closing/quitting/迁移/lease/gate拒绝；repo await/头像await/beforeRename中换owner或closing拒绝无发布；请求取消与晚回包不能推进 | 实际handler/service单元、已有configuration取消专项 |
 | ONB-09a | 普通save/remove/update保留onboarding；configuration导出不含progress、导入保持localprogress，不受strict snapshot新增字段影响 | repo/configuration-files专项 |
 | ONB-09b | 既有任务defaultsSnapshot和pending request不变；新任务默认继承变化；save写队列参与close flush，错误阻止假确认；资料/普通模型行为直接兼容 | 相关settings/default/profile/model测试 |
-| ONB-10 | Tab/ShiftTab焦点约束、radio方向键、Escape关闭与busy阻挡、Enter/Space图入口、composition Enter不提交；短native窗口与应用zoom按钮可达，长笔名不溢出；paper/ink；Windows Electron离线真实启动/关重开 | Electron，合成composition单独标记 |
+| ONB-10 | Tab/ShiftTab焦点约束、radio方向键、~~Escape关闭与busy阻挡~~Escape不关闭与busy阻挡（2026-10-12 修订，见 ONB-12 系列）、Enter/Space图入口、composition Enter不提交；短native窗口与应用zoom按钮可达，长笔名不溢出；paper/ink；Windows Electron离线真实启动/关重开 | Electron，合成composition单独标记 |
 | ONB-11 | 模型默认仍无、无平台fallback；确认网络调用数0；产品无HTTP监听、bitmap离线加载；raw Key不在state进度/public/errors/console/screenshots，Key只用合成密码且截图前清空 | 文件/public断言、Electron网络/监听审计 |
 
 ## 执行安排

@@ -9,7 +9,7 @@ import {ModelRepository} from '../../desktop/main/model-repository'
 import {defaultState,settingsSchema,parseContextWindow} from '../../desktop/core/settings'
 import {presetsFor} from '../../desktop/shared/model-catalog'
 import {modelChoices,excludedBuiltinModel} from '../../desktop/shared/builtin-model-catalog'
-import {onboardingStartup} from '../../src/lib/desktop/onboarding-flow'
+import {onboardingStartup,onboardingDialogGuard} from '../../src/lib/desktop/onboarding-flow'
 import * as store from '../../src/stores/desktop'
 import type {OnboardingAction} from '../../desktop/shared/onboarding'
 
@@ -34,7 +34,7 @@ function screen(){
    if(name==='@desktop/core/settings')return{settingsSchema,parseContextWindow}
    if(name==='@desktop/shared/model-catalog')return{presetsFor}
    if(name==='@desktop/shared/builtin-model-catalog')return{modelChoices,excludedBuiltinModel}
-   if(name==='@/lib/desktop/onboarding-flow')return{onboardingStartup}
+   if(name==='@/lib/desktop/onboarding-flow')return{onboardingStartup,onboardingDialogGuard}
    if(name==='@/stores/desktop')return{...store,useDesktopStore:(select:any)=>select(store.useDesktopStore.getState())}
    if(name==='./ModelConfigurationDialog')return load('ModelConfigurationDialog')
    if(name==='./ProfileSettings')return primitives(['ProfileEditorDialog'])

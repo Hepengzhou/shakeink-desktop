@@ -6,6 +6,7 @@ import { defaultState, parseContextWindow, type PublicModel } from "../../deskto
 import * as catalog from "../../desktop/shared/model-catalog"
 import * as builtinCatalog from "../../desktop/shared/builtin-model-catalog"
 import { thinkingEffortOptionsFor } from "../../src/lib/ai/thinking-effort"
+import { onboardingDialogGuard } from "../../src/lib/desktop/onboarding-flow"
 import { saveDesktopModel, removeDesktopModel, updateDesktopSettings, useDesktopStore } from "../../src/stores/desktop"
 import type { Bootstrap, SettingsAction, StateSnapshot } from "../../desktop/shared/ipc"
 
@@ -48,6 +49,7 @@ function component(file: string, exported: string, initial: Props, dependencies:
     if(name==="./ModelChoiceSelect")return primitives(["ModelChoiceSelect"])
     if(name==="@/lib/ai/thinking-effort")return {thinkingEffortOptionsFor}
     if(name==="@/components/chat/provider-logos")return primitives(["ProviderLogo"])
+    if(name==="@/lib/desktop/onboarding-flow")return {onboardingDialogGuard}
     if(name==="@base-ui/react/combobox")return {Combobox:primitives(["Root","Trigger","Portal","Positioner","Popup","Input","Empty","List","Item","ItemIndicator"])}
     throw new Error(`Unexpected component dependency: ${name}`)
   })

@@ -4,6 +4,7 @@ import { test } from "node:test"
 import { createHash } from "node:crypto"
 import { transformSync } from "esbuild"
 import { defaultState, settingsSchema, type Settings } from "../../desktop/core/settings"
+import { onboardingDialogGuard } from "../../src/lib/desktop/onboarding-flow"
 
 // Run the actual profile component with controlled IPC and hooks. These tests
 // do not implement Base UI's focus trap or a native file chooser/decoder.
@@ -36,6 +37,7 @@ function profile(options:{choose?:(session:string)=>Promise<Avatar|null>;save?:(
     if(name==="@/components/ui/button")return primitives(["Button"])
     if(name==="@/components/ui/input")return primitives(["Input"])
     if(name==="@desktop/core/settings")return {settingsSchema}
+    if(name==="@/lib/desktop/onboarding-flow")return {onboardingDialogGuard}
     if(name==="@/stores/desktop")return {
       useDesktopStore:(select:(state:unknown)=>unknown)=>select({bootstrap:state}),
       async updateDesktopSettings(update:(before:Settings)=>Settings){const next=update(structuredClone(state.settings));legacyWrites.push(next);state.settings=next},
