@@ -1,3 +1,65 @@
+/* Approved notification surfaces are local to the final Sonner theme, including
+   an explicit caller theme. Keep global theme and other overlay tokens intact. */
+.desktop-toaster[data-sonner-toaster][data-sonner-theme="light"] {
+  --desktop-toast-surface:#fcf8ee; --desktop-toast-text:#2b251b; --desktop-toast-description:#74664f;
+  --desktop-toast-border:#d8cba6; --desktop-toast-shadow:0 8px 24px -8px rgba(96,74,38,.18);
+  --desktop-toast-button:#f2ecdd; --desktop-toast-button-hover:#e9dfc8; --desktop-toast-button-border:#d8cba6;
+  --desktop-toast-info:#356caf; --desktop-toast-info-surface:#e8eff8;
+  --desktop-toast-success:#397653; --desktop-toast-success-surface:#e7f0e7;
+  --desktop-toast-warning:#a36d18; --desktop-toast-warning-surface:#f5ead4;
+  --desktop-toast-error:#b84b42; --desktop-toast-error-surface:#f7e4df;
+  --desktop-toast-loading:#68778a; --desktop-toast-loading-surface:#eceef1;
+}
+.desktop-toaster[data-sonner-toaster][data-sonner-theme="dark"] {
+  --desktop-toast-surface:#211c19; --desktop-toast-text:#ece7e1; --desktop-toast-description:#b5a99f;
+  --desktop-toast-border:#4b4039; --desktop-toast-shadow:0 8px 24px -8px rgba(0,0,0,.6);
+  --desktop-toast-button:#322b25; --desktop-toast-button-hover:#42382f; --desktop-toast-button-border:#55483f;
+  --desktop-toast-info:#8ab6f4; --desktop-toast-info-surface:#233449;
+  --desktop-toast-success:#89c59d; --desktop-toast-success-surface:#24392c;
+  --desktop-toast-warning:#edc070; --desktop-toast-warning-surface:#40331f;
+  --desktop-toast-error:#ef9992; --desktop-toast-error-surface:#432a28;
+  --desktop-toast-loading:#b0bbc9; --desktop-toast-loading-surface:#2d323b;
+}
+.desktop-toaster[data-sonner-toaster] { font-family:var(--font-ui); }
+.desktop-toaster[data-sonner-toaster][data-x-position="center"][data-y-position="top"] {
+  width:var(--width); max-width:calc(100vw - var(--desktop-toast-left) - var(--desktop-toast-right)); left:50%; right:auto; transform:translateX(-50%); top:var(--desktop-toast-top);
+}
+@media(max-width:600px) {
+  .desktop-toaster[data-sonner-toaster][data-x-position="center"][data-y-position="top"] {
+    top:var(--desktop-toast-mobile-top); max-width:calc(100vw - var(--desktop-toast-mobile-left) - var(--desktop-toast-mobile-right));
+  }
+}
+.desktop-toaster[data-sonner-toaster] .cn-toast[data-sonner-toast][data-styled="true"] {
+  --desktop-toast-tone:var(--desktop-toast-description); --desktop-toast-icon-surface:var(--desktop-toast-button);
+  background:var(--desktop-toast-surface); background-image:none; color:var(--desktop-toast-text); border:1px solid var(--desktop-toast-border);
+  border-radius:12px; box-shadow:var(--desktop-toast-shadow); padding:14px 16px; gap:12px; flex-wrap:wrap; align-items:center;
+  font-size:14px; line-height:22px; backdrop-filter:none; -webkit-backdrop-filter:none; -webkit-app-region:no-drag; app-region:no-drag;
+}
+.desktop-toaster[data-sonner-toaster][data-x-position="center"][data-y-position="top"] .cn-toast[data-sonner-toast][data-styled="true"] { width:100%; }
+.desktop-toaster[data-sonner-toaster] .cn-toast[data-sonner-toast][data-styled="true"] [data-content] { min-width:0; flex:1 1 150px; overflow-wrap:anywhere; }
+.desktop-toaster[data-sonner-toaster] .cn-toast[data-sonner-toast][data-styled="true"] [data-title] { font-weight:500; line-height:22px; }
+.desktop-toaster[data-sonner-toaster] .cn-toast[data-sonner-toast][data-styled="true"] [data-description] { color:var(--desktop-toast-description); font-size:13px; line-height:20px; margin-top:4px; }
+.desktop-toaster[data-sonner-toaster] .cn-toast[data-sonner-toast][data-styled="true"] [data-icon] {
+  height:32px; width:32px; flex:0 0 32px; border-radius:9px; margin:0; align-self:flex-start; display:flex; align-items:center; justify-content:center;
+  color:var(--desktop-toast-tone); background:var(--desktop-toast-icon-surface);
+}
+.desktop-toaster[data-sonner-toaster] .cn-toast[data-sonner-toast][data-styled="true"] [data-icon] svg { width:20px; height:20px; margin:0; }
+.desktop-toaster[data-sonner-toaster] .cn-toast[data-sonner-toast][data-styled="true"][data-type="info"] { --desktop-toast-tone:var(--desktop-toast-info); --desktop-toast-icon-surface:var(--desktop-toast-info-surface); }
+.desktop-toaster[data-sonner-toaster] .cn-toast[data-sonner-toast][data-styled="true"][data-type="success"] { --desktop-toast-tone:var(--desktop-toast-success); --desktop-toast-icon-surface:var(--desktop-toast-success-surface); }
+.desktop-toaster[data-sonner-toaster] .cn-toast[data-sonner-toast][data-styled="true"][data-type="warning"] { --desktop-toast-tone:var(--desktop-toast-warning); --desktop-toast-icon-surface:var(--desktop-toast-warning-surface); }
+.desktop-toaster[data-sonner-toaster] .cn-toast[data-sonner-toast][data-styled="true"][data-type="error"] { --desktop-toast-tone:var(--desktop-toast-error); --desktop-toast-icon-surface:var(--desktop-toast-error-surface); }
+.desktop-toaster[data-sonner-toaster] .cn-toast[data-sonner-toast][data-styled="true"][data-type="loading"] { --desktop-toast-tone:var(--desktop-toast-loading); --desktop-toast-icon-surface:var(--desktop-toast-loading-surface); }
+.desktop-toaster[data-sonner-toaster] .cn-toast[data-sonner-toast][data-styled="true"] [data-button] {
+  height:auto; min-height:32px; max-width:100%; flex-shrink:0; margin:0 0 0 auto; padding:5px 11px; border:1px solid var(--desktop-toast-button-border); border-radius:7px;
+  background:var(--desktop-toast-button); color:var(--desktop-toast-text); font-family:inherit; font-size:13px; font-weight:500; line-height:20px; white-space:normal; overflow-wrap:anywhere;
+}
+.desktop-toaster[data-sonner-toaster] .cn-toast[data-sonner-toast][data-styled="true"] [data-button]:hover { background:var(--desktop-toast-button-hover); }
+.desktop-toaster[data-sonner-toaster] .cn-toast[data-sonner-toast][data-styled="true"]:focus-visible,
+.desktop-toaster[data-sonner-toaster] .cn-toast[data-sonner-toast][data-styled="true"] [data-button]:focus-visible { outline:2px solid var(--desktop-toast-info); outline-offset:3px; }
+.desktop-toast-spin { animation:desktop-toast-spin 1s linear infinite; }
+@keyframes desktop-toast-spin { to { transform:rotate(360deg); } }
+@media(prefers-reduced-motion:reduce) { .desktop-toaster .desktop-toast-spin { animation:none; } }
+
 /* Desktop additions use the original Web semantic tokens. */
 :root, .paper {
   --desktop-dialog-overlay:rgba(0,0,0,.10);

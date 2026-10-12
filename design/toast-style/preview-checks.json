@@ -1,0 +1,1100 @@
+{
+  "date": "2026-10-12",
+  "revision": "v1",
+  "scope": "Local HTML design fixture only; not product tests or platform acceptance",
+  "productImplementation": false,
+  "productTestsExecuted": false,
+  "fullTestsExecuted": false,
+  "currentSourceImported": true,
+  "sourceHashes": {
+    "src/components/ui/sonner.tsx": "a87b8badbf8196efa6648362face66527e143ad54e778d04b1d1e159b8609ec2",
+    "src/app/providers.tsx": "1bd37645d72c757e7bab8a47699259f610ca7e6a8d7949d47a6fa8ba786abc2f",
+    "src/app/globals.css": "c008afae995c0740d9db6f2111ae4687d97829c7db823f66316786e5d51f83fc",
+    "src/app/desktop.css": "14f263f5fd1eaea99285232562dded23b2778c08905f59032c1d921b8a76bee4",
+    "src/components/desktop/DesktopApp.tsx": "8e51d4d1ec06d93f62288a94133d8a4fe19e810e1c3ff0cd1a0cac8a483f4f53"
+  },
+  "checks": [
+    {
+      "check": "current source reproduces invalid theme and transparent info background",
+      "current": {
+        "type": "info",
+        "theme": "paper",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(43, 37, 27)",
+        "radius": "6px",
+        "opacity": "1",
+        "filter": "none",
+        "rect": {
+          "x": 246.25,
+          "y": 427.546875,
+          "width": 356,
+          "height": 58,
+          "top": 427.546875,
+          "right": 602.25,
+          "bottom": 485.546875,
+          "left": 246.25
+        },
+        "host": {
+          "x": 129,
+          "y": 367.546875,
+          "width": 590.5,
+          "height": 280,
+          "top": 367.546875,
+          "right": 719.5,
+          "bottom": 647.546875,
+          "left": 129
+        },
+        "icon": {
+          "color": "rgb(43, 37, 27)",
+          "background": "rgba(0, 0, 0, 0)",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-info size-4\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><path d=\"M12 16v-4\"></path><path d=\"M12 8h.01\"></path></svg>"
+        },
+        "button": {
+          "color": "rgb(252, 248, 238)",
+          "background": "rgb(43, 37, 27)",
+          "rect": {
+            "x": 521.25,
+            "y": 444.546875,
+            "width": 64,
+            "height": 24,
+            "top": 444.546875,
+            "right": 585.25,
+            "bottom": 468.546875,
+            "left": 521.25
+          }
+        },
+        "description": null,
+        "overflow": false
+      }
+    },
+    {
+      "check": "short message",
+      "theme": "paper",
+      "type": "info",
+      "state": {
+        "type": "info",
+        "theme": "light",
+        "background": "rgb(252, 248, 238)",
+        "color": "rgb(43, 37, 27)",
+        "radius": "12px",
+        "opacity": "1",
+        "filter": "none",
+        "rect": {
+          "x": 805.75,
+          "y": 427.546875,
+          "width": 420,
+          "height": 62,
+          "top": 427.546875,
+          "right": 1225.75,
+          "bottom": 489.546875,
+          "left": 805.75
+        },
+        "host": {
+          "x": 720.5,
+          "y": 367.546875,
+          "width": 590.5,
+          "height": 280,
+          "top": 367.546875,
+          "right": 1311,
+          "bottom": 647.546875,
+          "left": 720.5
+        },
+        "icon": {
+          "color": "rgb(53, 108, 175)",
+          "background": "rgb(232, 239, 248)",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-info\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><path d=\"M12 16v-4\"></path><path d=\"M12 8h.01\"></path></svg>"
+        },
+        "button": null,
+        "description": null,
+        "overflow": false
+      }
+    },
+    {
+      "check": "short message",
+      "theme": "paper",
+      "type": "success",
+      "state": {
+        "type": "success",
+        "theme": "light",
+        "background": "rgb(252, 248, 238)",
+        "color": "rgb(43, 37, 27)",
+        "radius": "12px",
+        "opacity": "1",
+        "filter": "none",
+        "rect": {
+          "x": 805.75,
+          "y": 427.546875,
+          "width": 420,
+          "height": 62,
+          "top": 427.546875,
+          "right": 1225.75,
+          "bottom": 489.546875,
+          "left": 805.75
+        },
+        "host": {
+          "x": 720.5,
+          "y": 367.546875,
+          "width": 590.5,
+          "height": 280,
+          "top": 367.546875,
+          "right": 1311,
+          "bottom": 647.546875,
+          "left": 720.5
+        },
+        "icon": {
+          "color": "rgb(57, 118, 83)",
+          "background": "rgb(231, 240, 231)",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-circle-check lucide-check-circle-2\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><path d=\"m16 9-5.5 5.5L8 12\"></path></svg>"
+        },
+        "button": null,
+        "description": null,
+        "overflow": false
+      }
+    },
+    {
+      "check": "short message",
+      "theme": "paper",
+      "type": "warning",
+      "state": {
+        "type": "warning",
+        "theme": "light",
+        "background": "rgb(252, 248, 238)",
+        "color": "rgb(43, 37, 27)",
+        "radius": "12px",
+        "opacity": "1",
+        "filter": "none",
+        "rect": {
+          "x": 805.75,
+          "y": 427.546875,
+          "width": 420,
+          "height": 62,
+          "top": 427.546875,
+          "right": 1225.75,
+          "bottom": 489.546875,
+          "left": 805.75
+        },
+        "host": {
+          "x": 720.5,
+          "y": 367.546875,
+          "width": 590.5,
+          "height": 280,
+          "top": 367.546875,
+          "right": 1311,
+          "bottom": 647.546875,
+          "left": 720.5
+        },
+        "icon": {
+          "color": "rgb(163, 109, 24)",
+          "background": "rgb(245, 234, 212)",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-triangle-alert lucide-alert-triangle\" aria-hidden=\"true\"><path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\"></path><path d=\"M12 9v4\"></path><path d=\"M12 17h.01\"></path></svg>"
+        },
+        "button": null,
+        "description": null,
+        "overflow": false
+      }
+    },
+    {
+      "check": "short message",
+      "theme": "paper",
+      "type": "error",
+      "state": {
+        "type": "error",
+        "theme": "light",
+        "background": "rgb(252, 248, 238)",
+        "color": "rgb(43, 37, 27)",
+        "radius": "12px",
+        "opacity": "1",
+        "filter": "none",
+        "rect": {
+          "x": 805.75,
+          "y": 427.546875,
+          "width": 420,
+          "height": 62,
+          "top": 427.546875,
+          "right": 1225.75,
+          "bottom": 489.546875,
+          "left": 805.75
+        },
+        "host": {
+          "x": 720.5,
+          "y": 367.546875,
+          "width": 590.5,
+          "height": 280,
+          "top": 367.546875,
+          "right": 1311,
+          "bottom": 647.546875,
+          "left": 720.5
+        },
+        "icon": {
+          "color": "rgb(184, 75, 66)",
+          "background": "rgb(247, 228, 223)",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-octagon-x lucide-x-octagon\" aria-hidden=\"true\"><path d=\"m15 9-6 6\"></path><path d=\"M2.586 16.726A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2h6.624a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586z\"></path><path d=\"m9 9 6 6\"></path></svg>"
+        },
+        "button": null,
+        "description": null,
+        "overflow": false
+      }
+    },
+    {
+      "check": "short message",
+      "theme": "paper",
+      "type": "loading",
+      "state": {
+        "type": "loading",
+        "theme": "light",
+        "background": "rgb(252, 248, 238)",
+        "color": "rgb(43, 37, 27)",
+        "radius": "12px",
+        "opacity": "1",
+        "filter": "none",
+        "rect": {
+          "x": 805.75,
+          "y": 427.546875,
+          "width": 420,
+          "height": 62,
+          "top": 427.546875,
+          "right": 1225.75,
+          "bottom": 489.546875,
+          "left": 805.75
+        },
+        "host": {
+          "x": 720.5,
+          "y": 367.546875,
+          "width": 590.5,
+          "height": 280,
+          "top": 367.546875,
+          "right": 1311,
+          "bottom": 647.546875,
+          "left": 720.5
+        },
+        "icon": {
+          "color": "rgb(104, 119, 138)",
+          "background": "rgb(236, 238, 241)",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-loader-circle lucide-loader-2 proposal-spin\" aria-hidden=\"true\"><path d=\"M21 12a9 9 0 1 1-6.219-8.56\"></path></svg>"
+        },
+        "button": null,
+        "description": null,
+        "overflow": false
+      }
+    },
+    {
+      "check": "short message",
+      "theme": "paper",
+      "type": "normal",
+      "state": {
+        "type": "normal",
+        "theme": "light",
+        "background": "rgb(252, 248, 238)",
+        "color": "rgb(43, 37, 27)",
+        "radius": "12px",
+        "opacity": "1",
+        "filter": "none",
+        "rect": {
+          "x": 805.75,
+          "y": 427.546875,
+          "width": 420,
+          "height": 52,
+          "top": 427.546875,
+          "right": 1225.75,
+          "bottom": 479.546875,
+          "left": 805.75
+        },
+        "host": {
+          "x": 720.5,
+          "y": 367.546875,
+          "width": 590.5,
+          "height": 280,
+          "top": 367.546875,
+          "right": 1311,
+          "bottom": 647.546875,
+          "left": 720.5
+        },
+        "icon": null,
+        "button": null,
+        "description": null,
+        "overflow": false
+      }
+    },
+    {
+      "check": "message with action and focus/hover/callback",
+      "theme": "paper",
+      "scene": "action",
+      "state": {
+        "type": "info",
+        "theme": "light",
+        "background": "rgb(252, 248, 238)",
+        "color": "rgb(43, 37, 27)",
+        "radius": "12px",
+        "opacity": "1",
+        "filter": "none",
+        "rect": {
+          "x": 805.75,
+          "y": 427.546875,
+          "width": 420,
+          "height": 62,
+          "top": 427.546875,
+          "right": 1225.75,
+          "bottom": 489.546875,
+          "left": 805.75
+        },
+        "host": {
+          "x": 720.5,
+          "y": 367.546875,
+          "width": 590.5,
+          "height": 280,
+          "top": 367.546875,
+          "right": 1311,
+          "bottom": 647.546875,
+          "left": 720.5
+        },
+        "icon": {
+          "color": "rgb(53, 108, 175)",
+          "background": "rgb(232, 239, 248)",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-info\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><path d=\"M12 16v-4\"></path><path d=\"M12 8h.01\"></path></svg>"
+        },
+        "button": {
+          "color": "rgb(43, 37, 27)",
+          "background": "rgb(242, 236, 221)",
+          "rect": {
+            "x": 1132.75,
+            "y": 442.546875,
+            "width": 76,
+            "height": 32,
+            "top": 442.546875,
+            "right": 1208.75,
+            "bottom": 474.546875,
+            "left": 1132.75
+          }
+        },
+        "description": null,
+        "overflow": false
+      },
+      "hover": "rgb(233, 223, 200)"
+    },
+    {
+      "check": "message with action and focus/hover/callback",
+      "theme": "paper",
+      "scene": "long",
+      "state": {
+        "type": "info",
+        "theme": "light",
+        "background": "rgb(252, 248, 238)",
+        "color": "rgb(43, 37, 27)",
+        "radius": "12px",
+        "opacity": "1",
+        "filter": "none",
+        "rect": {
+          "x": 805.75,
+          "y": 427.546875,
+          "width": 420,
+          "height": 142,
+          "top": 427.546875,
+          "right": 1225.75,
+          "bottom": 569.546875,
+          "left": 805.75
+        },
+        "host": {
+          "x": 720.5,
+          "y": 367.546875,
+          "width": 590.5,
+          "height": 280,
+          "top": 367.546875,
+          "right": 1311,
+          "bottom": 647.546875,
+          "left": 720.5
+        },
+        "icon": {
+          "color": "rgb(53, 108, 175)",
+          "background": "rgb(232, 239, 248)",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-info\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><path d=\"M12 16v-4\"></path><path d=\"M12 8h.01\"></path></svg>"
+        },
+        "button": {
+          "color": "rgb(43, 37, 27)",
+          "background": "rgb(242, 236, 221)",
+          "rect": {
+            "x": 1132.75,
+            "y": 482.546875,
+            "width": 76,
+            "height": 32,
+            "top": 482.546875,
+            "right": 1208.75,
+            "bottom": 514.546875,
+            "left": 1132.75
+          }
+        },
+        "description": {
+          "color": "rgb(116, 102, 79)"
+        },
+        "overflow": false
+      },
+      "hover": "rgb(233, 223, 200)"
+    },
+    {
+      "check": "same ID loading changes to success",
+      "theme": "paper"
+    },
+    {
+      "check": "three messages expand on hover",
+      "theme": "paper"
+    },
+    {
+      "check": "short message",
+      "theme": "ink",
+      "type": "info",
+      "state": {
+        "type": "info",
+        "theme": "dark",
+        "background": "rgb(33, 28, 25)",
+        "color": "rgb(236, 231, 225)",
+        "radius": "12px",
+        "opacity": "1",
+        "filter": "none",
+        "rect": {
+          "x": 805.75,
+          "y": 427.546875,
+          "width": 420,
+          "height": 62,
+          "top": 427.546875,
+          "right": 1225.75,
+          "bottom": 489.546875,
+          "left": 805.75
+        },
+        "host": {
+          "x": 720.5,
+          "y": 367.546875,
+          "width": 590.5,
+          "height": 280,
+          "top": 367.546875,
+          "right": 1311,
+          "bottom": 647.546875,
+          "left": 720.5
+        },
+        "icon": {
+          "color": "rgb(138, 182, 244)",
+          "background": "rgb(35, 52, 73)",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-info\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><path d=\"M12 16v-4\"></path><path d=\"M12 8h.01\"></path></svg>"
+        },
+        "button": null,
+        "description": null,
+        "overflow": false
+      }
+    },
+    {
+      "check": "short message",
+      "theme": "ink",
+      "type": "success",
+      "state": {
+        "type": "success",
+        "theme": "dark",
+        "background": "rgb(33, 28, 25)",
+        "color": "rgb(236, 231, 225)",
+        "radius": "12px",
+        "opacity": "1",
+        "filter": "none",
+        "rect": {
+          "x": 805.75,
+          "y": 427.546875,
+          "width": 420,
+          "height": 62,
+          "top": 427.546875,
+          "right": 1225.75,
+          "bottom": 489.546875,
+          "left": 805.75
+        },
+        "host": {
+          "x": 720.5,
+          "y": 367.546875,
+          "width": 590.5,
+          "height": 280,
+          "top": 367.546875,
+          "right": 1311,
+          "bottom": 647.546875,
+          "left": 720.5
+        },
+        "icon": {
+          "color": "rgb(137, 197, 157)",
+          "background": "rgb(36, 57, 44)",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-circle-check lucide-check-circle-2\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><path d=\"m16 9-5.5 5.5L8 12\"></path></svg>"
+        },
+        "button": null,
+        "description": null,
+        "overflow": false
+      }
+    },
+    {
+      "check": "short message",
+      "theme": "ink",
+      "type": "warning",
+      "state": {
+        "type": "warning",
+        "theme": "dark",
+        "background": "rgb(33, 28, 25)",
+        "color": "rgb(236, 231, 225)",
+        "radius": "12px",
+        "opacity": "1",
+        "filter": "none",
+        "rect": {
+          "x": 805.75,
+          "y": 427.546875,
+          "width": 420,
+          "height": 62,
+          "top": 427.546875,
+          "right": 1225.75,
+          "bottom": 489.546875,
+          "left": 805.75
+        },
+        "host": {
+          "x": 720.5,
+          "y": 367.546875,
+          "width": 590.5,
+          "height": 280,
+          "top": 367.546875,
+          "right": 1311,
+          "bottom": 647.546875,
+          "left": 720.5
+        },
+        "icon": {
+          "color": "rgb(237, 192, 112)",
+          "background": "rgb(64, 51, 31)",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-triangle-alert lucide-alert-triangle\" aria-hidden=\"true\"><path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\"></path><path d=\"M12 9v4\"></path><path d=\"M12 17h.01\"></path></svg>"
+        },
+        "button": null,
+        "description": null,
+        "overflow": false
+      }
+    },
+    {
+      "check": "short message",
+      "theme": "ink",
+      "type": "error",
+      "state": {
+        "type": "error",
+        "theme": "dark",
+        "background": "rgb(33, 28, 25)",
+        "color": "rgb(236, 231, 225)",
+        "radius": "12px",
+        "opacity": "1",
+        "filter": "none",
+        "rect": {
+          "x": 805.75,
+          "y": 427.546875,
+          "width": 420,
+          "height": 62,
+          "top": 427.546875,
+          "right": 1225.75,
+          "bottom": 489.546875,
+          "left": 805.75
+        },
+        "host": {
+          "x": 720.5,
+          "y": 367.546875,
+          "width": 590.5,
+          "height": 280,
+          "top": 367.546875,
+          "right": 1311,
+          "bottom": 647.546875,
+          "left": 720.5
+        },
+        "icon": {
+          "color": "rgb(239, 153, 146)",
+          "background": "rgb(67, 42, 40)",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-octagon-x lucide-x-octagon\" aria-hidden=\"true\"><path d=\"m15 9-6 6\"></path><path d=\"M2.586 16.726A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2h6.624a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586z\"></path><path d=\"m9 9 6 6\"></path></svg>"
+        },
+        "button": null,
+        "description": null,
+        "overflow": false
+      }
+    },
+    {
+      "check": "short message",
+      "theme": "ink",
+      "type": "loading",
+      "state": {
+        "type": "loading",
+        "theme": "dark",
+        "background": "rgb(33, 28, 25)",
+        "color": "rgb(236, 231, 225)",
+        "radius": "12px",
+        "opacity": "1",
+        "filter": "none",
+        "rect": {
+          "x": 805.75,
+          "y": 427.546875,
+          "width": 420,
+          "height": 62,
+          "top": 427.546875,
+          "right": 1225.75,
+          "bottom": 489.546875,
+          "left": 805.75
+        },
+        "host": {
+          "x": 720.5,
+          "y": 367.546875,
+          "width": 590.5,
+          "height": 280,
+          "top": 367.546875,
+          "right": 1311,
+          "bottom": 647.546875,
+          "left": 720.5
+        },
+        "icon": {
+          "color": "rgb(176, 187, 201)",
+          "background": "rgb(45, 50, 59)",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-loader-circle lucide-loader-2 proposal-spin\" aria-hidden=\"true\"><path d=\"M21 12a9 9 0 1 1-6.219-8.56\"></path></svg>"
+        },
+        "button": null,
+        "description": null,
+        "overflow": false
+      }
+    },
+    {
+      "check": "short message",
+      "theme": "ink",
+      "type": "normal",
+      "state": {
+        "type": "normal",
+        "theme": "dark",
+        "background": "rgb(33, 28, 25)",
+        "color": "rgb(236, 231, 225)",
+        "radius": "12px",
+        "opacity": "1",
+        "filter": "none",
+        "rect": {
+          "x": 805.75,
+          "y": 427.546875,
+          "width": 420,
+          "height": 52,
+          "top": 427.546875,
+          "right": 1225.75,
+          "bottom": 479.546875,
+          "left": 805.75
+        },
+        "host": {
+          "x": 720.5,
+          "y": 367.546875,
+          "width": 590.5,
+          "height": 280,
+          "top": 367.546875,
+          "right": 1311,
+          "bottom": 647.546875,
+          "left": 720.5
+        },
+        "icon": null,
+        "button": null,
+        "description": null,
+        "overflow": false
+      }
+    },
+    {
+      "check": "message with action and focus/hover/callback",
+      "theme": "ink",
+      "scene": "action",
+      "state": {
+        "type": "info",
+        "theme": "dark",
+        "background": "rgb(33, 28, 25)",
+        "color": "rgb(236, 231, 225)",
+        "radius": "12px",
+        "opacity": "1",
+        "filter": "none",
+        "rect": {
+          "x": 805.75,
+          "y": 427.546875,
+          "width": 420,
+          "height": 62,
+          "top": 427.546875,
+          "right": 1225.75,
+          "bottom": 489.546875,
+          "left": 805.75
+        },
+        "host": {
+          "x": 720.5,
+          "y": 367.546875,
+          "width": 590.5,
+          "height": 280,
+          "top": 367.546875,
+          "right": 1311,
+          "bottom": 647.546875,
+          "left": 720.5
+        },
+        "icon": {
+          "color": "rgb(138, 182, 244)",
+          "background": "rgb(35, 52, 73)",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-info\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><path d=\"M12 16v-4\"></path><path d=\"M12 8h.01\"></path></svg>"
+        },
+        "button": {
+          "color": "rgb(236, 231, 225)",
+          "background": "rgb(50, 43, 37)",
+          "rect": {
+            "x": 1132.75,
+            "y": 442.546875,
+            "width": 76,
+            "height": 32,
+            "top": 442.546875,
+            "right": 1208.75,
+            "bottom": 474.546875,
+            "left": 1132.75
+          }
+        },
+        "description": null,
+        "overflow": false
+      },
+      "hover": "rgb(66, 56, 47)"
+    },
+    {
+      "check": "message with action and focus/hover/callback",
+      "theme": "ink",
+      "scene": "long",
+      "state": {
+        "type": "info",
+        "theme": "dark",
+        "background": "rgb(33, 28, 25)",
+        "color": "rgb(236, 231, 225)",
+        "radius": "12px",
+        "opacity": "1",
+        "filter": "none",
+        "rect": {
+          "x": 805.75,
+          "y": 427.546875,
+          "width": 420,
+          "height": 142,
+          "top": 427.546875,
+          "right": 1225.75,
+          "bottom": 569.546875,
+          "left": 805.75
+        },
+        "host": {
+          "x": 720.5,
+          "y": 367.546875,
+          "width": 590.5,
+          "height": 280,
+          "top": 367.546875,
+          "right": 1311,
+          "bottom": 647.546875,
+          "left": 720.5
+        },
+        "icon": {
+          "color": "rgb(138, 182, 244)",
+          "background": "rgb(35, 52, 73)",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-info\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><path d=\"M12 16v-4\"></path><path d=\"M12 8h.01\"></path></svg>"
+        },
+        "button": {
+          "color": "rgb(236, 231, 225)",
+          "background": "rgb(50, 43, 37)",
+          "rect": {
+            "x": 1132.75,
+            "y": 482.546875,
+            "width": 76,
+            "height": 32,
+            "top": 482.546875,
+            "right": 1208.75,
+            "bottom": 514.546875,
+            "left": 1132.75
+          }
+        },
+        "description": {
+          "color": "rgb(181, 169, 159)"
+        },
+        "overflow": false
+      },
+      "hover": "rgb(66, 56, 47)"
+    },
+    {
+      "check": "same ID loading changes to success",
+      "theme": "ink"
+    },
+    {
+      "check": "three messages expand on hover",
+      "theme": "ink"
+    },
+    {
+      "check": "narrow viewport long message",
+      "width": 601,
+      "state": {
+        "type": "info",
+        "theme": "dark",
+        "background": "rgb(33, 28, 25)",
+        "color": "rgb(236, 231, 225)",
+        "radius": "12px",
+        "opacity": "1",
+        "filter": "none",
+        "rect": {
+          "x": 90.5,
+          "y": 776.109375,
+          "width": 420,
+          "height": 142,
+          "top": 776.109375,
+          "right": 510.5,
+          "bottom": 918.109375,
+          "left": 90.5
+        },
+        "host": {
+          "x": 21,
+          "y": 716.109375,
+          "width": 559,
+          "height": 250,
+          "top": 716.109375,
+          "right": 580,
+          "bottom": 966.109375,
+          "left": 21
+        },
+        "icon": {
+          "color": "rgb(138, 182, 244)",
+          "background": "rgb(35, 52, 73)",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-info\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><path d=\"M12 16v-4\"></path><path d=\"M12 8h.01\"></path></svg>"
+        },
+        "button": {
+          "color": "rgb(236, 231, 225)",
+          "background": "rgb(50, 43, 37)",
+          "rect": {
+            "x": 417.5,
+            "y": 831.109375,
+            "width": 76,
+            "height": 32,
+            "top": 831.109375,
+            "right": 493.5,
+            "bottom": 863.109375,
+            "left": 417.5
+          }
+        },
+        "description": {
+          "color": "rgb(181, 169, 159)"
+        },
+        "overflow": false
+      }
+    },
+    {
+      "check": "narrow viewport long message",
+      "width": 600,
+      "state": {
+        "type": "info",
+        "theme": "dark",
+        "background": "rgb(33, 28, 25)",
+        "color": "rgb(236, 231, 225)",
+        "radius": "12px",
+        "opacity": "1",
+        "filter": "none",
+        "rect": {
+          "x": 90,
+          "y": 776.109375,
+          "width": 420,
+          "height": 142,
+          "top": 776.109375,
+          "right": 510,
+          "bottom": 918.109375,
+          "left": 90
+        },
+        "host": {
+          "x": 21,
+          "y": 716.109375,
+          "width": 558,
+          "height": 250,
+          "top": 716.109375,
+          "right": 579,
+          "bottom": 966.109375,
+          "left": 21
+        },
+        "icon": {
+          "color": "rgb(138, 182, 244)",
+          "background": "rgb(35, 52, 73)",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-info\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><path d=\"M12 16v-4\"></path><path d=\"M12 8h.01\"></path></svg>"
+        },
+        "button": {
+          "color": "rgb(236, 231, 225)",
+          "background": "rgb(50, 43, 37)",
+          "rect": {
+            "x": 417,
+            "y": 831.109375,
+            "width": 76,
+            "height": 32,
+            "top": 831.109375,
+            "right": 493,
+            "bottom": 863.109375,
+            "left": 417
+          }
+        },
+        "description": {
+          "color": "rgb(181, 169, 159)"
+        },
+        "overflow": false
+      }
+    },
+    {
+      "check": "narrow viewport long message",
+      "width": 560,
+      "state": {
+        "type": "info",
+        "theme": "dark",
+        "background": "rgb(33, 28, 25)",
+        "color": "rgb(236, 231, 225)",
+        "radius": "12px",
+        "opacity": "1",
+        "filter": "none",
+        "rect": {
+          "x": 70,
+          "y": 776.109375,
+          "width": 420,
+          "height": 142,
+          "top": 776.109375,
+          "right": 490,
+          "bottom": 918.109375,
+          "left": 70
+        },
+        "host": {
+          "x": 21,
+          "y": 716.109375,
+          "width": 518,
+          "height": 250,
+          "top": 716.109375,
+          "right": 539,
+          "bottom": 966.109375,
+          "left": 21
+        },
+        "icon": {
+          "color": "rgb(138, 182, 244)",
+          "background": "rgb(35, 52, 73)",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-info\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><path d=\"M12 16v-4\"></path><path d=\"M12 8h.01\"></path></svg>"
+        },
+        "button": {
+          "color": "rgb(236, 231, 225)",
+          "background": "rgb(50, 43, 37)",
+          "rect": {
+            "x": 397,
+            "y": 831.109375,
+            "width": 76,
+            "height": 32,
+            "top": 831.109375,
+            "right": 473,
+            "bottom": 863.109375,
+            "left": 397
+          }
+        },
+        "description": {
+          "color": "rgb(181, 169, 159)"
+        },
+        "overflow": false
+      }
+    },
+    {
+      "check": "narrow viewport long message",
+      "width": 320,
+      "state": {
+        "type": "info",
+        "theme": "dark",
+        "background": "rgb(33, 28, 25)",
+        "color": "rgb(236, 231, 225)",
+        "radius": "12px",
+        "opacity": "1",
+        "filter": "none",
+        "rect": {
+          "x": 29,
+          "y": 858.109375,
+          "width": 262,
+          "height": 186,
+          "top": 858.109375,
+          "right": 291,
+          "bottom": 1044.109375,
+          "left": 29
+        },
+        "host": {
+          "x": 13,
+          "y": 798.109375,
+          "width": 294,
+          "height": 250,
+          "top": 798.109375,
+          "right": 307,
+          "bottom": 1048.109375,
+          "left": 13
+        },
+        "icon": {
+          "color": "rgb(138, 182, 244)",
+          "background": "rgb(35, 52, 73)",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-info\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><path d=\"M12 16v-4\"></path><path d=\"M12 8h.01\"></path></svg>"
+        },
+        "button": {
+          "color": "rgb(236, 231, 225)",
+          "background": "rgb(50, 43, 37)",
+          "rect": {
+            "x": 198,
+            "y": 997.109375,
+            "width": 76,
+            "height": 32,
+            "top": 997.109375,
+            "right": 274,
+            "bottom": 1029.109375,
+            "left": 198
+          }
+        },
+        "description": {
+          "color": "rgb(181, 169, 159)"
+        },
+        "overflow": false
+      }
+    },
+    {
+      "check": "narrow viewport long message",
+      "width": 390,
+      "state": {
+        "type": "info",
+        "theme": "dark",
+        "background": "rgb(33, 28, 25)",
+        "color": "rgb(236, 231, 225)",
+        "radius": "12px",
+        "opacity": "1",
+        "filter": "none",
+        "rect": {
+          "x": 29,
+          "y": 820.515625,
+          "width": 332,
+          "height": 164,
+          "top": 820.515625,
+          "right": 361,
+          "bottom": 984.515625,
+          "left": 29
+        },
+        "host": {
+          "x": 13,
+          "y": 760.515625,
+          "width": 364,
+          "height": 250,
+          "top": 760.515625,
+          "right": 377,
+          "bottom": 1010.515625,
+          "left": 13
+        },
+        "icon": {
+          "color": "rgb(138, 182, 244)",
+          "background": "rgb(35, 52, 73)",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-info\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><path d=\"M12 16v-4\"></path><path d=\"M12 8h.01\"></path></svg>"
+        },
+        "button": {
+          "color": "rgb(236, 231, 225)",
+          "background": "rgb(50, 43, 37)",
+          "rect": {
+            "x": 268,
+            "y": 886.515625,
+            "width": 76,
+            "height": 32,
+            "top": 886.515625,
+            "right": 344,
+            "bottom": 918.515625,
+            "left": 268
+          }
+        },
+        "description": {
+          "color": "rgb(181, 169, 159)"
+        },
+        "overflow": false
+      }
+    },
+    {
+      "check": "reduced motion disables proposed loader spin"
+    },
+    {
+      "check": "keyboard theme switch updates existing toast"
+    }
+  ],
+  "errors": [],
+  "failedRequests": [],
+  "httpRequests": []
+}
