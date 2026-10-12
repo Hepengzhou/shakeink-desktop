@@ -30,6 +30,12 @@ function controlledPicker() {
     }
     if (name === "react/jsx-runtime") return { jsx: (type: unknown, props: unknown) => ({ type, props }), jsxs: (type: unknown, props: unknown) => ({ type, props }) }
     if (name === "@tanstack/react-query") return { useQuery: () => ({ data: { defaultModelId: null, models } }) }
+    if (name === "@/components/chat/use-chat-models") {
+      const helper={exports:{}}
+      const queryCode=transformSync(readFileSync(new URL("../../src/components/chat/use-chat-models.ts",import.meta.url),"utf8"),{loader:"ts",format:"cjs"}).code
+      new Function("module","exports","require",queryCode)(helper,helper.exports,()=>({useQuery:()=>({data:{defaultModelId:null,models}})}))
+      return helper.exports
+    }
     if (name === "@/stores/chat") return { useChatStore: store }
     if (name === "@/lib/utils") return { cn: () => "" }
     if (name === "@/components/chat/ui-events") return { CHAT_OPEN_MODEL_PICKER_EVENT: "open-picker" }

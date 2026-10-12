@@ -22,7 +22,7 @@ const readMissing=async(path:string)=>readFile(path,'utf8').catch(error=>{if(err
 
 test('DR65-01: migration cannot adopt and later delete a foreign empty directory inserted before owned-directory promotion',async()=>{
  const abort=new AbortController();let f:Awaited<ReturnType<typeof fixture>>,foreign:{device:string;inode:string}|undefined
- f=await fixture({async hook(phase,path){if(phase==='verified'){const p=join(f.target,'inbox/database/pg_notify');await mkdir(p,{recursive:true});const s=await stat(p);foreign={device:String(s.dev),inode:String(s.ino)}}if(phase==='ready-to-commit')abort.abort()}})
+ f=await fixture({async hook(phase,path){if(phase==='verified'){const p=join(f.target,'inbox/database/pg_notify');await mkdir(p,{recursive:true});const s=await stat(p,{bigint:true});foreign={device:String(s.dev),inode:String(s.ino)}}if(phase==='ready-to-commit')abort.abort()}})
  try{
   await assert.rejects(f.manager.migrate(await directoryIdentity(f.target),f.host,abort.signal));assert.ok(foreign)
   const identity=await directoryIdentity(join(f.target,'inbox/database/pg_notify')).catch(error=>{if(error.code==='ENOENT')return null;throw error})

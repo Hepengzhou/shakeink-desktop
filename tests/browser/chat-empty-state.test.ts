@@ -1,0 +1,421 @@
+import assert from "node:assert/strict"
+import { test as nodeTest } from "node:test"
+import { readFile } from "node:fs/promises"
+import { resolve, sep } from "node:path"
+import { build } from "esbuild"
+import postcss from "postcss"
+import tailwindcss from "@tailwindcss/postcss"
+import { chromium, type Browser, type Page } from "playwright-core"
+
+const test = Object.assign((name: string, run: () => Promise<void>) => nodeTest(name, { timeout: 180_000 }, run), { before: nodeTest.before, after: nodeTest.after })
+
+// Full production ChatPanel, useAgentChat, composer and CreateNovelDialog run
+// together. Only HTTP responses and synthetic account data are controlled.
+// This fixture has no listening server, provider connection or OS clipboard.
+// It is component evidence, not native Electron / supplier acceptance.
+const cssPath = resolve("src/app/globals.css")
+const stylesheet = (async () => (await postcss([tailwindcss()]).process(await readFile(cssPath, "utf8"), { from: cssPath })).css + "\n" + await readFile("src/app/desktop.css", "utf8"))()
+const bundle = build({ stdin: { loader: "tsx", sourcefile: "chat-empty-state-browser-fixture.tsx", resolveDir: process.cwd(), contents: `
+import React,{useState} from 'react';import {createRoot} from 'react-dom/client';import {flushSync} from 'react-dom';
+import {QueryClient,QueryClientProvider} from '@tanstack/react-query';
+import {ThemeProvider} from 'next-themes';
+import {ChatPanel} from './src/components/layout/ChatPanel';
+import {CreateNovelDialog} from './src/components/layout/CreateNovelDialog';
+import {useChatStore} from './src/stores/chat';import {useDesktopStore} from './src/stores/desktop';import {useTabsStore} from './src/stores/tabs';
+import {useCardSelection} from './src/components/chat/use-card-selection';
+import {editorToText} from './src/components/chat/composer-editor';
+import {defaultState} from './desktop/core/settings';import {desktopCommandTargets} from './src/lib/desktop/command-runtime';
+import {chatSessionKey} from './src/lib/chat-session';
+import {dispatchChatSendMessage} from './src/components/chat/ui-events';
+globalThis.mountChatEmpty=(options={})=>{
+ sessionStorage.clear();localStorage.clear();
+ const model={id:'11111111-1111-4111-8111-111111111111',name:'合成组件模型',provider:'openai',modelId:'fixture',tier:'NORMAL',contextWindow:0,free:false,thinkingEfforts:[]};
+ const state=structuredClone(defaultState);state.settings.agent.textModelId=options.defaultModel?model.id:null;
+ const bootstrap={...state,revision:1,platform:'win32',systemDark:options.theme==='ink',version:'fixture',draftSessionId:'fixture-session'};
+ const bridgeCalls=[],unexpected=[];
+ // An unexpected bridge access fails visibly. No permissive/no-op Proxy.
+ window.desktop=Object.freeze({
+  readClipboardText:async()=>{bridgeCalls.push('readClipboardText');return ''},
+  writeClipboardText:async text=>{bridgeCalls.push(['writeClipboardText',text])},
+ });
+ useDesktopStore.setState({bootstrap,saving:0,error:null});useTabsStore.setState({tabs:[],activeTabId:null});useCardSelection.setState({selection:null});
+ useChatStore.setState({accountId:null,recoveryStatus:'restoring',recoveryNotice:null,storageNotice:null,conversationId:null,requestedConversationId:null,
+  newConversationRequested:false,newConversationPayload:null,draft:'',draftNovelId:null,pendingNovelTitle:null,pendingNovelPosition:null,novelCreationRequestId:null,
+  creatingNovel:false,isGenerating:false,suspendedExecution:false,pendingQuestion:null,pendingPlan:null,pendingRequest:null,queuedMessages:[],queuePaused:false,
+  modelChoice:{modelId:null,effort:null},modelChoiceExplicit:false,mode:'standard',modeExplicit:false});
+ const calls=[],loads=new Map(),gates=new Map();let models=options.models===false?[]:[model],defaultModelId=options.responseDefault?model.id:null,wizardError=false,storageWriteFails=false;
+ const nativeStorageSet=Storage.prototype.setItem;
+ Storage.prototype.setItem=function(key,value){if(storageWriteFails&&key===chatSessionKey('fixture-author'))throw Error('controlled fixture storage failure');return nativeStorageSet.call(this,key,value)};
+ const client=new QueryClient({defaultOptions:{queries:{retry:false,staleTime:0},mutations:{retry:false}}});
+ const detail=(id,extra={})=>({conversation:{id,novelId:null,modelId:null,title:'合成会话'},messages:[],...extra});
+ const json=(body,status=200)=>new Response(JSON.stringify(body),{status,headers:{'content-type':'application/json'}});
+ window.fetch=async(input,init={})=>{
+  const path=String(input),method=init.method||'GET',body=init.body?JSON.parse(init.body):null;calls.push({path,method,body});
+  if(path==='/api/models'&&method==='GET')return json({models,defaultModelId});
+  if(path==='/api/novels'&&method==='GET')return json({novels:[],unavailableWorks:[]});
+  if(path==='/api/novels'&&method==='POST')return json({novel:{id:'fixture-created-work',title:body.title}},201);
+  if(path==='/api/chat/conversations'&&method==='GET')return json({conversations:[]});
+  if(path.startsWith('/api/templates/wizard')&&method==='GET')return wizardError?json({error:'合成本地模板读取失败'},500):json({templates:[],revision:1});
+  if(path==='/api/chat'&&method==='POST'){
+   const events=[{type:'start',messageId:'fixture-assistant'},{type:'text-start',id:'fixture-text'},{type:'text-delta',id:'fixture-text',delta:'受控组件响应'},{type:'text-end',id:'fixture-text'},{type:'finish',finishReason:'stop'}];
+   return new Response(events.map(e=>'data: '+JSON.stringify(e)+'\\n\\n').join(''),{headers:{'content-type':'text/event-stream','X-Conversation-Id':'fixture-sent-conversation'}});
+  }
+  const chat=/^\\/api\\/chat\\/conversations\\/([^/]+)$/.exec(path);
+  if(chat&&method==='GET'){
+   const id=chat[1],gate=gates.get(id);if(gate)await gate.promise;
+   const value=loads.get(id);if(value?.reject)throw Error(value.reject);return json(value?.body??detail(id),value?.status??200);
+  }
+  if(chat&&method==='PATCH')return json({conversation:{id:chat[1],...body}});
+  if(/^\\/api\\/chat\\/conversations\\/[^/]+\\/sop-plan$/.test(path))return json({active:null,recent:[]});
+  const novel=/^\\/api\\/novels\\/([^/]+)(?:\\/(.*))?$/.exec(path);
+  if(novel&&method==='GET'){
+   const [,id,part]=novel;if(!part)return json({novel:{id,title:'合成关联作品',characters:[],settings:[],volumes:[]}});
+   if(part==='story-workflow')return json({workflow:null});if(part==='scenes/factions')return json({factions:[]});if(part==='attributes')return json({definitions:[]});
+   if(part==='chapters/chapter/candidates/candidate')return json({candidate:{id:'candidate',chapterId:'chapter',status:'ready',content:'合成候选正文',contentHash:'a'.repeat(64),baseVersion:1,wordCount:6,variant:'immersive',checks:[]}});
+   if(part==='chapters/chapter')return json({chapter:{id:'chapter',title:'合成章',index:1,version:1,content:'合成正文',wordCount:4,status:'DRAFT'}});
+   if(['worlds','characters','items','scenes','settings'].includes(part))return json({[part]:[]});
+  }
+  unexpected.push({path,method});throw Error('unexpected fixture API '+method+' '+path);
+ };
+ const root=createRoot(document.getElementById('app'));let setWidth,setHeight,setSideWizard;
+ function App(){const [width,widthSet]=useState(options.width??1000),[height,heightSet]=useState(options.height??900),[sideWizard,sideSet]=useState(false);setWidth=widthSet;setHeight=heightSet;setSideWizard=sideSet;
+  return <ThemeProvider attribute='class' themes={['paper','ink']} enableSystem={false} forcedTheme={options.theme||'paper'}><QueryClientProvider client={client}><div id='fixture-panel' style={{width,height,position:'relative'}}><ChatPanel userId='fixture-author'/></div><CreateNovelDialog open={sideWizard} onOpenChange={sideSet} novels={[]}/></QueryClientProvider></ThemeProvider>;
+ }
+ document.documentElement.classList.toggle('ink',options.theme==='ink');document.documentElement.classList.toggle('paper',options.theme!=='ink');
+ flushSync(()=>root.render(<App/>));let pinnedEditor,pinnedChip;
+ return {model,calls,bridgeCalls,unexpected,client,
+  patch:value=>flushSync(()=>useChatStore.setState(value)),state:()=>{const s=useChatStore.getState();return {accountId:s.accountId,draftId:s.draftId,conversationId:s.conversationId,draft:s.draft,draftNovelId:s.draftNovelId,pendingNovelTitle:s.pendingNovelTitle,pendingNovelPosition:s.pendingNovelPosition,novelCreationRequestId:s.novelCreationRequestId,queuedMessages:s.queuedMessages,queuePaused:s.queuePaused,recoveryStatus:s.recoveryStatus,recoveryNotice:s.recoveryNotice,modelChoice:s.modelChoice,modelChoiceExplicit:s.modelChoiceExplicit,isGenerating:s.isGenerating,pendingQuestion:s.pendingQuestion,draftAction:s.draftAction,selection:useCardSelection.getState().selection}},
+  editor:()=>document.querySelector('[data-testid="composer-editor"]'),source:()=>editorToText(document.querySelector('[data-testid="composer-editor"]')),
+  pin:()=>{pinnedEditor=document.querySelector('[data-testid="composer-editor"]');pinnedChip=pinnedEditor?.querySelector('.composer-chip')},sameEditor:()=>pinnedEditor===document.querySelector('[data-testid="composer-editor"]'),sameChip:()=>pinnedChip===document.querySelector('[data-testid="composer-editor"]')?.querySelector('.composer-chip'),
+  choose:()=>flushSync(()=>useChatStore.getState().setModelChoice({modelId:model.id,effort:null})),
+  catalog:(available,withDefault=false)=>{models=available?[model]:[];defaultModelId=withDefault?model.id:null;flushSync(()=>client.setQueryData(['chat-models'],{models,defaultModelId}))},
+  command:id=>desktopCommandTargets.execute(id,document.querySelector('[data-testid="composer-editor"]')),
+  external:(text,novelId,options)=>dispatchChatSendMessage(text,novelId,options),
+  request:id=>useChatStore.getState().requestConversation(id),newDraft:payload=>useChatStore.getState().requestNewConversation(payload),
+  response:(id,status=200,extra={})=>loads.set(id,{status,body:status===200?detail(id,extra):{error:'合成加载失败'}}),reject:id=>loads.set(id,{reject:'合成网络失败'}),
+  defer:id=>{let release;const promise=new Promise(yes=>release=yes);gates.set(id,{promise,release})},release:id=>{const gate=gates.get(id);gate.release();gates.delete(id)},
+  select:value=>flushSync(()=>useCardSelection.setState({selection:value})),
+  wizardFailure:value=>{wizardError=value;return client.invalidateQueries({queryKey:['desktop','wizard-templates']})},
+  failStorage:value=>storageWriteFails=value,
+  sideWizard:()=>flushSync(()=>setSideWizard(true)),resize:(width,height)=>flushSync(()=>{setWidth(width);setHeight(height)}),
+  unmount:()=>{root.unmount();client.clear()},
+ };
+};` }, bundle: true, platform: "browser", format: "esm", outfile: "chat-empty-state-fixture.js", external: ["/brand/*"], loader: { ".ttf": "dataurl" }, define: { "process.env.NODE_ENV": '"development"', "process.env": "{}" }, minify: true, write: false, tsconfig: "tsconfig.json" }).then(result => ({ script: result.outputFiles!.find(file => file.path.endsWith(".js"))!.text, css: result.outputFiles!.find(file => file.path.endsWith(".css"))?.text ?? "" }))
+
+let browser: Browser
+test.before(async () => { if (process.env.XAANINK_CES_DIAGNOSTIC) process.stdout.write("CES fixture: launch\n"); browser = await chromium.launch({ headless: true, timeout: 60_000, ...(process.env.XAANINK_TEST_CHROMIUM ? { executablePath: process.env.XAANINK_TEST_CHROMIUM } : {}) }); if (process.env.XAANINK_CES_DIAGNOSTIC) process.stdout.write("CES fixture: launched\n") })
+test.after(async () => { await browser?.close() })
+async function frames(page: Page) { await page.evaluate(() => new Promise<void>(done => requestAnimationFrame(() => requestAnimationFrame(() => done())))) }
+const welcome = (page: Page) => page.getByTestId("chat-empty-state")
+const editor = (page: Page) => page.getByTestId("composer-editor")
+const action = (page: Page, name: string) => welcome(page).getByRole("button", { name: new RegExp("^" + name) })
+async function scenario(options: Record<string, unknown>, run: (page: Page) => Promise<void>) {
+  const page = await browser.newPage({ viewport: { width: 1400, height: 1000 } }), errors: string[] = []
+  const diagnostic = (step: string) => { if (process.env.XAANINK_CES_DIAGNOSTIC) process.stdout.write("CES fixture: " + step + "\n") }
+  // This full production bundle decodes the approved sprite sheets and Monaco
+  // dependencies. Give navigation/setup an environment budget, without changing
+  // any geometry, frame, draft or business assertions.
+  page.setDefaultTimeout(30_000); page.setDefaultNavigationTimeout(60_000); page.on("pageerror", error => errors.push(error.message))
+  try {
+    await page.route("**/*", async route => {
+      const url = new URL(route.request().url())
+      if (route.request().isNavigationRequest()) { await route.fulfill({ contentType: "text/html", body: "<div id='app'></div>" }); return }
+      const asset = resolve("public", "." + decodeURIComponent(url.pathname)), root = resolve("public")
+      if (asset.startsWith(root + sep)) {
+        try { const body = await readFile(asset); await route.fulfill({ body, contentType: asset.endsWith(".png") ? "image/png" : asset.endsWith(".svg") ? "image/svg+xml" : "application/octet-stream" }); return } catch { /* Missing assets remain failed requests, never fallback demo images. */ }
+      }
+      await route.abort()
+    })
+    await page.goto("http://127.0.0.1:1/chat-empty-state-component"); diagnostic("document")
+    const fixtureBundle = await bundle
+    diagnostic("bundle")
+    await page.addStyleTag({ content: await stylesheet }); if (fixtureBundle.css) await page.addStyleTag({ content: fixtureBundle.css })
+    diagnostic("styles")
+    await page.addScriptTag({ content: fixtureBundle.script, type: "module" })
+    diagnostic("script")
+    await page.waitForFunction(() => typeof (window as any).mountChatEmpty === "function")
+    await page.evaluate(options => { (window as any).f = (window as any).mountChatEmpty(options) }, options)
+    diagnostic("mounted")
+    await page.waitForFunction(() => (window as any).f.state().recoveryStatus === "ready")
+    await page.bringToFront(); await frames(page); diagnostic("ready"); await run(page)
+    assert.deepEqual(await page.evaluate(() => (window as any).f.unexpected), [], "only declared local API fixture routes may be used")
+    assert.deepEqual(errors, [], "the full production component must not throw")
+  } catch (error) { if (errors.length) throw new Error("Full component fixture errors: " + errors.join("; "), { cause: error }); throw error }
+  finally { await page.evaluate(() => (window as any).f?.unmount()).catch(() => {}); await page.close() }
+}
+async function posts(page: Page) { return page.evaluate(() => (window as any).f.calls.filter((call: any) => call.method === "POST")) }
+async function selected(page: Page, names: string[]) {
+  const dialog = page.getByRole("dialog")
+  for (const name of names) assert.equal(await dialog.getByRole("button", { name, exact: true }).getAttribute("aria-pressed"), "true", name + " must be selected")
+}
+
+test("CES-01a full ChatPanel first restore with paused empty queue exposes all seven approved entries", () => scenario({}, async page => {
+  assert.equal(await page.evaluate(() => (window as any).f.state().queuePaused), true)
+  await welcome(page).waitFor()
+  assert.equal(await welcome(page).getByRole("button").count(), 7)
+  for (const name of ["创建作品", "新角色", "新世界观", "新场景", "仙侠", "历史", "科幻"]) await action(page, name).waitFor()
+  assert.equal(await editor(page).count(), 1)
+  assert.equal(await page.getByRole("button", { name: "发送", exact: true }).isDisabled(), true)
+  assert.deepEqual(await posts(page), [])
+}))
+
+test("CES-01b actual pending, recovery, queue and owned-card states suppress welcome without hiding original controls", () => scenario({}, async page => {
+  await welcome(page).waitFor()
+  const blockers = [
+    [{ recoveryStatus: "restoring" }, "正在恢复会话"],
+    [{ creatingNovel: true, pendingNovelTitle: "合成待建作品" }, "正在创建"],
+    [{ recoveryNotice: "合成执行恢复通知" }, "合成执行恢复通知"],
+    [{ pendingRequest: { clientRequestId: "fixture-pending", body: '{"message":"待确认"}' } }, "上次发送结果待确认"],
+    [{ pendingPlan: { id: "fixture-plan", turnId: "fixture-turn", revision: 1, payload: { title: "合成待批准计划" } } }, "合成待批准计划"],
+    [{ queuedMessages: [{ id: "fixture-q", text: "合成排队草稿" }], queuePaused: true }, "合成排队草稿"],
+    [{ pendingQuestion: { markerStyle: "letters", questions: [{ question: "合成待答问题", options: ["合成选择"] }] } }, "合成待答问题"],
+  ] as const
+  for (const [patch, text] of blockers) {
+    await page.evaluate(patch => (window as any).f.patch(patch), patch); await frames(page)
+    assert.equal(await welcome(page).count(), 0, JSON.stringify(patch))
+    assert.ok(await page.getByText(text, { exact: false }).first().isVisible(), text + " must remain visible")
+    await page.evaluate(() => (window as any).f.patch({ recoveryStatus: "ready", creatingNovel: false, pendingNovelTitle: null, recoveryNotice: null, storageNotice: null, pendingRequest: null, pendingPlan: null, pendingQuestion: null, queuedMessages: [], queuePaused: true }))
+    await welcome(page).waitFor()
+  }
+  await page.evaluate(() => { const f = (window as any).f; f.failStorage(true); f.patch({ draft: "合成失败存储草稿" }) })
+  await frames(page); assert.equal(await welcome(page).count(), 0)
+  assert.ok(await page.getByText("草稿暂未写入本地存储，刷新前请复制草稿", { exact: true }).isVisible())
+  await page.evaluate(() => { const f = (window as any).f; f.failStorage(false); f.patch({ draft: "" }) }); await welcome(page).waitFor()
+  for (const patch of [{ isGenerating: true }, { suspendedExecution: true }]) {
+    await page.evaluate(patch => (window as any).f.patch(patch), patch); await frames(page); assert.equal(await welcome(page).count(), 0)
+    await page.evaluate(() => (window as any).f.patch({ isGenerating: false, suspendedExecution: false, pendingNovelTitle: null })); await welcome(page).waitFor()
+  }
+  await page.evaluate(() => (window as any).f.patch({ pendingNovelTitle: "合成待创建作品" })); await welcome(page).waitFor()
+  assert.ok(await page.getByText("《合成待创建作品》（待创建）", { exact: true }).isVisible())
+  await page.evaluate(() => (window as any).f.patch({ pendingNovelTitle: null }))
+  await page.evaluate(() => { const f = (window as any).f; f.patch({ draftNovelId: "fixture-work" }); f.select({ conversationId: null, novelId: "unrelated-work", chapterId: "chapter", chapterTitle: "合成章", candidateId: "candidate", label: "合成候选" }) })
+  await welcome(page).waitFor()
+  await page.evaluate(() => { const f = (window as any).f; f.select({ conversationId: null, novelId: "fixture-work", chapterId: "chapter", chapterTitle: "合成章", candidateId: "candidate", label: "合成候选" }) })
+  await frames(page); assert.equal(await welcome(page).count(), 0)
+  assert.equal(await page.getByTestId("candidate-action-panel").isVisible(), true, "zero-message owned selection must retain the original candidate slot")
+}))
+
+for (const [name, marker, body] of [
+  ["新角色", "【角色】", "・成长弧线与剧情作用："],
+  ["新世界观", "【世界观】", "・可以推动故事的冲突与秘密："],
+  ["新场景", "【场景】", "・场景的剧情作用与潜在冲突："],
+] as const) test(`CES-04 ${name} appends once with live chip DOM, native undo/redo and composer focus preserved`, () => scenario({}, async page => {
+  await welcome(page).waitFor()
+  const initial = "合成原稿 @[角色/青岚](character:fixture-char)"
+  await page.evaluate(initial => (window as any).f.patch({ draft: initial }), initial)
+  await editor(page).locator(".composer-chip").waitFor(); await page.evaluate(() => (window as any).f.pin())
+  await action(page, name).click()
+  const state = await page.evaluate(() => (window as any).f.state())
+  assert.ok(state.draft.startsWith(initial + "\n\n" + marker + "\n")); assert.ok(state.draft.endsWith(body))
+  assert.equal(await page.evaluate(() => (window as any).f.source()), state.draft)
+  assert.equal(await page.evaluate(() => (window as any).f.sameEditor() && (window as any).f.sameChip()), true)
+  assert.equal(await editor(page).evaluate(el => document.activeElement === el), true)
+  await editor(page).press("Control+z"); await frames(page)
+  assert.equal(await page.evaluate(() => (window as any).f.state().draft), initial)
+  await editor(page).press("Control+y"); await frames(page)
+  assert.equal(await page.evaluate(() => (window as any).f.state().draft), state.draft)
+  await action(page, name).click(); assert.equal(await page.evaluate(() => (window as any).f.state().draft), state.draft)
+  assert.equal(await editor(page).evaluate(el => document.activeElement === el), true)
+  assert.deepEqual(await posts(page), [])
+}))
+
+test("CES-04b synthetic composition state blocks quick prompt until compositionend without truncating text", () => scenario({}, async page => {
+  await welcome(page).waitFor(); await page.evaluate(() => (window as any).f.patch({ draft: "尚在输入的合成草稿" }))
+  await editor(page).dispatchEvent("compositionstart", { data: "尚" })
+  const card = action(page, "新角色")
+  if (!(await card.isDisabled())) await card.click()
+  assert.equal(await page.evaluate(() => (window as any).f.state().draft), "尚在输入的合成草稿")
+  await editor(page).dispatchEvent("compositionend", { data: "尚" }); await card.click()
+  assert.match(await page.evaluate(() => (window as any).f.state().draft), /^尚在输入的合成草稿\n\n【角色】/)
+}))
+
+for (const [genre, tags] of [
+  ["仙侠", ["古典仙侠", "修仙界", "热血", "升级流"]],
+  ["历史", ["架空历史", "古代", "正剧", "权谋"]],
+  ["科幻", ["星际文明", "星际", "烧脑", "经营"]],
+] as const) test(`CES-02 ${genre} opens original wizard preset, remains editable and never contaminates normal/sidebar entry`, () => scenario({}, async page => {
+  await welcome(page).waitFor(); await action(page, genre).click(); await page.getByRole("dialog").waitFor()
+  await selected(page, ["男频", "长篇", genre, ...tags])
+  await page.getByRole("dialog").getByRole("button", { name: "不限", exact: true }).first().click()
+  await page.evaluate(() => (window as any).f.patch({ draft: "父状态重渲染" })); await frames(page)
+  assert.equal(await page.getByRole("dialog").getByRole("button", { name: "不限", exact: true }).first().getAttribute("aria-pressed"), "true")
+  await page.getByRole("dialog").getByRole("button", { name: "取消", exact: true }).click(); await page.getByRole("dialog").waitFor({ state: "hidden" })
+  assert.equal(await page.evaluate(() => (window as any).f.state().draft), "父状态重渲染")
+  await action(page, "创建作品").click(); await page.getByRole("dialog").waitFor()
+  assert.equal(await page.getByRole("dialog").getByRole("button", { name: "全部", exact: true }).getAttribute("aria-pressed"), "true")
+  assert.equal(await page.getByRole("dialog").getByRole("button", { name: "男频", exact: true }).getAttribute("aria-pressed"), "false")
+  await page.getByRole("dialog").getByRole("button", { name: "取消", exact: true }).click(); await page.getByRole("dialog").waitFor({ state: "hidden" })
+  await page.evaluate(() => (window as any).f.sideWizard()); await page.getByRole("dialog").waitFor()
+  assert.equal(await page.getByRole("dialog").getByRole("button", { name: "全部", exact: true }).getAttribute("aria-pressed"), "true")
+  assert.equal(await page.getByRole("dialog").getByRole("button", { name: "男频", exact: true }).getAttribute("aria-pressed"), "false")
+  assert.deepEqual(await posts(page), [])
+}))
+
+test("CES-03 original wizard replacement requires confirmation and prepares a new unassociated unsent work", () => scenario({}, async page => {
+  await welcome(page).waitFor(); await page.evaluate(() => (window as any).f.patch({ draft: "必须保留的原稿", draftNovelId: "fixture-old-work" }))
+  const originalDraftId = await page.evaluate(() => (window as any).f.state().draftId)
+  await action(page, "仙侠").click(); const dialog = page.getByRole("dialog"); await dialog.waitFor()
+  await dialog.getByRole("button", { name: "确定", exact: true }).click()
+  assert.equal(await page.evaluate(() => (window as any).f.state().draft), "必须保留的原稿")
+  await dialog.getByRole("button", { name: "热血", exact: true }).click()
+  assert.equal(await dialog.getByRole("button", { name: "仍要替换", exact: true }).count(), 0)
+  await dialog.getByRole("button", { name: "热血", exact: true }).click()
+  await dialog.getByRole("button", { name: "确定", exact: true }).click()
+  await dialog.getByRole("button", { name: "仍要替换", exact: true }).click(); await dialog.waitFor({ state: "hidden" })
+  const state = await page.evaluate(() => (window as any).f.state())
+  assert.notEqual(state.draftId, originalDraftId); assert.equal(state.conversationId, null); assert.equal(state.draftNovelId, null)
+  assert.match(state.draft, /我的作品定位：/); assert.match(state.draft, /・题材：仙侠/)
+  assert.deepEqual(state.pendingNovelPosition, { channel: "男频", length: "长篇", genre: "仙侠", tags: ["古典仙侠", "修仙界", "热血", "升级流"] })
+  assert.ok(state.pendingNovelTitle); assert.ok(state.novelCreationRequestId); assert.deepEqual(await posts(page), [])
+  assert.equal(await editor(page).evaluate(element => document.activeElement === element), true, "confirmed wizard must focus the prepared original composer")
+  assert.equal(await page.getByRole("button", { name: "发送", exact: true }).isDisabled(), true)
+}))
+
+test("CES-05a a response default is never selected; deleted/unselected models cannot submit or create pending work", () => scenario({ responseDefault: true }, async page => {
+  await welcome(page).waitFor(); await action(page, "新角色").click()
+  assert.equal(await page.evaluate(() => (window as any).f.state().modelChoice.modelId), null)
+  assert.equal(await page.getByRole("button", { name: "发送", exact: true }).isDisabled(), true)
+  assert.equal(await page.evaluate(() => (window as any).f.command("ai.send")), false); assert.deepEqual(await posts(page), [])
+  await page.evaluate(() => { const f = (window as any).f; f.choose(); f.catalog(false); f.patch({ pendingNovelTitle: "不可提前创建", novelCreationRequestId: "fixture-stable-create-request" }) })
+  await frames(page); const before = await page.evaluate(() => (window as any).f.state())
+  assert.equal(await page.getByRole("button", { name: "发送", exact: true }).isDisabled(), true)
+  assert.equal(await page.evaluate(() => (window as any).f.command("ai.send")), false)
+  const after = await page.evaluate(() => (window as any).f.state())
+  assert.equal(after.draft, before.draft); assert.equal(after.pendingNovelTitle, before.pendingNovelTitle); assert.equal(after.novelCreationRequestId, before.novelCreationRequestId)
+  assert.deepEqual(await posts(page), [])
+}))
+
+test("CES-05b automatic queue retains its head without a live selected model and resumes only after valid selection", () => scenario({ models: false }, async page => {
+  await welcome(page).waitFor()
+  await page.evaluate(() => (window as any).f.patch({ queuedMessages: [{ id: "fixture-queue-head", text: "不得丢失的合成队首" }], queuePaused: false }))
+  await page.waitForTimeout(120)
+  assert.deepEqual(await page.evaluate(() => (window as any).f.state().queuedMessages), [{ id: "fixture-queue-head", text: "不得丢失的合成队首" }]); assert.deepEqual(await posts(page), [])
+  await page.evaluate(() => (window as any).f.catalog(true, true)); await page.waitForTimeout(60)
+  assert.equal(await page.evaluate(() => (window as any).f.state().queuedMessages.length), 1); assert.deepEqual(await posts(page), [])
+  await page.evaluate(() => (window as any).f.choose())
+  await page.waitForFunction(() => (window as any).f.calls.some((call: any) => call.path === "/api/chat" && call.method === "POST"))
+  const sent = await posts(page); assert.equal(sent.length, 1); assert.equal(sent[0].body.message, "不得丢失的合成队首")
+  assert.equal(await page.evaluate(() => (window as any).f.state().queuedMessages.length), 0)
+}))
+
+test("CES-05d no-model external action is retained in paused queue before question, selection or draft-action side effects", () => scenario({ models: false }, async page => {
+  await welcome(page).waitFor()
+  await page.evaluate(() => { const f = (window as any).f; f.patch({ draftNovelId: "fixture-work", draft: "保留已有草稿", draftAction: { kind: "question" }, pendingQuestion: { markerStyle: "letters", questions: [{ question: "保持当前待答", options: ["待答选项"] }] } }); f.select({ conversationId: null, novelId: "fixture-work", chapterId: "chapter", chapterTitle: "合成章", candidateId: "candidate", label: "合成候选" }) })
+  const before = await page.evaluate(() => (window as any).f.state())
+  const action = { kind: "improve", targetType: "CHAPTER_CONTENT", targetId: "chapter" }
+  await page.evaluate(action => (window as any).f.external("不得丢失的外部改进意图", "fixture-work", { action }), action); await frames(page)
+  const after = await page.evaluate(() => (window as any).f.state())
+  assert.equal(after.draft, before.draft); assert.deepEqual(after.pendingQuestion, before.pendingQuestion); assert.deepEqual(after.selection, before.selection); assert.deepEqual(after.draftAction, before.draftAction)
+  assert.equal(after.queuePaused, true); assert.equal(after.queuedMessages.length, 1); assert.equal(after.queuedMessages[0].text, "不得丢失的外部改进意图"); assert.deepEqual(after.queuedMessages[0].action, action)
+  assert.deepEqual(await posts(page), []); assert.equal(await page.getByText("保持当前待答", { exact: true }).isVisible(), true)
+}))
+
+test("CES-05e clicking original candidate improve without a model preserves selected slot and queues the complete intent", () => scenario({ models: false }, async page => {
+  await welcome(page).waitFor()
+  await page.evaluate(() => { const f = (window as any).f; f.patch({ draftNovelId: "fixture-work", draft: "保留候选讨论草稿" }); f.select({ conversationId: null, novelId: "fixture-work", chapterId: "chapter", chapterTitle: "合成章", candidateId: "candidate", label: "合成候选" }) })
+  await page.getByTestId("cap-option-improve").waitFor()
+  const before = await page.evaluate(() => (window as any).f.state())
+  await page.getByTestId("cap-option-improve").click(); await frames(page)
+  const after = await page.evaluate(() => (window as any).f.state())
+  assert.deepEqual(after.selection, before.selection); assert.equal(after.draft, before.draft); assert.equal(after.queuePaused, true)
+  assert.equal(after.queuedMessages.length, 1); assert.match(after.queuedMessages[0].text, /chapterId: chapter，candidateId: candidate/); assert.match(after.queuedMessages[0].text, /为基础改进，再抽 3 份候选/)
+  assert.equal(await page.getByTestId("candidate-action-panel").isVisible(), true); assert.deepEqual(await posts(page), [])
+}))
+
+test("CES-05c inherited default stays implicit until original send; first message preserves composer node and valid creation linkage", () => scenario({ defaultModel: true }, async page => {
+  await welcome(page).waitFor(); await action(page, "科幻").click(); const dialog = page.getByRole("dialog"); await dialog.waitFor()
+  await dialog.getByRole("button", { name: "确定", exact: true }).click(); await dialog.waitFor({ state: "hidden" })
+  assert.equal(await editor(page).evaluate(element => document.activeElement === element), true)
+  assert.equal(await page.evaluate(() => (window as any).f.state().modelChoiceExplicit), false)
+  await page.evaluate(() => { const f = (window as any).f; f.pin(); f.editor().focus() })
+  assert.equal(await page.evaluate(() => (window as any).f.command("ai.send")), true)
+  await page.waitForFunction(() => (window as any).f.calls.some((call: any) => call.path === "/api/chat" && call.method === "POST"))
+  const sent = await posts(page)
+  assert.equal(sent.length, 2); assert.equal(sent[0].path, "/api/novels"); assert.equal(sent[1].path, "/api/chat")
+  assert.equal(sent[0].body.position.genre, "科幻"); assert.equal(sent[1].body.novelId, "fixture-created-work")
+  assert.equal(Object.hasOwn(sent[1].body, "modelId"), false, "inherited model must still be captured atomically by the original backend boundary")
+  assert.equal(await page.evaluate(() => (window as any).f.sameEditor()), true); assert.equal(await editor(page).count(), 1); assert.equal(await welcome(page).count(), 0)
+  await page.evaluate(() => (window as any).f.newDraft()); await welcome(page).waitFor()
+  assert.equal(await page.evaluate(() => (window as any).f.sameEditor()), true)
+}))
+
+test("CES-06 loading failure stays visible, retries clear it and late old responses cannot poison a new draft", () => scenario({}, async page => {
+  await welcome(page).waitFor()
+  await page.evaluate(() => { const f = (window as any).f; f.response("fixture-failed-load", 500); f.request("fixture-failed-load") })
+  await page.getByRole("alert").filter({ hasText: /加载会话失败|合成加载失败/ }).waitFor()
+  assert.equal(await welcome(page).count(), 0)
+  await page.evaluate(() => (window as any).f.response("fixture-failed-load"))
+  await page.getByRole("button", { name: /重试加载|重新加载|重试/ }).first().click(); await welcome(page).waitFor()
+  await page.evaluate(() => { const f = (window as any).f; f.defer("fixture-late-load"); f.response("fixture-late-load", 500); f.request("fixture-late-load") })
+  await page.waitForFunction(() => (window as any).f.calls.some((call: any) => call.path === "/api/chat/conversations/fixture-late-load"))
+  await page.evaluate(() => (window as any).f.newDraft({ novelId: null, draft: "新归属合成草稿" })); await welcome(page).waitFor()
+  const draftId = await page.evaluate(() => (window as any).f.state().draftId)
+  await page.evaluate(() => (window as any).f.release("fixture-late-load")); await frames(page)
+  assert.equal(await page.evaluate(() => (window as any).f.state().draftId), draftId)
+  assert.equal(await page.evaluate(() => (window as any).f.state().draft), "新归属合成草稿")
+  assert.equal(await page.getByRole("alert").count(), 0); await welcome(page).waitFor()
+  assert.deepEqual(await posts(page), [])
+}))
+
+test("CES-06b continuing with a new accepted send clears a prior failed navigation alert", () => scenario({}, async page => {
+  await welcome(page).waitFor()
+  await page.evaluate(() => { const f=(window as any).f; f.response("fixture-abandoned-load",500); f.request("fixture-abandoned-load") })
+  await page.getByRole("alert").filter({hasText:/加载会话失败/}).waitFor()
+  await page.evaluate(() => (window as any).f.choose())
+  await page.getByTestId("composer-editor").fill("继续当前草稿的新回合")
+  await page.evaluate(() => (window as any).f.patch({pendingRequest:{clientRequestId:"fixture-pending",body:JSON.stringify({message:"另一个待核对回合"})}}))
+  await page.getByRole("button",{name:"发送",exact:true}).click();await frames(page)
+  assert.equal(await page.getByRole("alert").filter({hasText:/加载会话失败/}).count(),1)
+  assert.deepEqual(await posts(page),[])
+  await page.evaluate(() => (window as any).f.patch({pendingRequest:null}))
+  await page.getByRole("button",{name:"发送",exact:true}).click()
+  await page.waitForFunction(() => (window as any).f.calls.some((call:any)=>call.path==="/api/chat"&&call.method==="POST") && !(window as any).f.state().isGenerating)
+  assert.equal(await page.getByRole("alert").filter({hasText:/加载会话失败/}).count(),0)
+}))
+
+test("CES-07/08 real hover expands once, reverses, preserves static icons and pauses for reduced motion and original modal", () => scenario({}, async page => {
+  await welcome(page).waitFor()
+  const card = action(page, "新角色"), art = card.locator('[data-role="card-art"]')
+  const icons = await welcome(page).locator(".chat-empty-symbol").evaluateAll(elements => elements.map(element => ({ src: (element as HTMLImageElement).src, frame: element.getAttribute("data-frame") })))
+  await card.hover(); await page.waitForFunction(() => document.querySelector('[data-action="character"] [data-role="card-art"]')?.getAttribute("data-frame") === "12")
+  await page.waitForTimeout(150); assert.equal(await art.getAttribute("data-frame"), "12")
+  await page.mouse.move(1390, 990); await page.waitForFunction(() => document.querySelector('[data-action="character"] [data-role="card-art"]')?.getAttribute("data-frame") === "0")
+  await card.hover(); await page.waitForTimeout(180)
+  const partial = Number(await art.getAttribute("data-frame")); assert.ok(partial > 0 && partial < 12)
+  await page.mouse.move(1390, 990); await page.waitForTimeout(70); const reverse = Number(await art.getAttribute("data-frame")); assert.ok(reverse <= partial)
+  await card.hover(); await page.waitForFunction(() => document.querySelector('[data-action="character"] [data-role="card-art"]')?.getAttribute("data-frame") === "12")
+  await page.emulateMedia({ reducedMotion: "reduce" }); await page.waitForFunction(() => document.querySelector('[data-action="character"] [data-role="card-art"]')?.getAttribute("data-frame") === "0")
+  assert.equal(await welcome(page).getAttribute("data-motion"), "paused")
+  await page.emulateMedia({ reducedMotion: "no-preference" }); await action(page, "创建作品").click(); await page.getByRole("dialog").waitFor()
+  assert.equal(await welcome(page).getAttribute("data-motion"), "paused")
+  assert.deepEqual(await welcome(page).locator(".chat-empty-symbol").evaluateAll(elements => elements.map(element => ({ src: (element as HTMLImageElement).src, frame: element.getAttribute("data-frame") }))), icons)
+  assert.equal(await welcome(page).locator('[data-role="card-art"]').evaluateAll(elements => elements.every(element => element.getAttribute("data-frame") === "0")), true)
+  assert.deepEqual(await posts(page), [])
+}))
+
+for (const theme of ["paper", "ink"] as const) test(`CES-09 ${theme} uses real ThemeProvider, local images and aligned responsive welcome/composer`, () => scenario({ theme }, async page => {
+  await welcome(page).waitFor()
+  assert.equal(await page.evaluate(theme => document.documentElement.classList.contains(theme), theme), true)
+  await page.waitForFunction(() => [...document.querySelectorAll<HTMLImageElement>(".chat-empty-state img")].every(image => image.complete && image.naturalWidth > 0))
+  const colors = await welcome(page).locator('[data-role="card-art"]').evaluateAll(elements => elements.map(element => ({ filter: getComputedStyle(element).filter, opacity: getComputedStyle(element).opacity })))
+  for (const color of colors) { assert.ok(color.filter.includes("grayscale(1)")); assert.equal(color.opacity, "0.5"); assert.equal(color.filter.includes("sepia(0.5)"), theme === "paper") }
+  for (const width of [1000, 560, 480, 479, 320]) {
+    await page.evaluate(width => (window as any).f.resize(width, 900), width); await frames(page)
+    const layout = await page.evaluate(() => {
+      const group = document.querySelector(".chat-empty-actions")!.getBoundingClientRect(), composer = document.querySelector(".chat-empty-composer")!.getBoundingClientRect()
+      const cards = [...document.querySelectorAll(".chat-empty-action")].map(element => { const r = element.getBoundingClientRect(); return { x: r.x, y: r.y, width: r.width, height: r.height, subtitle: !!element.querySelector("small")?.textContent } })
+      return { group: { x: group.x, width: group.width }, composer: { x: composer.x, width: composer.width }, cards }
+    })
+    assert.ok(Math.abs(layout.group.x - layout.composer.x) < 1); assert.ok(Math.abs(layout.group.width - layout.composer.width) < 1); assert.ok(layout.group.width <= 800)
+    assert.ok(layout.cards.every(card => card.height === 114 && card.subtitle)); assert.ok(layout.cards.every(card => Math.abs(card.width - layout.cards[0].width) < 1))
+    assert.equal(Math.abs(layout.cards[0].x - layout.cards[1].x) < 1, width < 480)
+  }
+  await page.setViewportSize({ width: 1000, height: 520 }); await page.evaluate(() => (window as any).f.resize(320, 480)); await frames(page)
+  for (const name of ["创建作品", "新角色", "新世界观", "新场景", "仙侠", "历史", "科幻"]) {
+    const button = action(page, name); await button.evaluate(element => element.scrollIntoView({ block: "center", behavior: "instant" })); await frames(page)
+    const reachable = await button.evaluate(element => { const r = element.getBoundingClientRect(), s = element.closest(".chat-empty-state")!.getBoundingClientRect(), hit = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2); return r.y >= s.y - 1 && r.bottom <= s.bottom + 1 && (hit === element || element.contains(hit)) })
+    assert.equal(reachable, true, name + " must fit in the short scroll viewport and receive pointer input")
+    assert.ok(await editor(page).isVisible())
+  }
+  assert.deepEqual(await posts(page), [])
+}))

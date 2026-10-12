@@ -1,0 +1,33 @@
+{
+  "version": 3,
+  "images": [
+    {
+      "name": "xianxia",
+      "file": "theme-xianxia-v3.png",
+      "prompt": "Use case: stylized-concept.\nAsset type: A standalone, full-bleed horizontal background illustration for a refined desktop AI writing app's genre card, displayed at about 260 x 108 pixels.\nStyle/medium: Restrained cinematic editorial environment illustration, elegant broad shapes, subtle atmospheric depth, finely controlled soft lighting, matte surfaces, low visual noise. Sophisticated and calm rather than game-poster spectacle. This is one artwork, not a UI mockup, contact sheet, collage, or set of cards.\nComposition/framing: A wide landscape canvas, ideally 2.4:1, at least 3:2. Keep the essential subject and horizon within the central horizontal band so a 2.3:1 center crop preserves them. Place the main scene interest toward the middle-right. Keep the lower-left quarter naturally dark, quiet, and uncluttered for HTML text that will be added later; do not draw a panel or hard gradient box. The scene must read clearly at a small card size.\nConstraints: Entire image is artwork with no border, no rounded corners, no UI, no text, no letters, no numbers, no logo, no watermark. No people or characters, no glossy toy-like 3D, no oversaturated neon, no noisy micro-details, no starburst highlights. Opaque background.\nPrimary request: A Chinese xianxia fantasy landscape: majestic layered teal-green mountains emerging above a sea of mist, with one small, elegant immortal palace nestled on a distant ridge toward the right.\nLighting/mood: Serene early-morning light softly grazes the cloud sea and the palace roofline. Deep jade and blue-green shadows, pale cool mist, a very small restrained warm light in the palace. Strong sweeping mountain silhouettes and expansive stillness; the palace is a subtle focal point, not an oversized foreground object.",
+      "width": 1942,
+      "height": 809,
+      "sha256": "fceea47553865e181e94cb9743d958d8cd72b9d8a1f546144187031ff8ed0f1d",
+      "source": "built-in image_gen"
+    },
+    {
+      "name": "history",
+      "file": "theme-history-v3.png",
+      "prompt": "Use case: stylized-concept.\nAsset type: A standalone, full-bleed horizontal background illustration for a refined desktop AI writing app's genre card, displayed at about 260 x 108 pixels.\nStyle/medium: Restrained cinematic editorial environment illustration, elegant broad shapes, subtle atmospheric depth, finely controlled soft lighting, matte surfaces, low visual noise. Sophisticated and calm rather than game-poster spectacle. This is one artwork, not a UI mockup, contact sheet, collage, or set of cards.\nComposition/framing: A wide landscape canvas, ideally 2.4:1, at least 3:2. Keep the essential subject and horizon within the central horizontal band so a 2.3:1 center crop preserves them. Place the main scene interest toward the middle-right. Keep the lower-left quarter naturally dark, quiet, and uncluttered for HTML text that will be added later; do not draw a panel or hard gradient box. The scene must read clearly at a small card size.\nConstraints: Entire image is artwork with no border, no rounded corners, no UI, no text, no letters, no numbers, no logo, no watermark. No people or characters, no glossy toy-like 3D, no oversaturated neon, no noisy micro-details, no starburst highlights. Opaque background.\nPrimary request: A historical Chinese imperial capital seen from above its palace rooftops: an elegant rhythm of traditional tiled eaves and grand palace roofs receding toward a distant walled city, with the most recognizable palace grouping toward the right.\nLighting/mood: Restrained amber late-afternoon light, warm muted ochre rooftops, deep brown foreground shadows, soft golden haze between layers. Majestic yet quiet, historically grounded architectural silhouettes rather than ornate fantasy. Lower-left roofs remain in rich, low-detail shadow.",
+      "width": 1942,
+      "height": 809,
+      "sha256": "534ac60dc6b420c1caa4e0eec8082cf0b591da46fc471004cfdb08adfa5d2e6d",
+      "source": "built-in image_gen"
+    },
+    {
+      "name": "scifi",
+      "file": "theme-scifi-v3.png",
+      "prompt": "Use case: stylized-concept.\nAsset type: A standalone, full-bleed horizontal background illustration for a refined desktop AI writing app's genre card, displayed at about 260 x 108 pixels.\nStyle/medium: Restrained cinematic editorial environment illustration, elegant broad shapes, subtle atmospheric depth, finely controlled soft lighting, matte surfaces, low visual noise. Sophisticated and calm rather than game-poster spectacle. This is one artwork, not a UI mockup, contact sheet, collage, or set of cards.\nComposition/framing: A wide landscape canvas, ideally 2.4:1, at least 3:2. Keep the essential subject and horizon within the central horizontal band so a 2.3:1 center crop preserves them. Place the main scene interest toward the middle-right. Keep the lower-left quarter naturally dark, quiet, and uncluttered for HTML text that will be added later; do not draw a panel or hard gradient box. The scene must read clearly at a small card size.\nConstraints: Entire image is artwork with no border, no rounded corners, no UI, no text, no letters, no numbers, no logo, no watermark. No people or characters, no glossy toy-like 3D, no oversaturated neon, no noisy micro-details, no starburst highlights. Opaque background.\nPrimary request: A deep-blue science-fiction vista of a distant planet and an elegant orbital architectural structure: a graceful ring-like station or sparse orbital building arcs along the middle-right, with a large faraway planet softly lit beyond it.\nLighting/mood: Quiet deep navy space, muted indigo planetary atmosphere, restrained silver-blue edge light, extremely sparse stars. Monumental, plausible, calm and cinematic. Broad readable planetary and architectural forms, no vehicles in the foreground, no busy technical greebles. Lower-left is spacious dark navy.",
+      "width": 1942,
+      "height": 809,
+      "sha256": "18b77ede8a1f8066fbbfca0ebfa795a589ec212789c88a5ff6847004f66e17c8",
+      "source": "built-in image_gen"
+    }
+  ]
+}
+

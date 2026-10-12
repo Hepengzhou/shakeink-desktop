@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192" role="img" aria-label="世界观 · 地图与星球"><title>世界观 · 地图与星球</title>
+  <g transform="translate(0 0) rotate(-12 91 117)"><path d="M21 66L64 55L112 69L158 57V151L111 165L65 151L21 163Z" fill="#6a6053"/><path d="M21 66L64 55V151L21 163Z" fill="#e4ddd1"/><path d="M64 55L112 69V165L64 151Z" fill="#a7c9bc"/><path d="M112 69L158 57V151L112 165Z" fill="#e4ddd1"/>
+    <path d="M29 93L54 79L76 95L103 88L134 111L148 103M30 140L59 114L80 131L104 113L144 133" fill="none" stroke="#6c9f90" stroke-width="3" opacity=".55"/><path d="M64 59V148M112 74V160" fill="none" stroke="#aaa08c" stroke-width="2"/></g>
+  <g transform="translate(0 0)"><circle cx="106" cy="78" r="44" fill="#6c9f90"/><path d="M79 44L99 36L120 39L118 51L130 61L124 76L110 80L102 71L88 76L79 65ZM111 91L126 84L141 96L137 109L123 119L112 113L107 100Z" fill="#a7c9bc"/>
+    <path d="M72 98Q88 125 119 117Q150 109 150 78Q155 109 130 122Q91 139 72 98Z" fill="#466f64"/>
+    <ellipse cx="106" cy="79" rx="54" ry="29" transform="rotate(-23 106 79)" fill="none" stroke="#466f64" stroke-width="3"/>
+    <circle cx="145.00695" cy="60.60612" r="6" fill="#e4ddd1"/></g>
+  <g transform="translate(0 0) rotate(7 140 145)"><rect x="119" y="129" width="48" height="34" rx="5" fill="#466f64"/><path d="M143 136L148 145L143 154L138 145Z" fill="#a7c9bc"/><path d="M143 136V154" stroke="#e4ddd1" stroke-width="2"/></g></svg>

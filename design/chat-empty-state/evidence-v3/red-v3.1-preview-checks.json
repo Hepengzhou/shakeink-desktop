@@ -1,0 +1,44 @@
+{
+  "designRevision": "3.1",
+  "generatedAt": "2026-10-12T12:28:17.426Z",
+  "scope": "V3.1 local HTML design only: muted single-shot card art with original v3 assets. Not React business implementation, Electron, installers, real models, persistence or user UI approval. Prior results are not reused; v3 baseline is preserved in evidence-v3/baseline-v3-preview-checks.json.",
+  "runtime": {
+    "browser": "Installed Google Chrome",
+    "version": "154.0.8037.98",
+    "platform": "win32",
+    "protocol": "file:",
+    "isolatedContext": true
+  },
+  "selectedCases": [
+    "V3-03",
+    "V3-06"
+  ],
+  "summary": {
+    "passed": 0,
+    "failed": 2,
+    "unexecuted": 0,
+    "allExecutedAssertionsPassed": false,
+    "fullCoverage": false
+  },
+  "results": [
+    {
+      "id": "V3-03",
+      "name": "Large card composition and shared creation-card surfaces",
+      "status": "failed",
+      "durationMs": 984,
+      "error": "paper/book right art is not muted grayscale translucent: {\"filter\":\"none\",\"opacity\":1}"
+    },
+    {
+      "id": "V3-06",
+      "name": "Grouped triggers, single-shot card art, looping icons/Logo and theme zoom",
+      "status": "failed",
+      "durationMs": 10114,
+      "error": "card-book must play once and hold 23; observed reset or wrap over 2700ms"
+    }
+  ],
+  "unexecuted": [],
+  "executionError": null,
+  "browserErrors": [],
+  "failedRequests": [],
+  "networkRequestCount": 0
+}

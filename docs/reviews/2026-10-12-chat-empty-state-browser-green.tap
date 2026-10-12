@@ -1,0 +1,105 @@
+TAP version 13
+# Subtest: CES-01a full ChatPanel first restore with paused empty queue exposes all seven approved entries
+ok 1 - CES-01a full ChatPanel first restore with paused empty queue exposes all seven approved entries
+  ---
+  duration_ms: 1787.2624
+  ...
+# Subtest: CES-01b actual pending, recovery, queue and owned-card states suppress welcome without hiding original controls
+ok 2 - CES-01b actual pending, recovery, queue and owned-card states suppress welcome without hiding original controls
+  ---
+  duration_ms: 2114.9069
+  ...
+# Subtest: CES-04 新角色 appends once with live chip DOM, native undo/redo and composer focus preserved
+ok 3 - CES-04 新角色 appends once with live chip DOM, native undo/redo and composer focus preserved
+  ---
+  duration_ms: 1674.1232
+  ...
+# Subtest: CES-04 新世界观 appends once with live chip DOM, native undo/redo and composer focus preserved
+ok 4 - CES-04 新世界观 appends once with live chip DOM, native undo/redo and composer focus preserved
+  ---
+  duration_ms: 2026.5819
+  ...
+# Subtest: CES-04 新场景 appends once with live chip DOM, native undo/redo and composer focus preserved
+ok 5 - CES-04 新场景 appends once with live chip DOM, native undo/redo and composer focus preserved
+  ---
+  duration_ms: 1741.7243
+  ...
+# Subtest: CES-04b synthetic composition state blocks quick prompt until compositionend without truncating text
+ok 6 - CES-04b synthetic composition state blocks quick prompt until compositionend without truncating text
+  ---
+  duration_ms: 1459.5934
+  ...
+# Subtest: CES-02 仙侠 opens original wizard preset, remains editable and never contaminates normal/sidebar entry
+ok 7 - CES-02 仙侠 opens original wizard preset, remains editable and never contaminates normal/sidebar entry
+  ---
+  duration_ms: 2409.7275
+  ...
+# Subtest: CES-02 历史 opens original wizard preset, remains editable and never contaminates normal/sidebar entry
+ok 8 - CES-02 历史 opens original wizard preset, remains editable and never contaminates normal/sidebar entry
+  ---
+  duration_ms: 2783.2255
+  ...
+# Subtest: CES-02 科幻 opens original wizard preset, remains editable and never contaminates normal/sidebar entry
+ok 9 - CES-02 科幻 opens original wizard preset, remains editable and never contaminates normal/sidebar entry
+  ---
+  duration_ms: 2576.3103
+  ...
+# Subtest: CES-03 original wizard replacement requires confirmation and prepares a new unassociated unsent work
+ok 10 - CES-03 original wizard replacement requires confirmation and prepares a new unassociated unsent work
+  ---
+  duration_ms: 2111.6573
+  ...
+# Subtest: CES-05a a response default is never selected; deleted/unselected models cannot submit or create pending work
+ok 11 - CES-05a a response default is never selected; deleted/unselected models cannot submit or create pending work
+  ---
+  duration_ms: 2102.0154
+  ...
+# Subtest: CES-05b automatic queue retains its head without a live selected model and resumes only after valid selection
+ok 12 - CES-05b automatic queue retains its head without a live selected model and resumes only after valid selection
+  ---
+  duration_ms: 2354.9756
+  ...
+# Subtest: CES-05d no-model external action is retained in paused queue before question, selection or draft-action side effects
+ok 13 - CES-05d no-model external action is retained in paused queue before question, selection or draft-action side effects
+  ---
+  duration_ms: 1440.9279
+  ...
+# Subtest: CES-05e clicking original candidate improve without a model preserves selected slot and queues the complete intent
+ok 14 - CES-05e clicking original candidate improve without a model preserves selected slot and queues the complete intent
+  ---
+  duration_ms: 1445.9156
+  ...
+# Subtest: CES-05c inherited default stays implicit until original send; first message preserves composer node and valid creation linkage
+ok 15 - CES-05c inherited default stays implicit until original send; first message preserves composer node and valid creation linkage
+  ---
+  duration_ms: 1860.3483
+  ...
+# Subtest: CES-06 loading failure stays visible, retries clear it and late old responses cannot poison a new draft
+ok 16 - CES-06 loading failure stays visible, retries clear it and late old responses cannot poison a new draft
+  ---
+  duration_ms: 1431.0261
+  ...
+# Subtest: CES-07/08 real hover expands once, reverses, preserves static icons and pauses for reduced motion and original modal
+ok 17 - CES-07/08 real hover expands once, reverses, preserves static icons and pauses for reduced motion and original modal
+  ---
+  duration_ms: 4284.207
+  ...
+# Subtest: CES-09 paper uses real ThemeProvider, local images and aligned responsive welcome/composer
+ok 18 - CES-09 paper uses real ThemeProvider, local images and aligned responsive welcome/composer
+  ---
+  duration_ms: 1878.282
+  ...
+# Subtest: CES-09 ink uses real ThemeProvider, local images and aligned responsive welcome/composer
+ok 19 - CES-09 ink uses real ThemeProvider, local images and aligned responsive welcome/composer
+  ---
+  duration_ms: 1940.2133
+  ...
+1..19
+# tests 19
+# suites 0
+# pass 19
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 51286.5351

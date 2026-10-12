@@ -115,3 +115,30 @@ test("late failure after an owner change cannot toast or mark the new owner's re
     assert.equal(f.state.recoveryStatus, "restoring"); assert.deepEqual(f.errors, [])
   }
 }))
+
+test("CES-06 failed owned load retains target error until retry or reset; old failures cannot overwrite it", async () => withFetch(async () => {
+  globalThis.fetch = async () => new Response("{}", {status:500})
+  const f = controlledHook()
+  assert.equal(await f.hook.loadConversation("failed-chat"),false)
+  const updates=f.setters.find(values=>values.some(value=>(value as any)?.message==="加载会话失败，请稍后重试"))
+  assert.ok(updates);assert.deepEqual(updates.at(-1),{conversationId:"failed-chat",message:"加载会话失败，请稍后重试"})
+  globalThis.fetch=async()=>new Response(JSON.stringify(detail("retried-chat")))
+  assert.equal(await f.hook.loadConversation("retried-chat"),true);assert.equal(updates.at(-1),null)
+  globalThis.fetch = async () => {throw Error("network unavailable")}
+  assert.equal(await f.hook.loadConversation("offline-chat"),false);assert.equal((updates.at(-1) as any).conversationId,"offline-chat")
+  f.hook.resetConversation(null);assert.equal(updates.at(-1),null)
+  const stale=deferred<Response>();globalThis.fetch=()=>stale.promise
+  const pending=f.hook.loadConversation("stale-chat");f.hook.resetConversation(null)
+  stale.reject(Error("stale failure"));assert.equal(await pending,false);assert.equal(updates.at(-1),null)
+}))
+
+test("CES-06 missing conversation owner replacement keeps its error; navigation to a saved draft clears it",async()=>withFetch(async()=>{
+  const saved={...emptyChatSession(),draftId:"clean-draft"},f=controlledHook([saved])
+  globalThis.fetch=async()=>new Response("{}",{status:404})
+  assert.equal(await f.hook.loadConversation("missing"),false)
+  const updates=f.setters.find(values=>values.some(value=>(value as any)?.conversationId==="missing"))
+  assert.ok(updates);assert.equal((updates.at(-1) as any).message,"会话不存在或已无权访问")
+  assert.equal(f.state.conversationId,null);assert.equal(f.state.recoveryStatus,"ready")
+  const owner=f.mountAdapter()
+  try{assert.equal(await owner.adapter.navigate({kind:"draft",id:"clean-draft",accountId:"author"},new AbortController().signal),true);assert.equal(updates.at(-1),null)}finally{owner.cleanup()}
+}))

@@ -1,0 +1,376 @@
+[
+  {
+    "category": "theme",
+    "id": "theme-ability-awakening-era",
+    "immediate": {
+      "open": true,
+      "hidden": true,
+      "focus": "theme-ability-awakening-era",
+      "events": [
+        {
+          "type": "keydown",
+          "time": 6396.200000001118,
+          "cancelable": true,
+          "prevented": false,
+          "open": true,
+          "hidden": false,
+          "focus": "wizard-detail-use"
+        },
+        {
+          "type": "cancel",
+          "time": 6396.700000001118,
+          "cancelable": true,
+          "prevented": true,
+          "open": true,
+          "hidden": true,
+          "focus": "theme-ability-awakening-era"
+        },
+        {
+          "type": "keyup",
+          "time": 6413.700000001118,
+          "cancelable": true,
+          "prevented": false,
+          "open": true,
+          "hidden": true,
+          "focus": "theme-ability-awakening-era"
+        }
+      ]
+    },
+    "settled": {
+      "open": true,
+      "hidden": true,
+      "focus": "theme-ability-awakening-era",
+      "events": [
+        {
+          "type": "keydown",
+          "time": 6396.200000001118,
+          "cancelable": true,
+          "prevented": false,
+          "open": true,
+          "hidden": false,
+          "focus": "wizard-detail-use"
+        },
+        {
+          "type": "cancel",
+          "time": 6396.700000001118,
+          "cancelable": true,
+          "prevented": true,
+          "open": true,
+          "hidden": true,
+          "focus": "theme-ability-awakening-era"
+        },
+        {
+          "type": "keyup",
+          "time": 6413.700000001118,
+          "cancelable": true,
+          "prevented": false,
+          "open": true,
+          "hidden": true,
+          "focus": "theme-ability-awakening-era"
+        }
+      ]
+    }
+  },
+  {
+    "category": "world",
+    "id": "world-ai-uprising",
+    "immediate": {
+      "open": true,
+      "hidden": true,
+      "focus": "world-ai-uprising",
+      "events": [
+        {
+          "type": "keydown",
+          "time": 6396.200000001118,
+          "cancelable": true,
+          "prevented": false,
+          "open": true,
+          "hidden": false,
+          "focus": "wizard-detail-use"
+        },
+        {
+          "type": "cancel",
+          "time": 6396.700000001118,
+          "cancelable": true,
+          "prevented": true,
+          "open": true,
+          "hidden": true,
+          "focus": "theme-ability-awakening-era"
+        },
+        {
+          "type": "keyup",
+          "time": 6413.700000001118,
+          "cancelable": true,
+          "prevented": false,
+          "open": true,
+          "hidden": true,
+          "focus": "theme-ability-awakening-era"
+        },
+        {
+          "type": "keydown",
+          "time": 7110.4000000003725,
+          "cancelable": true,
+          "prevented": false,
+          "open": true,
+          "hidden": false,
+          "focus": "wizard-detail-use"
+        },
+        {
+          "type": "cancel",
+          "time": 7110.700000001118,
+          "cancelable": true,
+          "prevented": true,
+          "open": true,
+          "hidden": true,
+          "focus": "world-ai-uprising"
+        },
+        {
+          "type": "keyup",
+          "time": 7112.300000000745,
+          "cancelable": true,
+          "prevented": false,
+          "open": true,
+          "hidden": true,
+          "focus": "world-ai-uprising"
+        }
+      ]
+    },
+    "settled": {
+      "open": true,
+      "hidden": true,
+      "focus": "world-ai-uprising",
+      "events": [
+        {
+          "type": "keydown",
+          "time": 6396.200000001118,
+          "cancelable": true,
+          "prevented": false,
+          "open": true,
+          "hidden": false,
+          "focus": "wizard-detail-use"
+        },
+        {
+          "type": "cancel",
+          "time": 6396.700000001118,
+          "cancelable": true,
+          "prevented": true,
+          "open": true,
+          "hidden": true,
+          "focus": "theme-ability-awakening-era"
+        },
+        {
+          "type": "keyup",
+          "time": 6413.700000001118,
+          "cancelable": true,
+          "prevented": false,
+          "open": true,
+          "hidden": true,
+          "focus": "theme-ability-awakening-era"
+        },
+        {
+          "type": "keydown",
+          "time": 7110.4000000003725,
+          "cancelable": true,
+          "prevented": false,
+          "open": true,
+          "hidden": false,
+          "focus": "wizard-detail-use"
+        },
+        {
+          "type": "cancel",
+          "time": 7110.700000001118,
+          "cancelable": true,
+          "prevented": true,
+          "open": true,
+          "hidden": true,
+          "focus": "world-ai-uprising"
+        },
+        {
+          "type": "keyup",
+          "time": 7112.300000000745,
+          "cancelable": true,
+          "prevented": false,
+          "open": true,
+          "hidden": true,
+          "focus": "world-ai-uprising"
+        }
+      ]
+    }
+  },
+  {
+    "category": "character",
+    "id": "char-assassin-recluse",
+    "immediate": {
+      "open": false,
+      "hidden": true,
+      "events": [
+        {
+          "type": "keydown",
+          "time": 6396.200000001118,
+          "cancelable": true,
+          "prevented": false,
+          "open": true,
+          "hidden": false,
+          "focus": "wizard-detail-use"
+        },
+        {
+          "type": "cancel",
+          "time": 6396.700000001118,
+          "cancelable": true,
+          "prevented": true,
+          "open": true,
+          "hidden": true,
+          "focus": "theme-ability-awakening-era"
+        },
+        {
+          "type": "keyup",
+          "time": 6413.700000001118,
+          "cancelable": true,
+          "prevented": false,
+          "open": true,
+          "hidden": true,
+          "focus": "theme-ability-awakening-era"
+        },
+        {
+          "type": "keydown",
+          "time": 7110.4000000003725,
+          "cancelable": true,
+          "prevented": false,
+          "open": true,
+          "hidden": false,
+          "focus": "wizard-detail-use"
+        },
+        {
+          "type": "cancel",
+          "time": 7110.700000001118,
+          "cancelable": true,
+          "prevented": true,
+          "open": true,
+          "hidden": true,
+          "focus": "world-ai-uprising"
+        },
+        {
+          "type": "keyup",
+          "time": 7112.300000000745,
+          "cancelable": true,
+          "prevented": false,
+          "open": true,
+          "hidden": true,
+          "focus": "world-ai-uprising"
+        },
+        {
+          "type": "keydown",
+          "time": 7764.60000000149,
+          "cancelable": true,
+          "prevented": false,
+          "open": true,
+          "hidden": false,
+          "focus": "wizard-detail-use"
+        },
+        {
+          "type": "cancel",
+          "time": 7764.9000000003725,
+          "cancelable": false,
+          "prevented": false,
+          "open": true,
+          "hidden": true,
+          "focus": "char-assassin-recluse"
+        },
+        {
+          "type": "close",
+          "time": 7767,
+          "cancelable": false,
+          "prevented": false,
+          "open": false,
+          "hidden": true
+        }
+      ]
+    },
+    "settled": {
+      "open": false,
+      "hidden": true,
+      "events": [
+        {
+          "type": "keydown",
+          "time": 6396.200000001118,
+          "cancelable": true,
+          "prevented": false,
+          "open": true,
+          "hidden": false,
+          "focus": "wizard-detail-use"
+        },
+        {
+          "type": "cancel",
+          "time": 6396.700000001118,
+          "cancelable": true,
+          "prevented": true,
+          "open": true,
+          "hidden": true,
+          "focus": "theme-ability-awakening-era"
+        },
+        {
+          "type": "keyup",
+          "time": 6413.700000001118,
+          "cancelable": true,
+          "prevented": false,
+          "open": true,
+          "hidden": true,
+          "focus": "theme-ability-awakening-era"
+        },
+        {
+          "type": "keydown",
+          "time": 7110.4000000003725,
+          "cancelable": true,
+          "prevented": false,
+          "open": true,
+          "hidden": false,
+          "focus": "wizard-detail-use"
+        },
+        {
+          "type": "cancel",
+          "time": 7110.700000001118,
+          "cancelable": true,
+          "prevented": true,
+          "open": true,
+          "hidden": true,
+          "focus": "world-ai-uprising"
+        },
+        {
+          "type": "keyup",
+          "time": 7112.300000000745,
+          "cancelable": true,
+          "prevented": false,
+          "open": true,
+          "hidden": true,
+          "focus": "world-ai-uprising"
+        },
+        {
+          "type": "keydown",
+          "time": 7764.60000000149,
+          "cancelable": true,
+          "prevented": false,
+          "open": true,
+          "hidden": false,
+          "focus": "wizard-detail-use"
+        },
+        {
+          "type": "cancel",
+          "time": 7764.9000000003725,
+          "cancelable": false,
+          "prevented": false,
+          "open": true,
+          "hidden": true,
+          "focus": "char-assassin-recluse"
+        },
+        {
+          "type": "close",
+          "time": 7767,
+          "cancelable": false,
+          "prevented": false,
+          "open": false,
+          "hidden": true
+        }
+      ]
+    }
+  }
+]

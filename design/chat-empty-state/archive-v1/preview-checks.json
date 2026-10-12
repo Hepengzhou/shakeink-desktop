@@ -1,0 +1,4640 @@
+{
+  "generatedAt": "2026-10-12T11:07:24.683Z",
+  "scope": "HTML design preview only. Not product React, business behavior, Electron, Windows installer, macOS, persistence, live model, or user UI approval.",
+  "runtime": {
+    "browser": "Installed Google Chrome",
+    "platform": "win32",
+    "protocol": "file:",
+    "isolatedContext": true,
+    "version": "154.0.8037.98"
+  },
+  "selectedCases": "all PV01–PV12",
+  "summary": {
+    "passed": 12,
+    "failed": 0,
+    "unexecuted": 1,
+    "allExecutedAssertionsPassed": true,
+    "fullCoverage": false
+  },
+  "results": [
+    {
+      "id": "PV01",
+      "name": "Offline file preview and all local assets load",
+      "status": "passed",
+      "durationMs": 23,
+      "details": {
+        "loaded": [
+          {
+            "name": "logo",
+            "width": 12288,
+            "height": 192
+          },
+          {
+            "name": "book",
+            "width": 2304,
+            "height": 96
+          },
+          {
+            "name": "world",
+            "width": 2304,
+            "height": 96
+          },
+          {
+            "name": "character",
+            "width": 2304,
+            "height": 96
+          },
+          {
+            "name": "scene",
+            "width": 2304,
+            "height": 96
+          }
+        ],
+        "pageErrors": 0,
+        "failedRequests": 0,
+        "networkRequests": 0
+      }
+    },
+    {
+      "id": "PV02",
+      "name": "Both themes and measured text contrast",
+      "status": "passed",
+      "durationMs": 672,
+      "details": [
+        {
+          "theme": "paper",
+          "samples": [
+            {
+              "selector": "h1",
+              "foreground": "rgb(43, 37, 27)",
+              "background": [
+                240,
+                231,
+                209
+              ],
+              "ratio": 12.331
+            },
+            {
+              "selector": ".welcome-subtitle",
+              "foreground": "rgb(113, 100, 78)",
+              "background": [
+                240,
+                231,
+                209
+              ],
+              "ratio": 4.692
+            },
+            {
+              "selector": ".book-copy strong",
+              "foreground": "rgb(43, 37, 27)",
+              "background": [
+                237,
+                219,
+                202
+              ],
+              "ratio": 11.269
+            },
+            {
+              "selector": ".book-copy>span",
+              "foreground": "rgb(128, 85, 68)",
+              "background": [
+                237,
+                219,
+                202
+              ],
+              "ratio": 4.722
+            },
+            {
+              "selector": ".create-world .secondary-label",
+              "foreground": "rgb(43, 37, 27)",
+              "background": [
+                226,
+                231,
+                215
+              ],
+              "ratio": 12.034
+            },
+            {
+              "selector": ".create-character .secondary-label",
+              "foreground": "rgb(43, 37, 27)",
+              "background": [
+                232,
+                223,
+                223
+              ],
+              "ratio": 11.605
+            },
+            {
+              "selector": ".create-scene .secondary-label",
+              "foreground": "rgb(43, 37, 27)",
+              "background": [
+                238,
+                226,
+                197
+              ],
+              "ratio": 11.799
+            },
+            {
+              "selector": ".composer-hint",
+              "foreground": "rgb(113, 100, 78)",
+              "background": [
+                240,
+                231,
+                209
+              ],
+              "ratio": 4.692
+            },
+            {
+              "selector": ".context-row .quiet-button",
+              "foreground": "rgb(113, 100, 78)",
+              "background": [
+                240,
+                231,
+                209
+              ],
+              "ratio": 4.692
+            },
+            {
+              "selector": ".mode-button",
+              "foreground": "rgb(113, 100, 78)",
+              "background": [
+                249,
+                244,
+                228
+              ],
+              "ratio": 5.251
+            },
+            {
+              "selector": ".model-button",
+              "foreground": "rgb(113, 100, 78)",
+              "background": [
+                249,
+                244,
+                228
+              ],
+              "ratio": 5.251
+            },
+            {
+              "selector": "textarea",
+              "foreground": "rgb(113, 100, 78)",
+              "background": [
+                249,
+                244,
+                228
+              ],
+              "ratio": 5.251
+            }
+          ],
+          "screenshot": "paper-1000x760.png"
+        },
+        {
+          "theme": "ink",
+          "samples": [
+            {
+              "selector": "h1",
+              "foreground": "rgb(236, 231, 225)",
+              "background": [
+                13,
+                11,
+                10
+              ],
+              "ratio": 15.976
+            },
+            {
+              "selector": ".welcome-subtitle",
+              "foreground": "rgb(163, 152, 141)",
+              "background": [
+                13,
+                11,
+                10
+              ],
+              "ratio": 6.951
+            },
+            {
+              "selector": ".book-copy strong",
+              "foreground": "rgb(236, 231, 225)",
+              "background": [
+                41,
+                28,
+                23
+              ],
+              "ratio": 13.423
+            },
+            {
+              "selector": ".book-copy>span",
+              "foreground": "rgb(197, 162, 142)",
+              "background": [
+                41,
+                28,
+                23
+              ],
+              "ratio": 7.018
+            },
+            {
+              "selector": ".create-world .secondary-label",
+              "foreground": "rgb(236, 231, 225)",
+              "background": [
+                21,
+                32,
+                29
+              ],
+              "ratio": 13.6
+            },
+            {
+              "selector": ".create-character .secondary-label",
+              "foreground": "rgb(236, 231, 225)",
+              "background": [
+                33,
+                27,
+                40
+              ],
+              "ratio": 13.645
+            },
+            {
+              "selector": ".create-scene .secondary-label",
+              "foreground": "rgb(236, 231, 225)",
+              "background": [
+                39,
+                33,
+                21
+              ],
+              "ratio": 12.995
+            },
+            {
+              "selector": ".composer-hint",
+              "foreground": "rgb(163, 152, 141)",
+              "background": [
+                13,
+                11,
+                10
+              ],
+              "ratio": 6.951
+            },
+            {
+              "selector": ".context-row .quiet-button",
+              "foreground": "rgb(163, 152, 141)",
+              "background": [
+                13,
+                11,
+                10
+              ],
+              "ratio": 6.951
+            },
+            {
+              "selector": ".mode-button",
+              "foreground": "rgb(163, 152, 141)",
+              "background": [
+                23,
+                19,
+                18
+              ],
+              "ratio": 6.53
+            },
+            {
+              "selector": ".model-button",
+              "foreground": "rgb(163, 152, 141)",
+              "background": [
+                23,
+                19,
+                18
+              ],
+              "ratio": 6.53
+            },
+            {
+              "selector": "textarea",
+              "foreground": "rgb(163, 152, 141)",
+              "background": [
+                23,
+                19,
+                18
+              ],
+              "ratio": 6.53
+            }
+          ],
+          "screenshot": "ink-1000x760.png"
+        }
+      ]
+    },
+    {
+      "id": "PV03",
+      "name": "Two-theme width matrix: 1000, 560, 420, 320",
+      "status": "passed",
+      "durationMs": 2307,
+      "details": [
+        {
+          "theme": "paper",
+          "width": 1000,
+          "observed": {
+            "panel": {
+              "x": 140,
+              "y": 92,
+              "width": 1000,
+              "height": 760,
+              "right": 1140,
+              "bottom": 852
+            },
+            "welcome": {
+              "x": 400,
+              "y": 193.09375,
+              "width": 480,
+              "height": 391.28125,
+              "right": 880,
+              "bottom": 584.375
+            },
+            "scroll": {
+              "x": 141,
+              "y": 137,
+              "width": 998,
+              "height": 499.46875,
+              "right": 1139,
+              "bottom": 636.46875
+            },
+            "dock": {
+              "x": 141,
+              "y": 636.46875,
+              "width": 998,
+              "height": 214.53125,
+              "right": 1139,
+              "bottom": 851
+            },
+            "book": {
+              "x": 400,
+              "y": 402.375,
+              "width": 480,
+              "height": 80,
+              "right": 880,
+              "bottom": 482.375
+            },
+            "group": {
+              "x": 400,
+              "y": 402.375,
+              "width": 480,
+              "height": 182,
+              "right": 880,
+              "bottom": 584.375
+            },
+            "title": {
+              "x": 400,
+              "y": 303.09375,
+              "width": 480,
+              "height": 39.1875,
+              "right": 880,
+              "bottom": 342.28125
+            },
+            "secondary": [
+              {
+                "x": 400,
+                "y": 492.375,
+                "width": 153.328125,
+                "height": 92,
+                "right": 553.328125,
+                "bottom": 584.375
+              },
+              {
+                "x": 563.328125,
+                "y": 492.375,
+                "width": 153.328125,
+                "height": 92,
+                "right": 716.65625,
+                "bottom": 584.375
+              },
+              {
+                "x": 726.65625,
+                "y": 492.375,
+                "width": 153.328125,
+                "height": 92,
+                "right": 879.984375,
+                "bottom": 584.375
+              }
+            ],
+            "labels": [
+              {
+                "width": 150,
+                "scrollWidth": 150,
+                "text": "创建作品从第一缕灵感，到完整的故事",
+                "rect": {
+                  "x": 481,
+                  "y": 420.828125,
+                  "width": 149.5,
+                  "height": 43.09375,
+                  "right": 630.5,
+                  "bottom": 463.921875
+                }
+              },
+              {
+                "width": 121,
+                "scrollWidth": 121,
+                "text": "新世界观",
+                "rect": {
+                  "x": 416,
+                  "y": 555.375,
+                  "width": 121.328125,
+                  "height": 16,
+                  "right": 537.328125,
+                  "bottom": 571.375
+                }
+              },
+              {
+                "width": 121,
+                "scrollWidth": 121,
+                "text": "新角色",
+                "rect": {
+                  "x": 579.328125,
+                  "y": 555.375,
+                  "width": 121.328125,
+                  "height": 16,
+                  "right": 700.65625,
+                  "bottom": 571.375
+                }
+              },
+              {
+                "width": 121,
+                "scrollWidth": 121,
+                "text": "新场景",
+                "rect": {
+                  "x": 742.65625,
+                  "y": 555.375,
+                  "width": 121.328125,
+                  "height": 16,
+                  "right": 863.984375,
+                  "bottom": 571.375
+                }
+              }
+            ],
+            "panelOverflow": 0,
+            "scrollOverflow": 0,
+            "scrollHeight": 499,
+            "clientHeight": 499,
+            "tools": [
+              {
+                "rect": {
+                  "x": 168,
+                  "y": 638.46875,
+                  "width": 109,
+                  "height": 28,
+                  "right": 277,
+                  "bottom": 666.46875
+                },
+                "name": "不关联作品"
+              },
+              {
+                "rect": {
+                  "x": 178,
+                  "y": 769.25,
+                  "width": 30,
+                  "height": 30,
+                  "right": 208,
+                  "bottom": 799.25
+                },
+                "name": "添加引用"
+              },
+              {
+                "rect": {
+                  "x": 223,
+                  "y": 770.25,
+                  "width": 56,
+                  "height": 28,
+                  "right": 279,
+                  "bottom": 798.25
+                },
+                "name": "标准"
+              },
+              {
+                "rect": {
+                  "x": 282,
+                  "y": 770.25,
+                  "width": 100,
+                  "height": 28,
+                  "right": 382,
+                  "bottom": 798.25
+                },
+                "name": "选择模型"
+              },
+              {
+                "rect": {
+                  "x": 1070,
+                  "y": 768.25,
+                  "width": 32,
+                  "height": 32,
+                  "right": 1102,
+                  "bottom": 800.25
+                },
+                "name": "发送（请先配置文本模型）"
+              }
+            ]
+          },
+          "screenshot": "paper-1000x760.png"
+        },
+        {
+          "theme": "paper",
+          "width": 560,
+          "observed": {
+            "panel": {
+              "x": 360,
+              "y": 92,
+              "width": 560,
+              "height": 760,
+              "right": 920,
+              "bottom": 852
+            },
+            "welcome": {
+              "x": 400,
+              "y": 195.890625,
+              "width": 480,
+              "height": 385.6875,
+              "right": 880,
+              "bottom": 581.578125
+            },
+            "scroll": {
+              "x": 361,
+              "y": 137,
+              "width": 558,
+              "height": 499.46875,
+              "right": 919,
+              "bottom": 636.46875
+            },
+            "dock": {
+              "x": 361,
+              "y": 636.46875,
+              "width": 558,
+              "height": 214.53125,
+              "right": 919,
+              "bottom": 851
+            },
+            "book": {
+              "x": 400,
+              "y": 399.578125,
+              "width": 480,
+              "height": 80,
+              "right": 880,
+              "bottom": 479.578125
+            },
+            "group": {
+              "x": 400,
+              "y": 399.578125,
+              "width": 480,
+              "height": 182,
+              "right": 880,
+              "bottom": 581.578125
+            },
+            "title": {
+              "x": 400,
+              "y": 305.890625,
+              "width": 480,
+              "height": 33.59375,
+              "right": 880,
+              "bottom": 339.484375
+            },
+            "secondary": [
+              {
+                "x": 400,
+                "y": 489.578125,
+                "width": 153.328125,
+                "height": 92,
+                "right": 553.328125,
+                "bottom": 581.578125
+              },
+              {
+                "x": 563.328125,
+                "y": 489.578125,
+                "width": 153.328125,
+                "height": 92,
+                "right": 716.65625,
+                "bottom": 581.578125
+              },
+              {
+                "x": 726.65625,
+                "y": 489.578125,
+                "width": 153.328125,
+                "height": 92,
+                "right": 879.984375,
+                "bottom": 581.578125
+              }
+            ],
+            "labels": [
+              {
+                "width": 143,
+                "scrollWidth": 143,
+                "text": "创建作品从第一缕灵感，到完整的故事",
+                "rect": {
+                  "x": 481,
+                  "y": 418.375,
+                  "width": 143,
+                  "height": 42.390625,
+                  "right": 624,
+                  "bottom": 460.765625
+                }
+              },
+              {
+                "width": 127,
+                "scrollWidth": 127,
+                "text": "新世界观",
+                "rect": {
+                  "x": 413,
+                  "y": 552.578125,
+                  "width": 127.328125,
+                  "height": 16,
+                  "right": 540.328125,
+                  "bottom": 568.578125
+                }
+              },
+              {
+                "width": 127,
+                "scrollWidth": 127,
+                "text": "新角色",
+                "rect": {
+                  "x": 576.328125,
+                  "y": 552.578125,
+                  "width": 127.328125,
+                  "height": 16,
+                  "right": 703.65625,
+                  "bottom": 568.578125
+                }
+              },
+              {
+                "width": 127,
+                "scrollWidth": 127,
+                "text": "新场景",
+                "rect": {
+                  "x": 739.65625,
+                  "y": 552.578125,
+                  "width": 127.328125,
+                  "height": 16,
+                  "right": 866.984375,
+                  "bottom": 568.578125
+                }
+              }
+            ],
+            "panelOverflow": 0,
+            "scrollOverflow": 0,
+            "scrollHeight": 499,
+            "clientHeight": 499,
+            "tools": [
+              {
+                "rect": {
+                  "x": 380,
+                  "y": 638.46875,
+                  "width": 109,
+                  "height": 28,
+                  "right": 489,
+                  "bottom": 666.46875
+                },
+                "name": "不关联作品"
+              },
+              {
+                "rect": {
+                  "x": 390,
+                  "y": 769.25,
+                  "width": 30,
+                  "height": 30,
+                  "right": 420,
+                  "bottom": 799.25
+                },
+                "name": "添加引用"
+              },
+              {
+                "rect": {
+                  "x": 435,
+                  "y": 770.25,
+                  "width": 56,
+                  "height": 28,
+                  "right": 491,
+                  "bottom": 798.25
+                },
+                "name": "标准"
+              },
+              {
+                "rect": {
+                  "x": 494,
+                  "y": 770.25,
+                  "width": 100,
+                  "height": 28,
+                  "right": 594,
+                  "bottom": 798.25
+                },
+                "name": "选择模型"
+              },
+              {
+                "rect": {
+                  "x": 858,
+                  "y": 768.25,
+                  "width": 32,
+                  "height": 32,
+                  "right": 890,
+                  "bottom": 800.25
+                },
+                "name": "发送（请先配置文本模型）"
+              }
+            ]
+          },
+          "screenshot": "paper-560x760.png"
+        },
+        {
+          "theme": "paper",
+          "width": 420,
+          "observed": {
+            "panel": {
+              "x": 430,
+              "y": 92,
+              "width": 420,
+              "height": 760,
+              "right": 850,
+              "bottom": 852
+            },
+            "welcome": {
+              "x": 455,
+              "y": 195.890625,
+              "width": 370,
+              "height": 385.6875,
+              "right": 825,
+              "bottom": 581.578125
+            },
+            "scroll": {
+              "x": 431,
+              "y": 137,
+              "width": 418,
+              "height": 499.46875,
+              "right": 849,
+              "bottom": 636.46875
+            },
+            "dock": {
+              "x": 431,
+              "y": 636.46875,
+              "width": 418,
+              "height": 214.53125,
+              "right": 849,
+              "bottom": 851
+            },
+            "book": {
+              "x": 455,
+              "y": 399.578125,
+              "width": 370,
+              "height": 80,
+              "right": 825,
+              "bottom": 479.578125
+            },
+            "group": {
+              "x": 455,
+              "y": 399.578125,
+              "width": 370,
+              "height": 182,
+              "right": 825,
+              "bottom": 581.578125
+            },
+            "title": {
+              "x": 455,
+              "y": 305.890625,
+              "width": 370,
+              "height": 33.59375,
+              "right": 825,
+              "bottom": 339.484375
+            },
+            "secondary": [
+              {
+                "x": 455,
+                "y": 489.578125,
+                "width": 116.65625,
+                "height": 92,
+                "right": 571.65625,
+                "bottom": 581.578125
+              },
+              {
+                "x": 581.65625,
+                "y": 489.578125,
+                "width": 116.671875,
+                "height": 92,
+                "right": 698.328125,
+                "bottom": 581.578125
+              },
+              {
+                "x": 708.328125,
+                "y": 489.578125,
+                "width": 116.65625,
+                "height": 92,
+                "right": 824.984375,
+                "bottom": 581.578125
+              }
+            ],
+            "labels": [
+              {
+                "width": 143,
+                "scrollWidth": 143,
+                "text": "创建作品从第一缕灵感，到完整的故事",
+                "rect": {
+                  "x": 536,
+                  "y": 418.375,
+                  "width": 143,
+                  "height": 42.390625,
+                  "right": 679,
+                  "bottom": 460.765625
+                }
+              },
+              {
+                "width": 91,
+                "scrollWidth": 91,
+                "text": "新世界观",
+                "rect": {
+                  "x": 468,
+                  "y": 552.578125,
+                  "width": 90.65625,
+                  "height": 16,
+                  "right": 558.65625,
+                  "bottom": 568.578125
+                }
+              },
+              {
+                "width": 91,
+                "scrollWidth": 91,
+                "text": "新角色",
+                "rect": {
+                  "x": 594.65625,
+                  "y": 552.578125,
+                  "width": 90.671875,
+                  "height": 16,
+                  "right": 685.328125,
+                  "bottom": 568.578125
+                }
+              },
+              {
+                "width": 91,
+                "scrollWidth": 91,
+                "text": "新场景",
+                "rect": {
+                  "x": 721.328125,
+                  "y": 552.578125,
+                  "width": 90.65625,
+                  "height": 16,
+                  "right": 811.984375,
+                  "bottom": 568.578125
+                }
+              }
+            ],
+            "panelOverflow": 0,
+            "scrollOverflow": 0,
+            "scrollHeight": 499,
+            "clientHeight": 499,
+            "tools": [
+              {
+                "rect": {
+                  "x": 450,
+                  "y": 638.46875,
+                  "width": 109,
+                  "height": 28,
+                  "right": 559,
+                  "bottom": 666.46875
+                },
+                "name": "不关联作品"
+              },
+              {
+                "rect": {
+                  "x": 460,
+                  "y": 769.25,
+                  "width": 30,
+                  "height": 30,
+                  "right": 490,
+                  "bottom": 799.25
+                },
+                "name": "添加引用"
+              },
+              {
+                "rect": {
+                  "x": 505,
+                  "y": 770.25,
+                  "width": 56,
+                  "height": 28,
+                  "right": 561,
+                  "bottom": 798.25
+                },
+                "name": "标准"
+              },
+              {
+                "rect": {
+                  "x": 564,
+                  "y": 770.25,
+                  "width": 100,
+                  "height": 28,
+                  "right": 664,
+                  "bottom": 798.25
+                },
+                "name": "选择模型"
+              },
+              {
+                "rect": {
+                  "x": 788,
+                  "y": 768.25,
+                  "width": 32,
+                  "height": 32,
+                  "right": 820,
+                  "bottom": 800.25
+                },
+                "name": "发送（请先配置文本模型）"
+              }
+            ]
+          },
+          "screenshot": "paper-420x760.png"
+        },
+        {
+          "theme": "paper",
+          "width": 320,
+          "observed": {
+            "panel": {
+              "x": 480,
+              "y": 92,
+              "width": 320,
+              "height": 760,
+              "right": 800,
+              "bottom": 852
+            },
+            "welcome": {
+              "x": 497,
+              "y": 204.96875,
+              "width": 286,
+              "height": 379.484375,
+              "right": 783,
+              "bottom": 584.453125
+            },
+            "scroll": {
+              "x": 481,
+              "y": 137,
+              "width": 318,
+              "height": 511.4375,
+              "right": 799,
+              "bottom": 648.4375
+            },
+            "dock": {
+              "x": 481,
+              "y": 648.4375,
+              "width": 318,
+              "height": 202.5625,
+              "right": 799,
+              "bottom": 851
+            },
+            "book": {
+              "x": 497,
+              "y": 402.453125,
+              "width": 286,
+              "height": 80,
+              "right": 783,
+              "bottom": 482.453125
+            },
+            "group": {
+              "x": 497,
+              "y": 402.453125,
+              "width": 286,
+              "height": 182,
+              "right": 783,
+              "bottom": 584.453125
+            },
+            "title": {
+              "x": 497,
+              "y": 314.96875,
+              "width": 286,
+              "height": 30.796875,
+              "right": 783,
+              "bottom": 345.765625
+            },
+            "secondary": [
+              {
+                "x": 497,
+                "y": 492.453125,
+                "width": 91.328125,
+                "height": 92,
+                "right": 588.328125,
+                "bottom": 584.453125
+              },
+              {
+                "x": 594.328125,
+                "y": 492.453125,
+                "width": 91.328125,
+                "height": 92,
+                "right": 685.65625,
+                "bottom": 584.453125
+              },
+              {
+                "x": 691.65625,
+                "y": 492.453125,
+                "width": 91.34375,
+                "height": 92,
+                "right": 783,
+                "bottom": 584.453125
+              }
+            ],
+            "labels": [
+              {
+                "width": 127,
+                "scrollWidth": 127,
+                "text": "创建作品从第一缕灵感，到完整的故事",
+                "rect": {
+                  "x": 559,
+                  "y": 422.453125,
+                  "width": 127.40625,
+                  "height": 40,
+                  "right": 686.40625,
+                  "bottom": 462.453125
+                }
+              },
+              {
+                "width": 71,
+                "scrollWidth": 71,
+                "text": "新世界观",
+                "rect": {
+                  "x": 507,
+                  "y": 558.453125,
+                  "width": 71.328125,
+                  "height": 15,
+                  "right": 578.328125,
+                  "bottom": 573.453125
+                }
+              },
+              {
+                "width": 71,
+                "scrollWidth": 71,
+                "text": "新角色",
+                "rect": {
+                  "x": 604.328125,
+                  "y": 558.453125,
+                  "width": 71.328125,
+                  "height": 15,
+                  "right": 675.65625,
+                  "bottom": 573.453125
+                }
+              },
+              {
+                "width": 71,
+                "scrollWidth": 71,
+                "text": "新场景",
+                "rect": {
+                  "x": 701.65625,
+                  "y": 558.453125,
+                  "width": 71.34375,
+                  "height": 15,
+                  "right": 773,
+                  "bottom": 573.453125
+                }
+              }
+            ],
+            "panelOverflow": 0,
+            "scrollOverflow": 0,
+            "scrollHeight": 511,
+            "clientHeight": 511,
+            "tools": [
+              {
+                "rect": {
+                  "x": 496,
+                  "y": 650.4375,
+                  "width": 103,
+                  "height": 28,
+                  "right": 599,
+                  "bottom": 678.4375
+                },
+                "name": "不关联作品"
+              },
+              {
+                "rect": {
+                  "x": 503,
+                  "y": 772,
+                  "width": 30,
+                  "height": 30,
+                  "right": 533,
+                  "bottom": 802
+                },
+                "name": "添加引用"
+              },
+              {
+                "rect": {
+                  "x": 538,
+                  "y": 773,
+                  "width": 48,
+                  "height": 28,
+                  "right": 586,
+                  "bottom": 801
+                },
+                "name": "标准"
+              },
+              {
+                "rect": {
+                  "x": 587,
+                  "y": 773,
+                  "width": 69,
+                  "height": 28,
+                  "right": 656,
+                  "bottom": 801
+                },
+                "name": "选择模型"
+              },
+              {
+                "rect": {
+                  "x": 745,
+                  "y": 771,
+                  "width": 32,
+                  "height": 32,
+                  "right": 777,
+                  "bottom": 803
+                },
+                "name": "发送（请先配置文本模型）"
+              }
+            ]
+          },
+          "screenshot": "paper-320x760.png"
+        },
+        {
+          "theme": "ink",
+          "width": 1000,
+          "observed": {
+            "panel": {
+              "x": 140,
+              "y": 92,
+              "width": 1000,
+              "height": 760,
+              "right": 1140,
+              "bottom": 852
+            },
+            "welcome": {
+              "x": 400,
+              "y": 193.09375,
+              "width": 480,
+              "height": 391.28125,
+              "right": 880,
+              "bottom": 584.375
+            },
+            "scroll": {
+              "x": 141,
+              "y": 137,
+              "width": 998,
+              "height": 499.46875,
+              "right": 1139,
+              "bottom": 636.46875
+            },
+            "dock": {
+              "x": 141,
+              "y": 636.46875,
+              "width": 998,
+              "height": 214.53125,
+              "right": 1139,
+              "bottom": 851
+            },
+            "book": {
+              "x": 400,
+              "y": 402.375,
+              "width": 480,
+              "height": 80,
+              "right": 880,
+              "bottom": 482.375
+            },
+            "group": {
+              "x": 400,
+              "y": 402.375,
+              "width": 480,
+              "height": 182,
+              "right": 880,
+              "bottom": 584.375
+            },
+            "title": {
+              "x": 400,
+              "y": 303.09375,
+              "width": 480,
+              "height": 39.1875,
+              "right": 880,
+              "bottom": 342.28125
+            },
+            "secondary": [
+              {
+                "x": 400,
+                "y": 492.375,
+                "width": 153.328125,
+                "height": 92,
+                "right": 553.328125,
+                "bottom": 584.375
+              },
+              {
+                "x": 563.328125,
+                "y": 492.375,
+                "width": 153.328125,
+                "height": 92,
+                "right": 716.65625,
+                "bottom": 584.375
+              },
+              {
+                "x": 726.65625,
+                "y": 492.375,
+                "width": 153.328125,
+                "height": 92,
+                "right": 879.984375,
+                "bottom": 584.375
+              }
+            ],
+            "labels": [
+              {
+                "width": 150,
+                "scrollWidth": 150,
+                "text": "创建作品从第一缕灵感，到完整的故事",
+                "rect": {
+                  "x": 481,
+                  "y": 420.828125,
+                  "width": 149.5,
+                  "height": 43.09375,
+                  "right": 630.5,
+                  "bottom": 463.921875
+                }
+              },
+              {
+                "width": 121,
+                "scrollWidth": 121,
+                "text": "新世界观",
+                "rect": {
+                  "x": 416,
+                  "y": 555.375,
+                  "width": 121.328125,
+                  "height": 16,
+                  "right": 537.328125,
+                  "bottom": 571.375
+                }
+              },
+              {
+                "width": 121,
+                "scrollWidth": 121,
+                "text": "新角色",
+                "rect": {
+                  "x": 579.328125,
+                  "y": 555.375,
+                  "width": 121.328125,
+                  "height": 16,
+                  "right": 700.65625,
+                  "bottom": 571.375
+                }
+              },
+              {
+                "width": 121,
+                "scrollWidth": 121,
+                "text": "新场景",
+                "rect": {
+                  "x": 742.65625,
+                  "y": 555.375,
+                  "width": 121.328125,
+                  "height": 16,
+                  "right": 863.984375,
+                  "bottom": 571.375
+                }
+              }
+            ],
+            "panelOverflow": 0,
+            "scrollOverflow": 0,
+            "scrollHeight": 499,
+            "clientHeight": 499,
+            "tools": [
+              {
+                "rect": {
+                  "x": 168,
+                  "y": 638.46875,
+                  "width": 109,
+                  "height": 28,
+                  "right": 277,
+                  "bottom": 666.46875
+                },
+                "name": "不关联作品"
+              },
+              {
+                "rect": {
+                  "x": 178,
+                  "y": 769.25,
+                  "width": 30,
+                  "height": 30,
+                  "right": 208,
+                  "bottom": 799.25
+                },
+                "name": "添加引用"
+              },
+              {
+                "rect": {
+                  "x": 223,
+                  "y": 770.25,
+                  "width": 56,
+                  "height": 28,
+                  "right": 279,
+                  "bottom": 798.25
+                },
+                "name": "标准"
+              },
+              {
+                "rect": {
+                  "x": 282,
+                  "y": 770.25,
+                  "width": 100,
+                  "height": 28,
+                  "right": 382,
+                  "bottom": 798.25
+                },
+                "name": "选择模型"
+              },
+              {
+                "rect": {
+                  "x": 1070,
+                  "y": 768.25,
+                  "width": 32,
+                  "height": 32,
+                  "right": 1102,
+                  "bottom": 800.25
+                },
+                "name": "发送（请先配置文本模型）"
+              }
+            ]
+          },
+          "screenshot": "ink-1000x760.png"
+        },
+        {
+          "theme": "ink",
+          "width": 560,
+          "observed": {
+            "panel": {
+              "x": 360,
+              "y": 92,
+              "width": 560,
+              "height": 760,
+              "right": 920,
+              "bottom": 852
+            },
+            "welcome": {
+              "x": 400,
+              "y": 195.890625,
+              "width": 480,
+              "height": 385.6875,
+              "right": 880,
+              "bottom": 581.578125
+            },
+            "scroll": {
+              "x": 361,
+              "y": 137,
+              "width": 558,
+              "height": 499.46875,
+              "right": 919,
+              "bottom": 636.46875
+            },
+            "dock": {
+              "x": 361,
+              "y": 636.46875,
+              "width": 558,
+              "height": 214.53125,
+              "right": 919,
+              "bottom": 851
+            },
+            "book": {
+              "x": 400,
+              "y": 399.578125,
+              "width": 480,
+              "height": 80,
+              "right": 880,
+              "bottom": 479.578125
+            },
+            "group": {
+              "x": 400,
+              "y": 399.578125,
+              "width": 480,
+              "height": 182,
+              "right": 880,
+              "bottom": 581.578125
+            },
+            "title": {
+              "x": 400,
+              "y": 305.890625,
+              "width": 480,
+              "height": 33.59375,
+              "right": 880,
+              "bottom": 339.484375
+            },
+            "secondary": [
+              {
+                "x": 400,
+                "y": 489.578125,
+                "width": 153.328125,
+                "height": 92,
+                "right": 553.328125,
+                "bottom": 581.578125
+              },
+              {
+                "x": 563.328125,
+                "y": 489.578125,
+                "width": 153.328125,
+                "height": 92,
+                "right": 716.65625,
+                "bottom": 581.578125
+              },
+              {
+                "x": 726.65625,
+                "y": 489.578125,
+                "width": 153.328125,
+                "height": 92,
+                "right": 879.984375,
+                "bottom": 581.578125
+              }
+            ],
+            "labels": [
+              {
+                "width": 143,
+                "scrollWidth": 143,
+                "text": "创建作品从第一缕灵感，到完整的故事",
+                "rect": {
+                  "x": 481,
+                  "y": 418.375,
+                  "width": 143,
+                  "height": 42.390625,
+                  "right": 624,
+                  "bottom": 460.765625
+                }
+              },
+              {
+                "width": 127,
+                "scrollWidth": 127,
+                "text": "新世界观",
+                "rect": {
+                  "x": 413,
+                  "y": 552.578125,
+                  "width": 127.328125,
+                  "height": 16,
+                  "right": 540.328125,
+                  "bottom": 568.578125
+                }
+              },
+              {
+                "width": 127,
+                "scrollWidth": 127,
+                "text": "新角色",
+                "rect": {
+                  "x": 576.328125,
+                  "y": 552.578125,
+                  "width": 127.328125,
+                  "height": 16,
+                  "right": 703.65625,
+                  "bottom": 568.578125
+                }
+              },
+              {
+                "width": 127,
+                "scrollWidth": 127,
+                "text": "新场景",
+                "rect": {
+                  "x": 739.65625,
+                  "y": 552.578125,
+                  "width": 127.328125,
+                  "height": 16,
+                  "right": 866.984375,
+                  "bottom": 568.578125
+                }
+              }
+            ],
+            "panelOverflow": 0,
+            "scrollOverflow": 0,
+            "scrollHeight": 499,
+            "clientHeight": 499,
+            "tools": [
+              {
+                "rect": {
+                  "x": 380,
+                  "y": 638.46875,
+                  "width": 109,
+                  "height": 28,
+                  "right": 489,
+                  "bottom": 666.46875
+                },
+                "name": "不关联作品"
+              },
+              {
+                "rect": {
+                  "x": 390,
+                  "y": 769.25,
+                  "width": 30,
+                  "height": 30,
+                  "right": 420,
+                  "bottom": 799.25
+                },
+                "name": "添加引用"
+              },
+              {
+                "rect": {
+                  "x": 435,
+                  "y": 770.25,
+                  "width": 56,
+                  "height": 28,
+                  "right": 491,
+                  "bottom": 798.25
+                },
+                "name": "标准"
+              },
+              {
+                "rect": {
+                  "x": 494,
+                  "y": 770.25,
+                  "width": 100,
+                  "height": 28,
+                  "right": 594,
+                  "bottom": 798.25
+                },
+                "name": "选择模型"
+              },
+              {
+                "rect": {
+                  "x": 858,
+                  "y": 768.25,
+                  "width": 32,
+                  "height": 32,
+                  "right": 890,
+                  "bottom": 800.25
+                },
+                "name": "发送（请先配置文本模型）"
+              }
+            ]
+          },
+          "screenshot": "ink-560x760.png"
+        },
+        {
+          "theme": "ink",
+          "width": 420,
+          "observed": {
+            "panel": {
+              "x": 430,
+              "y": 92,
+              "width": 420,
+              "height": 760,
+              "right": 850,
+              "bottom": 852
+            },
+            "welcome": {
+              "x": 455,
+              "y": 195.890625,
+              "width": 370,
+              "height": 385.6875,
+              "right": 825,
+              "bottom": 581.578125
+            },
+            "scroll": {
+              "x": 431,
+              "y": 137,
+              "width": 418,
+              "height": 499.46875,
+              "right": 849,
+              "bottom": 636.46875
+            },
+            "dock": {
+              "x": 431,
+              "y": 636.46875,
+              "width": 418,
+              "height": 214.53125,
+              "right": 849,
+              "bottom": 851
+            },
+            "book": {
+              "x": 455,
+              "y": 399.578125,
+              "width": 370,
+              "height": 80,
+              "right": 825,
+              "bottom": 479.578125
+            },
+            "group": {
+              "x": 455,
+              "y": 399.578125,
+              "width": 370,
+              "height": 182,
+              "right": 825,
+              "bottom": 581.578125
+            },
+            "title": {
+              "x": 455,
+              "y": 305.890625,
+              "width": 370,
+              "height": 33.59375,
+              "right": 825,
+              "bottom": 339.484375
+            },
+            "secondary": [
+              {
+                "x": 455,
+                "y": 489.578125,
+                "width": 116.65625,
+                "height": 92,
+                "right": 571.65625,
+                "bottom": 581.578125
+              },
+              {
+                "x": 581.65625,
+                "y": 489.578125,
+                "width": 116.671875,
+                "height": 92,
+                "right": 698.328125,
+                "bottom": 581.578125
+              },
+              {
+                "x": 708.328125,
+                "y": 489.578125,
+                "width": 116.65625,
+                "height": 92,
+                "right": 824.984375,
+                "bottom": 581.578125
+              }
+            ],
+            "labels": [
+              {
+                "width": 143,
+                "scrollWidth": 143,
+                "text": "创建作品从第一缕灵感，到完整的故事",
+                "rect": {
+                  "x": 536,
+                  "y": 418.375,
+                  "width": 143,
+                  "height": 42.390625,
+                  "right": 679,
+                  "bottom": 460.765625
+                }
+              },
+              {
+                "width": 91,
+                "scrollWidth": 91,
+                "text": "新世界观",
+                "rect": {
+                  "x": 468,
+                  "y": 552.578125,
+                  "width": 90.65625,
+                  "height": 16,
+                  "right": 558.65625,
+                  "bottom": 568.578125
+                }
+              },
+              {
+                "width": 91,
+                "scrollWidth": 91,
+                "text": "新角色",
+                "rect": {
+                  "x": 594.65625,
+                  "y": 552.578125,
+                  "width": 90.671875,
+                  "height": 16,
+                  "right": 685.328125,
+                  "bottom": 568.578125
+                }
+              },
+              {
+                "width": 91,
+                "scrollWidth": 91,
+                "text": "新场景",
+                "rect": {
+                  "x": 721.328125,
+                  "y": 552.578125,
+                  "width": 90.65625,
+                  "height": 16,
+                  "right": 811.984375,
+                  "bottom": 568.578125
+                }
+              }
+            ],
+            "panelOverflow": 0,
+            "scrollOverflow": 0,
+            "scrollHeight": 499,
+            "clientHeight": 499,
+            "tools": [
+              {
+                "rect": {
+                  "x": 450,
+                  "y": 638.46875,
+                  "width": 109,
+                  "height": 28,
+                  "right": 559,
+                  "bottom": 666.46875
+                },
+                "name": "不关联作品"
+              },
+              {
+                "rect": {
+                  "x": 460,
+                  "y": 769.25,
+                  "width": 30,
+                  "height": 30,
+                  "right": 490,
+                  "bottom": 799.25
+                },
+                "name": "添加引用"
+              },
+              {
+                "rect": {
+                  "x": 505,
+                  "y": 770.25,
+                  "width": 56,
+                  "height": 28,
+                  "right": 561,
+                  "bottom": 798.25
+                },
+                "name": "标准"
+              },
+              {
+                "rect": {
+                  "x": 564,
+                  "y": 770.25,
+                  "width": 100,
+                  "height": 28,
+                  "right": 664,
+                  "bottom": 798.25
+                },
+                "name": "选择模型"
+              },
+              {
+                "rect": {
+                  "x": 788,
+                  "y": 768.25,
+                  "width": 32,
+                  "height": 32,
+                  "right": 820,
+                  "bottom": 800.25
+                },
+                "name": "发送（请先配置文本模型）"
+              }
+            ]
+          },
+          "screenshot": "ink-420x760.png"
+        },
+        {
+          "theme": "ink",
+          "width": 320,
+          "observed": {
+            "panel": {
+              "x": 480,
+              "y": 92,
+              "width": 320,
+              "height": 760,
+              "right": 800,
+              "bottom": 852
+            },
+            "welcome": {
+              "x": 497,
+              "y": 204.96875,
+              "width": 286,
+              "height": 379.484375,
+              "right": 783,
+              "bottom": 584.453125
+            },
+            "scroll": {
+              "x": 481,
+              "y": 137,
+              "width": 318,
+              "height": 511.4375,
+              "right": 799,
+              "bottom": 648.4375
+            },
+            "dock": {
+              "x": 481,
+              "y": 648.4375,
+              "width": 318,
+              "height": 202.5625,
+              "right": 799,
+              "bottom": 851
+            },
+            "book": {
+              "x": 497,
+              "y": 402.453125,
+              "width": 286,
+              "height": 80,
+              "right": 783,
+              "bottom": 482.453125
+            },
+            "group": {
+              "x": 497,
+              "y": 402.453125,
+              "width": 286,
+              "height": 182,
+              "right": 783,
+              "bottom": 584.453125
+            },
+            "title": {
+              "x": 497,
+              "y": 314.96875,
+              "width": 286,
+              "height": 30.796875,
+              "right": 783,
+              "bottom": 345.765625
+            },
+            "secondary": [
+              {
+                "x": 497,
+                "y": 492.453125,
+                "width": 91.328125,
+                "height": 92,
+                "right": 588.328125,
+                "bottom": 584.453125
+              },
+              {
+                "x": 594.328125,
+                "y": 492.453125,
+                "width": 91.328125,
+                "height": 92,
+                "right": 685.65625,
+                "bottom": 584.453125
+              },
+              {
+                "x": 691.65625,
+                "y": 492.453125,
+                "width": 91.34375,
+                "height": 92,
+                "right": 783,
+                "bottom": 584.453125
+              }
+            ],
+            "labels": [
+              {
+                "width": 127,
+                "scrollWidth": 127,
+                "text": "创建作品从第一缕灵感，到完整的故事",
+                "rect": {
+                  "x": 559,
+                  "y": 422.453125,
+                  "width": 127.40625,
+                  "height": 40,
+                  "right": 686.40625,
+                  "bottom": 462.453125
+                }
+              },
+              {
+                "width": 71,
+                "scrollWidth": 71,
+                "text": "新世界观",
+                "rect": {
+                  "x": 507,
+                  "y": 558.453125,
+                  "width": 71.328125,
+                  "height": 15,
+                  "right": 578.328125,
+                  "bottom": 573.453125
+                }
+              },
+              {
+                "width": 71,
+                "scrollWidth": 71,
+                "text": "新角色",
+                "rect": {
+                  "x": 604.328125,
+                  "y": 558.453125,
+                  "width": 71.328125,
+                  "height": 15,
+                  "right": 675.65625,
+                  "bottom": 573.453125
+                }
+              },
+              {
+                "width": 71,
+                "scrollWidth": 71,
+                "text": "新场景",
+                "rect": {
+                  "x": 701.65625,
+                  "y": 558.453125,
+                  "width": 71.34375,
+                  "height": 15,
+                  "right": 773,
+                  "bottom": 573.453125
+                }
+              }
+            ],
+            "panelOverflow": 0,
+            "scrollOverflow": 0,
+            "scrollHeight": 511,
+            "clientHeight": 511,
+            "tools": [
+              {
+                "rect": {
+                  "x": 496,
+                  "y": 650.4375,
+                  "width": 103,
+                  "height": 28,
+                  "right": 599,
+                  "bottom": 678.4375
+                },
+                "name": "不关联作品"
+              },
+              {
+                "rect": {
+                  "x": 503,
+                  "y": 772,
+                  "width": 30,
+                  "height": 30,
+                  "right": 533,
+                  "bottom": 802
+                },
+                "name": "添加引用"
+              },
+              {
+                "rect": {
+                  "x": 538,
+                  "y": 773,
+                  "width": 48,
+                  "height": 28,
+                  "right": 586,
+                  "bottom": 801
+                },
+                "name": "标准"
+              },
+              {
+                "rect": {
+                  "x": 587,
+                  "y": 773,
+                  "width": 69,
+                  "height": 28,
+                  "right": 656,
+                  "bottom": 801
+                },
+                "name": "选择模型"
+              },
+              {
+                "rect": {
+                  "x": 745,
+                  "y": 771,
+                  "width": 32,
+                  "height": 32,
+                  "right": 777,
+                  "bottom": 803
+                },
+                "name": "发送（请先配置文本模型）"
+              }
+            ]
+          },
+          "screenshot": "ink-320x760.png"
+        }
+      ]
+    },
+    {
+      "id": "PV04",
+      "name": "Short panels keep composer docked and all actions reachable",
+      "status": "passed",
+      "durationMs": 2063,
+      "details": [
+        {
+          "theme": "paper",
+          "width": 560,
+          "height": 520,
+          "observed": {
+            "panel": {
+              "x": 360,
+              "y": 92,
+              "width": 560,
+              "height": 520,
+              "right": 920,
+              "bottom": 612
+            },
+            "welcome": {
+              "x": 400,
+              "y": 153,
+              "width": 480,
+              "height": 307.28125,
+              "right": 880,
+              "bottom": 460.28125
+            },
+            "scroll": {
+              "x": 361,
+              "y": 137,
+              "width": 558,
+              "height": 289.25,
+              "right": 919,
+              "bottom": 426.25
+            },
+            "dock": {
+              "x": 361,
+              "y": 426.25,
+              "width": 558,
+              "height": 184.75,
+              "right": 919,
+              "bottom": 611
+            },
+            "book": {
+              "x": 400,
+              "y": 300.28125,
+              "width": 480,
+              "height": 70,
+              "right": 880,
+              "bottom": 370.28125
+            },
+            "group": {
+              "x": 400,
+              "y": 300.28125,
+              "width": 480,
+              "height": 160,
+              "right": 880,
+              "bottom": 460.28125
+            },
+            "title": {
+              "x": 400,
+              "y": 225,
+              "width": 480,
+              "height": 32.1875,
+              "right": 880,
+              "bottom": 257.1875
+            },
+            "secondary": [
+              {
+                "x": 400,
+                "y": 380.28125,
+                "width": 153.328125,
+                "height": 80,
+                "right": 553.328125,
+                "bottom": 460.28125
+              },
+              {
+                "x": 563.328125,
+                "y": 380.28125,
+                "width": 153.328125,
+                "height": 80,
+                "right": 716.65625,
+                "bottom": 460.28125
+              },
+              {
+                "x": 726.65625,
+                "y": 380.28125,
+                "width": 153.328125,
+                "height": 80,
+                "right": 879.984375,
+                "bottom": 460.28125
+              }
+            ],
+            "labels": [
+              {
+                "width": 143,
+                "scrollWidth": 143,
+                "text": "创建作品从第一缕灵感，到完整的故事",
+                "rect": {
+                  "x": 481,
+                  "y": 314.09375,
+                  "width": 143,
+                  "height": 42.390625,
+                  "right": 624,
+                  "bottom": 356.484375
+                }
+              },
+              {
+                "width": 127,
+                "scrollWidth": 127,
+                "text": "新世界观",
+                "rect": {
+                  "x": 413,
+                  "y": 435.28125,
+                  "width": 127.328125,
+                  "height": 16,
+                  "right": 540.328125,
+                  "bottom": 451.28125
+                }
+              },
+              {
+                "width": 127,
+                "scrollWidth": 127,
+                "text": "新角色",
+                "rect": {
+                  "x": 576.328125,
+                  "y": 435.28125,
+                  "width": 127.328125,
+                  "height": 16,
+                  "right": 703.65625,
+                  "bottom": 451.28125
+                }
+              },
+              {
+                "width": 127,
+                "scrollWidth": 127,
+                "text": "新场景",
+                "rect": {
+                  "x": 739.65625,
+                  "y": 435.28125,
+                  "width": 127.328125,
+                  "height": 16,
+                  "right": 866.984375,
+                  "bottom": 451.28125
+                }
+              }
+            ],
+            "panelOverflow": 0,
+            "scrollOverflow": 0,
+            "scrollHeight": 339,
+            "clientHeight": 289,
+            "tools": [
+              {
+                "rect": {
+                  "x": 380,
+                  "y": 428.25,
+                  "width": 109,
+                  "height": 28,
+                  "right": 489,
+                  "bottom": 456.25
+                },
+                "name": "不关联作品"
+              },
+              {
+                "rect": {
+                  "x": 390,
+                  "y": 535.25,
+                  "width": 30,
+                  "height": 30,
+                  "right": 420,
+                  "bottom": 565.25
+                },
+                "name": "添加引用"
+              },
+              {
+                "rect": {
+                  "x": 435,
+                  "y": 536.25,
+                  "width": 56,
+                  "height": 28,
+                  "right": 491,
+                  "bottom": 564.25
+                },
+                "name": "标准"
+              },
+              {
+                "rect": {
+                  "x": 494,
+                  "y": 536.25,
+                  "width": 100,
+                  "height": 28,
+                  "right": 594,
+                  "bottom": 564.25
+                },
+                "name": "选择模型"
+              },
+              {
+                "rect": {
+                  "x": 858,
+                  "y": 534.25,
+                  "width": 32,
+                  "height": 32,
+                  "right": 890,
+                  "bottom": 566.25
+                },
+                "name": "发送（请先配置文本模型）"
+              }
+            ]
+          },
+          "reachable": [
+            {
+              "action": "book",
+              "fullyVisible": true,
+              "receivesPointer": true
+            },
+            {
+              "action": "world",
+              "fullyVisible": true,
+              "receivesPointer": true
+            },
+            {
+              "action": "character",
+              "fullyVisible": true,
+              "receivesPointer": true
+            },
+            {
+              "action": "scene",
+              "fullyVisible": true,
+              "receivesPointer": true
+            }
+          ],
+          "screenshots": [
+            "paper-560x520-top.png",
+            "paper-560x520-actions.png"
+          ]
+        },
+        {
+          "theme": "paper",
+          "width": 320,
+          "height": 420,
+          "observed": {
+            "panel": {
+              "x": 480,
+              "y": 92,
+              "width": 320,
+              "height": 420,
+              "right": 800,
+              "bottom": 512
+            },
+            "welcome": {
+              "x": 497,
+              "y": 153,
+              "width": 286,
+              "height": 303.875,
+              "right": 783,
+              "bottom": 456.875
+            },
+            "scroll": {
+              "x": 481,
+              "y": 137,
+              "width": 318,
+              "height": 194,
+              "right": 799,
+              "bottom": 331
+            },
+            "dock": {
+              "x": 481,
+              "y": 331,
+              "width": 318,
+              "height": 180,
+              "right": 799,
+              "bottom": 511
+            },
+            "book": {
+              "x": 497,
+              "y": 296.875,
+              "width": 286,
+              "height": 70,
+              "right": 783,
+              "bottom": 366.875
+            },
+            "group": {
+              "x": 497,
+              "y": 296.875,
+              "width": 286,
+              "height": 160,
+              "right": 783,
+              "bottom": 456.875
+            },
+            "title": {
+              "x": 497,
+              "y": 225,
+              "width": 286,
+              "height": 32.1875,
+              "right": 783,
+              "bottom": 257.1875
+            },
+            "secondary": [
+              {
+                "x": 497,
+                "y": 376.875,
+                "width": 91.328125,
+                "height": 80,
+                "right": 588.328125,
+                "bottom": 456.875
+              },
+              {
+                "x": 594.328125,
+                "y": 376.875,
+                "width": 91.328125,
+                "height": 80,
+                "right": 685.65625,
+                "bottom": 456.875
+              },
+              {
+                "x": 691.65625,
+                "y": 376.875,
+                "width": 91.34375,
+                "height": 80,
+                "right": 783,
+                "bottom": 456.875
+              }
+            ],
+            "labels": [
+              {
+                "width": 127,
+                "scrollWidth": 127,
+                "text": "创建作品从第一缕灵感，到完整的故事",
+                "rect": {
+                  "x": 559,
+                  "y": 311.875,
+                  "width": 127.40625,
+                  "height": 40,
+                  "right": 686.40625,
+                  "bottom": 351.875
+                }
+              },
+              {
+                "width": 71,
+                "scrollWidth": 71,
+                "text": "新世界观",
+                "rect": {
+                  "x": 507,
+                  "y": 432.875,
+                  "width": 71.328125,
+                  "height": 15,
+                  "right": 578.328125,
+                  "bottom": 447.875
+                }
+              },
+              {
+                "width": 71,
+                "scrollWidth": 71,
+                "text": "新角色",
+                "rect": {
+                  "x": 604.328125,
+                  "y": 432.875,
+                  "width": 71.328125,
+                  "height": 15,
+                  "right": 675.65625,
+                  "bottom": 447.875
+                }
+              },
+              {
+                "width": 71,
+                "scrollWidth": 71,
+                "text": "新场景",
+                "rect": {
+                  "x": 701.65625,
+                  "y": 432.875,
+                  "width": 71.34375,
+                  "height": 15,
+                  "right": 773,
+                  "bottom": 447.875
+                }
+              }
+            ],
+            "panelOverflow": 0,
+            "scrollOverflow": 0,
+            "scrollHeight": 336,
+            "clientHeight": 194,
+            "tools": [
+              {
+                "rect": {
+                  "x": 496,
+                  "y": 333,
+                  "width": 103,
+                  "height": 28,
+                  "right": 599,
+                  "bottom": 361
+                },
+                "name": "不关联作品"
+              },
+              {
+                "rect": {
+                  "x": 503,
+                  "y": 438,
+                  "width": 30,
+                  "height": 30,
+                  "right": 533,
+                  "bottom": 468
+                },
+                "name": "添加引用"
+              },
+              {
+                "rect": {
+                  "x": 538,
+                  "y": 439,
+                  "width": 48,
+                  "height": 28,
+                  "right": 586,
+                  "bottom": 467
+                },
+                "name": "标准"
+              },
+              {
+                "rect": {
+                  "x": 587,
+                  "y": 439,
+                  "width": 69,
+                  "height": 28,
+                  "right": 656,
+                  "bottom": 467
+                },
+                "name": "选择模型"
+              },
+              {
+                "rect": {
+                  "x": 745,
+                  "y": 437,
+                  "width": 32,
+                  "height": 32,
+                  "right": 777,
+                  "bottom": 469
+                },
+                "name": "发送（请先配置文本模型）"
+              }
+            ]
+          },
+          "reachable": [
+            {
+              "action": "book",
+              "fullyVisible": true,
+              "receivesPointer": true
+            },
+            {
+              "action": "world",
+              "fullyVisible": true,
+              "receivesPointer": true
+            },
+            {
+              "action": "character",
+              "fullyVisible": true,
+              "receivesPointer": true
+            },
+            {
+              "action": "scene",
+              "fullyVisible": true,
+              "receivesPointer": true
+            }
+          ],
+          "screenshots": [
+            "paper-320x420-top.png",
+            "paper-320x420-actions.png"
+          ]
+        },
+        {
+          "theme": "ink",
+          "width": 560,
+          "height": 520,
+          "observed": {
+            "panel": {
+              "x": 360,
+              "y": 92,
+              "width": 560,
+              "height": 520,
+              "right": 920,
+              "bottom": 612
+            },
+            "welcome": {
+              "x": 400,
+              "y": 153,
+              "width": 480,
+              "height": 307.28125,
+              "right": 880,
+              "bottom": 460.28125
+            },
+            "scroll": {
+              "x": 361,
+              "y": 137,
+              "width": 558,
+              "height": 289.25,
+              "right": 919,
+              "bottom": 426.25
+            },
+            "dock": {
+              "x": 361,
+              "y": 426.25,
+              "width": 558,
+              "height": 184.75,
+              "right": 919,
+              "bottom": 611
+            },
+            "book": {
+              "x": 400,
+              "y": 300.28125,
+              "width": 480,
+              "height": 70,
+              "right": 880,
+              "bottom": 370.28125
+            },
+            "group": {
+              "x": 400,
+              "y": 300.28125,
+              "width": 480,
+              "height": 160,
+              "right": 880,
+              "bottom": 460.28125
+            },
+            "title": {
+              "x": 400,
+              "y": 225,
+              "width": 480,
+              "height": 32.1875,
+              "right": 880,
+              "bottom": 257.1875
+            },
+            "secondary": [
+              {
+                "x": 400,
+                "y": 380.28125,
+                "width": 153.328125,
+                "height": 80,
+                "right": 553.328125,
+                "bottom": 460.28125
+              },
+              {
+                "x": 563.328125,
+                "y": 380.28125,
+                "width": 153.328125,
+                "height": 80,
+                "right": 716.65625,
+                "bottom": 460.28125
+              },
+              {
+                "x": 726.65625,
+                "y": 380.28125,
+                "width": 153.328125,
+                "height": 80,
+                "right": 879.984375,
+                "bottom": 460.28125
+              }
+            ],
+            "labels": [
+              {
+                "width": 143,
+                "scrollWidth": 143,
+                "text": "创建作品从第一缕灵感，到完整的故事",
+                "rect": {
+                  "x": 481,
+                  "y": 314.09375,
+                  "width": 143,
+                  "height": 42.390625,
+                  "right": 624,
+                  "bottom": 356.484375
+                }
+              },
+              {
+                "width": 127,
+                "scrollWidth": 127,
+                "text": "新世界观",
+                "rect": {
+                  "x": 413,
+                  "y": 435.28125,
+                  "width": 127.328125,
+                  "height": 16,
+                  "right": 540.328125,
+                  "bottom": 451.28125
+                }
+              },
+              {
+                "width": 127,
+                "scrollWidth": 127,
+                "text": "新角色",
+                "rect": {
+                  "x": 576.328125,
+                  "y": 435.28125,
+                  "width": 127.328125,
+                  "height": 16,
+                  "right": 703.65625,
+                  "bottom": 451.28125
+                }
+              },
+              {
+                "width": 127,
+                "scrollWidth": 127,
+                "text": "新场景",
+                "rect": {
+                  "x": 739.65625,
+                  "y": 435.28125,
+                  "width": 127.328125,
+                  "height": 16,
+                  "right": 866.984375,
+                  "bottom": 451.28125
+                }
+              }
+            ],
+            "panelOverflow": 0,
+            "scrollOverflow": 0,
+            "scrollHeight": 339,
+            "clientHeight": 289,
+            "tools": [
+              {
+                "rect": {
+                  "x": 380,
+                  "y": 428.25,
+                  "width": 109,
+                  "height": 28,
+                  "right": 489,
+                  "bottom": 456.25
+                },
+                "name": "不关联作品"
+              },
+              {
+                "rect": {
+                  "x": 390,
+                  "y": 535.25,
+                  "width": 30,
+                  "height": 30,
+                  "right": 420,
+                  "bottom": 565.25
+                },
+                "name": "添加引用"
+              },
+              {
+                "rect": {
+                  "x": 435,
+                  "y": 536.25,
+                  "width": 56,
+                  "height": 28,
+                  "right": 491,
+                  "bottom": 564.25
+                },
+                "name": "标准"
+              },
+              {
+                "rect": {
+                  "x": 494,
+                  "y": 536.25,
+                  "width": 100,
+                  "height": 28,
+                  "right": 594,
+                  "bottom": 564.25
+                },
+                "name": "选择模型"
+              },
+              {
+                "rect": {
+                  "x": 858,
+                  "y": 534.25,
+                  "width": 32,
+                  "height": 32,
+                  "right": 890,
+                  "bottom": 566.25
+                },
+                "name": "发送（请先配置文本模型）"
+              }
+            ]
+          },
+          "reachable": [
+            {
+              "action": "book",
+              "fullyVisible": true,
+              "receivesPointer": true
+            },
+            {
+              "action": "world",
+              "fullyVisible": true,
+              "receivesPointer": true
+            },
+            {
+              "action": "character",
+              "fullyVisible": true,
+              "receivesPointer": true
+            },
+            {
+              "action": "scene",
+              "fullyVisible": true,
+              "receivesPointer": true
+            }
+          ],
+          "screenshots": [
+            "ink-560x520-top.png",
+            "ink-560x520-actions.png"
+          ]
+        },
+        {
+          "theme": "ink",
+          "width": 320,
+          "height": 420,
+          "observed": {
+            "panel": {
+              "x": 480,
+              "y": 92,
+              "width": 320,
+              "height": 420,
+              "right": 800,
+              "bottom": 512
+            },
+            "welcome": {
+              "x": 497,
+              "y": 153,
+              "width": 286,
+              "height": 303.875,
+              "right": 783,
+              "bottom": 456.875
+            },
+            "scroll": {
+              "x": 481,
+              "y": 137,
+              "width": 318,
+              "height": 194,
+              "right": 799,
+              "bottom": 331
+            },
+            "dock": {
+              "x": 481,
+              "y": 331,
+              "width": 318,
+              "height": 180,
+              "right": 799,
+              "bottom": 511
+            },
+            "book": {
+              "x": 497,
+              "y": 296.875,
+              "width": 286,
+              "height": 70,
+              "right": 783,
+              "bottom": 366.875
+            },
+            "group": {
+              "x": 497,
+              "y": 296.875,
+              "width": 286,
+              "height": 160,
+              "right": 783,
+              "bottom": 456.875
+            },
+            "title": {
+              "x": 497,
+              "y": 225,
+              "width": 286,
+              "height": 32.1875,
+              "right": 783,
+              "bottom": 257.1875
+            },
+            "secondary": [
+              {
+                "x": 497,
+                "y": 376.875,
+                "width": 91.328125,
+                "height": 80,
+                "right": 588.328125,
+                "bottom": 456.875
+              },
+              {
+                "x": 594.328125,
+                "y": 376.875,
+                "width": 91.328125,
+                "height": 80,
+                "right": 685.65625,
+                "bottom": 456.875
+              },
+              {
+                "x": 691.65625,
+                "y": 376.875,
+                "width": 91.34375,
+                "height": 80,
+                "right": 783,
+                "bottom": 456.875
+              }
+            ],
+            "labels": [
+              {
+                "width": 127,
+                "scrollWidth": 127,
+                "text": "创建作品从第一缕灵感，到完整的故事",
+                "rect": {
+                  "x": 559,
+                  "y": 311.875,
+                  "width": 127.40625,
+                  "height": 40,
+                  "right": 686.40625,
+                  "bottom": 351.875
+                }
+              },
+              {
+                "width": 71,
+                "scrollWidth": 71,
+                "text": "新世界观",
+                "rect": {
+                  "x": 507,
+                  "y": 432.875,
+                  "width": 71.328125,
+                  "height": 15,
+                  "right": 578.328125,
+                  "bottom": 447.875
+                }
+              },
+              {
+                "width": 71,
+                "scrollWidth": 71,
+                "text": "新角色",
+                "rect": {
+                  "x": 604.328125,
+                  "y": 432.875,
+                  "width": 71.328125,
+                  "height": 15,
+                  "right": 675.65625,
+                  "bottom": 447.875
+                }
+              },
+              {
+                "width": 71,
+                "scrollWidth": 71,
+                "text": "新场景",
+                "rect": {
+                  "x": 701.65625,
+                  "y": 432.875,
+                  "width": 71.34375,
+                  "height": 15,
+                  "right": 773,
+                  "bottom": 447.875
+                }
+              }
+            ],
+            "panelOverflow": 0,
+            "scrollOverflow": 0,
+            "scrollHeight": 336,
+            "clientHeight": 194,
+            "tools": [
+              {
+                "rect": {
+                  "x": 496,
+                  "y": 333,
+                  "width": 103,
+                  "height": 28,
+                  "right": 599,
+                  "bottom": 361
+                },
+                "name": "不关联作品"
+              },
+              {
+                "rect": {
+                  "x": 503,
+                  "y": 438,
+                  "width": 30,
+                  "height": 30,
+                  "right": 533,
+                  "bottom": 468
+                },
+                "name": "添加引用"
+              },
+              {
+                "rect": {
+                  "x": 538,
+                  "y": 439,
+                  "width": 48,
+                  "height": 28,
+                  "right": 586,
+                  "bottom": 467
+                },
+                "name": "标准"
+              },
+              {
+                "rect": {
+                  "x": 587,
+                  "y": 439,
+                  "width": 69,
+                  "height": 28,
+                  "right": 656,
+                  "bottom": 467
+                },
+                "name": "选择模型"
+              },
+              {
+                "rect": {
+                  "x": 745,
+                  "y": 437,
+                  "width": 32,
+                  "height": 32,
+                  "right": 777,
+                  "bottom": 469
+                },
+                "name": "发送（请先配置文本模型）"
+              }
+            ]
+          },
+          "reachable": [
+            {
+              "action": "book",
+              "fullyVisible": true,
+              "receivesPointer": true
+            },
+            {
+              "action": "world",
+              "fullyVisible": true,
+              "receivesPointer": true
+            },
+            {
+              "action": "character",
+              "fullyVisible": true,
+              "receivesPointer": true
+            },
+            {
+              "action": "scene",
+              "fullyVisible": true,
+              "receivesPointer": true
+            }
+          ],
+          "screenshots": [
+            "ink-320x420-top.png",
+            "ink-320x420-actions.png"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PV05",
+      "name": "Real hover, independent sprites, full cycles, and focus overlap",
+      "status": "passed",
+      "durationMs": 12229,
+      "details": {
+        "triggers": [
+          {
+            "name": "logo",
+            "icon": {
+              "logo": 4,
+              "book": 0,
+              "world": 0,
+              "character": 0,
+              "scene": 0
+            }
+          },
+          {
+            "name": "book",
+            "icon": {
+              "logo": 0,
+              "book": 4,
+              "world": 0,
+              "character": 0,
+              "scene": 0
+            }
+          },
+          {
+            "name": "world",
+            "icon": {
+              "logo": 0,
+              "book": 0,
+              "world": 4,
+              "character": 0,
+              "scene": 0
+            }
+          },
+          {
+            "name": "character",
+            "icon": {
+              "logo": 0,
+              "book": 0,
+              "world": 0,
+              "character": 4,
+              "scene": 0
+            }
+          },
+          {
+            "name": "scene",
+            "icon": {
+              "logo": 0,
+              "book": 0,
+              "world": 0,
+              "character": 0,
+              "scene": 4
+            }
+          }
+        ],
+        "cycles": [
+          {
+            "name": "logo",
+            "sequence": [
+              {
+                "frame": 0,
+                "time": 10270.100000000559,
+                "backgroundPosition": "0px 0px"
+              },
+              {
+                "frame": 1,
+                "time": 10337.100000000559,
+                "backgroundPosition": "-96px 0px"
+              },
+              {
+                "frame": 2,
+                "time": 10387,
+                "backgroundPosition": "-192px 0px"
+              },
+              {
+                "frame": 3,
+                "time": 10436.200000000186,
+                "backgroundPosition": "-288px 0px"
+              },
+              {
+                "frame": 4,
+                "time": 10486.200000000186,
+                "backgroundPosition": "-384px 0px"
+              },
+              {
+                "frame": 5,
+                "time": 10536,
+                "backgroundPosition": "-480px 0px"
+              },
+              {
+                "frame": 6,
+                "time": 10586.100000000559,
+                "backgroundPosition": "-576px 0px"
+              },
+              {
+                "frame": 7,
+                "time": 10635.900000000373,
+                "backgroundPosition": "-672px 0px"
+              },
+              {
+                "frame": 8,
+                "time": 10686,
+                "backgroundPosition": "-768px 0px"
+              },
+              {
+                "frame": 9,
+                "time": 10735.700000000186,
+                "backgroundPosition": "-864px 0px"
+              },
+              {
+                "frame": 10,
+                "time": 10792.400000000373,
+                "backgroundPosition": "-960px 0px"
+              },
+              {
+                "frame": 11,
+                "time": 10836,
+                "backgroundPosition": "-1056px 0px"
+              },
+              {
+                "frame": 12,
+                "time": 10886.200000000186,
+                "backgroundPosition": "-1152px 0px"
+              },
+              {
+                "frame": 13,
+                "time": 10935.900000000373,
+                "backgroundPosition": "-1248px 0px"
+              },
+              {
+                "frame": 14,
+                "time": 10986.100000000559,
+                "backgroundPosition": "-1344px 0px"
+              },
+              {
+                "frame": 15,
+                "time": 11036.200000000186,
+                "backgroundPosition": "-1440px 0px"
+              },
+              {
+                "frame": 16,
+                "time": 11086.5,
+                "backgroundPosition": "-1536px 0px"
+              },
+              {
+                "frame": 17,
+                "time": 11136.5,
+                "backgroundPosition": "-1632px 0px"
+              },
+              {
+                "frame": 18,
+                "time": 11186.200000000186,
+                "backgroundPosition": "-1728px 0px"
+              },
+              {
+                "frame": 19,
+                "time": 11236.300000000745,
+                "backgroundPosition": "-1824px 0px"
+              },
+              {
+                "frame": 20,
+                "time": 11286.200000000186,
+                "backgroundPosition": "-1920px 0px"
+              },
+              {
+                "frame": 21,
+                "time": 11336.300000000745,
+                "backgroundPosition": "-2016px 0px"
+              },
+              {
+                "frame": 22,
+                "time": 11387,
+                "backgroundPosition": "-2112px 0px"
+              },
+              {
+                "frame": 23,
+                "time": 11435.800000000745,
+                "backgroundPosition": "-2208px 0px"
+              },
+              {
+                "frame": 24,
+                "time": 11485.900000000373,
+                "backgroundPosition": "-2304px 0px"
+              },
+              {
+                "frame": 25,
+                "time": 11536.800000000745,
+                "backgroundPosition": "-2400px 0px"
+              },
+              {
+                "frame": 26,
+                "time": 11585.700000000186,
+                "backgroundPosition": "-2496px 0px"
+              },
+              {
+                "frame": 27,
+                "time": 11635.800000000745,
+                "backgroundPosition": "-2592px 0px"
+              },
+              {
+                "frame": 28,
+                "time": 11686.300000000745,
+                "backgroundPosition": "-2688px 0px"
+              },
+              {
+                "frame": 29,
+                "time": 11751.5,
+                "backgroundPosition": "-2784px 0px"
+              },
+              {
+                "frame": 30,
+                "time": 11786.5,
+                "backgroundPosition": "-2880px 0px"
+              },
+              {
+                "frame": 31,
+                "time": 11836.100000000559,
+                "backgroundPosition": "-2976px 0px"
+              },
+              {
+                "frame": 32,
+                "time": 11885.800000000745,
+                "backgroundPosition": "-3072px 0px"
+              },
+              {
+                "frame": 33,
+                "time": 11936.200000000186,
+                "backgroundPosition": "-3168px 0px"
+              },
+              {
+                "frame": 34,
+                "time": 11986.300000000745,
+                "backgroundPosition": "-3264px 0px"
+              },
+              {
+                "frame": 35,
+                "time": 12036.100000000559,
+                "backgroundPosition": "-3360px 0px"
+              },
+              {
+                "frame": 36,
+                "time": 12085.700000000186,
+                "backgroundPosition": "-3456px 0px"
+              },
+              {
+                "frame": 37,
+                "time": 12136.700000000186,
+                "backgroundPosition": "-3552px 0px"
+              },
+              {
+                "frame": 38,
+                "time": 12186.200000000186,
+                "backgroundPosition": "-3648px 0px"
+              },
+              {
+                "frame": 39,
+                "time": 12245,
+                "backgroundPosition": "-3744px 0px"
+              },
+              {
+                "frame": 40,
+                "time": 12286.300000000745,
+                "backgroundPosition": "-3840px 0px"
+              },
+              {
+                "frame": 41,
+                "time": 12336,
+                "backgroundPosition": "-3936px 0px"
+              },
+              {
+                "frame": 42,
+                "time": 12386,
+                "backgroundPosition": "-4032px 0px"
+              },
+              {
+                "frame": 43,
+                "time": 12436.100000000559,
+                "backgroundPosition": "-4128px 0px"
+              },
+              {
+                "frame": 44,
+                "time": 12486.100000000559,
+                "backgroundPosition": "-4224px 0px"
+              },
+              {
+                "frame": 45,
+                "time": 12535.900000000373,
+                "backgroundPosition": "-4320px 0px"
+              },
+              {
+                "frame": 46,
+                "time": 12585.800000000745,
+                "backgroundPosition": "-4416px 0px"
+              },
+              {
+                "frame": 47,
+                "time": 12636.900000000373,
+                "backgroundPosition": "-4512px 0px"
+              },
+              {
+                "frame": 48,
+                "time": 12686.400000000373,
+                "backgroundPosition": "-4608px 0px"
+              },
+              {
+                "frame": 49,
+                "time": 12736.800000000745,
+                "backgroundPosition": "-4704px 0px"
+              },
+              {
+                "frame": 50,
+                "time": 12786,
+                "backgroundPosition": "-4800px 0px"
+              },
+              {
+                "frame": 51,
+                "time": 12835.900000000373,
+                "backgroundPosition": "-4896px 0px"
+              },
+              {
+                "frame": 52,
+                "time": 12886,
+                "backgroundPosition": "-4992px 0px"
+              },
+              {
+                "frame": 53,
+                "time": 12936.100000000559,
+                "backgroundPosition": "-5088px 0px"
+              },
+              {
+                "frame": 54,
+                "time": 12985.600000000559,
+                "backgroundPosition": "-5184px 0px"
+              },
+              {
+                "frame": 55,
+                "time": 13036.200000000186,
+                "backgroundPosition": "-5280px 0px"
+              },
+              {
+                "frame": 56,
+                "time": 13086.100000000559,
+                "backgroundPosition": "-5376px 0px"
+              },
+              {
+                "frame": 57,
+                "time": 13136.200000000186,
+                "backgroundPosition": "-5472px 0px"
+              },
+              {
+                "frame": 58,
+                "time": 13185.700000000186,
+                "backgroundPosition": "-5568px 0px"
+              },
+              {
+                "frame": 59,
+                "time": 13236,
+                "backgroundPosition": "-5664px 0px"
+              },
+              {
+                "frame": 60,
+                "time": 13285.900000000373,
+                "backgroundPosition": "-5760px 0px"
+              },
+              {
+                "frame": 61,
+                "time": 13336,
+                "backgroundPosition": "-5856px 0px"
+              },
+              {
+                "frame": 62,
+                "time": 13385.700000000186,
+                "backgroundPosition": "-5952px 0px"
+              },
+              {
+                "frame": 63,
+                "time": 13435.600000000559,
+                "backgroundPosition": "-6048px 0px"
+              },
+              {
+                "frame": 0,
+                "time": 13487.100000000559,
+                "backgroundPosition": "0px 0px"
+              },
+              {
+                "frame": 1,
+                "time": 13535.700000000186,
+                "backgroundPosition": "-96px 0px"
+              },
+              {
+                "frame": 2,
+                "time": 13585.700000000186,
+                "backgroundPosition": "-192px 0px"
+              },
+              {
+                "frame": 3,
+                "time": 13635.900000000373,
+                "backgroundPosition": "-288px 0px"
+              },
+              {
+                "frame": 4,
+                "time": 13686.300000000745,
+                "backgroundPosition": "-384px 0px"
+              },
+              {
+                "frame": 5,
+                "time": 13736.300000000745,
+                "backgroundPosition": "-480px 0px"
+              }
+            ],
+            "distinctObservedFrames": 64,
+            "availableFrames": 64,
+            "frameSamplingNote": "Real requestAnimationFrame can skip intermediate frames under scheduling load; completed last-to-first transition is required.",
+            "screenshot": "hover-logo-cycle.png",
+            "screenshotFrameAfterCapture": 7
+          },
+          {
+            "name": "book",
+            "sequence": [
+              {
+                "frame": 0,
+                "time": 14054.400000000373,
+                "backgroundPosition": "0px 0px"
+              },
+              {
+                "frame": 1,
+                "time": 14119.200000000186,
+                "backgroundPosition": "-48px 0px"
+              },
+              {
+                "frame": 2,
+                "time": 14169.400000000373,
+                "backgroundPosition": "-96px 0px"
+              },
+              {
+                "frame": 3,
+                "time": 14219.300000000745,
+                "backgroundPosition": "-144px 0px"
+              },
+              {
+                "frame": 4,
+                "time": 14269.100000000559,
+                "backgroundPosition": "-192px 0px"
+              },
+              {
+                "frame": 5,
+                "time": 14320.300000000745,
+                "backgroundPosition": "-240px 0px"
+              },
+              {
+                "frame": 6,
+                "time": 14370.100000000559,
+                "backgroundPosition": "-288px 0px"
+              },
+              {
+                "frame": 7,
+                "time": 14419.400000000373,
+                "backgroundPosition": "-336px 0px"
+              },
+              {
+                "frame": 8,
+                "time": 14469.300000000745,
+                "backgroundPosition": "-384px 0px"
+              },
+              {
+                "frame": 9,
+                "time": 14519.300000000745,
+                "backgroundPosition": "-432px 0px"
+              },
+              {
+                "frame": 10,
+                "time": 14569.5,
+                "backgroundPosition": "-480px 0px"
+              },
+              {
+                "frame": 11,
+                "time": 14621.300000000745,
+                "backgroundPosition": "-528px 0px"
+              },
+              {
+                "frame": 12,
+                "time": 14671.5,
+                "backgroundPosition": "-576px 0px"
+              },
+              {
+                "frame": 13,
+                "time": 14719.200000000186,
+                "backgroundPosition": "-624px 0px"
+              },
+              {
+                "frame": 14,
+                "time": 14769.300000000745,
+                "backgroundPosition": "-672px 0px"
+              },
+              {
+                "frame": 15,
+                "time": 14832.400000000373,
+                "backgroundPosition": "-720px 0px"
+              },
+              {
+                "frame": 16,
+                "time": 14869.400000000373,
+                "backgroundPosition": "-768px 0px"
+              },
+              {
+                "frame": 17,
+                "time": 14919.300000000745,
+                "backgroundPosition": "-816px 0px"
+              },
+              {
+                "frame": 18,
+                "time": 14969.300000000745,
+                "backgroundPosition": "-864px 0px"
+              },
+              {
+                "frame": 19,
+                "time": 15019.300000000745,
+                "backgroundPosition": "-912px 0px"
+              },
+              {
+                "frame": 20,
+                "time": 15069.600000000559,
+                "backgroundPosition": "-960px 0px"
+              },
+              {
+                "frame": 21,
+                "time": 15119.300000000745,
+                "backgroundPosition": "-1008px 0px"
+              },
+              {
+                "frame": 22,
+                "time": 15169.600000000559,
+                "backgroundPosition": "-1056px 0px"
+              },
+              {
+                "frame": 23,
+                "time": 15219.5,
+                "backgroundPosition": "-1104px 0px"
+              },
+              {
+                "frame": 0,
+                "time": 15269.5,
+                "backgroundPosition": "0px 0px"
+              },
+              {
+                "frame": 1,
+                "time": 15319.600000000559,
+                "backgroundPosition": "-48px 0px"
+              },
+              {
+                "frame": 2,
+                "time": 15369.400000000373,
+                "backgroundPosition": "-96px 0px"
+              },
+              {
+                "frame": 3,
+                "time": 15419.600000000559,
+                "backgroundPosition": "-144px 0px"
+              },
+              {
+                "frame": 4,
+                "time": 15469.600000000559,
+                "backgroundPosition": "-192px 0px"
+              }
+            ],
+            "distinctObservedFrames": 24,
+            "availableFrames": 24,
+            "frameSamplingNote": "Real requestAnimationFrame can skip intermediate frames under scheduling load; completed last-to-first transition is required.",
+            "screenshot": "hover-book-cycle.png",
+            "screenshotFrameAfterCapture": 7
+          }
+        ],
+        "overlap": {
+          "focusOnly": 8,
+          "hoverOnly": 14,
+          "reset": true
+        },
+        "inputModalitySwitch": {
+          "logoFocusVisible": true,
+          "logoAfterMouse": 7
+        }
+      }
+    },
+    {
+      "id": "PV06",
+      "name": "Independent decoded sprite and original Logo pixel checks",
+      "status": "passed",
+      "durationMs": 1752,
+      "details": {
+        "method": "Independently decoded PNGs and rasterized original SVG with the same sharp size; seam left = last frame, right = first frame.",
+        "assets": [
+          {
+            "sprite": "logo-paper.png",
+            "hashMatches": true,
+            "decodedDimensions": [
+              12288,
+              192
+            ],
+            "maxAdjacentDelta": 0.129638671875,
+            "seamDelta": 0.12172444661458333,
+            "originalHashMatches": true,
+            "firstFramePixelIdentical": true,
+            "fixedChangedBytes": 0,
+            "smokeChangedBytes": 122676,
+            "seamFile": "seam-logo-paper.png"
+          },
+          {
+            "sprite": "book-paper.png",
+            "hashMatches": true,
+            "decodedDimensions": [
+              2304,
+              96
+            ],
+            "maxAdjacentDelta": 0.6737738715277778,
+            "seamDelta": 0.04261610243055555,
+            "seamFile": "seam-book-paper.png"
+          },
+          {
+            "sprite": "world-paper.png",
+            "hashMatches": true,
+            "decodedDimensions": [
+              2304,
+              96
+            ],
+            "maxAdjacentDelta": 2.293918185763889,
+            "seamDelta": 1.0947808159722223,
+            "seamFile": "seam-world-paper.png"
+          },
+          {
+            "sprite": "character-paper.png",
+            "hashMatches": true,
+            "decodedDimensions": [
+              2304,
+              96
+            ],
+            "maxAdjacentDelta": 0.6633572048611112,
+            "seamDelta": 0.4656846788194444,
+            "seamFile": "seam-character-paper.png"
+          },
+          {
+            "sprite": "scene-paper.png",
+            "hashMatches": true,
+            "decodedDimensions": [
+              2304,
+              96
+            ],
+            "maxAdjacentDelta": 0.8144259982638888,
+            "seamDelta": 0.19984266493055555,
+            "seamFile": "seam-scene-paper.png"
+          },
+          {
+            "sprite": "logo-ink.png",
+            "hashMatches": true,
+            "decodedDimensions": [
+              12288,
+              192
+            ],
+            "maxAdjacentDelta": 0.17118326822916666,
+            "seamDelta": 0.1566094292534722,
+            "originalHashMatches": true,
+            "firstFramePixelIdentical": true,
+            "fixedChangedBytes": 0,
+            "smokeChangedBytes": 123207,
+            "seamFile": "seam-logo-ink.png"
+          },
+          {
+            "sprite": "book-ink.png",
+            "hashMatches": true,
+            "decodedDimensions": [
+              2304,
+              96
+            ],
+            "maxAdjacentDelta": 0.5290798611111112,
+            "seamDelta": 0.029568142361111112,
+            "seamFile": "seam-book-ink.png"
+          },
+          {
+            "sprite": "world-ink.png",
+            "hashMatches": true,
+            "decodedDimensions": [
+              2304,
+              96
+            ],
+            "maxAdjacentDelta": 2.4900444878472223,
+            "seamDelta": 0.997314453125,
+            "seamFile": "seam-world-ink.png"
+          },
+          {
+            "sprite": "character-ink.png",
+            "hashMatches": true,
+            "decodedDimensions": [
+              2304,
+              96
+            ],
+            "maxAdjacentDelta": 0.7532280815972222,
+            "seamDelta": 0.5123155381944444,
+            "seamFile": "seam-character-ink.png"
+          },
+          {
+            "sprite": "scene-ink.png",
+            "hashMatches": true,
+            "decodedDimensions": [
+              2304,
+              96
+            ],
+            "maxAdjacentDelta": 0.8949924045138888,
+            "seamDelta": 0.20491536458333334,
+            "seamFile": "seam-scene-ink.png"
+          }
+        ]
+      }
+    },
+    {
+      "id": "PV07",
+      "name": "Real keyboard focus, Enter/Space, modal Tab and Escape return",
+      "status": "passed",
+      "durationMs": 2991,
+      "details": [
+        {
+          "action": "book",
+          "key": "Enter",
+          "focus": {
+            "visible": true,
+            "outline": "solid",
+            "outlineWidth": "2px"
+          },
+          "tabStops": [
+            {
+              "inside": true,
+              "tag": "BUTTON",
+              "id": "dialog-secondary",
+              "action": null
+            },
+            {
+              "inside": true,
+              "tag": "BUTTON",
+              "id": "dialog-primary",
+              "action": null
+            },
+            {
+              "inside": true,
+              "tag": "BUTTON",
+              "id": "close-dialog",
+              "action": null
+            },
+            {
+              "inside": true,
+              "tag": "BUTTON",
+              "id": "dialog-secondary",
+              "action": null
+            },
+            {
+              "inside": true,
+              "tag": "BUTTON",
+              "id": "dialog-primary",
+              "action": null
+            },
+            {
+              "inside": true,
+              "tag": "BUTTON",
+              "id": "dialog-secondary",
+              "action": null
+            },
+            {
+              "inside": true,
+              "tag": "BUTTON",
+              "id": "close-dialog",
+              "action": null
+            },
+            {
+              "inside": true,
+              "tag": "BUTTON",
+              "id": "dialog-primary",
+              "action": null
+            }
+          ],
+          "focusReturned": true
+        },
+        {
+          "action": "world",
+          "key": "Space",
+          "focus": {
+            "visible": true,
+            "outline": "solid",
+            "outlineWidth": "2px"
+          },
+          "tabStops": [
+            {
+              "inside": true,
+              "tag": "BUTTON",
+              "id": "dialog-secondary",
+              "action": null
+            },
+            {
+              "inside": true,
+              "tag": "BUTTON",
+              "id": "dialog-primary",
+              "action": null
+            },
+            {
+              "inside": true,
+              "tag": "BUTTON",
+              "id": "close-dialog",
+              "action": null
+            },
+            {
+              "inside": true,
+              "tag": "BUTTON",
+              "id": "dialog-secondary",
+              "action": null
+            },
+            {
+              "inside": true,
+              "tag": "BUTTON",
+              "id": "dialog-primary",
+              "action": null
+            },
+            {
+              "inside": true,
+              "tag": "BUTTON",
+              "id": "dialog-secondary",
+              "action": null
+            },
+            {
+              "inside": true,
+              "tag": "BUTTON",
+              "id": "close-dialog",
+              "action": null
+            },
+            {
+              "inside": true,
+              "tag": "BUTTON",
+              "id": "dialog-primary",
+              "action": null
+            }
+          ],
+          "focusReturned": true
+        },
+        {
+          "action": "character",
+          "key": "Enter",
+          "focus": {
+            "visible": true,
+            "outline": "solid",
+            "outlineWidth": "2px"
+          },
+          "tabStops": [
+            {
+              "inside": true,
+              "tag": "BUTTON",
+              "id": "dialog-secondary",
+              "action": null
+            },
+            {
+              "inside": true,
+              "tag": "BUTTON",
+              "id": "dialog-primary",
+              "action": null
+            },
+            {
+              "inside": true,
+              "tag": "BUTTON",
+              "id": "close-dialog",
+              "action": null
+            },
+            {
+              "inside": true,
+              "tag": "BUTTON",
+              "id": "dialog-secondary",
+              "action": null
+            },
+            {
+              "inside": true,
+              "tag": "BUTTON",
+              "id": "dialog-primary",
+              "action": null
+            },
+            {
+              "inside": true,
+              "tag": "BUTTON",
+              "id": "dialog-secondary",
+              "action": null
+            },
+            {
+              "inside": true,
+              "tag": "BUTTON",
+              "id": "close-dialog",
+              "action": null
+            },
+            {
+              "inside": true,
+              "tag": "BUTTON",
+              "id": "dialog-primary",
+              "action": null
+            }
+          ],
+          "focusReturned": true
+        },
+        {
+          "action": "scene",
+          "key": "Space",
+          "focus": {
+            "visible": true,
+            "outline": "solid",
+            "outlineWidth": "2px"
+          },
+          "tabStops": [
+            {
+              "inside": true,
+              "tag": "BUTTON",
+              "id": "dialog-secondary",
+              "action": null
+            },
+            {
+              "inside": true,
+              "tag": "BUTTON",
+              "id": "dialog-primary",
+              "action": null
+            },
+            {
+              "inside": true,
+              "tag": "BUTTON",
+              "id": "close-dialog",
+              "action": null
+            },
+            {
+              "inside": true,
+              "tag": "BUTTON",
+              "id": "dialog-secondary",
+              "action": null
+            },
+            {
+              "inside": true,
+              "tag": "BUTTON",
+              "id": "dialog-primary",
+              "action": null
+            },
+            {
+              "inside": true,
+              "tag": "BUTTON",
+              "id": "dialog-secondary",
+              "action": null
+            },
+            {
+              "inside": true,
+              "tag": "BUTTON",
+              "id": "close-dialog",
+              "action": null
+            },
+            {
+              "inside": true,
+              "tag": "BUTTON",
+              "id": "dialog-primary",
+              "action": null
+            }
+          ],
+          "focusReturned": true
+        }
+      ]
+    },
+    {
+      "id": "PV08",
+      "name": "System and manual reduce-motion priority, real blur/hidden lifecycle",
+      "status": "passed",
+      "durationMs": 3041,
+      "details": {
+        "manual": "passed",
+        "systemPriority": "passed",
+        "keyboard": "passed",
+        "lifecycle": {
+          "hidden": false,
+          "focused": false,
+          "events": [
+            {
+              "event": "blur",
+              "hidden": false,
+              "focused": false
+            }
+          ]
+        },
+        "browserLifecycleFreeze": {
+          "hidden": false,
+          "focused": true,
+          "events": [
+            {
+              "event": "blur",
+              "hidden": false,
+              "focused": false
+            },
+            {
+              "event": "focus",
+              "hidden": false,
+              "focused": true
+            }
+          ],
+          "frames": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "backgroundFrames": {
+          "first": {
+            "logo": 0,
+            "book": 0,
+            "world": 0,
+            "character": 0,
+            "scene": 0
+          },
+          "later": {
+            "logo": 0,
+            "book": 0,
+            "world": 0,
+            "character": 0,
+            "scene": 0
+          }
+        },
+        "lifecycleCoverage": {
+          "blurObserved": true,
+          "hiddenObserved": false
+        },
+        "unexecuted": [
+          "Real document.hidden was not exposed by tab switching or browser lifecycle freezing in installed headless Chrome. Actual window blur was verified separately; no synthetic visibility event used."
+        ]
+      }
+    },
+    {
+      "id": "PV09",
+      "name": "Four creation flows disclose prerequisites and do not fake creation",
+      "status": "passed",
+      "durationMs": 583,
+      "details": [
+        {
+          "action": "book",
+          "prerequisiteDisclosed": true,
+          "noFakeSuccess": true
+        },
+        {
+          "action": "world",
+          "prerequisiteDisclosed": true,
+          "noFakeSuccess": true
+        },
+        {
+          "action": "character",
+          "prerequisiteDisclosed": true,
+          "noFakeSuccess": true
+        },
+        {
+          "action": "scene",
+          "prerequisiteDisclosed": true,
+          "noFakeSuccess": true
+        }
+      ]
+    },
+    {
+      "id": "PV10",
+      "name": "Draft editing/preservation, composer explanations, disabled send",
+      "status": "passed",
+      "durationMs": 1016,
+      "details": {
+        "flows": [
+          "model",
+          "mode",
+          "association",
+          "add"
+        ],
+        "preservedAfterThemesAndSizes": true,
+        "sendDisabled": true,
+        "typedOnlySyntheticTestText": true
+      }
+    },
+    {
+      "id": "PV11",
+      "name": "200% browser-layout-equivalent scaling at narrow short width",
+      "status": "passed",
+      "durationMs": 1217,
+      "details": {
+        "method": "CSS zoom:2 on the product region, preserving a 320×420 CSS-pixel panel and doubling rendered text/control sizes. This verifies zoom-equivalent narrow layout, not OS font-only scaling.",
+        "observations": [
+          {
+            "theme": "paper",
+            "observed": {
+              "panel": {
+                "x": 320,
+                "y": 92,
+                "width": 640,
+                "height": 840,
+                "right": 960,
+                "bottom": 932
+              },
+              "welcome": {
+                "x": 354,
+                "y": 214,
+                "width": 572,
+                "height": 607.78125,
+                "right": 926,
+                "bottom": 821.78125
+              },
+              "scroll": {
+                "x": 322,
+                "y": 182,
+                "width": 636,
+                "height": 340,
+                "right": 958,
+                "bottom": 522
+              },
+              "dock": {
+                "x": 322,
+                "y": 522,
+                "width": 636,
+                "height": 408,
+                "right": 958,
+                "bottom": 930
+              },
+              "book": {
+                "x": 354,
+                "y": 501.78125,
+                "width": 572,
+                "height": 140,
+                "right": 926,
+                "bottom": 641.78125
+              },
+              "group": {
+                "x": 354,
+                "y": 501.78125,
+                "width": 572,
+                "height": 320,
+                "right": 926,
+                "bottom": 821.78125
+              },
+              "title": {
+                "x": 354,
+                "y": 358,
+                "width": 572,
+                "height": 64.390625,
+                "right": 926,
+                "bottom": 422.390625
+              },
+              "secondary": [
+                {
+                  "x": 354,
+                  "y": 661.78125,
+                  "width": 182.65625,
+                  "height": 160,
+                  "right": 536.65625,
+                  "bottom": 821.78125
+                },
+                {
+                  "x": 548.65625,
+                  "y": 661.78125,
+                  "width": 182.671875,
+                  "height": 160,
+                  "right": 731.328125,
+                  "bottom": 821.78125
+                },
+                {
+                  "x": 743.328125,
+                  "y": 661.78125,
+                  "width": 182.671875,
+                  "height": 160,
+                  "right": 926,
+                  "bottom": 821.78125
+                }
+              ],
+              "labels": [
+                {
+                  "width": 127,
+                  "scrollWidth": 127,
+                  "text": "创建作品从第一缕灵感，到完整的故事",
+                  "rect": {
+                    "x": 478,
+                    "y": 531.78125,
+                    "width": 254.8125,
+                    "height": 80,
+                    "right": 732.8125,
+                    "bottom": 611.78125
+                  }
+                },
+                {
+                  "width": 71,
+                  "scrollWidth": 71,
+                  "text": "新世界观",
+                  "rect": {
+                    "x": 374,
+                    "y": 773.78125,
+                    "width": 142.65625,
+                    "height": 30,
+                    "right": 516.65625,
+                    "bottom": 803.78125
+                  }
+                },
+                {
+                  "width": 71,
+                  "scrollWidth": 71,
+                  "text": "新角色",
+                  "rect": {
+                    "x": 568.65625,
+                    "y": 773.78125,
+                    "width": 142.671875,
+                    "height": 30,
+                    "right": 711.328125,
+                    "bottom": 803.78125
+                  }
+                },
+                {
+                  "width": 71,
+                  "scrollWidth": 71,
+                  "text": "新场景",
+                  "rect": {
+                    "x": 763.328125,
+                    "y": 773.78125,
+                    "width": 142.671875,
+                    "height": 30,
+                    "right": 906,
+                    "bottom": 803.78125
+                  }
+                }
+              ],
+              "panelOverflow": 0,
+              "scrollOverflow": 0,
+              "scrollHeight": 336,
+              "clientHeight": 170,
+              "tools": [
+                {
+                  "rect": {
+                    "x": 352,
+                    "y": 526,
+                    "width": 206,
+                    "height": 56,
+                    "right": 558,
+                    "bottom": 582
+                  },
+                  "name": "不关联作品"
+                },
+                {
+                  "rect": {
+                    "x": 366,
+                    "y": 784,
+                    "width": 60,
+                    "height": 60,
+                    "right": 426,
+                    "bottom": 844
+                  },
+                  "name": "添加引用"
+                },
+                {
+                  "rect": {
+                    "x": 436,
+                    "y": 786,
+                    "width": 96,
+                    "height": 56,
+                    "right": 532,
+                    "bottom": 842
+                  },
+                  "name": "标准"
+                },
+                {
+                  "rect": {
+                    "x": 534,
+                    "y": 786,
+                    "width": 138,
+                    "height": 56,
+                    "right": 672,
+                    "bottom": 842
+                  },
+                  "name": "选择模型"
+                },
+                {
+                  "rect": {
+                    "x": 850,
+                    "y": 782,
+                    "width": 64,
+                    "height": 64,
+                    "right": 914,
+                    "bottom": 846
+                  },
+                  "name": "发送（请先配置文本模型）"
+                }
+              ]
+            },
+            "reachable": [
+              {
+                "action": "book",
+                "fullyVisible": true,
+                "receivesPointer": true
+              },
+              {
+                "action": "world",
+                "fullyVisible": true,
+                "receivesPointer": true
+              },
+              {
+                "action": "character",
+                "fullyVisible": true,
+                "receivesPointer": true
+              },
+              {
+                "action": "scene",
+                "fullyVisible": true,
+                "receivesPointer": true
+              }
+            ],
+            "screenshot": "paper-320x420-zoom200.png"
+          },
+          {
+            "theme": "ink",
+            "observed": {
+              "panel": {
+                "x": 320,
+                "y": 92,
+                "width": 640,
+                "height": 840,
+                "right": 960,
+                "bottom": 932
+              },
+              "welcome": {
+                "x": 354,
+                "y": 214,
+                "width": 572,
+                "height": 607.78125,
+                "right": 926,
+                "bottom": 821.78125
+              },
+              "scroll": {
+                "x": 322,
+                "y": 182,
+                "width": 636,
+                "height": 340,
+                "right": 958,
+                "bottom": 522
+              },
+              "dock": {
+                "x": 322,
+                "y": 522,
+                "width": 636,
+                "height": 408,
+                "right": 958,
+                "bottom": 930
+              },
+              "book": {
+                "x": 354,
+                "y": 501.78125,
+                "width": 572,
+                "height": 140,
+                "right": 926,
+                "bottom": 641.78125
+              },
+              "group": {
+                "x": 354,
+                "y": 501.78125,
+                "width": 572,
+                "height": 320,
+                "right": 926,
+                "bottom": 821.78125
+              },
+              "title": {
+                "x": 354,
+                "y": 358,
+                "width": 572,
+                "height": 64.390625,
+                "right": 926,
+                "bottom": 422.390625
+              },
+              "secondary": [
+                {
+                  "x": 354,
+                  "y": 661.78125,
+                  "width": 182.65625,
+                  "height": 160,
+                  "right": 536.65625,
+                  "bottom": 821.78125
+                },
+                {
+                  "x": 548.65625,
+                  "y": 661.78125,
+                  "width": 182.671875,
+                  "height": 160,
+                  "right": 731.328125,
+                  "bottom": 821.78125
+                },
+                {
+                  "x": 743.328125,
+                  "y": 661.78125,
+                  "width": 182.671875,
+                  "height": 160,
+                  "right": 926,
+                  "bottom": 821.78125
+                }
+              ],
+              "labels": [
+                {
+                  "width": 127,
+                  "scrollWidth": 127,
+                  "text": "创建作品从第一缕灵感，到完整的故事",
+                  "rect": {
+                    "x": 478,
+                    "y": 531.78125,
+                    "width": 254.8125,
+                    "height": 80,
+                    "right": 732.8125,
+                    "bottom": 611.78125
+                  }
+                },
+                {
+                  "width": 71,
+                  "scrollWidth": 71,
+                  "text": "新世界观",
+                  "rect": {
+                    "x": 374,
+                    "y": 773.78125,
+                    "width": 142.65625,
+                    "height": 30,
+                    "right": 516.65625,
+                    "bottom": 803.78125
+                  }
+                },
+                {
+                  "width": 71,
+                  "scrollWidth": 71,
+                  "text": "新角色",
+                  "rect": {
+                    "x": 568.65625,
+                    "y": 773.78125,
+                    "width": 142.671875,
+                    "height": 30,
+                    "right": 711.328125,
+                    "bottom": 803.78125
+                  }
+                },
+                {
+                  "width": 71,
+                  "scrollWidth": 71,
+                  "text": "新场景",
+                  "rect": {
+                    "x": 763.328125,
+                    "y": 773.78125,
+                    "width": 142.671875,
+                    "height": 30,
+                    "right": 906,
+                    "bottom": 803.78125
+                  }
+                }
+              ],
+              "panelOverflow": 0,
+              "scrollOverflow": 0,
+              "scrollHeight": 336,
+              "clientHeight": 170,
+              "tools": [
+                {
+                  "rect": {
+                    "x": 352,
+                    "y": 526,
+                    "width": 206,
+                    "height": 56,
+                    "right": 558,
+                    "bottom": 582
+                  },
+                  "name": "不关联作品"
+                },
+                {
+                  "rect": {
+                    "x": 366,
+                    "y": 784,
+                    "width": 60,
+                    "height": 60,
+                    "right": 426,
+                    "bottom": 844
+                  },
+                  "name": "添加引用"
+                },
+                {
+                  "rect": {
+                    "x": 436,
+                    "y": 786,
+                    "width": 96,
+                    "height": 56,
+                    "right": 532,
+                    "bottom": 842
+                  },
+                  "name": "标准"
+                },
+                {
+                  "rect": {
+                    "x": 534,
+                    "y": 786,
+                    "width": 138,
+                    "height": 56,
+                    "right": 672,
+                    "bottom": 842
+                  },
+                  "name": "选择模型"
+                },
+                {
+                  "rect": {
+                    "x": 850,
+                    "y": 782,
+                    "width": 64,
+                    "height": 64,
+                    "right": 914,
+                    "bottom": 846
+                  },
+                  "name": "发送（请先配置文本模型）"
+                }
+              ]
+            },
+            "reachable": [
+              {
+                "action": "book",
+                "fullyVisible": true,
+                "receivesPointer": true
+              },
+              {
+                "action": "world",
+                "fullyVisible": true,
+                "receivesPointer": true
+              },
+              {
+                "action": "character",
+                "fullyVisible": true,
+                "receivesPointer": true
+              },
+              {
+                "action": "scene",
+                "fullyVisible": true,
+                "receivesPointer": true
+              }
+            ],
+            "screenshot": "ink-320x420-zoom200.png"
+          }
+        ]
+      }
+    },
+    {
+      "id": "PV12",
+      "name": "Design-only scope, local dependencies, credential count and hashes",
+      "status": "passed",
+      "durationMs": 57,
+      "details": {
+        "credentialMatchCount": 0,
+        "scannedFiles": 24,
+        "scanScope": "Only design/chat-empty-state; matched strings are never output",
+        "dependencies": [
+          {
+            "tag": "LINK",
+            "protocol": "file:"
+          },
+          {
+            "tag": "SCRIPT",
+            "protocol": "file:"
+          }
+        ],
+        "changedPathsInDesignDirectory": 77,
+        "preexistingOrConcurrentPathsOutsideDesignDirectory": 0,
+        "mutationScope": "This verifier writes only itself, preview-checks.json and evidence/**. Existing or concurrent repository changes are not attributed to this task.",
+        "hashes": [
+          {
+            "path": "build-assets.mjs",
+            "sha256": "7063026b6086554139057f30590fab4ca7c550bb6799fb67dd57feba9b41d253"
+          },
+          {
+            "path": "code-review.md",
+            "sha256": "46744862d3315463d59b3d0c832d1e56fa702ea2fd458cc1d2834913552b10f4"
+          },
+          {
+            "path": "index.html",
+            "sha256": "9c5954631c6775abc34b42d46b077af307def45f40d08f9727a8308390c7ee8f"
+          },
+          {
+            "path": "plan-review.md",
+            "sha256": "5bfa625b5eba51b8e8b3ae6c577c427588be9b08b5c9be9ef2ce1357e62826d8"
+          },
+          {
+            "path": "preview-ink.png",
+            "sha256": "01fdfc16d96f1a749611a471f4393d13701af0e5044555a72c5bd75a8cd2d8f8"
+          },
+          {
+            "path": "preview-paper.png",
+            "sha256": "4792a2ef513ab1713c97961bb27cc874b5278a2508e548c74483c0d6b85b7e4e"
+          },
+          {
+            "path": "preview.css",
+            "sha256": "8bc056a5ffc88065e7e40c79e9a78817d23bb5e9b5d1eb1d1837f38cad00e3bc"
+          },
+          {
+            "path": "preview.js",
+            "sha256": "4313fb832e1be80a3569b6c8704bdccb26421b29963a75e09b15ade8fd49fec6"
+          },
+          {
+            "path": "product-design.md",
+            "sha256": "f51520e4ca15b6e38af8010ff1347e7c5fdde1a661c1dd0711b585bd0bed9826"
+          },
+          {
+            "path": "README.md",
+            "sha256": "c4c354167186540783f198b1084555c8ee1ed32c437099d780cd9d2657b513ad"
+          },
+          {
+            "path": "research.md",
+            "sha256": "5746d0b67039d6a38cb7e59d9c431c6865b888d8748bdfb5a876faf20587179e"
+          },
+          {
+            "path": "test-cases.md",
+            "sha256": "d923ea3d6b660bbb4ba1d5d0b819b7ec1be170227c7fb9201317f565050c2859"
+          },
+          {
+            "path": "test-review.md",
+            "sha256": "ab0641b31b13332fdd08c8b32db163571802f38733603db118c8389e7823064f"
+          },
+          {
+            "path": "verify-preview.mjs",
+            "sha256": "d076891d0e8d31a6284f8570c1ec6f6e775c206f68767952d9f90c064b191c69"
+          },
+          {
+            "path": "assets/book-ink-first.png",
+            "sha256": "1c0b431e535bb9d3bff8a256fb2460a92e0867cd924c1c6f2a6183fbef3a9a04"
+          },
+          {
+            "path": "assets/book-ink.png",
+            "sha256": "8fcfadeb8798c1ace56746fc8f1bebdf1f1bb08744d1ca81335726ab757e3133"
+          },
+          {
+            "path": "assets/book-ink.svg",
+            "sha256": "f830fa85cbddddadfba49a110d77ac0633c886d77283764180d4c33417f9fb46"
+          },
+          {
+            "path": "assets/book-paper-first.png",
+            "sha256": "d4249227fffbce2d461cd75ff3bf9582edfc55e8acd99945f98bd3e24f46aa71"
+          },
+          {
+            "path": "assets/book-paper.png",
+            "sha256": "f27cdf06d02e81f15feb061d88e3dd4ad4f9a570c2ca00f87af6d21cbe06b4da"
+          },
+          {
+            "path": "assets/book-paper.svg",
+            "sha256": "bb19a8084c5534f329b10e771610f160c95e325770a564ccb31eeca4834bdd7c"
+          },
+          {
+            "path": "assets/character-ink-first.png",
+            "sha256": "dc0d0ac2f95aee00e5026e3aabe76a8d6ba953871bf436e7e78efb31a3afd0d5"
+          },
+          {
+            "path": "assets/character-ink.png",
+            "sha256": "07cb1efbf6f271f8c143adab47914d930765ef7232088cd89846cf270c71f876"
+          },
+          {
+            "path": "assets/character-ink.svg",
+            "sha256": "a74001646b564316b50aef377af4f5b6b3259b6c77cf7f88dcb667399b2c9142"
+          },
+          {
+            "path": "assets/character-paper-first.png",
+            "sha256": "8d17d5847ec8d6044ad81d7b729cc13dd05ac8f284b58aed97ff3987db70589b"
+          },
+          {
+            "path": "assets/character-paper.png",
+            "sha256": "ebcca80c2337868b5f84b8ee4eb64954dbbcb5ab937fb0bb3f7548d40e1bb446"
+          },
+          {
+            "path": "assets/character-paper.svg",
+            "sha256": "12c6619b4de08212042795fd88fe0af68d6234f16f9150c3e20de1507e8cf6da"
+          },
+          {
+            "path": "assets/contact-sheet.png",
+            "sha256": "699d4d11433714103c08f6bf4b37040f9cbadc3714ee79b14e555d4e25d70cde"
+          },
+          {
+            "path": "assets/logo-ink-first.png",
+            "sha256": "5f5cab3ef790b873e78003dfea219661c732b883b32f624d255994f2e94da7d3"
+          },
+          {
+            "path": "assets/logo-ink.png",
+            "sha256": "a498672ae50e78719dc16cc54575c44578012135ce7241c4fdaa77e86282d15a"
+          },
+          {
+            "path": "assets/logo-ink.svg",
+            "sha256": "70f455112c0ae48f40207dbef4d50cca9ba79dd23a616642c3f86331d8e1276a"
+          },
+          {
+            "path": "assets/logo-paper-first.png",
+            "sha256": "a5629c4561b1fee837c1e997e6f01c6d91677066f2e51ab777bee1d474a0a5b7"
+          },
+          {
+            "path": "assets/logo-paper.png",
+            "sha256": "7c3957b151fa3e256094a4f122b1bf8ad681fe9d00c5e702417358aab7e08dc6"
+          },
+          {
+            "path": "assets/logo-paper.svg",
+            "sha256": "539388e660960efb034573498bfc641d67f6c1c369a3258c1ed6080b7a5e1b23"
+          },
+          {
+            "path": "assets/manifest.json",
+            "sha256": "7edb00d590b09a4fc61f2f12fe9a675da750d29a1f41bd713fb3ea4eba572854"
+          },
+          {
+            "path": "assets/scene-ink-first.png",
+            "sha256": "93cf7d2b2071377acd0d5f1342d3366bdc710ebb0dbbb0676ae1244a4d4dcd0d"
+          },
+          {
+            "path": "assets/scene-ink.png",
+            "sha256": "a9218a769dae7b3f7e948eef7569c3c11b64612d659cd1b2c4264efa0fc19462"
+          },
+          {
+            "path": "assets/scene-ink.svg",
+            "sha256": "051551b4d110e08ff7a5631f1ed32b021bad469708cd304e0d1c905669cef77f"
+          },
+          {
+            "path": "assets/scene-paper-first.png",
+            "sha256": "af1877f85143665d6c106e60e8bd246f439e175c13f3883c9dc9ea298a903dca"
+          },
+          {
+            "path": "assets/scene-paper.png",
+            "sha256": "a56bad43124108dca36b8bbc5d0b40a5bbe7e4dca5e2f46fdff54c2c9e4c05be"
+          },
+          {
+            "path": "assets/scene-paper.svg",
+            "sha256": "47cfd769cf6935fff2ba260d5546cda59a2cf171a0ddbd81f53aeb5652c88d90"
+          },
+          {
+            "path": "assets/world-ink-first.png",
+            "sha256": "0e1a1b7721157b512ce8d0bf4b8c7c1673d4e653a1425f03bde501d16196cd3b"
+          },
+          {
+            "path": "assets/world-ink.png",
+            "sha256": "eec2808edcf2eec6febff9ad7b7ecc339aed465883c4cb67eb021aefa2505f0d"
+          },
+          {
+            "path": "assets/world-ink.svg",
+            "sha256": "afe632775848d4d30855f9349877d2c6f1284760ef47e7d1961b89a81864f4b4"
+          },
+          {
+            "path": "assets/world-paper-first.png",
+            "sha256": "1b0fd0f0e865ad28e9cdd39c7ad1b49f2e8b608495197641de6024e29937eb1d"
+          },
+          {
+            "path": "assets/world-paper.png",
+            "sha256": "66a42bc9143bdd3f5abf2ce77f91558dcd2363b0bcbd3c18e40fad03fc7c8dd3"
+          },
+          {
+            "path": "assets/world-paper.svg",
+            "sha256": "43e43de7579aa17d58529ab466588bc8d28210b6c8d6753c545f8ac7f948ba2f"
+          }
+        ]
+      }
+    }
+  ],
+  "unexecuted": [
+    "Real document.hidden was not exposed by tab switching or browser lifecycle freezing in installed headless Chrome. Actual window blur was verified separately; no synthetic visibility event used."
+  ],
+  "browserErrors": [],
+  "failedRequests": [],
+  "networkRequestCount": 0
+}

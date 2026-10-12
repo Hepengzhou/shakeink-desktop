@@ -21,7 +21,6 @@ import {
   VARIANT_LABELS,
   type CardActionRow,
 } from "@/lib/card-select-actions"
-import { useChatStore } from "@/stores/chat"
 import { apiGet } from "@/components/content/api"
 import { acceptCandidateAction, useLaterChapterCount, type CandidateDetail } from "@/components/content/candidate-accept"
 import type { ChapterDetail } from "@/components/content/types"
@@ -30,12 +29,6 @@ import { MARKERS } from "./AskUserPanel"
 import { usePendingAnswerMatch } from "./pending-answer"
 import { dispatchChatSendMessage } from "./ui-events"
 import { useCardSelection } from "./use-card-selection"
-
-/** 发送入口会排队（而非立即发送）的判定：与 ChatPanel.handleSendCardMessage 的排队条件一致 */
-function willQueueMessage(): boolean {
-  const s = useChatStore.getState()
-  return !!(s.pendingQuestion || s.pendingPlan || s.isGenerating || s.recoveryStatus !== "ready" || s.creatingNovel)
-}
 
 export function CandidateActionPanel({ novelId, conversationId }: { novelId: string; conversationId: string | null }) {
   const queryClient = useQueryClient()
@@ -126,9 +119,9 @@ export function CandidateActionPanel({ novelId, conversationId }: { novelId: str
 
   /** 发消息类动作：入队（生成中/待答问答等）时面板保留；立即发送则关闭面板回输入框 */
   const sendMessage = (text: string) => {
-    const queued = willQueueMessage()
     dispatchChatSendMessage(text, novelId)
-    if (!queued) clearCard()
+    // The real ChatPanel closes selection only after accepting an immediate
+    // send. Queued or model-blocked actions must keep the source card selected.
   }
 
   const runRow = async (row: CardActionRow) => {

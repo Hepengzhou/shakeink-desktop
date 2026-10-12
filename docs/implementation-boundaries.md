@@ -1,5 +1,9 @@
 # UI 批准与实施边界
 
+<!-- USER-2026-10-12-CHAT-EMPTY-STATE BEGIN -->
+> **最新批准（2026-10-12）：用户“UI 审核通过，可以继续”，批准 AI 对话首屏 v3.4。** 对纯净空态允许采用 `design/chat-empty-state/product-design.md` 与对应 HTML 的中央 Logo/标题/七卡、底部输入框、双主题和悬停动画；四功能卡同尺寸、左图标固定，宣纸右图暖黄灰，题材入口预选原创作向导，三功能入口填入提示词。此范围覆盖下表对话行“保留原排版”的空态限制；消息/业务状态仍保留原真实 React、同一 composer 及原向导，不将 HTML 或模拟数据导入产品。无模型可准备草稿但发送禁用。方案、用例、代码审核和真实目标验证仍按 AGENTS.md 顺序执行。实施记录见 `docs/reviews/2026-10-12-chat-empty-state-plan.md`，此批准不代表实现或验收已完成。
+<!-- USER-2026-10-12-CHAT-EMPTY-STATE END -->
+
 <!-- USER-2026-10-08-CANCEL-BACKUPS CURRENT-SCOPE BEGIN -->
 > **当前范围（2026-10-08）：用户取消全部备份功能。** 最新用户scope覆盖下面“目录/备份/恢复”：仅备份/从备份恢复撤销；正常迁移/重定位、异常草稿恢复/导出、writer lease及其它已批准UI保持。原边界全文保留，旧备份字样不能复活功能。
 > 活动清单：[acceptance-active-scope.json](acceptance-active-scope.json)；原文和退役明细：[backup-scope-retirement.json](backup-scope-retirement.json)。此处不声明实现完成或验收通过。

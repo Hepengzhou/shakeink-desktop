@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; img-src 'self' file: data:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'none'; font-src 'self'; object-src 'none'; base-uri 'none'">
+  <title>玄印 · AI 对话首屏设计审核</title>
+  <link rel="stylesheet" href="preview.css">
+  <script src="preview.js" defer></script>
+</head>
+<body>
+  <svg class="svg-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+    <symbol id="i-chevron" viewBox="0 0 20 20"><path d="m6 8 4 4 4-4"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 20 20"><path d="M4 10h12m-5-5 5 5-5 5"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 20 20"><path d="M10 4v12M4 10h12"/></symbol>
+    <symbol id="i-book" viewBox="0 0 20 20"><path d="M10 5v12M10 5C7 3 4 3 2 4v12c3-1 5-1 8 1 3-2 5-2 8-1V4c-2-1-5-1-8 1Z"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 20 20"><path d="M5 3h10a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H8l-5 3V5a2 2 0 0 1 2-2Z"/><path d="M7 7h6M7 11h4"/></symbol>
+    <symbol id="i-pen" viewBox="0 0 20 20"><path d="m12 4 4 4M4 12l9-9a2.1 2.1 0 0 1 3 3l-9 9-4 1 1-4Z"/></symbol>
+    <symbol id="i-close" viewBox="0 0 20 20"><path d="m5 5 10 10M15 5 5 15"/></symbol>
+    <symbol id="i-send" viewBox="0 0 20 20"><path d="M10 16V4m-5 5 5-5 5 5"/></symbol>
+    <symbol id="i-model" viewBox="0 0 20 20"><path d="m10 2 7 4v8l-7 4-7-4V6l7-4ZM3 6l7 4 7-4m-7 4v8"/></symbol>
+  </defs></svg>
+
+  <header class="review-header" aria-label="设计审核工具，不属于产品">
+    <div class="review-title"><span class="review-mark">玄印</span><span class="review-slash">/</span><strong>AI 对话首屏</strong><span class="review-version">设计稿 01</span></div>
+    <nav class="review-controls" aria-label="预览控制">
+      <div class="segmented" aria-label="主题"><button type="button" data-theme="paper" aria-pressed="false">宣纸</button><button type="button" data-theme="ink" aria-pressed="true">玄墨</button></div>
+      <div class="segmented size-controls" aria-label="面板宽度"><button type="button" data-width="1000" aria-pressed="true">宽屏</button><button type="button" data-width="560" aria-pressed="false">分栏</button><button type="button" data-width="420" aria-pressed="false">窄栏</button></div>
+      <label class="review-check"><input type="checkbox" id="short-window">短窗</label>
+      <label class="review-check"><input type="checkbox" id="reduce-motion">减少动态</label>
+      <button class="review-link" id="design-notes" type="button">设计说明 ↗</button>
+    </nav>
+  </header>
+
+  <main class="stage" aria-label="对话区域设计预览">
+    <section class="chat-panel" id="panel" data-theme="ink" aria-label="AI 对话面板" style="--panel-width:1000px">
+      <!-- 保留真实 ChatPanel 顶栏的 44px 空间，不新增标题或会话入口。 -->
+      <header class="panel-header" aria-hidden="true"></header>
+
+      <div class="welcome-scroll">
+        <div class="welcome" id="welcome">
+          <div class="brand-motion" tabindex="0" role="img" aria-label="玄印香炉标志，悬停或聚焦时烟缓缓飘动">
+            <span class="sprite logo-sprite" data-sprite="logo" data-frame="0" aria-hidden="true"></span>
+          </div>
+          <h1>让灵感，落笔成章。</h1>
+          <p class="welcome-subtitle">从一个故事开始，构筑属于你的世界。</p>
+
+          <div class="creation-actions" aria-label="创作入口">
+            <button class="creation-button create-book" type="button" data-action="book">
+              <span class="sprite book-sprite" data-sprite="book" data-frame="0" aria-hidden="true"></span>
+              <span class="book-copy"><strong>创建作品</strong><span>从第一缕灵感，到完整的故事</span></span>
+              <svg class="icon action-arrow" aria-hidden="true"><use href="#i-arrow"/></svg>
+            </button>
+            <div class="secondary-actions">
+              <button class="creation-button create-world" type="button" data-action="world"><span class="sprite" data-sprite="world" data-frame="0" aria-hidden="true"></span><span class="secondary-label">新世界观<svg class="icon action-arrow" aria-hidden="true"><use href="#i-plus"/></svg></span></button>
+              <button class="creation-button create-character" type="button" data-action="character"><span class="sprite" data-sprite="character" data-frame="0" aria-hidden="true"></span><span class="secondary-label">新角色<svg class="icon action-arrow" aria-hidden="true"><use href="#i-plus"/></svg></span></button>
+              <button class="creation-button create-scene" type="button" data-action="scene"><span class="sprite" data-sprite="scene" data-frame="0" aria-hidden="true"></span><span class="secondary-label">新场景<svg class="icon action-arrow" aria-hidden="true"><use href="#i-plus"/></svg></span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="composer-dock">
+        <div class="composer-width">
+          <div class="context-row"><button type="button" class="quiet-button" data-action="association"><svg class="icon small" aria-hidden="true"><use href="#i-book"/></svg><span>不关联作品</span><svg class="icon tiny" aria-hidden="true"><use href="#i-chevron"/></svg></button></div>
+          <div class="composer">
+            <label class="sr-only" for="draft">对话输入</label>
+            <textarea id="draft" rows="3" placeholder="写下你的想法，或用 @ 引用创作内容…" spellcheck="false"></textarea>
+            <div class="composer-toolbar">
+              <div class="composer-tools"><button type="button" class="icon-button add-button" data-action="add" aria-label="添加引用" title="添加引用"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg></button><span class="tool-divider" aria-hidden="true"></span><button type="button" class="quiet-button mode-button" data-action="mode"><span>标准</span><svg class="icon tiny" aria-hidden="true"><use href="#i-chevron"/></svg></button><button type="button" class="quiet-button model-button" data-action="model"><svg class="icon small" aria-hidden="true"><use href="#i-model"/></svg><span>选择模型</span><svg class="icon tiny" aria-hidden="true"><use href="#i-chevron"/></svg></button></div>
+              <button type="button" id="send" class="send-button" disabled aria-label="发送（请先配置文本模型）" title="请先配置文本模型"><svg class="icon" aria-hidden="true"><use href="#i-send"/></svg></button>
+            </div>
+          </div>
+          <p class="composer-hint">选择文本模型后，即可开始对话</p>
+        </div>
+      </footer>
+
+      <dialog id="interaction-dialog" aria-labelledby="dialog-title" aria-describedby="dialog-description">
+        <div class="dialog-top"><span class="dialog-eyebrow">交互示意</span><button class="icon-button" type="button" id="close-dialog" aria-label="关闭说明"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+        <h2 id="dialog-title"></h2><p id="dialog-description"></p>
+        <div id="dialog-extra"></div>
+        <div class="dialog-actions"><button type="button" id="dialog-secondary" class="dialog-secondary">返回设计稿</button><button type="button" id="dialog-primary" class="dialog-primary">知道了</button></div>
+      </dialog>
+    </section>
+  </main>
+
+  <footer class="review-footer"><span><span class="review-indicator"></span>待审核 · 仅 AI 对话区域</span><span>悬停 Logo 与按钮，查看逐帧动效</span><span><a href="research.md">01 调研</a><a href="product-design.md">02 产品设计</a><span id="dimensions">1000 × 760</span></span></footer>
+</body>
+</html>

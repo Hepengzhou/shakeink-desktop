@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96" role="img" aria-label="新角色 · 人物"><title>新角色 · 人物</title>
+  <path fill="#8b6bad" d="M23 77Q22 60 32 55Q40 50 48 51Q60 50 68 58Q74 64 74 77Q49 85 23 77Z"/>
+  <path fill="#684583" d="M48 60L54 79Q63 80 74 77Q74 63 67 57L59 53Z"/>
+  <path fill="#c5a9d5" d="M35 53L45 60L40 68L29 57ZM59 53L48 60L54 68L65 57Z"/>
+  <path fill="#e5c4c1" d="M41 44H55V56L48 61L41 56Z"/>
+  <g transform="rotate(0 48 48)"><path fill="#684583" d="M30 33Q29 17 47 17Q66 16 66 33V45Q64 52 57 53H35Q29 47 30 33Z"/><path fill="#e5c4c1" d="M35 32Q40 33 47 25Q54 34 60 32V40Q58 50 48 52Q38 51 35 42Z"/><path fill="#8b6bad" d="M31 32Q29 21 40 17Q50 12 60 21Q66 26 65 35Q54 34 48 25Q43 33 31 35Z"/></g>
+  <path fill="#c5a9d5" d="M78 30L80.5 36.5L87 39L80.5 41.5L78 48L75.5 41.5L69 39L75.5 36.5Z"/></svg>

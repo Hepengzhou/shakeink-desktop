@@ -6,7 +6,7 @@
  * different model. New-task defaults are captured separately at task creation.
  */
 import { useEffect, useRef, useState } from "react"
-import { useQuery } from "@tanstack/react-query"
+import { useChatModels, type SelectableModel } from "@/components/chat/use-chat-models"
 import { Check } from "lucide-react"
 import { toast } from "sonner"
 
@@ -27,23 +27,6 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-
-interface SelectableModel {
-  id: string
-  name: string
-  provider: string
-  modelId: string
-  tier: "NORMAL" | "ADVANCED"
-  contextWindow: number
-  /** 官网 0 价免费模型：名称旁展示「免费」标签 */
-  free: boolean
-  thinkingEfforts: { value: string; label: string; description?: string }[]
-}
-
-interface ModelsResponse {
-  defaultModelId: string | null
-  models: SelectableModel[]
-}
 
 /** 上下文窗口紧凑展示（128000 → 128K，1000000 → 1M） */
 function formatWindow(tokens: number): string {
@@ -74,15 +57,7 @@ export function ModelPicker() {
     return () => {selection.current.alive=false;selection.current.ticket++}
   },[])
 
-  const { data } = useQuery({
-    queryKey: ["chat-models"],
-    queryFn: async () => {
-      const res = await fetch("/api/models")
-      if (!res.ok) throw new Error("加载模型列表失败")
-      return (await res.json()) as ModelsResponse
-    },
-    staleTime: 5 * 60 * 1000,
-  })
+  const { data } = useChatModels()
 
   const models = data?.models ?? []
   const effectiveModelId = modelChoice.modelId

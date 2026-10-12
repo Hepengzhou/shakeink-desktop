@@ -3,6 +3,32 @@
   "approvedUiCommit": "6f79382a86f1cb2f81b3b3936492fa6dc66bb8cb",
   "sourceCommit": "55a62560dc4818143469abb12717a23c752ade8c",
   "precedence": "latest user instruction, implementation boundaries, current UI contract; earlier superseded variants are not requirements",
+  "chatEmptyStateRevision": {
+    "date": "2026-10-12",
+    "verificationUpdatedAt": "2026-10-13",
+    "designRevision": "v3.4",
+    "approval": "UI 审核通过，可以继续",
+    "status": "implemented-scoped-validated",
+    "research": "design/chat-empty-state/revision-v3.md",
+    "productDesign": "design/chat-empty-state/product-design.md",
+    "design": "design/chat-empty-state/index.html",
+    "plan": "docs/reviews/2026-10-12-chat-empty-state-plan.md",
+    "planReview": "docs/reviews/2026-10-12-chat-empty-state-plan-review.md",
+    "testCases": "docs/reviews/2026-10-12-chat-empty-state-test-cases.md",
+    "testReview": "docs/reviews/2026-10-12-chat-empty-state-test-review.md",
+    "testIds": ["CES-01", "CES-02", "CES-03", "CES-04", "CES-05", "CES-06", "CES-07", "CES-08", "CES-09", "CES-10", "CES-11"],
+    "implementation": ["src/components/layout/ChatPanel.tsx", "src/components/chat/ChatEmptyState.tsx", "src/components/chat/use-chat-empty-motion.ts", "src/components/layout/CreateNovelDialog.tsx", "src/components/chat/use-chat-models.ts", "src/components/chat/use-agent-chat.ts", "src/components/chat/CandidateActionPanel.tsx", "public/brand/chat-empty/manifest.json"],
+    "codeReview": "docs/reviews/2026-10-12-chat-empty-state-code-review.md",
+    "verification": "docs/reviews/2026-10-12-chat-empty-state-verification.md",
+    "validation": {
+      "componentBrowser": "20/20 passed within final 60/60 component, navigation and motion checks; final-scoped-budgeted.tap",
+      "windowsElectron": "20 observed-scope checks passed after final build; actual dual theme/offline API/blur/native hide",
+      "unverified": ["true document.hidden visibilitychange branch under automation", "physical IME", "macOS", "supplier endpoint", "installed package"],
+      "fullBrowser": "38 current files / 360 passed; latest complete evidence per file, not a single monolithic run; browser-final-file-coverage.json; earlier 359/1 and incomplete runs retained",
+      "fullRegression": "final core 1946: 1903 pass/40 fail/1 cancel/2 skip; 39 fail and 1 cancel match earlier baseline; DR65 inode precision fixture corrected and 9/9 scoped checks passed; no new all-green full-core claim; original full failure evidence retained"
+    },
+    "scope": "Only idle welcome presentation and seven real entry actions; original composer/messages/cards/local wizard retained. No preview runtime, supplier Key, sample data, package installation or claimed macOS acceptance."
+  },
   "toastAppearanceRevision": {
     "date": "2026-10-12",
     "designRevision": "v1",

@@ -13,15 +13,28 @@ import { chromium, type Browser, type Page } from "playwright-core"
 // an isolated interaction probe, not full composer or native-window acceptance.
 const source = ts.createSourceFile("ChatPanel.tsx", readFileSync("src/components/layout/ChatPanel.tsx", "utf8"), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX)
 let caption = "", host = "", scroller = "", root = "", thinking = "", timer = ""
+function literalClasses(node: ts.JsxElement) {
+  const attribute = node.openingElement.attributes.properties.find(p => ts.isJsxAttribute(p) && p.name.getText(source) === "className")
+  if (!attribute || !ts.isJsxAttribute(attribute) || !attribute.initializer) return []
+  const classes: string[] = []
+  function collect(value: ts.Node) { if (ts.isStringLiteralLike(value)) classes.push(...value.text.split(/\s+/)); ts.forEachChild(value, collect) }
+  collect(attribute.initializer)
+  return classes
+}
+function ownsScrollRef(node: ts.JsxElement) {
+  return node.openingElement.attributes.properties.some(p => ts.isJsxAttribute(p) && p.name.getText(source) === "ref" && p.initializer && ts.isJsxExpression(p.initializer) && p.initializer.expression?.getText(source) === "scrollRef")
+}
 function inspect(node: ts.Node) {
   if (ts.isFunctionDeclaration(node) && node.name?.text === "ThinkingRow") thinking = node.getText(source)
   if (ts.isVariableDeclaration(node) && node.name.getText(source) === "PENDING_TIMER_THRESHOLD_SEC") timer = `const ${node.getText(source)};`
   if (ts.isJsxElement(node)) {
     const opening = node.openingElement, text = opening.getText(source)
-    if (text.includes('className="chatpane ')) root = text
+    if (literalClasses(node).includes("chatpane")) root = text
     if (text.includes('className="desktop-drag flex h-11')) caption = node.getText(source)
-    if (text.includes('messages.length === 0 ? "hidden"')) host = text
-    if (text.includes("ref={scrollRef}")) scroller = text
+    // Locate the actual owning message host via its direct viewport child;
+    // it now stays mounted for empty-state business controls as well.
+    if (node.children.some(child => ts.isJsxElement(child) && ownsScrollRef(child))) host = text
+    if (ownsScrollRef(node)) scroller = text
   }
   ts.forEachChild(node, inspect)
 }
@@ -39,7 +52,7 @@ ${thinking}
 window.mountMessageCaption=()=>{
  const calls=[];let resize,appearance,restores,floating;const messages=Array.from({length:20},(_,i)=>({id:'synthetic-'+i}));
  const currentConversation={title:'合成滚动验收会话标题，验证图标和第一个字附近的原生命中'};
- const canSend=true,progressVisible=false,PROGRESS_GUTTER_CLASS='';
+ const canSend=true,showWelcome=false,progressVisible=false,PROGRESS_GUTTER_CLASS='';
  function App(){const [width,setWidth]=useState(600),[zoom,setZoom]=useState(1),[showRestores,setRestores]=useState(false),[showFloating,setFloating]=useState(false);resize=setWidth;appearance=setZoom;restores=setRestores;floating=setFloating;
  const scrollRef=useRef(null),handleScroll=()=>{},handleMessageAreaClick=()=>{};
  const desktopBootstrap={platform:'win32',settings:{appearance:{zoom}}};const sidebarHidden=showRestores,contentHidden=showRestores;
@@ -65,6 +78,7 @@ async function scenario(run: (page: Page) => Promise<void>) {
     await page.route("**/*", route => route.abort()); await page.setContent('<div id="app"></div>')
     await page.addStyleTag({ content: await stylesheet }); await page.addScriptTag({ content: await bundle })
     await page.evaluate(() => (window as any).mountMessageCaption()); await frames(page)
+    assert.equal(await page.locator('[data-thinking-message="0"]').isVisible(), true, "The real message host and viewport must remain visible")
     await run(page); assert.deepEqual(errors, [])
   } finally { await page.close() }
 }

@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: AIDRAG-05 vertically clipped real ThinkingRow buttons do not exclude the caption icon or first character
+ok 1 - AIDRAG-05 vertically clipped real ThinkingRow buttons do not exclude the caption icon or first character
+  ---
+  duration_ms: 1927.2225
+  type: 'test'
+  ...
+# Subtest: AIDRAG-06 body controls remain interactive and caption restore buttons retain their exclusions
+ok 2 - AIDRAG-06 body controls remain interactive and caption restore buttons retain their exclusions
+  ---
+  duration_ms: 870.3021
+  type: 'test'
+  ...
+# Subtest: AIDRAG-07 visible floating roots retain exclusions while their clipped options do not register separately
+ok 3 - AIDRAG-07 visible floating roots retain exclusions while their clipped options do not register separately
+  ---
+  duration_ms: 496.9412
+  type: 'test'
+  ...
+# Subtest: DRAG-01 AI title is the first pane row, before workflow/recovery/creation notices
+ok 4 - DRAG-01 AI title is the first pane row, before workflow/recovery/creation notices
+  ---
+  duration_ms: 0.6381
+  type: 'test'
+  ...
+# Subtest: DRAG-04 AI drag contract is restricted to its title, preserving body/composer and notices
+ok 5 - DRAG-04 AI drag contract is restricted to its title, preserving body/composer and notices
+  ---
+  duration_ms: 0.5567
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 8803.1433

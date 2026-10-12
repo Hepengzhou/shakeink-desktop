@@ -30,7 +30,10 @@ const mocks:Record<string,string>={
  "@/lib/chat-session":`export const browserSessionStorage=()=>({})`,
  "sonner":`export const toast={info:x=>globalThis.messages.push(x),success:x=>globalThis.messages.push(x),error:x=>globalThis.messages.push(x)}`,
 }
-const emptyChildren:Record<string,string>={"./WindowControls":"WindowsMenuControl","./SettingsDialog":"SettingsDialog","./ModelRequiredDialog":"ModelRequiredDialog","./DesktopCommandController":"DesktopCommandController","./DesktopNavigation":"DesktopNavigation","./RecoveryDialog":"RecoveryDialog","./TemplateManagementDialog":"TemplateManagementDialog"}
+// Startup onboarding is a separate workspace child: defaultState opens its
+// theme dialog after remount. Keep this lease fixture's existing null boundary,
+// without calling onExit or fabricating completed onboarding or a repair reply.
+const emptyChildren:Record<string,string>={"./WindowControls":"WindowsMenuControl","./SettingsDialog":"SettingsDialog","./ModelRequiredDialog":"ModelRequiredDialog","./DesktopCommandController":"DesktopCommandController","./DesktopNavigation":"DesktopNavigation","./RecoveryDialog":"RecoveryDialog","./TemplateManagementDialog":"TemplateManagementDialog","./OnboardingController":"OnboardingController"}
 const bundle=build({stdin:{loader:"tsx",resolveDir:process.cwd(),contents:`
 import React from 'react';import{createRoot}from'react-dom/client';import{flushSync}from'react-dom';
 import{WorkLeasePendingDialog}from'./src/components/desktop/WorkLeasePendingDialog';import DesktopApp from'./src/components/desktop/DesktopApp';

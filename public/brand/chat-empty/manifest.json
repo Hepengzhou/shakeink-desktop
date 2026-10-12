@@ -1,0 +1,175 @@
+{
+  "version": 1,
+  "approvedDesign": "AI chat empty state v3.4, approved 2026-10-12",
+  "source": "Approved local assets; byte-for-byte copy. No preview script or template data is shipped.",
+  "assets": [
+    {
+      "file": "logo-paper.png",
+      "source": "design/chat-empty-state/assets/logo-paper.png",
+      "bytes": 87238,
+      "width": 12288,
+      "height": 192,
+      "sha256": "c6ed1a5db5d8a77926b47384565d22989f389ee3a10150f69629dd6f50b40133"
+    },
+    {
+      "file": "logo-ink.png",
+      "source": "design/chat-empty-state/assets/logo-ink.png",
+      "bytes": 86422,
+      "width": 12288,
+      "height": 192,
+      "sha256": "0311eb1349eee724894050f6acf7e0df18e938783f8cc7aecebef55ad108c981"
+    },
+    {
+      "file": "card-book-paper.png",
+      "source": "design/chat-empty-state/assets/card-book-paper.png",
+      "bytes": 122071,
+      "width": 4608,
+      "height": 192,
+      "sha256": "4af89e0a29d1a3b20bf10cba8fd870dcb10c15d6e73e72e12f2609b1f1c66abb"
+    },
+    {
+      "file": "book-paper-first.png",
+      "source": "design/chat-empty-state/assets/book-paper-first.png",
+      "bytes": 1640,
+      "width": 96,
+      "height": 96,
+      "sha256": "486bda2eb96ef7e0fede0f54908a73b882e3df013c6bbd30f857c5ed1dd38854"
+    },
+    {
+      "file": "card-book-ink.png",
+      "source": "design/chat-empty-state/assets/card-book-ink.png",
+      "bytes": 122687,
+      "width": 4608,
+      "height": 192,
+      "sha256": "06b5c59c3f7885b8b51755deeba35786104c98d3017ae2dd5c134044e6694b02"
+    },
+    {
+      "file": "book-ink-first.png",
+      "source": "design/chat-empty-state/assets/book-ink-first.png",
+      "bytes": 1639,
+      "width": 96,
+      "height": 96,
+      "sha256": "c5ea32213ff2c6fafde9b1afb8a01f90e61cfa098af1ff79bd060ee77171c9d9"
+    },
+    {
+      "file": "card-character-paper.png",
+      "source": "design/chat-empty-state/assets/card-character-paper.png",
+      "bytes": 123357,
+      "width": 4608,
+      "height": 192,
+      "sha256": "3222861ad56e5d6fcb8a473c8b80ac895e6c546d65990aaec9122674cc1f7040"
+    },
+    {
+      "file": "character-paper-first.png",
+      "source": "design/chat-empty-state/assets/character-paper-first.png",
+      "bytes": 1614,
+      "width": 96,
+      "height": 96,
+      "sha256": "a2cf533536c0f79367b08eb3d4ef479e6da9cf1110040c12a596f896b3c0fc5d"
+    },
+    {
+      "file": "card-character-ink.png",
+      "source": "design/chat-empty-state/assets/card-character-ink.png",
+      "bytes": 121247,
+      "width": 4608,
+      "height": 192,
+      "sha256": "cbca9f7a90543afbb996fca5abca2eb0db0b5f7d6713cfed90d93535486ebf1d"
+    },
+    {
+      "file": "character-ink-first.png",
+      "source": "design/chat-empty-state/assets/character-ink-first.png",
+      "bytes": 1614,
+      "width": 96,
+      "height": 96,
+      "sha256": "be15f6b6a31c0477c2333244054513a5c66c3d791e5c417123f4c8bf878d0f05"
+    },
+    {
+      "file": "card-world-paper.png",
+      "source": "design/chat-empty-state/assets/card-world-paper.png",
+      "bytes": 121564,
+      "width": 4608,
+      "height": 192,
+      "sha256": "5da3feaff579816aa88f5be4cd1f45bfe2ef625b075ed915052684489ecf315c"
+    },
+    {
+      "file": "world-paper-first.png",
+      "source": "design/chat-empty-state/assets/world-paper-first.png",
+      "bytes": 1938,
+      "width": 96,
+      "height": 96,
+      "sha256": "b8d3d81fc7291ba5a75707f0be101a9d5623b7a1c850a3986205451c61564214"
+    },
+    {
+      "file": "card-world-ink.png",
+      "source": "design/chat-empty-state/assets/card-world-ink.png",
+      "bytes": 121615,
+      "width": 4608,
+      "height": 192,
+      "sha256": "c833ba7ccb86688bb1c9e79c3c32771aeb222cac22534dc2f4e219ba2cc3f80b"
+    },
+    {
+      "file": "world-ink-first.png",
+      "source": "design/chat-empty-state/assets/world-ink-first.png",
+      "bytes": 1937,
+      "width": 96,
+      "height": 96,
+      "sha256": "6547d2e0061e16587627eb29bc94a245667a8ebe4cf8b399c9f7e434ca9b57c1"
+    },
+    {
+      "file": "card-scene-paper.png",
+      "source": "design/chat-empty-state/assets/card-scene-paper.png",
+      "bytes": 106031,
+      "width": 4608,
+      "height": 192,
+      "sha256": "9df62c8e6375afb0130122757b16cd3361b8d99d1c0d414c48815b14d7afa53f"
+    },
+    {
+      "file": "scene-paper-first.png",
+      "source": "design/chat-empty-state/assets/scene-paper-first.png",
+      "bytes": 1553,
+      "width": 96,
+      "height": 96,
+      "sha256": "ebbee9d41501e73a9c62229c2ead07f9f778d793d6050bc762010017d60d89ea"
+    },
+    {
+      "file": "card-scene-ink.png",
+      "source": "design/chat-empty-state/assets/card-scene-ink.png",
+      "bytes": 104135,
+      "width": 4608,
+      "height": 192,
+      "sha256": "058973b78168e255d965301d7ad63473edc60800acf342d81977e008f28b40d3"
+    },
+    {
+      "file": "scene-ink-first.png",
+      "source": "design/chat-empty-state/assets/scene-ink-first.png",
+      "bytes": 1549,
+      "width": 96,
+      "height": 96,
+      "sha256": "8d76a9727696b3cce282049e4f9cd1be942590dc69465b19c722ea719972c227"
+    },
+    {
+      "file": "theme-xianxia-v3.png",
+      "source": "design/chat-empty-state/assets/theme-xianxia-v3.png",
+      "bytes": 2166463,
+      "width": 1942,
+      "height": 809,
+      "sha256": "fceea47553865e181e94cb9743d958d8cd72b9d8a1f546144187031ff8ed0f1d"
+    },
+    {
+      "file": "theme-history-v3.png",
+      "source": "design/chat-empty-state/assets/theme-history-v3.png",
+      "bytes": 2051956,
+      "width": 1942,
+      "height": 809,
+      "sha256": "534ac60dc6b420c1caa4e0eec8082cf0b591da46fc471004cfdb08adfa5d2e6d"
+    },
+    {
+      "file": "theme-scifi-v3.png",
+      "source": "design/chat-empty-state/assets/theme-scifi-v3.png",
+      "bytes": 1905789,
+      "width": 1942,
+      "height": 809,
+      "sha256": "18b77ede8a1f8066fbbfca0ebfa795a589ec212789c88a5ff6847004f66e17c8"
+    }
+  ]
+}

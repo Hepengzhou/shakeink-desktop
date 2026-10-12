@@ -3,6 +3,25 @@
   "sourceCommit": "55a62560dc4818143469abb12717a23c752ade8c",
   "status": "planned",
   "note": "Mappings are proposed local entry points, not implementation or test results.",
+  "chatEmptyStateRevision": {
+    "date": "2026-10-12",
+    "verificationUpdatedAt": "2026-10-13",
+    "designRevision": "v3.4",
+    "approval": "UI 审核通过，可以继续",
+    "status": "implemented-scoped-validated",
+    "reuse": ["src/components/layout/ChatPanel.tsx", "src/components/layout/CreateNovelDialog.tsx", "src/components/chat/composer-editor.ts", "src/components/chat/CandidateActionPanel.tsx", "src/lib/creation-wizard", "src/lib/desktop/use-wizard-templates.ts"],
+    "changed": ["src/components/chat/ChatEmptyState.tsx", "src/components/chat/chat-empty-motion.ts", "src/components/chat/use-chat-empty-motion.ts", "src/components/chat/use-chat-models.ts", "src/components/chat/use-agent-chat.ts", "src/lib/chat-empty-state.ts", "src/lib/creation-wizard/presets.ts", "public/brand/chat-empty/manifest.json"],
+    "testIds": ["CES-01", "CES-02", "CES-03", "CES-04", "CES-05", "CES-06", "CES-07", "CES-08", "CES-09", "CES-10", "CES-11"],
+    "verification": "docs/reviews/2026-10-12-chat-empty-state-verification.md",
+    "validation": {
+      "componentBrowser": "20/20 passed within final 60/60 checks; final-scoped-budgeted.tap",
+      "windowsElectron": "20 observed-scope checks passed after final build",
+      "fullBrowser": "38 current files / 360 passed via latest complete per-file evidence; earlier failures/incomplete runs retained",
+      "globalAcceptance": "not all green: final core 1946 / 1903 pass / 40 fail / 1 cancel / 2 skip; baseline and DR65 precision fixture evidence retained; browser file coverage passed",
+      "unverified": ["true document.hidden visibilitychange", "physical IME", "macOS", "supplier endpoint", "installed package"]
+    },
+    "boundaries": "Approved HTML is review-only; 21 PNG copied by byte hash to public. No embedded demo templates, no model fallback, unchanged 29 business panels and no supplier/packaged/macOS claim."
+  },
   "toastAppearanceRevision": {
     "date": "2026-10-12",
     "designRevision": "v1",

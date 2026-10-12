@@ -15,6 +15,12 @@ function picker(modelId: string | null, models: unknown[] = []) {
     if(name === "react")return {useState:(value:unknown)=>[value,()=>{}],useRef:(value:unknown)=>({current:value}),useEffect:(action:()=>unknown)=>effects.push(action)}
     if(name === "react/jsx-runtime")return {jsx:(type:unknown,props:unknown)=>({type,props}),jsxs:(type:unknown,props:unknown)=>({type,props})}
     if(name === "@tanstack/react-query")return {useQuery:()=>({data:{defaultModelId:null,models}})}
+    if(name === "@/components/chat/use-chat-models") {
+      const helper={exports:{}}
+      const queryCode=transformSync(readFileSync(new URL("../../src/components/chat/use-chat-models.ts",import.meta.url),"utf8"),{loader:"ts",format:"cjs"}).code
+      new Function("module","exports","require",queryCode)(helper,helper.exports,()=>({useQuery:()=>({data:{defaultModelId:null,models}})}))
+      return helper.exports
+    }
     if(name === "@/stores/chat")return {useChatStore:Object.assign((select:(value:unknown)=>unknown)=>select(state),{getState:()=>state})}
     if(name === "@/lib/ai/auto-model")return {AUTO_MODEL_ID:"auto"}
     if(name === "@/lib/utils")return {cn:()=>""}

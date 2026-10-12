@@ -29,12 +29,9 @@ import {
   ClipboardList,
   Cog,
   Copy,
-  Feather,
-  Globe,
   Hash,
   ImageIcon,
   ListTodo,
-  ListTree,
   MessageSquare,
   PanelLeft,
   PanelRight,
@@ -44,10 +41,8 @@ import {
   Shield,
   Slash,
   Square,
-  UserPlus,
   Wifi,
   Wrench,
-  type LucideIcon,
 } from "lucide-react"
 import { toast } from "sonner"
 
@@ -115,6 +110,12 @@ import {
   MENTION_GROUP_ICONS,
 } from "@/components/chat/MentionPopup"
 import { ModelPicker } from "@/components/chat/ModelPicker"
+import { useChatModels, type ModelsResponse } from "@/components/chat/use-chat-models"
+import { ChatEmptyState } from "@/components/chat/ChatEmptyState"
+import { CreateNovelDialog } from "@/components/layout/CreateNovelDialog"
+import { canShowChatWelcome, hasSelectedModel, quickPromptSuffix, type QuickPromptKind } from "@/lib/chat-empty-state"
+import type { WizardPreset } from "@/lib/creation-wizard/presets"
+import "@/components/chat/chat-empty-dock.css"
 import { classifyWireError, type ErrorUserAction } from "@/lib/ai/error-classification"
 import { CHAT_FOCUS_COMPOSER_EVENT, CHAT_OPEN_MODEL_PICKER_EVENT, CHAT_SEND_MESSAGE_EVENT, dispatchChatUiEvent } from "@/components/chat/ui-events"
 import {
@@ -147,34 +148,6 @@ interface NovelSummaryItem {
   id: string
   title: string
 }
-
-/** 空会话引导页的模板提示词卡片：点击填入草稿，作者确认后再发送（生成要耗墨滴，不抢跑） */
-const TEMPLATE_CARDS: { icon: LucideIcon; title: string; desc: string; prompt: string }[] = [
-  {
-    icon: UserPlus,
-    title: "创建一个角色",
-    desc: "外貌、性格、背景与目标",
-    prompt: "帮我创建一个新角色",
-  },
-  {
-    icon: Feather,
-    title: "写一段剧情",
-    desc: "来一段仙侠风的精彩片段",
-    prompt: "帮我写一段仙侠风格的精彩剧情",
-  },
-  {
-    icon: Globe,
-    title: "搭建世界观",
-    desc: "玄幻类的世界观设定",
-    prompt: "帮我搭建一套玄幻风格的世界观设定",
-  },
-  {
-    icon: ListTree,
-    title: "规划大纲",
-    desc: "卷章结构与情节走向",
-    prompt: "帮我规划小说的章节大纲",
-  },
-]
 
 async function fetchConversations(): Promise<ConversationSummary[]> {
   const res = await fetch("/api/chat/conversations")
@@ -910,6 +883,13 @@ export function ChatPanel({
   onShowSidebar?: () => void
 }) {
   const queryClient = useQueryClient()
+  const { data: modelCatalog } = useChatModels()
+  const selectedModelId = useChatStore(s => s.modelChoice.modelId)
+  const modelAvailable = hasSelectedModel(selectedModelId, modelCatalog)
+  const hasLiveModel = () => hasSelectedModel(useChatStore.getState().modelChoice.modelId, queryClient.getQueryData<ModelsResponse>(["chat-models"]))
+  const [createOpen, setCreateOpen] = useState(false)
+  const [wizardPreset, setWizardPreset] = useState<WizardPreset | undefined>()
+  const [composing, setComposing] = useState(false)
   const tabs = useTabsStore((s) => s.tabs)
   const activeTabId = useTabsStore((s) => s.activeTabId)
   const activeNovelId = tabs.find((t) => t.id === activeTabId)?.novelId ?? null
@@ -937,7 +917,7 @@ export function ChatPanel({
   const pendingPlan = useChatStore(s => s.pendingPlan)
   /** 创建作品向导对话入口留下的待创建书名（首条消息发送时才真正落库） */
   const pendingNovelTitle = useChatStore((s) => s.pendingNovelTitle)
-  const { messages, loadConversation, resetConversation, send, stop, retryTurn, skipQuestion, reconcilePending, cancelFollowing, following, approvePlan, skipPlan, isLoadingConversation, activeNovelId: conversationNovelId, setActiveNovelId: setConversationNovelId } =
+  const { messages, loadConversation, resetConversation, send, stop, retryTurn, skipQuestion, reconcilePending, cancelFollowing, following, approvePlan, skipPlan, isLoadingConversation, conversationLoadError, activeNovelId: conversationNovelId, setActiveNovelId: setConversationNovelId } =
     useAgentChat(userId)
   const [inputHistory]=useState(()=>new ComposerHistory())
   useEffect(()=>{
@@ -977,8 +957,7 @@ export function ChatPanel({
     (selectionOverridesAsk || !showAskPanel) &&
     cardSelection !== null &&
     cardSelection.conversationId === conversationId &&
-    cardSelection.novelId === entityNovelId &&
-    messages.length > 0
+    cardSelection.novelId === entityNovelId
 
   // 进程面板（2026-08 zcode 式进程框，取代原内联清单卡）：任务清单取最近一轮推断结果 +
   // 智能体区列最近子代理；浮于消息区右上角——chatpane ≥1720px 时右侧边距天然容纳、不占位
@@ -1218,6 +1197,7 @@ export function ChatPanel({
   const sendText = useCallback(async (text: string, storySelection?: StorySelection) => {
     const before = useChatStore.getState()
     if (sendBusyRef.current || before.recoveryStatus !== "ready" || before.isGenerating || before.creatingNovel) return
+    if (!hasSelectedModel(before.modelChoice.modelId, queryClient.getQueryData<ModelsResponse>(["chat-models"]))) return
     const sending = Symbol()
     sendBusyRef.current = sending
     const draftId = before.draftId
@@ -1265,7 +1245,7 @@ export function ChatPanel({
   const handleSend = async () => {
     const text = useChatStore.getState().draft.trim()
     // 三阶段保存：气泡存在时即使无文本也可发送（仅发气泡）
-    if ((!text && stagedChipCount === 0) || !canSend || sendBusyRef.current) return
+    if ((!text && stagedChipCount === 0) || !canSend || sendBusyRef.current || !hasLiveModel()) return
     const before=useChatStore.getState(),sourceDraft=before.draftId
     // 生成中点击发送 → 进入队列（§2.5），当前轮流结束后自动按序发送
     if (useChatStore.getState().isGenerating) {
@@ -1312,6 +1292,7 @@ export function ChatPanel({
     if (isGenerating || queuePaused || pendingQuestion || pendingPlan) return
     const current = useChatStore.getState()
     if (current.recoveryStatus !== "ready" || current.creatingNovel || current.isGenerating || current.queuePaused || current.pendingQuestion || current.pendingPlan || current.queuedMessages.length === 0 || sendBusyRef.current) return
+    if (!hasSelectedModel(current.modelChoice.modelId, queryClient.getQueryData<ModelsResponse>(["chat-models"]))) return
     const next = current.queuedMessages[0]
     useChatStore.getState().removeQueuedMessage(next.id)
     // 队列项携带的回合动作（正文改进对话框）随出队置回，发送未被收下时兜底清除防串轮
@@ -1320,7 +1301,7 @@ export function ChatPanel({
       const after = useChatStore.getState()
       if (next.action && after.draftAction === next.action) useChatStore.setState({ draftAction: null })
     })
-  }, [isGenerating, queuePaused, queuedMessages, pendingQuestion, pendingPlan, sendText])
+  }, [isGenerating, queuePaused, queuedMessages, pendingQuestion, pendingPlan, sendText, modelCatalog, selectedModelId, queryClient])
 
   /** 队列行「立即发送」：提到队首 + 停止当前流（流结束后自动按序机制拿起队首，避免双发） */
   const handleSendQueuedNow = (id: string) => {
@@ -1383,6 +1364,12 @@ export function ChatPanel({
       「选项即点即执行则关闭、入队保留」语义一致（入队时选中态保留）。 */
   const handleSendCardMessage = useCallback(async (text: string, action?: ChatAction) => {
     let state = useChatStore.getState()
+    if (!hasSelectedModel(state.modelChoice.modelId, queryClient.getQueryData<ModelsResponse>(["chat-models"]))) {
+      state.enqueueMessage({id:`q-${crypto.randomUUID()}`, text, ...(action ? {action} : {})})
+      useChatStore.setState({queuePaused:true})
+      toast.info("未选择可用模型，内容已保留在待确认队列")
+      return
+    }
     if (action && state.pendingQuestion) {
       await skipQuestion()
       state = useChatStore.getState()
@@ -1402,7 +1389,7 @@ export function ChatPanel({
     await sendText(text)
     const after = useChatStore.getState()
     if (action && after.draftAction === action) useChatStore.setState({ draftAction: null })
-  }, [sendText, skipQuestion])
+  }, [sendText, skipQuestion, queryClient])
 
   // 订阅内容面板的 chat:send-message：来源小说与当前会话关联一致时发进当前会话；
   // 不一致（面板属于另一作品/会话未关联）时不串戏，退回新建会话入口（同「改进正文」机制）；
@@ -1626,7 +1613,7 @@ export function ChatPanel({
     "ai.stop":{enabled:()=>isGenerating&&!mention,run:stop},
   })
   useDesktopCommands({
-    "ai.send":{enabled:()=>canSend&&!mention,run:handleSend},
+    "ai.send":{enabled:()=>canSend&&!mention&&hasLiveModel(),run:handleSend},
     "ai.newline":{enabled:()=>canSend&&!mention,run:()=>{textareaRef.current?.focus();document.execCommand("insertLineBreak");syncFromEditor()}},
     "ai.models":()=>dispatchChatUiEvent(CHAT_OPEN_MODEL_PICKER_EVENT),
     "ai.mention":{enabled:()=>canSend,run:()=>insertToken("@")},
@@ -1641,9 +1628,33 @@ export function ChatPanel({
 
   /** 桌面提示跟随已提交快捷键；默认 Enter 发送、Shift+Enter 换行。 */
   const composerEnterHint = desktopBootstrap?composerBindingHint(desktopCommandCatalog(desktopBootstrap.platform),desktopBootstrap.settings.shortcuts[desktopBootstrap.platform]):"Enter 发送，Shift+Enter 换行"
+  const showWelcome = canShowChatWelcome({
+    recoveryStatus, messageCount:messages.length, loading:isLoadingConversation || !!requestedConversationId, loadError:!!conversationLoadError,
+    generating:isGenerating, creatingNovel, following:!!following, suspended:suspendedExecution,
+    question:!!pendingQuestion, plan:!!pendingPlan, request:!!pendingRequest,
+    selection:!!cardSelection && cardSelection.conversationId===conversationId && cardSelection.novelId===entityNovelId,
+    queueCount:queuedMessages.length, notice:!!(recoveryNotice || storageNotice), activePlan:planBarActive,
+    progress:!!chatProgress || !!storyDraft || (!!conversationId && (planQuery.isLoading || planQuery.isError)),
+  })
+  const openCreation = (preset?: WizardPreset) => {
+    if (!canSend || composing) return
+    setWizardPreset(preset); setCreateOpen(true)
+  }
+  const fillQuickPrompt = (kind: QuickPromptKind) => {
+    const editor = textareaRef.current
+    if (!canSend || composing || !editor || !editor.isContentEditable) return
+    const suffix = quickPromptSuffix(editorToText(editor), kind)
+    editor.focus()
+    if (!suffix) return
+    const range = document.createRange(), selection = window.getSelection()
+    range.selectNodeContents(editor); range.collapse(false)
+    selection?.removeAllRanges(); selection?.addRange(range)
+    insertDraftAtCaret(editor, suffix, chipHydrate, {nativeUndo:true})
+    syncFromEditor()
+  }
 
   return (
-    <div className="chatpane flex h-full flex-col bg-chat-bg" aria-busy={!canSend}>
+    <div className={cn("chatpane flex h-full flex-col bg-chat-bg", showWelcome && "chat-empty-panel")} aria-busy={!canSend}>
       {/* header：标题 + 会话选择 + 关联小说指示胶囊 */}
       <div data-desktop-caption={desktopBootstrap?.platform === "win32" ? "win32" : undefined} className="desktop-drag flex h-11 shrink-0 items-center gap-2 border-b border-border px-3"
         style={desktopBootstrap?.platform === "win32" && contentHidden ? {
@@ -1689,12 +1700,16 @@ export function ChatPanel({
       {recoveryStatus !== "ready" && <div role="status" className="border-b border-border bg-card px-4 py-2 text-sm text-muted-foreground">正在恢复会话…</div>}
       {(recoveryNotice || storageNotice) && <div role="status" className="border-b border-border bg-card px-4 py-2 text-xs text-muted-foreground">{storageNotice ?? recoveryNotice}</div>}
       {creatingNovel && <div role="status" className="border-b border-border bg-card px-4 py-2 text-sm text-muted-foreground">正在创建《{pendingNovelTitle}》，书名和草稿已保留…</div>}
+      {conversationLoadError && <div role="alert" className="flex items-center gap-3 border-b border-border bg-card px-4 py-2 text-sm text-muted-foreground"><span>{conversationLoadError.message}</span><Button variant="outline" size="sm" disabled={isLoadingConversation} onClick={() => void loadConversation(conversationLoadError.conversationId, {preserveOnFailure:true})}>重新加载会话</Button></div>}
+      {messages.length === 0 && conversationId && planQuery.isLoading && <div role="status" className="px-4 py-2 text-xs text-muted-foreground">正在读取会话计划…</div>}
+      {messages.length === 0 && conversationId && planQuery.isError && <div role="alert" className="flex items-center gap-3 px-4 py-2 text-xs text-muted-foreground"><span>加载会话计划失败</span><Button variant="outline" size="sm" onClick={() => void planQuery.refetch()}>重新加载计划</Button></div>}
 
-      {/* 消息区（相对定位容器承载「回到底部」悬浮钮）；空会话时隐藏，由下方输入区转为居中引导页。
+      {/* 消息区（相对定位容器承载「回到底部」悬浮钮）；纯净空会话时展示欢迎区，原业务状态保持可见。
           进程面板为右上角浮层：chatpane ≥1720px 时 960 内容两侧边距已足够容纳面板，浮层不占位、
           消息保持原宽且居中；800~1720px 滚动区右侧预留等宽水槽（消息按比例让宽不被遮挡），
           <800px 直接覆盖消息区右上角。滚动条始终位于面板右侧 */}
-      <div className={messages.length === 0 ? "hidden" : "relative flex min-h-0 flex-1 flex-col"}>
+      <div className="relative flex min-h-0 flex-1 flex-col">
+        {showWelcome && <ChatEmptyState onCreate={openCreation} onPrompt={fillQuickPrompt} disabled={!canSend || composing} modalOpen={createOpen} />}
         {/* SOP 进行中计划吸顶条（2026-08）：有计划时钉在消息区顶部，点击滚动定位到计划卡 */}
         {conversationId && (
           <ActivePlanBar
@@ -1739,7 +1754,7 @@ export function ChatPanel({
           onScroll={handleScroll}
           onClick={handleMessageAreaClick}
           className={cn(
-            "min-h-0 flex-1 overflow-y-auto px-4 py-[18px]",
+            showWelcome ? "hidden" : "min-h-0 flex-1 overflow-y-auto px-4 py-[18px]",
             // 面板可见且 chatpane 处于 800~1720px 中间带：右侧预留「面板宽 clamp(260,30%,340) + 28px」
             // 水槽，滚动条落在水槽右缘 = 面板右侧；≥1720 边距天然够用不预留（消息原宽居中），<800 覆盖式
             progressVisible && PROGRESS_GUTTER_CLASS
@@ -1795,25 +1810,89 @@ export function ChatPanel({
         )}
       </div>
 
-      {/* 输入区：空会话时转为居中引导页（标题 + 输入框 + 模板提示词卡片），有消息后固定底部。
+      {/* 输入区：始终固定底部，欢迎区退出时保留同一原输入框。
           与消息区之间不设分割线、不放建议气泡，视觉一体化。水平内边距与消息滚动区一致（px-4 +
           同一进程面板水槽），保证 composer 与 960 消息列宽度、位置完全对齐 */}
       <div
         className={cn(
-          messages.length === 0
-            ? "flex min-h-0 flex-1 flex-col items-center justify-center overflow-y-auto px-4 pt-6 pb-16"
-            : "shrink-0 px-4 pt-2 pb-3.5",
+          "shrink-0 px-4 pt-2 pb-3.5",
+          showWelcome && "chat-empty-dock",
           progressVisible && PROGRESS_GUTTER_CLASS
         )}
       >
         {messages.length === 0 && (
-          <h1 className="w-full max-w-[720px] text-center font-serif text-2xl font-semibold tracking-[0.04em] text-foreground dark:font-sans">
-            {heroNovel
-              ? `今天想为《${heroNovel.title}》写点什么？`
-              : pendingNovelTitle
-                ? `今天想为《${pendingNovelTitle}》写点什么？`
-                : "今天想写点什么？"}
-          </h1>
+          /* 真实作品关联入口：位于原 composer 上方，选择和待创建状态继续来自真实 store。 */
+          <div className={showWelcome ? "chat-empty-context mx-auto flex w-full max-w-[800px] items-center" : "mx-auto mt-1 flex w-full max-w-[960px] items-center"}>
+              <DropdownMenu onOpenChange={(open) => !open && setNovelQuery("")}>
+                <DropdownMenuTrigger
+                  render={
+                    <button
+                      type="button"
+                      title="选择要创作的小说"
+                      aria-label="选择要创作的小说"
+                      className="flex h-7 max-w-full items-center gap-1.5 rounded-full px-2.5 text-xs text-muted-foreground transition-colors hover:bg-hover-wash hover:text-foreground"
+                    />
+                  }
+                >
+                  <BookOpen className="size-3.5 shrink-0" />
+                  <span className="max-w-[220px] truncate">
+                    {pendingNovelTitle ? `《${pendingNovelTitle}》（待创建）` : heroNovel ? `《${heroNovel.title}》` : heroNovelPick === null ? "不关联小说" : "选择要创作的小说"}
+                  </span>
+                  <ChevronDown className="size-3 shrink-0" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  side="bottom"
+                  align="start"
+                  sideOffset={8}
+                  className="w-64 p-0"
+                >
+                  <div className="flex items-center gap-2 border-b border-border px-3 py-2">
+                    <Search className="size-3.5 shrink-0 text-muted-foreground" />
+                    <input
+                      value={novelQuery}
+                      onChange={(e) => setNovelQuery(e.target.value)}
+                      onKeyDown={(e) => e.stopPropagation()}
+                      placeholder="搜索小说"
+                      className="w-full bg-transparent text-xs outline-none placeholder:text-muted-foreground"
+                    />
+                  </div>
+                  <div className="p-1">
+                    {/* 新建作品：常驻列表区顶部，不参与 novelQuery 搜索过滤；挂起态右侧 ✓。
+                        仅空会话（!conversationId）可点——已加载的空会话 storedNovelId 跟随旧书，
+                        此时挂起新书会显示「待创建」但发送仍落旧书（守卫与 handleCreateHeroNovel 同边界） */}
+                    {!conversationId && (
+                      <DropdownMenuItem onClick={handleCreateHeroNovel}>
+                        <Plus className="size-3.5 text-muted-foreground" />
+                        <span className="min-w-0 flex-1">新建作品</span>
+                        {pendingNovelTitle && <Check className="size-3.5 text-primary" />}
+                      </DropdownMenuItem>
+                    )}
+                    {filteredHeroNovels.length === 0 && (
+                      <div className="px-2 py-1.5 text-xs text-muted-foreground">
+                        没有匹配的小说
+                      </div>
+                    )}
+                    {filteredHeroNovels.map((n) => (
+                      <DropdownMenuItem key={n.id} onClick={() => handleSelectNovel(n)}>
+                        <BookOpen className="size-3.5 text-muted-foreground" />
+                        <span className="min-w-0 flex-1 truncate">《{n.title}》</span>
+                        {n.id === heroNovelId && <Check className="size-3.5 text-primary" />}
+                      </DropdownMenuItem>
+                    ))}
+                  </div>
+                  <DropdownMenuSeparator />
+                  <div className="p-1">
+                    <DropdownMenuItem onClick={handleClearHeroNovel}>
+                      <BookX className="size-3.5 text-muted-foreground" />
+                      <span className="min-w-0 flex-1">不关联小说（仅闲聊）</span>
+                      {heroNovelPick === null && !pendingNovelTitle && (
+                        <Check className="size-3.5 text-primary" />
+                      )}
+                    </DropdownMenuItem>
+                  </div>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
         )}
 
         {/* 计划模式：参谋产出计划后显示批准条，点击切回标准模式执行（问答面板展示时让位） */}
@@ -1845,8 +1924,8 @@ export function ChatPanel({
         <div
           className={cn(
             "relative mx-auto w-full rounded-composer border border-(--chat-line-strong) bg-chat-surface",
-            messages.length === 0
-              ? "mt-9 max-w-[720px] shadow-3 dark:border-foreground/12 dark:bg-popover"
+            showWelcome
+              ? "chat-empty-composer max-w-[800px]"
               : "max-w-[960px]"
           )}
         >
@@ -1893,6 +1972,8 @@ export function ChatPanel({
             aria-multiline="true"
             aria-label="消息输入框"
             data-testid="composer-editor"
+            onCompositionStart={() => setComposing(true)}
+            onCompositionEnd={() => {setComposing(false); syncFromEditor()}}
             data-placeholder={
               composerNovelId
                 ? mode === "plan"
@@ -2002,7 +2083,7 @@ export function ChatPanel({
             className={cn(
               "chat-composer-editable max-h-[140px] w-full overflow-y-auto bg-transparent px-3.5 pt-3 pb-1 text-[13.5px] leading-[1.6] wrap-break-word whitespace-pre-wrap text-foreground outline-none",
               "data-[desktop-empty=true]:before:content-[attr(data-placeholder)] data-[desktop-empty=true]:before:text-muted-foreground/70 data-[desktop-empty=true]:before:pointer-events-none",
-              messages.length === 0 ? "min-h-[92px]" : "min-h-[52px]"
+              showWelcome ? "min-h-[48px]" : "min-h-[52px]"
             )}
           />
           <div className="flex items-center justify-between gap-2 px-2 pt-1 pb-2">
@@ -2139,7 +2220,7 @@ export function ChatPanel({
                 <button
                   type="button"
                   onClick={handleSend}
-                  disabled={!canSend || (!draft.trim() && stagedChipCount === 0)}
+                  disabled={!canSend || !modelAvailable || (!draft.trim() && stagedChipCount === 0)}
                   title="发送"
                   aria-label="发送"
                   className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
@@ -2152,103 +2233,9 @@ export function ChatPanel({
         </div>
         )}
 
-        {messages.length === 0 && (
-          /* 状态栏（Codex 式贴合）：顶部 -mt 塞入 composer 卡片底下（卡片 relative 压在其上，输入框四角圆角完整），两侧内缩 4px，仅露底部圆角；bg-primary/6 暖调装饰底与选中态 selected-surface 语义分离 */
-          <div className="mx-auto -mt-2 flex w-[calc(100%-8px)] max-w-[712px] items-center rounded-b-composer border border-(--chat-line) bg-primary/6 px-2.5 pt-4 pb-2">
-              <DropdownMenu onOpenChange={(open) => !open && setNovelQuery("")}>
-                <DropdownMenuTrigger
-                  render={
-                    <button
-                      type="button"
-                      title="选择要创作的小说"
-                      aria-label="选择要创作的小说"
-                      className="flex h-7 max-w-full items-center gap-1.5 rounded-full px-2.5 text-xs text-muted-foreground transition-colors hover:bg-hover-wash hover:text-foreground"
-                    />
-                  }
-                >
-                  <BookOpen className="size-3.5 shrink-0" />
-                  <span className="max-w-[220px] truncate">
-                    {pendingNovelTitle ? `《${pendingNovelTitle}》（待创建）` : heroNovel ? `《${heroNovel.title}》` : heroNovelPick === null ? "不关联小说" : "选择要创作的小说"}
-                  </span>
-                  <ChevronDown className="size-3 shrink-0" />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  side="bottom"
-                  align="start"
-                  sideOffset={8}
-                  className="w-64 p-0"
-                >
-                  <div className="flex items-center gap-2 border-b border-border px-3 py-2">
-                    <Search className="size-3.5 shrink-0 text-muted-foreground" />
-                    <input
-                      value={novelQuery}
-                      onChange={(e) => setNovelQuery(e.target.value)}
-                      onKeyDown={(e) => e.stopPropagation()}
-                      placeholder="搜索小说"
-                      className="w-full bg-transparent text-xs outline-none placeholder:text-muted-foreground"
-                    />
-                  </div>
-                  <div className="p-1">
-                    {/* 新建作品：常驻列表区顶部，不参与 novelQuery 搜索过滤；挂起态右侧 ✓。
-                        仅空会话（!conversationId）可点——已加载的空会话 storedNovelId 跟随旧书，
-                        此时挂起新书会显示「待创建」但发送仍落旧书（守卫与 handleCreateHeroNovel 同边界） */}
-                    {!conversationId && (
-                      <DropdownMenuItem onClick={handleCreateHeroNovel}>
-                        <Plus className="size-3.5 text-muted-foreground" />
-                        <span className="min-w-0 flex-1">新建作品</span>
-                        {pendingNovelTitle && <Check className="size-3.5 text-primary" />}
-                      </DropdownMenuItem>
-                    )}
-                    {filteredHeroNovels.length === 0 && (
-                      <div className="px-2 py-1.5 text-xs text-muted-foreground">
-                        没有匹配的小说
-                      </div>
-                    )}
-                    {filteredHeroNovels.map((n) => (
-                      <DropdownMenuItem key={n.id} onClick={() => handleSelectNovel(n)}>
-                        <BookOpen className="size-3.5 text-muted-foreground" />
-                        <span className="min-w-0 flex-1 truncate">《{n.title}》</span>
-                        {n.id === heroNovelId && <Check className="size-3.5 text-primary" />}
-                      </DropdownMenuItem>
-                    ))}
-                  </div>
-                  <DropdownMenuSeparator />
-                  <div className="p-1">
-                    <DropdownMenuItem onClick={handleClearHeroNovel}>
-                      <BookX className="size-3.5 text-muted-foreground" />
-                      <span className="min-w-0 flex-1">不关联小说（仅闲聊）</span>
-                      {heroNovelPick === null && !pendingNovelTitle && (
-                        <Check className="size-3.5 text-primary" />
-                      )}
-                    </DropdownMenuItem>
-                  </div>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-        )}
 
-        {messages.length === 0 && (
-          <div className="mt-9 grid w-full max-w-[600px] grid-cols-2 gap-2.5">
-            {TEMPLATE_CARDS.map((card) => (
-              <button
-                key={card.title}
-                type="button"
-                onClick={() => {
-                  setDraft(card.prompt)
-                  textareaRef.current?.focus()
-                }}
-                className="group flex flex-col items-start gap-1.5 rounded-card border border-(--chat-line) bg-chat-surface px-4 py-3.5 text-left shadow-1 transition-colors hover:border-primary/40 hover:bg-hover-wash"
-              >
-                <card.icon className="size-4 text-primary/80 transition-colors group-hover:text-primary" />
-                <span className="text-[13px] font-medium text-foreground">{card.title}</span>
-                <span className="text-[11.5px] leading-snug text-muted-foreground">
-                  {card.desc}
-                </span>
-              </button>
-            ))}
-          </div>
-        )}
       </div>
+      <CreateNovelDialog open={createOpen} onOpenChange={setCreateOpen} initialPreset={wizardPreset} draftFocusRef={textareaRef} novels={novels ?? []} />
     </div>
   )
 }

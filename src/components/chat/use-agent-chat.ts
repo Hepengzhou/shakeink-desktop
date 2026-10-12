@@ -259,6 +259,7 @@ export function useAgentChat(userId: string) {
   /** 每个回合最多自动重试一次（仅服务端异常且无任何写入效果时），用户主动停止不自动重试。 */
   const autoRetriedRef = useRef(new Set<string>())
   const [following, setFollowing] = useState<string | null>(null)
+  const [conversationLoadError, setConversationLoadError] = useState<{conversationId: string; message: string} | null>(null)
   const applyTurnState = useCallback((data: TurnState) => {
     if (useChatStore.getState().accountId !== userId || useChatStore.getState().conversationId !== data.turn.conversationId || useChatStore.getState().isGenerating) return
     for (const message of data.messages) if (Array.isArray(message.toolCalls)) for (const call of message.toolCalls as {toolName?: string; output?: unknown}[]) if(call.toolName === "commitStagedChanges") applySceneCommitReceipt(call.output)
@@ -305,6 +306,7 @@ export function useAgentChat(userId: string) {
     const savedDraft = sessionRepo.get(id)
     setFollowing(null)
     setLoadingConversation(true)
+    setConversationLoadError(null)
     useChatStore.setState({ isGenerating: false, queuePaused: true, recoveryStatus: "restoring" })
     try {
       const res = await navigationRead(fetch(`/api/chat/conversations/${id}`, { signal: token.controller.signal }), token.controller.signal)
@@ -330,7 +332,11 @@ export function useAgentChat(userId: string) {
       if (data.turnState) applyTurnState(data.turnState)
       return true
     } catch (error) {
-      if (execution.owns(token) && !token.controller.signal.aborted && owner() === expectedOwner) toast.error(error instanceof Error ? error.message : "加载会话失败")
+      if (execution.owns(token) && !token.controller.signal.aborted && owner() === expectedOwner) {
+        const message = error instanceof Error ? error.message : "加载会话失败"
+        setConversationLoadError({conversationId:id, message})
+        toast.error(message)
+      }
       return false
     } finally {
       options.signal?.removeEventListener("abort", abort)
@@ -347,6 +353,7 @@ export function useAgentChat(userId: string) {
     execution.cancel()
     setFollowing(null)
     setLoadingConversation(false)
+    setConversationLoadError(null)
     const choices = newChatChoices(useDesktopStore.getState().bootstrap?.settings.agent ?? defaultState.settings.agent)
     useChatStore.setState({ conversationId: null, pendingNovelTitle: pending?.pendingNovelTitle ?? null, pendingNovelPosition: pending?.pendingNovelPosition ?? null, novelCreationRequestId: pending?.pendingNovelTitle ? crypto.randomUUID() : null, pendingRequest: null, pendingPlan: null, draftAction: action, draftId: crypto.randomUUID(), draftNovelId: novelId, draft, recoveryNotice: null, recoveryStatus: "ready", suspendedExecution: false, ...choices, pendingQuestion: null, queuedMessages: [], queuePaused: false, isGenerating: false })
     setActiveNovelId(novelId)
@@ -372,7 +379,7 @@ export function useAgentChat(userId: string) {
       } else if (state.conversationId || state.draftId !== target.id) {
         const saved = sessionRepo.get(target.id)
         if (!saved || saved.conversationId || saved.draftId !== target.id) return false
-        stopRef.current?.(); execution.cancel(); setFollowing(null); setLoadingConversation(false)
+        stopRef.current?.(); execution.cancel(); setFollowing(null); setLoadingConversation(false); setConversationLoadError(null)
         if (signal.aborted || useChatStore.getState().accountId !== userId) return false
         const choices = restoreChatChoices(saved, useDesktopStore.getState().bootstrap?.settings.agent ?? defaultState.settings.agent)
         useChatStore.setState({ conversationId: null, draftId: saved.draftId, draftNovelId: saved.novelId, draft: saved.draft,
@@ -393,6 +400,7 @@ export function useAgentChat(userId: string) {
   useEffect(() => {
     let cancelled = false
     let writing = false
+    setConversationLoadError(null)
     const { entry, error } = sessionRepo.read()
     const initial = entry ?? emptyChatSession()
     const initialChoices = restoreChatChoices(initial, useDesktopStore.getState().bootstrap?.settings.agent ?? defaultState.settings.agent)
@@ -481,6 +489,9 @@ export function useAgentChat(userId: string) {
     if (store.pendingRequest && (JSON.parse(body).message !== message || JSON.stringify(JSON.parse(body).storySelection) !== JSON.stringify(storySelection)) && !recovery) {
       execution.end(token); toast.error("上次发送结果待确认，请先核对上次发送"); return false
     }
+    // A new activity supersedes an abandoned load only after send preflight.
+    // Rejected submissions keep the failed navigation target visible.
+    setConversationLoadError(null)
     const transmittedBatches = (JSON.parse(body) as {stagedChanges?: typeof stagedBatches}).stagedChanges ?? []
     if (transmittedBatches.length) useStagedChangesStore.getState().markSent(transmittedBatches.map(b => b.batchKey), transmittedBatches, true)
     useChatStore.setState({ pendingRequest: store.pendingRequest ?? { clientRequestId: requested.clientRequestId, body }, isGenerating: true, suspendedExecution: true, recoveryNotice: null, pendingQuestion: null, pendingPlan: null, queuePaused: true })
@@ -775,5 +786,5 @@ export function useAgentChat(userId: string) {
     const pending = useChatStore.getState().pendingRequest
     if (pending) { const body = JSON.parse(pending.body); await send(body.message ?? "", body.novelId ?? null, body.retryOfTurnId ? { turnId: body.retryOfTurnId, resume: body.resume } : undefined) }
   }, [send])
-  return { messages, activeNovelId, setActiveNovelId: updateActiveNovelId, loadConversation, resetConversation, send, stop, retryTurn, skipQuestion, reconcilePending, cancelFollowing, following, approvePlan, skipPlan, isLoadingConversation }
+  return { messages, activeNovelId, setActiveNovelId: updateActiveNovelId, loadConversation, resetConversation, send, stop, retryTurn, skipQuestion, reconcilePending, cancelFollowing, following, approvePlan, skipPlan, isLoadingConversation, conversationLoadError }
 }

@@ -1,0 +1,515 @@
+{
+  "designRevision": "3.3",
+  "generatedAt": "2026-10-12T13:27:23.024Z",
+  "scope": "V3.3 local HTML design only: static icons, local interactive creation wizard from repository presets and editable quick prompts. Not React business implementation, Electron, installers, real models, persistence or user UI approval. Production pure functions serve as independent verification expectations. Prior results are not reused; v3.2 baseline is preserved in evidence-v3/baseline-v3.2-preview-checks.json.",
+  "runtime": {
+    "browser": "Installed Google Chrome",
+    "version": "154.0.8037.98",
+    "platform": "win32",
+    "protocol": "file:",
+    "isolatedContext": true
+  },
+  "selectedCases": [
+    "V3-08"
+  ],
+  "summary": {
+    "passed": 1,
+    "failed": 0,
+    "unexecuted": 0,
+    "allExecutedAssertionsPassed": true,
+    "fullCoverage": false
+  },
+  "results": [
+    {
+      "id": "V3-08",
+      "name": "Real local wizard defaults, presets, production filtering, selection and draft composition",
+      "status": "passed",
+      "durationMs": 20369,
+      "details": {
+        "oracle": "Actual src/lib/creation-wizard compose/filter/position/templates modules imported through local tsx; never the preview implementation",
+        "defaultLists": [
+          {
+            "category": "theme",
+            "count": 120,
+            "idsSha256": "1b992895cff1fa13673e422643a4de7dcbdaa0e7848e928db88fa2e740ef7df3"
+          },
+          {
+            "category": "world",
+            "count": 122,
+            "idsSha256": "5f3093c8522bbf0cd5f3e840aa0858ad64fe6a40b370ee647625f565c008018c"
+          },
+          {
+            "category": "character",
+            "count": 69,
+            "idsSha256": "ff174ed6c2d3467281a7e60aa6340ebb95502c67dac594a720eb891ce5425851"
+          },
+          {
+            "category": "plot",
+            "count": 90,
+            "idsSha256": "a5967015f45b6c406dfecb1b53f147428fd251bd689ff3754c96b93c3cd02e5c"
+          }
+        ],
+        "details": [
+          {
+            "category": "theme",
+            "first": "theme-ability-awakening-era",
+            "alternate": "theme-ai-babysitter",
+            "detailPromptMatched": true,
+            "trap": {
+              "first": "wizard-detail-close",
+              "last": "wizard-detail-use",
+              "count": 2,
+              "method": "Place focus at boundary, then real Tab/Shift+Tab; entrance activation is tested separately with real keyboard traversal."
+            }
+          },
+          {
+            "category": "world",
+            "first": "world-ai-uprising",
+            "alternate": "world-alley-childhood",
+            "detailPromptMatched": true,
+            "trap": {
+              "first": "wizard-detail-close",
+              "last": "wizard-detail-use",
+              "count": 2,
+              "method": "Place focus at boundary, then real Tab/Shift+Tab; entrance activation is tested separately with real keyboard traversal."
+            }
+          },
+          {
+            "category": "character",
+            "first": "char-assassin-recluse",
+            "alternate": "char-cautious-cultivator",
+            "detailPromptMatched": true,
+            "trap": {
+              "first": "wizard-detail-close",
+              "last": "wizard-detail-use",
+              "count": 2,
+              "method": "Place focus at boundary, then real Tab/Shift+Tab; entrance activation is tested separately with real keyboard traversal."
+            }
+          },
+          {
+            "category": "plot",
+            "first": "plot-add-points-all-the-way",
+            "alternate": "plot-anger-points-system",
+            "detailPromptMatched": true,
+            "trap": {
+              "first": "wizard-detail-close",
+              "last": "wizard-detail-use",
+              "count": 2,
+              "method": "Place focus at boundary, then real Tab/Shift+Tab; entrance activation is tested separately with real keyboard traversal."
+            }
+          }
+        ],
+        "picks": {
+          "theme": "theme-ability-awakening-era",
+          "world": "world-ai-uprising",
+          "character": "char-assassin-recluse",
+          "plot": "plot-add-points-all-the-way"
+        },
+        "composedSha256": "0ab91ba764796b318b27abc828b3beaa5e0b6038bf268713a16b44595de70b83",
+        "blankDraft": "我想创作一部新小说，请带我一步步完成它。\n\n我的作品定位：\n・频道：不限\n・篇幅：不限\n・题材：全部",
+        "composedFocus": {
+          "focused": true,
+          "height": 140,
+          "renderedHeight": 140,
+          "valueLength": 555
+        },
+        "presets": [
+          {
+            "action": "book",
+            "state": {
+              "channel": "不限",
+              "length": "不限",
+              "genre": "全部",
+              "tags": {
+                "sub": [],
+                "bg": [],
+                "style": [],
+                "flow": []
+              }
+            },
+            "lists": [
+              {
+                "category": "theme",
+                "count": 120,
+                "idsSha256": "1b992895cff1fa13673e422643a4de7dcbdaa0e7848e928db88fa2e740ef7df3"
+              },
+              {
+                "category": "world",
+                "count": 122,
+                "idsSha256": "5f3093c8522bbf0cd5f3e840aa0858ad64fe6a40b370ee647625f565c008018c"
+              },
+              {
+                "category": "character",
+                "count": 69,
+                "idsSha256": "ff174ed6c2d3467281a7e60aa6340ebb95502c67dac594a720eb891ce5425851"
+              },
+              {
+                "category": "plot",
+                "count": 90,
+                "idsSha256": "a5967015f45b6c406dfecb1b53f147428fd251bd689ff3754c96b93c3cd02e5c"
+              }
+            ],
+            "resetOnReopen": true
+          },
+          {
+            "action": "genre-xianxia",
+            "state": {
+              "channel": "男频",
+              "length": "长篇",
+              "genre": "仙侠",
+              "tags": {
+                "sub": [
+                  "古典仙侠"
+                ],
+                "bg": [
+                  "修仙界"
+                ],
+                "style": [
+                  "热血"
+                ],
+                "flow": [
+                  "升级流"
+                ]
+              }
+            },
+            "lists": [
+              {
+                "category": "theme",
+                "count": 5,
+                "idsSha256": "43106744787be6069a56a6f920578ebb4ebd76c725f1e1af06087f457a6835c3"
+              },
+              {
+                "category": "world",
+                "count": 5,
+                "idsSha256": "8620855e2eb493abc3d9479bce2062a6090f54df854084fc7935e55c5c074d83"
+              },
+              {
+                "category": "character",
+                "count": 6,
+                "idsSha256": "49557b969e441dd695fed65efc9ca06b9d96c89567d02d0b82b1ac8eeb422f08"
+              },
+              {
+                "category": "plot",
+                "count": 6,
+                "idsSha256": "ed094340537aef505e56441e22e1dbda9316fe26edd5f83c8ad571325e441b88"
+              }
+            ],
+            "resetOnReopen": true
+          },
+          {
+            "action": "genre-history",
+            "state": {
+              "channel": "男频",
+              "length": "长篇",
+              "genre": "历史",
+              "tags": {
+                "sub": [
+                  "架空历史"
+                ],
+                "bg": [
+                  "古代"
+                ],
+                "style": [
+                  "正剧"
+                ],
+                "flow": [
+                  "权谋"
+                ]
+              }
+            },
+            "lists": [
+              {
+                "category": "theme",
+                "count": 5,
+                "idsSha256": "75dc24bee9877fea5021d1931e9ed6bf26cc56dc82b6d4ee5870485417132b08"
+              },
+              {
+                "category": "world",
+                "count": 4,
+                "idsSha256": "48498a097d86ab07077eb93d8fcc25cb5782e8403b6e3bd56bc39e02e6517ed2"
+              },
+              {
+                "category": "character",
+                "count": 6,
+                "idsSha256": "2edc1eb228b990cdfff19d74ae68a3eebfe8527d981443db71ad793c72e0df52"
+              },
+              {
+                "category": "plot",
+                "count": 5,
+                "idsSha256": "36d7acea20ba0e0883eacaf08e4780e5f35005d3bb542d21d563d18b20ee3884"
+              }
+            ],
+            "resetOnReopen": true
+          },
+          {
+            "action": "genre-scifi",
+            "state": {
+              "channel": "男频",
+              "length": "长篇",
+              "genre": "科幻",
+              "tags": {
+                "sub": [
+                  "星际文明"
+                ],
+                "bg": [
+                  "星际"
+                ],
+                "style": [
+                  "烧脑"
+                ],
+                "flow": [
+                  "经营"
+                ]
+              }
+            },
+            "lists": [
+              {
+                "category": "theme",
+                "count": 4,
+                "idsSha256": "9ffc21706c263d9a3ecdb658cc1219e5e42be928dc7331bfcc7898efb6d841b0"
+              },
+              {
+                "category": "world",
+                "count": 5,
+                "idsSha256": "8fc16722a952b0f7c9dd3ef3c46e02b0d801ccd2fbcd39c9f01ef1c52825e792"
+              },
+              {
+                "category": "character",
+                "count": 4,
+                "idsSha256": "c7a8a6d72a45956a4c826453aaa51dc3fdae7171a5d6d1e4780982e1ee80d946"
+              },
+              {
+                "category": "plot",
+                "count": 4,
+                "idsSha256": "8299c573a88e6216ac5fcbd587a1388746a57b53587441773671494908ab157d"
+              }
+            ],
+            "resetOnReopen": true
+          }
+        ],
+        "keyboard": [
+          {
+            "action": "book",
+            "key": "Enter",
+            "focus": {
+              "visible": true,
+              "outline": "solid"
+            },
+            "trap": {
+              "first": "wizard-close",
+              "last": "wizard-confirm",
+              "count": 230,
+              "method": "Place focus at boundary, then real Tab/Shift+Tab; entrance activation is tested separately with real keyboard traversal."
+            }
+          },
+          {
+            "action": "book",
+            "key": "Space",
+            "focus": {
+              "visible": true,
+              "outline": "solid"
+            },
+            "trap": {
+              "first": "wizard-close",
+              "last": "wizard-confirm",
+              "count": 230,
+              "method": "Place focus at boundary, then real Tab/Shift+Tab; entrance activation is tested separately with real keyboard traversal."
+            }
+          },
+          {
+            "action": "genre-xianxia",
+            "key": "Enter",
+            "focus": {
+              "visible": true,
+              "outline": "solid"
+            },
+            "trap": {
+              "first": "wizard-close",
+              "last": "wizard-confirm",
+              "count": 106,
+              "method": "Place focus at boundary, then real Tab/Shift+Tab; entrance activation is tested separately with real keyboard traversal."
+            }
+          },
+          {
+            "action": "genre-xianxia",
+            "key": "Space",
+            "focus": {
+              "visible": true,
+              "outline": "solid"
+            },
+            "trap": {
+              "first": "wizard-close",
+              "last": "wizard-confirm",
+              "count": 106,
+              "method": "Place focus at boundary, then real Tab/Shift+Tab; entrance activation is tested separately with real keyboard traversal."
+            }
+          },
+          {
+            "action": "genre-history",
+            "key": "Enter",
+            "focus": {
+              "visible": true,
+              "outline": "solid"
+            },
+            "trap": {
+              "first": "wizard-close",
+              "last": "wizard-confirm",
+              "count": 107,
+              "method": "Place focus at boundary, then real Tab/Shift+Tab; entrance activation is tested separately with real keyboard traversal."
+            }
+          },
+          {
+            "action": "genre-history",
+            "key": "Space",
+            "focus": {
+              "visible": true,
+              "outline": "solid"
+            },
+            "trap": {
+              "first": "wizard-close",
+              "last": "wizard-confirm",
+              "count": 107,
+              "method": "Place focus at boundary, then real Tab/Shift+Tab; entrance activation is tested separately with real keyboard traversal."
+            }
+          },
+          {
+            "action": "genre-scifi",
+            "key": "Enter",
+            "focus": {
+              "visible": true,
+              "outline": "solid"
+            },
+            "trap": {
+              "first": "wizard-close",
+              "last": "wizard-confirm",
+              "count": 107,
+              "method": "Place focus at boundary, then real Tab/Shift+Tab; entrance activation is tested separately with real keyboard traversal."
+            }
+          },
+          {
+            "action": "genre-scifi",
+            "key": "Space",
+            "focus": {
+              "visible": true,
+              "outline": "solid"
+            },
+            "trap": {
+              "first": "wizard-close",
+              "last": "wizard-confirm",
+              "count": 107,
+              "method": "Place focus at boundary, then real Tab/Shift+Tab; entrance activation is tested separately with real keyboard traversal."
+            }
+          }
+        ],
+        "linkedFilters": {
+          "prunedTemplate": "theme-sword-opens-heaven-gate",
+          "femaleState": {
+            "channel": "女频",
+            "length": "长篇",
+            "genre": "全部",
+            "tags": {
+              "sub": [],
+              "bg": [
+                "修仙界"
+              ],
+              "style": [],
+              "flow": [
+                "升级流"
+              ]
+            }
+          },
+          "femaleLists": [
+            {
+              "category": "theme",
+              "count": 12,
+              "idsSha256": "a9497d9cfd5c1cb5fd798b2367d9d999252f8fee27dccb2605fd9a84b8033869"
+            },
+            {
+              "category": "world",
+              "count": 8,
+              "idsSha256": "56dc2fbf3bb2a4f0566a5c1394f796e60a78d284886a59f1fee925cfddd70c14"
+            },
+            {
+              "category": "character",
+              "count": 9,
+              "idsSha256": "7f4a96d7b04bbc5af495c2264d0a2f80d7facc4f64e433eb552606ca47fa32d9"
+            },
+            {
+              "category": "plot",
+              "count": 5,
+              "idsSha256": "827d072926ecbc68bf9ccbaa25f9ad745d3af2188b8d334a27507954201c0573"
+            }
+          ],
+          "genreChanged": {
+            "channel": "男频",
+            "length": "长篇",
+            "genre": "历史",
+            "tags": {
+              "sub": [],
+              "bg": [
+                "修仙界"
+              ],
+              "style": [
+                "热血"
+              ],
+              "flow": [
+                "升级流"
+              ]
+            }
+          },
+          "genreLists": [
+            {
+              "category": "theme",
+              "count": 4,
+              "idsSha256": "9ffc21706c263d9a3ecdb658cc1219e5e42be928dc7331bfcc7898efb6d841b0"
+            },
+            {
+              "category": "world",
+              "count": 4,
+              "idsSha256": "48498a097d86ab07077eb93d8fcc25cb5782e8403b6e3bd56bc39e02e6517ed2"
+            },
+            {
+              "category": "character",
+              "count": 4,
+              "idsSha256": "c7a8a6d72a45956a4c826453aaa51dc3fdae7171a5d6d1e4780982e1ee80d946"
+            },
+            {
+              "category": "plot",
+              "count": 6,
+              "idsSha256": "ed094340537aef505e56441e22e1dbda9316fe26edd5f83c8ad571325e441b88"
+            }
+          ],
+          "lengthPrunedTemplate": "theme-sword-opens-heaven-gate",
+          "lengthLists": [
+            {
+              "category": "theme",
+              "count": 90,
+              "idsSha256": "3d966f69d2c21f5733d568f07645db11d910eee39a26546e39a4edbdd2070e25"
+            },
+            {
+              "category": "world",
+              "count": 95,
+              "idsSha256": "9c6d33324cd788680a4c622bbdfb8a0cc5fddd6c8c84aa5b480f13eaccb62bd9"
+            },
+            {
+              "category": "character",
+              "count": 53,
+              "idsSha256": "1e86c4a6158534d77b307e59fea96f5187cf6e01fae2e27eb8833d7d6b9c18f2"
+            },
+            {
+              "category": "plot",
+              "count": 80,
+              "idsSha256": "68a808c110f48e0226acc51d0e7cf195f186f875979e9f71dfcd846a1a8f37ca"
+            }
+          ],
+          "tagLimit": 20
+        }
+      }
+    }
+  ],
+  "unexecuted": [],
+  "executionError": null,
+  "browserErrors": [],
+  "failedRequests": [],
+  "networkRequestCount": 0
+}

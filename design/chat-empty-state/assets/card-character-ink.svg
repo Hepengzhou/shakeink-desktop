@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192" role="img" aria-label="角色 · 人物设定卡"><title>角色 · 人物设定卡</title>
+  <g transform="translate(0 0) rotate(-13 80 99)"><rect x="24" y="35" width="98" height="129" rx="10" fill="#9c7caf"/><circle cx="40" cy="50" r="3" fill="#c4afd1"/><circle cx="51" cy="50" r="3" fill="#c4afd1"/><path d="M38 134H98V139H38ZM38 146H82V150H38Z" fill="#c4afd1"/></g>
+  <g transform="translate(0 0) rotate(5 110 96)"><rect x="56" y="24" width="107" height="147" rx="9" fill="#aaa08c"/><rect x="56" y="24" width="107" height="143" rx="9" fill="#e4ddd1"/>
+    <rect x="68" y="36" width="83" height="87" rx="6" fill="#c4afd1"/><path d="M78 118Q77 96 99 92H120Q141 96 141 118Z" fill="#615071"/><path d="M102 82H118V103L110 111L102 103Z" fill="#e4ddd1"/>
+    <g transform="rotate(0 110 91)"><path d="M88 70Q84 44 109 44Q137 43 134 71L129 90H94Z" fill="#615071"/><path d="M96 63Q109 66 118 53Q120 64 127 66V76Q124 91 110 92Q98 90 95 77Z" fill="#e4ddd1"/></g>
+    <path d="M71 135H135V140H71ZM71 147H116V151H71Z" fill="#9c7caf" opacity=".65"/></g>
+  <g transform="translate(0 0) rotate(-6 141 149)"><rect x="116" y="137" width="57" height="27" rx="7" fill="#615071"/><path d="M127 148H160V152H127Z" fill="#c4afd1"/><circle cx="166" cy="132" r="8" fill="#9c7caf"/><path d="M166 127L168 130L171 132L168 134L166 137L164 134L161 132L164 130Z" fill="#e4ddd1"/></g></svg>

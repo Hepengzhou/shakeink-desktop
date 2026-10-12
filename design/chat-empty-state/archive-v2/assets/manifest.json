@@ -1,0 +1,2364 @@
+{
+  "version": 2,
+  "generator": "design/chat-empty-state/build-assets.mjs",
+  "generationMethod": "Local SVG authoring and sharp rasterization; no network, external image generation, credentials, or application data.",
+  "iconRasterization": "Preserve SVG alpha coverage, then set RGB of every nontransparent icon pixel to its single declared ink color; this removes overlap-rounding artifacts. Logo is rasterized directly without this step.",
+  "fpsByType": {
+    "logo": 16,
+    "icons": 20
+  },
+  "spriteLayout": "horizontal; frame n begins at x = n × frameWidth",
+  "alpha": true,
+  "logoNormalization": {
+    "originalViewBox": "0 0 128 128",
+    "viewBox": "-14 -24 156 156",
+    "width": 128,
+    "height": 128,
+    "transforms": "preserved",
+    "originalTransforms": [
+      "translate(0 0) scale(1) translate(0 0)",
+      "translate(7.03202 1.50000) scale(0.2354049)",
+      "translate(313,8)"
+    ],
+    "colors": {
+      "paper": "#b8b8b8",
+      "ink": "#d0d0d0"
+    },
+    "allowedChanges": [
+      "Replace root viewBox",
+      "Replace original single fill color"
+    ]
+  },
+  "logoMotion": {
+    "coordinateBoundaryY": 235,
+    "fixedRasterRegion": {
+      "x": 0,
+      "y": 104,
+      "width": 192,
+      "height": 88
+    },
+    "horizontalAmplitudeSource": 72,
+    "previousHorizontalAmplitudeSource": 12,
+    "horizontalCoefficientRatioToV1": 6,
+    "verticalRiseSource": 78,
+    "verticalWaveSource": 12,
+    "displaySize": 128,
+    "method": "Only original smoke control points at source y<235 vary in x and y. Smoothstep reaches zero at the boundary; original body coordinates and all transforms remain unchanged.",
+    "trails": false
+  },
+  "palettes": {
+    "paper": {
+      "background": "#f0e7d1",
+      "text": "#2b251b",
+      "secondary": "#786e5d",
+      "logo": "#b8b8b8",
+      "icon": "#686868"
+    },
+    "ink": {
+      "background": "#0d0b0a",
+      "text": "#ece7e1",
+      "secondary": "#b6aa9a",
+      "logo": "#d0d0d0",
+      "icon": "#c1c1c1"
+    }
+  },
+  "assets": [
+    {
+      "name": "logo",
+      "theme": "paper",
+      "sprite": "logo-paper.png",
+      "staticSvg": "logo-paper.svg",
+      "firstFrame": "logo-paper-first.png",
+      "frameWidth": 192,
+      "frameHeight": 192,
+      "frameCount": 64,
+      "fps": 16,
+      "durationMs": 4000,
+      "width": 12288,
+      "height": 192,
+      "source": "public/brand/logo-icon-paper.svg",
+      "sourceSha256": "539388e660960efb034573498bfc641d67f6c1c369a3258c1ed6080b7a5e1b23",
+      "spriteSha256": "b87b0f70ccb9fb7d2b0cb53051a4aeb8ebecc458cb55d357b1a77514f936356e",
+      "bytes": 98544,
+      "colors": [
+        "#b8b8b8"
+      ]
+    },
+    {
+      "name": "book",
+      "theme": "paper",
+      "sprite": "book-paper.png",
+      "staticSvg": "book-paper.svg",
+      "firstFrame": "book-paper-first.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frameCount": 24,
+      "fps": 20,
+      "durationMs": 1200,
+      "width": 2304,
+      "height": 96,
+      "source": "design/chat-empty-state/build-assets.mjs",
+      "spriteSha256": "49bd61d4e6d65beb5ee97007e71c272187daac262c3f832ae73943898a891f65",
+      "bytes": 10273,
+      "colors": [
+        "#686868"
+      ]
+    },
+    {
+      "name": "world",
+      "theme": "paper",
+      "sprite": "world-paper.png",
+      "staticSvg": "world-paper.svg",
+      "firstFrame": "world-paper-first.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frameCount": 24,
+      "fps": 20,
+      "durationMs": 1200,
+      "width": 2304,
+      "height": 96,
+      "source": "design/chat-empty-state/build-assets.mjs",
+      "spriteSha256": "c2533bb90a925b2bb36a9d313a314ef476cf9b618c65b2d7f77face43f6ceadd",
+      "bytes": 6931,
+      "colors": [
+        "#686868"
+      ]
+    },
+    {
+      "name": "character",
+      "theme": "paper",
+      "sprite": "character-paper.png",
+      "staticSvg": "character-paper.svg",
+      "firstFrame": "character-paper-first.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frameCount": 24,
+      "fps": 20,
+      "durationMs": 1200,
+      "width": 2304,
+      "height": 96,
+      "source": "design/chat-empty-state/build-assets.mjs",
+      "spriteSha256": "1190aa33f92d7e47e37a755ec9e99d3affbba7f2dba527e8286fcc99d666ec0c",
+      "bytes": 13749,
+      "colors": [
+        "#686868"
+      ]
+    },
+    {
+      "name": "scene",
+      "theme": "paper",
+      "sprite": "scene-paper.png",
+      "staticSvg": "scene-paper.svg",
+      "firstFrame": "scene-paper-first.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frameCount": 24,
+      "fps": 20,
+      "durationMs": 1200,
+      "width": 2304,
+      "height": 96,
+      "source": "design/chat-empty-state/build-assets.mjs",
+      "spriteSha256": "66b114cb892e5b9f72309fbeafaf0f0d46727cd377822ba61cbccfef8aa30dee",
+      "bytes": 7308,
+      "colors": [
+        "#686868"
+      ]
+    },
+    {
+      "name": "logo",
+      "theme": "ink",
+      "sprite": "logo-ink.png",
+      "staticSvg": "logo-ink.svg",
+      "firstFrame": "logo-ink-first.png",
+      "frameWidth": 192,
+      "frameHeight": 192,
+      "frameCount": 64,
+      "fps": 16,
+      "durationMs": 4000,
+      "width": 12288,
+      "height": 192,
+      "source": "public/brand/logo-icon-ink.svg",
+      "sourceSha256": "70f455112c0ae48f40207dbef4d50cca9ba79dd23a616642c3f86331d8e1276a",
+      "spriteSha256": "b3d084269c5ad4a0d31f3f626767d409f11a518c6951af465f80933e0edb4fba",
+      "bytes": 98576,
+      "colors": [
+        "#d0d0d0"
+      ]
+    },
+    {
+      "name": "book",
+      "theme": "ink",
+      "sprite": "book-ink.png",
+      "staticSvg": "book-ink.svg",
+      "firstFrame": "book-ink-first.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frameCount": 24,
+      "fps": 20,
+      "durationMs": 1200,
+      "width": 2304,
+      "height": 96,
+      "source": "design/chat-empty-state/build-assets.mjs",
+      "spriteSha256": "e7e8001c45596381a000565a03fed976425ee38b7f57fdf7c982fa9f1506eaad",
+      "bytes": 10270,
+      "colors": [
+        "#c1c1c1"
+      ]
+    },
+    {
+      "name": "world",
+      "theme": "ink",
+      "sprite": "world-ink.png",
+      "staticSvg": "world-ink.svg",
+      "firstFrame": "world-ink-first.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frameCount": 24,
+      "fps": 20,
+      "durationMs": 1200,
+      "width": 2304,
+      "height": 96,
+      "source": "design/chat-empty-state/build-assets.mjs",
+      "spriteSha256": "56e6d336c4c9ede32a62af29f87c454f221b6ec5efd2506fc749392781aafbb8",
+      "bytes": 6933,
+      "colors": [
+        "#c1c1c1"
+      ]
+    },
+    {
+      "name": "character",
+      "theme": "ink",
+      "sprite": "character-ink.png",
+      "staticSvg": "character-ink.svg",
+      "firstFrame": "character-ink-first.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frameCount": 24,
+      "fps": 20,
+      "durationMs": 1200,
+      "width": 2304,
+      "height": 96,
+      "source": "design/chat-empty-state/build-assets.mjs",
+      "spriteSha256": "68e0badf412bf85a2911b15d526c013f89d7882d0b6e2ed74619c04d1cfec346",
+      "bytes": 13748,
+      "colors": [
+        "#c1c1c1"
+      ]
+    },
+    {
+      "name": "scene",
+      "theme": "ink",
+      "sprite": "scene-ink.png",
+      "staticSvg": "scene-ink.svg",
+      "firstFrame": "scene-ink-first.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frameCount": 24,
+      "fps": 20,
+      "durationMs": 1200,
+      "width": 2304,
+      "height": 96,
+      "source": "design/chat-empty-state/build-assets.mjs",
+      "spriteSha256": "2ab49d536dc3db563d0e9d0a2fd30e6a1a1d4886f0f1f48a05331ab86236fed4",
+      "bytes": 7307,
+      "colors": [
+        "#c1c1c1"
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "sprite": "logo-paper.png",
+      "frameZeroMatchesDeclaredRasterization": true,
+      "frameZeroMatchesStaticSvg": true,
+      "animationChangesPixels": true,
+      "changedPixelsVsFrameZero": [
+        0,
+        433,
+        551,
+        619,
+        665,
+        687,
+        703,
+        709,
+        703,
+        706,
+        704,
+        702,
+        702,
+        710,
+        740,
+        769,
+        821,
+        862,
+        909,
+        973,
+        1015,
+        1073,
+        1106,
+        1155,
+        1195,
+        1242,
+        1274,
+        1313,
+        1347,
+        1373,
+        1398,
+        1423,
+        1437,
+        1458,
+        1470,
+        1475,
+        1472,
+        1469,
+        1463,
+        1460,
+        1447,
+        1437,
+        1410,
+        1390,
+        1366,
+        1343,
+        1306,
+        1275,
+        1233,
+        1195,
+        1159,
+        1117,
+        1080,
+        1035,
+        995,
+        958,
+        911,
+        874,
+        834,
+        797,
+        740,
+        670,
+        569,
+        446
+      ],
+      "grayscaleAllFrames": true,
+      "transparentEdgesAllFrames": true,
+      "opaqueColorAllFrames": "#b8b8b8",
+      "frameZeroBounds": {
+        "x": 26,
+        "y": 33,
+        "width": 140,
+        "height": 152
+      },
+      "allFrameBounds": {
+        "x": 26,
+        "y": 10,
+        "width": 140,
+        "height": 175
+      },
+      "originalSvgSha256": "539388e660960efb034573498bfc641d67f6c1c369a3258c1ed6080b7a5e1b23",
+      "normalizedSvgSha256": "a3abfb154e76c66be4d665b1e1e9c8a5cc245e2bdbf1c63be8c1a71b910caa24",
+      "staticSvgMatchesNormalizedOriginal": true,
+      "originalPathAndTransformsPreserved": true,
+      "fixedRasterRegion": {
+        "x": 0,
+        "y": 104,
+        "width": 192,
+        "height": 88
+      },
+      "fixedRegionChangedPixels": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "smokeChangedPixels": [
+        0,
+        433,
+        551,
+        619,
+        665,
+        687,
+        703,
+        709,
+        703,
+        706,
+        704,
+        702,
+        702,
+        710,
+        740,
+        769,
+        821,
+        862,
+        909,
+        973,
+        1015,
+        1073,
+        1106,
+        1155,
+        1195,
+        1242,
+        1274,
+        1313,
+        1347,
+        1373,
+        1398,
+        1423,
+        1437,
+        1458,
+        1470,
+        1475,
+        1472,
+        1469,
+        1463,
+        1460,
+        1447,
+        1437,
+        1410,
+        1390,
+        1366,
+        1343,
+        1306,
+        1275,
+        1233,
+        1195,
+        1159,
+        1117,
+        1080,
+        1035,
+        995,
+        958,
+        911,
+        874,
+        834,
+        797,
+        740,
+        670,
+        569,
+        446
+      ],
+      "burnerFixedAllFrames": true,
+      "smokeChangesAllNonzeroFrames": true,
+      "smokeCoverage": {
+        "firstFrame": {
+          "bbox": {
+            "x": 75,
+            "y": 33,
+            "width": 66,
+            "height": 71
+          },
+          "occupiedPixels": 1114,
+          "opaquePixels": 801,
+          "opaqueColors": [
+            "#b8b8b8"
+          ],
+          "edgePixels": 0,
+          "nonGrayPixels": 0
+        },
+        "unionBounds": {
+          "x": 75,
+          "y": 10,
+          "width": 74,
+          "height": 94
+        },
+        "frames": [
+          {
+            "bbox": {
+              "x": 75,
+              "y": 33,
+              "width": 66,
+              "height": 71
+            },
+            "occupiedPixels": 1114
+          },
+          {
+            "bbox": {
+              "x": 75,
+              "y": 34,
+              "width": 66,
+              "height": 70
+            },
+            "occupiedPixels": 1100
+          },
+          {
+            "bbox": {
+              "x": 75,
+              "y": 34,
+              "width": 66,
+              "height": 70
+            },
+            "occupiedPixels": 1102
+          },
+          {
+            "bbox": {
+              "x": 75,
+              "y": 34,
+              "width": 66,
+              "height": 70
+            },
+            "occupiedPixels": 1101
+          },
+          {
+            "bbox": {
+              "x": 75,
+              "y": 34,
+              "width": 66,
+              "height": 70
+            },
+            "occupiedPixels": 1103
+          },
+          {
+            "bbox": {
+              "x": 75,
+              "y": 34,
+              "width": 66,
+              "height": 70
+            },
+            "occupiedPixels": 1110
+          },
+          {
+            "bbox": {
+              "x": 75,
+              "y": 33,
+              "width": 66,
+              "height": 71
+            },
+            "occupiedPixels": 1119
+          },
+          {
+            "bbox": {
+              "x": 75,
+              "y": 33,
+              "width": 66,
+              "height": 71
+            },
+            "occupiedPixels": 1132
+          },
+          {
+            "bbox": {
+              "x": 75,
+              "y": 32,
+              "width": 66,
+              "height": 72
+            },
+            "occupiedPixels": 1140
+          },
+          {
+            "bbox": {
+              "x": 75,
+              "y": 32,
+              "width": 67,
+              "height": 72
+            },
+            "occupiedPixels": 1155
+          },
+          {
+            "bbox": {
+              "x": 75,
+              "y": 31,
+              "width": 69,
+              "height": 73
+            },
+            "occupiedPixels": 1167
+          },
+          {
+            "bbox": {
+              "x": 76,
+              "y": 30,
+              "width": 69,
+              "height": 74
+            },
+            "occupiedPixels": 1182
+          },
+          {
+            "bbox": {
+              "x": 76,
+              "y": 29,
+              "width": 70,
+              "height": 75
+            },
+            "occupiedPixels": 1204
+          },
+          {
+            "bbox": {
+              "x": 76,
+              "y": 29,
+              "width": 71,
+              "height": 75
+            },
+            "occupiedPixels": 1223
+          },
+          {
+            "bbox": {
+              "x": 76,
+              "y": 28,
+              "width": 72,
+              "height": 76
+            },
+            "occupiedPixels": 1243
+          },
+          {
+            "bbox": {
+              "x": 77,
+              "y": 27,
+              "width": 71,
+              "height": 77
+            },
+            "occupiedPixels": 1259
+          },
+          {
+            "bbox": {
+              "x": 77,
+              "y": 25,
+              "width": 72,
+              "height": 79
+            },
+            "occupiedPixels": 1289
+          },
+          {
+            "bbox": {
+              "x": 77,
+              "y": 24,
+              "width": 72,
+              "height": 80
+            },
+            "occupiedPixels": 1315
+          },
+          {
+            "bbox": {
+              "x": 77,
+              "y": 23,
+              "width": 72,
+              "height": 81
+            },
+            "occupiedPixels": 1328
+          },
+          {
+            "bbox": {
+              "x": 78,
+              "y": 22,
+              "width": 71,
+              "height": 82
+            },
+            "occupiedPixels": 1359
+          },
+          {
+            "bbox": {
+              "x": 78,
+              "y": 21,
+              "width": 70,
+              "height": 83
+            },
+            "occupiedPixels": 1378
+          },
+          {
+            "bbox": {
+              "x": 78,
+              "y": 20,
+              "width": 70,
+              "height": 84
+            },
+            "occupiedPixels": 1403
+          },
+          {
+            "bbox": {
+              "x": 79,
+              "y": 19,
+              "width": 68,
+              "height": 85
+            },
+            "occupiedPixels": 1414
+          },
+          {
+            "bbox": {
+              "x": 79,
+              "y": 17,
+              "width": 68,
+              "height": 87
+            },
+            "occupiedPixels": 1441
+          },
+          {
+            "bbox": {
+              "x": 79,
+              "y": 16,
+              "width": 67,
+              "height": 88
+            },
+            "occupiedPixels": 1458
+          },
+          {
+            "bbox": {
+              "x": 80,
+              "y": 15,
+              "width": 65,
+              "height": 89
+            },
+            "occupiedPixels": 1482
+          },
+          {
+            "bbox": {
+              "x": 80,
+              "y": 14,
+              "width": 63,
+              "height": 90
+            },
+            "occupiedPixels": 1493
+          },
+          {
+            "bbox": {
+              "x": 80,
+              "y": 14,
+              "width": 62,
+              "height": 90
+            },
+            "occupiedPixels": 1514
+          },
+          {
+            "bbox": {
+              "x": 81,
+              "y": 13,
+              "width": 60,
+              "height": 91
+            },
+            "occupiedPixels": 1528
+          },
+          {
+            "bbox": {
+              "x": 81,
+              "y": 12,
+              "width": 60,
+              "height": 92
+            },
+            "occupiedPixels": 1539
+          },
+          {
+            "bbox": {
+              "x": 81,
+              "y": 12,
+              "width": 60,
+              "height": 92
+            },
+            "occupiedPixels": 1552
+          },
+          {
+            "bbox": {
+              "x": 81,
+              "y": 11,
+              "width": 60,
+              "height": 93
+            },
+            "occupiedPixels": 1563
+          },
+          {
+            "bbox": {
+              "x": 81,
+              "y": 11,
+              "width": 60,
+              "height": 93
+            },
+            "occupiedPixels": 1560
+          },
+          {
+            "bbox": {
+              "x": 82,
+              "y": 10,
+              "width": 59,
+              "height": 94
+            },
+            "occupiedPixels": 1567
+          },
+          {
+            "bbox": {
+              "x": 82,
+              "y": 10,
+              "width": 59,
+              "height": 94
+            },
+            "occupiedPixels": 1574
+          },
+          {
+            "bbox": {
+              "x": 82,
+              "y": 10,
+              "width": 59,
+              "height": 94
+            },
+            "occupiedPixels": 1577
+          },
+          {
+            "bbox": {
+              "x": 82,
+              "y": 10,
+              "width": 59,
+              "height": 94
+            },
+            "occupiedPixels": 1570
+          },
+          {
+            "bbox": {
+              "x": 82,
+              "y": 10,
+              "width": 59,
+              "height": 94
+            },
+            "occupiedPixels": 1565
+          },
+          {
+            "bbox": {
+              "x": 82,
+              "y": 11,
+              "width": 59,
+              "height": 93
+            },
+            "occupiedPixels": 1558
+          },
+          {
+            "bbox": {
+              "x": 82,
+              "y": 11,
+              "width": 59,
+              "height": 93
+            },
+            "occupiedPixels": 1553
+          },
+          {
+            "bbox": {
+              "x": 82,
+              "y": 12,
+              "width": 59,
+              "height": 92
+            },
+            "occupiedPixels": 1539
+          },
+          {
+            "bbox": {
+              "x": 82,
+              "y": 12,
+              "width": 59,
+              "height": 92
+            },
+            "occupiedPixels": 1526
+          },
+          {
+            "bbox": {
+              "x": 81,
+              "y": 13,
+              "width": 60,
+              "height": 91
+            },
+            "occupiedPixels": 1506
+          },
+          {
+            "bbox": {
+              "x": 81,
+              "y": 14,
+              "width": 60,
+              "height": 90
+            },
+            "occupiedPixels": 1495
+          },
+          {
+            "bbox": {
+              "x": 81,
+              "y": 14,
+              "width": 60,
+              "height": 90
+            },
+            "occupiedPixels": 1474
+          },
+          {
+            "bbox": {
+              "x": 81,
+              "y": 15,
+              "width": 60,
+              "height": 89
+            },
+            "occupiedPixels": 1460
+          },
+          {
+            "bbox": {
+              "x": 80,
+              "y": 16,
+              "width": 61,
+              "height": 88
+            },
+            "occupiedPixels": 1435
+          },
+          {
+            "bbox": {
+              "x": 80,
+              "y": 17,
+              "width": 61,
+              "height": 87
+            },
+            "occupiedPixels": 1419
+          },
+          {
+            "bbox": {
+              "x": 80,
+              "y": 18,
+              "width": 61,
+              "height": 86
+            },
+            "occupiedPixels": 1389
+          },
+          {
+            "bbox": {
+              "x": 79,
+              "y": 20,
+              "width": 62,
+              "height": 84
+            },
+            "occupiedPixels": 1368
+          },
+          {
+            "bbox": {
+              "x": 79,
+              "y": 21,
+              "width": 62,
+              "height": 83
+            },
+            "occupiedPixels": 1344
+          },
+          {
+            "bbox": {
+              "x": 78,
+              "y": 22,
+              "width": 63,
+              "height": 82
+            },
+            "occupiedPixels": 1323
+          },
+          {
+            "bbox": {
+              "x": 78,
+              "y": 23,
+              "width": 63,
+              "height": 81
+            },
+            "occupiedPixels": 1303
+          },
+          {
+            "bbox": {
+              "x": 78,
+              "y": 24,
+              "width": 63,
+              "height": 80
+            },
+            "occupiedPixels": 1275
+          },
+          {
+            "bbox": {
+              "x": 77,
+              "y": 25,
+              "width": 64,
+              "height": 79
+            },
+            "occupiedPixels": 1257
+          },
+          {
+            "bbox": {
+              "x": 77,
+              "y": 26,
+              "width": 64,
+              "height": 78
+            },
+            "occupiedPixels": 1236
+          },
+          {
+            "bbox": {
+              "x": 77,
+              "y": 27,
+              "width": 64,
+              "height": 77
+            },
+            "occupiedPixels": 1205
+          },
+          {
+            "bbox": {
+              "x": 76,
+              "y": 28,
+              "width": 65,
+              "height": 76
+            },
+            "occupiedPixels": 1193
+          },
+          {
+            "bbox": {
+              "x": 76,
+              "y": 29,
+              "width": 65,
+              "height": 75
+            },
+            "occupiedPixels": 1176
+          },
+          {
+            "bbox": {
+              "x": 76,
+              "y": 30,
+              "width": 65,
+              "height": 74
+            },
+            "occupiedPixels": 1159
+          },
+          {
+            "bbox": {
+              "x": 76,
+              "y": 31,
+              "width": 65,
+              "height": 73
+            },
+            "occupiedPixels": 1144
+          },
+          {
+            "bbox": {
+              "x": 75,
+              "y": 32,
+              "width": 66,
+              "height": 72
+            },
+            "occupiedPixels": 1134
+          },
+          {
+            "bbox": {
+              "x": 75,
+              "y": 32,
+              "width": 66,
+              "height": 72
+            },
+            "occupiedPixels": 1122
+          },
+          {
+            "bbox": {
+              "x": 75,
+              "y": 33,
+              "width": 66,
+              "height": 71
+            },
+            "occupiedPixels": 1119
+          }
+        ],
+        "maximumChangedPixelsVsFrameZero": 1475,
+        "maximumChangedPixelsAsFractionOfFirstFrameSmoke": 1.3240574506283662
+      },
+      "sourceDisplacement": {
+        "maxAbsoluteDx": 76.75274,
+        "maxAbsoluteDy": 79.80409,
+        "minDy": -79.80409,
+        "maxDy": 1.80409,
+        "rasterPixelsPerSourceUnit": 0.2897291076923077
+      },
+      "decodedSpriteMismatchPixels": 0,
+      "passed": true
+    },
+    {
+      "sprite": "book-paper.png",
+      "frameZeroMatchesDeclaredRasterization": true,
+      "animationChangesPixels": true,
+      "changedPixelsVsFrameZero": [
+        0,
+        187,
+        217,
+        363,
+        443,
+        583,
+        663,
+        814,
+        947,
+        1003,
+        1079,
+        1080,
+        1067,
+        1080,
+        1079,
+        1003,
+        947,
+        814,
+        663,
+        583,
+        443,
+        363,
+        217,
+        187
+      ],
+      "grayscaleAllFrames": true,
+      "transparentEdgesAllFrames": true,
+      "opaqueColorAllFrames": "#686868",
+      "frameZeroBounds": {
+        "x": 7,
+        "y": 15,
+        "width": 82,
+        "height": 71
+      },
+      "allFrameBounds": {
+        "x": 7,
+        "y": 15,
+        "width": 82,
+        "height": 71
+      },
+      "staticSvgSingleSolidColor": true,
+      "noSvgStrokes": true,
+      "decodedSpriteMismatchPixels": 0,
+      "passed": true
+    },
+    {
+      "sprite": "world-paper.png",
+      "frameZeroMatchesDeclaredRasterization": true,
+      "animationChangesPixels": true,
+      "changedPixelsVsFrameZero": [
+        0,
+        27,
+        42,
+        53,
+        88,
+        100,
+        94,
+        69,
+        43,
+        44,
+        26,
+        19,
+        21,
+        39,
+        33,
+        73,
+        107,
+        100,
+        94,
+        67,
+        53,
+        50,
+        30,
+        19
+      ],
+      "grayscaleAllFrames": true,
+      "transparentEdgesAllFrames": true,
+      "opaqueColorAllFrames": "#686868",
+      "frameZeroBounds": {
+        "x": 10,
+        "y": 15,
+        "width": 78,
+        "height": 66
+      },
+      "allFrameBounds": {
+        "x": 3,
+        "y": 14,
+        "width": 90,
+        "height": 68
+      },
+      "staticSvgSingleSolidColor": true,
+      "noSvgStrokes": true,
+      "decodedSpriteMismatchPixels": 0,
+      "passed": true
+    },
+    {
+      "sprite": "character-paper.png",
+      "frameZeroMatchesDeclaredRasterization": true,
+      "animationChangesPixels": true,
+      "changedPixelsVsFrameZero": [
+        0,
+        364,
+        458,
+        539,
+        603,
+        642,
+        651,
+        642,
+        603,
+        539,
+        458,
+        364,
+        0,
+        357,
+        453,
+        536,
+        603,
+        642,
+        651,
+        642,
+        603,
+        536,
+        453,
+        357
+      ],
+      "grayscaleAllFrames": true,
+      "transparentEdgesAllFrames": true,
+      "opaqueColorAllFrames": "#686868",
+      "frameZeroBounds": {
+        "x": 10,
+        "y": 8,
+        "width": 75,
+        "height": 79
+      },
+      "allFrameBounds": {
+        "x": 10,
+        "y": 8,
+        "width": 75,
+        "height": 79
+      },
+      "staticSvgSingleSolidColor": true,
+      "noSvgStrokes": true,
+      "decodedSpriteMismatchPixels": 0,
+      "passed": true
+    },
+    {
+      "sprite": "scene-paper.png",
+      "frameZeroMatchesDeclaredRasterization": true,
+      "animationChangesPixels": true,
+      "changedPixelsVsFrameZero": [
+        0,
+        89,
+        108,
+        137,
+        176,
+        221,
+        268,
+        314,
+        360,
+        394,
+        428,
+        443,
+        452,
+        443,
+        428,
+        394,
+        360,
+        314,
+        268,
+        221,
+        176,
+        137,
+        108,
+        89
+      ],
+      "grayscaleAllFrames": true,
+      "transparentEdgesAllFrames": true,
+      "opaqueColorAllFrames": "#686868",
+      "frameZeroBounds": {
+        "x": 5,
+        "y": 13,
+        "width": 88,
+        "height": 71
+      },
+      "allFrameBounds": {
+        "x": 5,
+        "y": 5,
+        "width": 88,
+        "height": 79
+      },
+      "staticSvgSingleSolidColor": true,
+      "noSvgStrokes": true,
+      "decodedSpriteMismatchPixels": 0,
+      "passed": true
+    },
+    {
+      "sprite": "logo-ink.png",
+      "frameZeroMatchesDeclaredRasterization": true,
+      "frameZeroMatchesStaticSvg": true,
+      "animationChangesPixels": true,
+      "changedPixelsVsFrameZero": [
+        0,
+        433,
+        551,
+        619,
+        665,
+        687,
+        703,
+        709,
+        703,
+        706,
+        704,
+        702,
+        702,
+        710,
+        740,
+        769,
+        821,
+        862,
+        909,
+        973,
+        1015,
+        1073,
+        1106,
+        1155,
+        1195,
+        1242,
+        1274,
+        1313,
+        1347,
+        1373,
+        1398,
+        1423,
+        1437,
+        1458,
+        1470,
+        1475,
+        1472,
+        1469,
+        1463,
+        1460,
+        1447,
+        1437,
+        1410,
+        1390,
+        1366,
+        1343,
+        1306,
+        1275,
+        1233,
+        1195,
+        1159,
+        1117,
+        1080,
+        1035,
+        995,
+        958,
+        911,
+        874,
+        834,
+        797,
+        740,
+        670,
+        569,
+        446
+      ],
+      "grayscaleAllFrames": true,
+      "transparentEdgesAllFrames": true,
+      "opaqueColorAllFrames": "#d0d0d0",
+      "frameZeroBounds": {
+        "x": 26,
+        "y": 33,
+        "width": 140,
+        "height": 152
+      },
+      "allFrameBounds": {
+        "x": 26,
+        "y": 10,
+        "width": 140,
+        "height": 175
+      },
+      "originalSvgSha256": "70f455112c0ae48f40207dbef4d50cca9ba79dd23a616642c3f86331d8e1276a",
+      "normalizedSvgSha256": "2bfa386e1e90b1184617aa1bb2d8961fcf46e94d1af17675b776f5a845e5bfd3",
+      "staticSvgMatchesNormalizedOriginal": true,
+      "originalPathAndTransformsPreserved": true,
+      "fixedRasterRegion": {
+        "x": 0,
+        "y": 104,
+        "width": 192,
+        "height": 88
+      },
+      "fixedRegionChangedPixels": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "smokeChangedPixels": [
+        0,
+        433,
+        551,
+        619,
+        665,
+        687,
+        703,
+        709,
+        703,
+        706,
+        704,
+        702,
+        702,
+        710,
+        740,
+        769,
+        821,
+        862,
+        909,
+        973,
+        1015,
+        1073,
+        1106,
+        1155,
+        1195,
+        1242,
+        1274,
+        1313,
+        1347,
+        1373,
+        1398,
+        1423,
+        1437,
+        1458,
+        1470,
+        1475,
+        1472,
+        1469,
+        1463,
+        1460,
+        1447,
+        1437,
+        1410,
+        1390,
+        1366,
+        1343,
+        1306,
+        1275,
+        1233,
+        1195,
+        1159,
+        1117,
+        1080,
+        1035,
+        995,
+        958,
+        911,
+        874,
+        834,
+        797,
+        740,
+        670,
+        569,
+        446
+      ],
+      "burnerFixedAllFrames": true,
+      "smokeChangesAllNonzeroFrames": true,
+      "smokeCoverage": {
+        "firstFrame": {
+          "bbox": {
+            "x": 75,
+            "y": 33,
+            "width": 66,
+            "height": 71
+          },
+          "occupiedPixels": 1114,
+          "opaquePixels": 801,
+          "opaqueColors": [
+            "#d0d0d0"
+          ],
+          "edgePixels": 0,
+          "nonGrayPixels": 0
+        },
+        "unionBounds": {
+          "x": 75,
+          "y": 10,
+          "width": 74,
+          "height": 94
+        },
+        "frames": [
+          {
+            "bbox": {
+              "x": 75,
+              "y": 33,
+              "width": 66,
+              "height": 71
+            },
+            "occupiedPixels": 1114
+          },
+          {
+            "bbox": {
+              "x": 75,
+              "y": 34,
+              "width": 66,
+              "height": 70
+            },
+            "occupiedPixels": 1100
+          },
+          {
+            "bbox": {
+              "x": 75,
+              "y": 34,
+              "width": 66,
+              "height": 70
+            },
+            "occupiedPixels": 1102
+          },
+          {
+            "bbox": {
+              "x": 75,
+              "y": 34,
+              "width": 66,
+              "height": 70
+            },
+            "occupiedPixels": 1101
+          },
+          {
+            "bbox": {
+              "x": 75,
+              "y": 34,
+              "width": 66,
+              "height": 70
+            },
+            "occupiedPixels": 1103
+          },
+          {
+            "bbox": {
+              "x": 75,
+              "y": 34,
+              "width": 66,
+              "height": 70
+            },
+            "occupiedPixels": 1110
+          },
+          {
+            "bbox": {
+              "x": 75,
+              "y": 33,
+              "width": 66,
+              "height": 71
+            },
+            "occupiedPixels": 1119
+          },
+          {
+            "bbox": {
+              "x": 75,
+              "y": 33,
+              "width": 66,
+              "height": 71
+            },
+            "occupiedPixels": 1132
+          },
+          {
+            "bbox": {
+              "x": 75,
+              "y": 32,
+              "width": 66,
+              "height": 72
+            },
+            "occupiedPixels": 1140
+          },
+          {
+            "bbox": {
+              "x": 75,
+              "y": 32,
+              "width": 67,
+              "height": 72
+            },
+            "occupiedPixels": 1155
+          },
+          {
+            "bbox": {
+              "x": 75,
+              "y": 31,
+              "width": 69,
+              "height": 73
+            },
+            "occupiedPixels": 1167
+          },
+          {
+            "bbox": {
+              "x": 76,
+              "y": 30,
+              "width": 69,
+              "height": 74
+            },
+            "occupiedPixels": 1182
+          },
+          {
+            "bbox": {
+              "x": 76,
+              "y": 29,
+              "width": 70,
+              "height": 75
+            },
+            "occupiedPixels": 1204
+          },
+          {
+            "bbox": {
+              "x": 76,
+              "y": 29,
+              "width": 71,
+              "height": 75
+            },
+            "occupiedPixels": 1223
+          },
+          {
+            "bbox": {
+              "x": 76,
+              "y": 28,
+              "width": 72,
+              "height": 76
+            },
+            "occupiedPixels": 1243
+          },
+          {
+            "bbox": {
+              "x": 77,
+              "y": 27,
+              "width": 71,
+              "height": 77
+            },
+            "occupiedPixels": 1259
+          },
+          {
+            "bbox": {
+              "x": 77,
+              "y": 25,
+              "width": 72,
+              "height": 79
+            },
+            "occupiedPixels": 1289
+          },
+          {
+            "bbox": {
+              "x": 77,
+              "y": 24,
+              "width": 72,
+              "height": 80
+            },
+            "occupiedPixels": 1315
+          },
+          {
+            "bbox": {
+              "x": 77,
+              "y": 23,
+              "width": 72,
+              "height": 81
+            },
+            "occupiedPixels": 1328
+          },
+          {
+            "bbox": {
+              "x": 78,
+              "y": 22,
+              "width": 71,
+              "height": 82
+            },
+            "occupiedPixels": 1359
+          },
+          {
+            "bbox": {
+              "x": 78,
+              "y": 21,
+              "width": 70,
+              "height": 83
+            },
+            "occupiedPixels": 1378
+          },
+          {
+            "bbox": {
+              "x": 78,
+              "y": 20,
+              "width": 70,
+              "height": 84
+            },
+            "occupiedPixels": 1403
+          },
+          {
+            "bbox": {
+              "x": 79,
+              "y": 19,
+              "width": 68,
+              "height": 85
+            },
+            "occupiedPixels": 1414
+          },
+          {
+            "bbox": {
+              "x": 79,
+              "y": 17,
+              "width": 68,
+              "height": 87
+            },
+            "occupiedPixels": 1441
+          },
+          {
+            "bbox": {
+              "x": 79,
+              "y": 16,
+              "width": 67,
+              "height": 88
+            },
+            "occupiedPixels": 1458
+          },
+          {
+            "bbox": {
+              "x": 80,
+              "y": 15,
+              "width": 65,
+              "height": 89
+            },
+            "occupiedPixels": 1482
+          },
+          {
+            "bbox": {
+              "x": 80,
+              "y": 14,
+              "width": 63,
+              "height": 90
+            },
+            "occupiedPixels": 1493
+          },
+          {
+            "bbox": {
+              "x": 80,
+              "y": 14,
+              "width": 62,
+              "height": 90
+            },
+            "occupiedPixels": 1514
+          },
+          {
+            "bbox": {
+              "x": 81,
+              "y": 13,
+              "width": 60,
+              "height": 91
+            },
+            "occupiedPixels": 1528
+          },
+          {
+            "bbox": {
+              "x": 81,
+              "y": 12,
+              "width": 60,
+              "height": 92
+            },
+            "occupiedPixels": 1539
+          },
+          {
+            "bbox": {
+              "x": 81,
+              "y": 12,
+              "width": 60,
+              "height": 92
+            },
+            "occupiedPixels": 1552
+          },
+          {
+            "bbox": {
+              "x": 81,
+              "y": 11,
+              "width": 60,
+              "height": 93
+            },
+            "occupiedPixels": 1563
+          },
+          {
+            "bbox": {
+              "x": 81,
+              "y": 11,
+              "width": 60,
+              "height": 93
+            },
+            "occupiedPixels": 1560
+          },
+          {
+            "bbox": {
+              "x": 82,
+              "y": 10,
+              "width": 59,
+              "height": 94
+            },
+            "occupiedPixels": 1567
+          },
+          {
+            "bbox": {
+              "x": 82,
+              "y": 10,
+              "width": 59,
+              "height": 94
+            },
+            "occupiedPixels": 1574
+          },
+          {
+            "bbox": {
+              "x": 82,
+              "y": 10,
+              "width": 59,
+              "height": 94
+            },
+            "occupiedPixels": 1577
+          },
+          {
+            "bbox": {
+              "x": 82,
+              "y": 10,
+              "width": 59,
+              "height": 94
+            },
+            "occupiedPixels": 1570
+          },
+          {
+            "bbox": {
+              "x": 82,
+              "y": 10,
+              "width": 59,
+              "height": 94
+            },
+            "occupiedPixels": 1565
+          },
+          {
+            "bbox": {
+              "x": 82,
+              "y": 11,
+              "width": 59,
+              "height": 93
+            },
+            "occupiedPixels": 1558
+          },
+          {
+            "bbox": {
+              "x": 82,
+              "y": 11,
+              "width": 59,
+              "height": 93
+            },
+            "occupiedPixels": 1553
+          },
+          {
+            "bbox": {
+              "x": 82,
+              "y": 12,
+              "width": 59,
+              "height": 92
+            },
+            "occupiedPixels": 1539
+          },
+          {
+            "bbox": {
+              "x": 82,
+              "y": 12,
+              "width": 59,
+              "height": 92
+            },
+            "occupiedPixels": 1526
+          },
+          {
+            "bbox": {
+              "x": 81,
+              "y": 13,
+              "width": 60,
+              "height": 91
+            },
+            "occupiedPixels": 1506
+          },
+          {
+            "bbox": {
+              "x": 81,
+              "y": 14,
+              "width": 60,
+              "height": 90
+            },
+            "occupiedPixels": 1495
+          },
+          {
+            "bbox": {
+              "x": 81,
+              "y": 14,
+              "width": 60,
+              "height": 90
+            },
+            "occupiedPixels": 1474
+          },
+          {
+            "bbox": {
+              "x": 81,
+              "y": 15,
+              "width": 60,
+              "height": 89
+            },
+            "occupiedPixels": 1460
+          },
+          {
+            "bbox": {
+              "x": 80,
+              "y": 16,
+              "width": 61,
+              "height": 88
+            },
+            "occupiedPixels": 1435
+          },
+          {
+            "bbox": {
+              "x": 80,
+              "y": 17,
+              "width": 61,
+              "height": 87
+            },
+            "occupiedPixels": 1419
+          },
+          {
+            "bbox": {
+              "x": 80,
+              "y": 18,
+              "width": 61,
+              "height": 86
+            },
+            "occupiedPixels": 1389
+          },
+          {
+            "bbox": {
+              "x": 79,
+              "y": 20,
+              "width": 62,
+              "height": 84
+            },
+            "occupiedPixels": 1368
+          },
+          {
+            "bbox": {
+              "x": 79,
+              "y": 21,
+              "width": 62,
+              "height": 83
+            },
+            "occupiedPixels": 1344
+          },
+          {
+            "bbox": {
+              "x": 78,
+              "y": 22,
+              "width": 63,
+              "height": 82
+            },
+            "occupiedPixels": 1323
+          },
+          {
+            "bbox": {
+              "x": 78,
+              "y": 23,
+              "width": 63,
+              "height": 81
+            },
+            "occupiedPixels": 1303
+          },
+          {
+            "bbox": {
+              "x": 78,
+              "y": 24,
+              "width": 63,
+              "height": 80
+            },
+            "occupiedPixels": 1275
+          },
+          {
+            "bbox": {
+              "x": 77,
+              "y": 25,
+              "width": 64,
+              "height": 79
+            },
+            "occupiedPixels": 1257
+          },
+          {
+            "bbox": {
+              "x": 77,
+              "y": 26,
+              "width": 64,
+              "height": 78
+            },
+            "occupiedPixels": 1236
+          },
+          {
+            "bbox": {
+              "x": 77,
+              "y": 27,
+              "width": 64,
+              "height": 77
+            },
+            "occupiedPixels": 1205
+          },
+          {
+            "bbox": {
+              "x": 76,
+              "y": 28,
+              "width": 65,
+              "height": 76
+            },
+            "occupiedPixels": 1193
+          },
+          {
+            "bbox": {
+              "x": 76,
+              "y": 29,
+              "width": 65,
+              "height": 75
+            },
+            "occupiedPixels": 1176
+          },
+          {
+            "bbox": {
+              "x": 76,
+              "y": 30,
+              "width": 65,
+              "height": 74
+            },
+            "occupiedPixels": 1159
+          },
+          {
+            "bbox": {
+              "x": 76,
+              "y": 31,
+              "width": 65,
+              "height": 73
+            },
+            "occupiedPixels": 1144
+          },
+          {
+            "bbox": {
+              "x": 75,
+              "y": 32,
+              "width": 66,
+              "height": 72
+            },
+            "occupiedPixels": 1134
+          },
+          {
+            "bbox": {
+              "x": 75,
+              "y": 32,
+              "width": 66,
+              "height": 72
+            },
+            "occupiedPixels": 1122
+          },
+          {
+            "bbox": {
+              "x": 75,
+              "y": 33,
+              "width": 66,
+              "height": 71
+            },
+            "occupiedPixels": 1119
+          }
+        ],
+        "maximumChangedPixelsVsFrameZero": 1475,
+        "maximumChangedPixelsAsFractionOfFirstFrameSmoke": 1.3240574506283662
+      },
+      "sourceDisplacement": {
+        "maxAbsoluteDx": 76.75274,
+        "maxAbsoluteDy": 79.80409,
+        "minDy": -79.80409,
+        "maxDy": 1.80409,
+        "rasterPixelsPerSourceUnit": 0.2897291076923077
+      },
+      "decodedSpriteMismatchPixels": 0,
+      "passed": true
+    },
+    {
+      "sprite": "book-ink.png",
+      "frameZeroMatchesDeclaredRasterization": true,
+      "animationChangesPixels": true,
+      "changedPixelsVsFrameZero": [
+        0,
+        187,
+        217,
+        363,
+        443,
+        583,
+        663,
+        814,
+        947,
+        1003,
+        1079,
+        1080,
+        1067,
+        1080,
+        1079,
+        1003,
+        947,
+        814,
+        663,
+        583,
+        443,
+        363,
+        217,
+        187
+      ],
+      "grayscaleAllFrames": true,
+      "transparentEdgesAllFrames": true,
+      "opaqueColorAllFrames": "#c1c1c1",
+      "frameZeroBounds": {
+        "x": 7,
+        "y": 15,
+        "width": 82,
+        "height": 71
+      },
+      "allFrameBounds": {
+        "x": 7,
+        "y": 15,
+        "width": 82,
+        "height": 71
+      },
+      "staticSvgSingleSolidColor": true,
+      "noSvgStrokes": true,
+      "decodedSpriteMismatchPixels": 0,
+      "passed": true
+    },
+    {
+      "sprite": "world-ink.png",
+      "frameZeroMatchesDeclaredRasterization": true,
+      "animationChangesPixels": true,
+      "changedPixelsVsFrameZero": [
+        0,
+        27,
+        42,
+        53,
+        88,
+        100,
+        94,
+        69,
+        43,
+        44,
+        26,
+        19,
+        21,
+        39,
+        33,
+        73,
+        107,
+        100,
+        94,
+        67,
+        53,
+        50,
+        30,
+        19
+      ],
+      "grayscaleAllFrames": true,
+      "transparentEdgesAllFrames": true,
+      "opaqueColorAllFrames": "#c1c1c1",
+      "frameZeroBounds": {
+        "x": 10,
+        "y": 15,
+        "width": 78,
+        "height": 66
+      },
+      "allFrameBounds": {
+        "x": 3,
+        "y": 14,
+        "width": 90,
+        "height": 68
+      },
+      "staticSvgSingleSolidColor": true,
+      "noSvgStrokes": true,
+      "decodedSpriteMismatchPixels": 0,
+      "passed": true
+    },
+    {
+      "sprite": "character-ink.png",
+      "frameZeroMatchesDeclaredRasterization": true,
+      "animationChangesPixels": true,
+      "changedPixelsVsFrameZero": [
+        0,
+        364,
+        458,
+        539,
+        603,
+        642,
+        651,
+        642,
+        603,
+        539,
+        458,
+        364,
+        0,
+        357,
+        453,
+        536,
+        603,
+        642,
+        651,
+        642,
+        603,
+        536,
+        453,
+        357
+      ],
+      "grayscaleAllFrames": true,
+      "transparentEdgesAllFrames": true,
+      "opaqueColorAllFrames": "#c1c1c1",
+      "frameZeroBounds": {
+        "x": 10,
+        "y": 8,
+        "width": 75,
+        "height": 79
+      },
+      "allFrameBounds": {
+        "x": 10,
+        "y": 8,
+        "width": 75,
+        "height": 79
+      },
+      "staticSvgSingleSolidColor": true,
+      "noSvgStrokes": true,
+      "decodedSpriteMismatchPixels": 0,
+      "passed": true
+    },
+    {
+      "sprite": "scene-ink.png",
+      "frameZeroMatchesDeclaredRasterization": true,
+      "animationChangesPixels": true,
+      "changedPixelsVsFrameZero": [
+        0,
+        89,
+        108,
+        137,
+        176,
+        221,
+        268,
+        314,
+        360,
+        394,
+        428,
+        443,
+        452,
+        443,
+        428,
+        394,
+        360,
+        314,
+        268,
+        221,
+        176,
+        137,
+        108,
+        89
+      ],
+      "grayscaleAllFrames": true,
+      "transparentEdgesAllFrames": true,
+      "opaqueColorAllFrames": "#c1c1c1",
+      "frameZeroBounds": {
+        "x": 5,
+        "y": 13,
+        "width": 88,
+        "height": 71
+      },
+      "allFrameBounds": {
+        "x": 5,
+        "y": 5,
+        "width": 88,
+        "height": 79
+      },
+      "staticSvgSingleSolidColor": true,
+      "noSvgStrokes": true,
+      "decodedSpriteMismatchPixels": 0,
+      "passed": true
+    }
+  ],
+  "contactSheet": "contact-sheet.png",
+  "verification": {
+    "executed": true,
+    "command": "node design/chat-empty-state/build-assets.mjs",
+    "allChecksPassed": true,
+    "scope": "Generated design assets only; not business, Electron, or target-system acceptance."
+  }
+}

@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; img-src 'self' file: data:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'none'; font-src 'self'; object-src 'none'; base-uri 'none'">
+  <title>玄印 · AI 对话首屏设计审核</title>
+  <link rel="stylesheet" href="preview.css">
+  <script src="wizard-data.js" defer></script>
+  <script src="wizard.js" defer></script>
+  <script src="preview.js" defer></script>
+</head>
+<body>
+  <svg class="svg-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+    <symbol id="i-chevron" viewBox="0 0 20 20"><path d="m6 8 4 4 4-4"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 20 20"><path d="M10 4v12M4 10h12"/></symbol>
+    <symbol id="i-book" viewBox="0 0 20 20"><path d="M10 5v12M10 5C7 3 4 3 2 4v12c3-1 5-1 8 1 3-2 5-2 8-1V4c-2-1-5-1-8 1Z"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 20 20"><path d="M5 3h10a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H8l-5 3V5a2 2 0 0 1 2-2Z"/><path d="M7 7h6M7 11h4"/></symbol>
+    <symbol id="i-pen" viewBox="0 0 20 20"><path d="m12 4 4 4M4 12l9-9a2.1 2.1 0 0 1 3 3l-9 9-4 1 1-4Z"/></symbol>
+    <symbol id="i-close" viewBox="0 0 20 20"><path d="m5 5 10 10M15 5 5 15"/></symbol>
+    <symbol id="i-send" viewBox="0 0 20 20"><path d="M10 16V4m-5 5 5-5 5 5"/></symbol>
+    <symbol id="i-model" viewBox="0 0 20 20"><path d="m10 2 7 4v8l-7 4-7-4V6l7-4ZM3 6l7 4 7-4m-7 4v8"/></symbol>
+  </defs></svg>
+
+  <header class="review-header" aria-label="设计审核工具，不属于产品">
+    <div class="review-title"><span class="review-mark">玄印</span><span class="review-slash">/</span><strong>AI 对话首屏</strong><span class="review-version">设计稿 03.4</span></div>
+    <nav class="review-controls" aria-label="预览控制">
+      <div class="segmented" aria-label="主题"><button type="button" data-theme="paper" aria-pressed="false">宣纸</button><button type="button" data-theme="ink" aria-pressed="true">玄墨</button></div>
+      <div class="segmented size-controls" aria-label="面板宽度"><button type="button" data-width="1000" aria-pressed="true">宽屏</button><button type="button" data-width="560" aria-pressed="false">分栏</button><button type="button" data-width="420" aria-pressed="false">窄栏</button></div>
+      <label class="review-check"><input type="checkbox" id="short-window">短窗</label>
+      <label class="review-check"><input type="checkbox" id="reduce-motion">减少动态</label>
+      <button class="review-link" id="design-notes" type="button">设计说明 ↗</button>
+    </nav>
+  </header>
+
+  <main class="stage" aria-label="对话区域设计预览">
+    <section class="chat-panel" id="panel" data-theme="ink" aria-label="AI 对话面板" style="--panel-width:1000px">
+      <!-- 保留真实 ChatPanel 顶栏的 44px 空间，不新增标题或会话入口。 -->
+      <header class="panel-header" aria-hidden="true"></header>
+
+      <div class="welcome-scroll">
+        <div class="welcome" id="welcome">
+          <div class="welcome-head">
+            <div class="brand-motion" tabindex="0" role="img" aria-label="玄印香炉标志，悬停或聚焦时烟缓缓飘动">
+              <span class="sprite logo-sprite" data-sprite="logo" data-role="logo" data-frames="64" data-fps="16" data-frame="0" aria-hidden="true"></span>
+            </div>
+            <h1>今天，想写点什么？</h1>
+            <p class="welcome-subtitle">让一个念头，长成一个故事。</p>
+          </div>
+
+          <div class="creation-actions" aria-label="创作入口">
+            <div class="action-grid">
+              <button class="creation-button create-book" type="button" data-action="book">
+                <img class="action-symbol" data-icon="book" data-role="icon" src="assets/book-ink-first.png" width="26" height="26" alt="">
+                <span class="card-copy"><strong>创建作品</strong><small>写下故事的第一笔</small></span>
+                <span class="sprite card-art" data-sprite="card-book" data-role="card-art" data-frames="24" data-fps="20" data-frame="0" aria-hidden="true"></span>
+              </button>
+              <button class="creation-button create-character" type="button" data-action="character">
+                <img class="action-symbol" data-icon="character" data-role="icon" src="assets/character-ink-first.png" width="26" height="26" alt="">
+                <span class="card-copy"><strong>新角色</strong><small>让想象中的人鲜活起来</small></span>
+                <span class="sprite card-art" data-sprite="card-character" data-role="card-art" data-frames="24" data-fps="20" data-frame="0" aria-hidden="true"></span>
+              </button>
+              <button class="creation-button create-world" type="button" data-action="world">
+                <img class="action-symbol" data-icon="world" data-role="icon" src="assets/world-ink-first.png" width="26" height="26" alt="">
+                <span class="card-copy"><strong>新世界观</strong><small>构建故事中的天地</small></span>
+                <span class="sprite card-art" data-sprite="card-world" data-role="card-art" data-frames="24" data-fps="20" data-frame="0" aria-hidden="true"></span>
+              </button>
+              <button class="creation-button create-scene" type="button" data-action="scene">
+                <img class="action-symbol" data-icon="scene" data-role="icon" src="assets/scene-ink-first.png" width="26" height="26" alt="">
+                <span class="card-copy"><strong>新场景</strong><small>让每一幕跃然眼前</small></span>
+                <span class="sprite card-art" data-sprite="card-scene" data-role="card-art" data-frames="24" data-fps="20" data-frame="0" aria-hidden="true"></span>
+              </button>
+            </div>
+            <div class="genre-grid" aria-label="从小说题材开始">
+              <button class="genre-card" type="button" data-action="genre-xianxia">
+                <img class="genre-image" src="assets/theme-xianxia-v3.png" width="1942" height="809" alt="" draggable="false">
+                <span class="genre-copy"><strong>仙侠</strong><small>山海之间，自有天地</small></span>
+              </button>
+              <button class="genre-card" type="button" data-action="genre-history">
+                <img class="genre-image" src="assets/theme-history-v3.png" width="1942" height="809" alt="" draggable="false">
+                <span class="genre-copy"><strong>历史</strong><small>落笔处，风云再起</small></span>
+              </button>
+              <button class="genre-card" type="button" data-action="genre-scifi">
+                <img class="genre-image" src="assets/theme-scifi-v3.png" width="1942" height="809" alt="" draggable="false">
+                <span class="genre-copy"><strong>科幻</strong><small>向未知，再走一步</small></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="composer-dock">
+        <div class="composer-width">
+          <div class="context-row"><button type="button" class="quiet-button" data-action="association"><svg class="icon small" aria-hidden="true"><use href="#i-book"/></svg><span>不关联作品</span><svg class="icon tiny" aria-hidden="true"><use href="#i-chevron"/></svg></button></div>
+          <div class="composer">
+            <label class="sr-only" for="draft">对话输入</label>
+            <textarea id="draft" rows="2" placeholder="写下你的想法，或用 @ 引用创作内容…" spellcheck="false"></textarea>
+            <div class="composer-toolbar">
+              <div class="composer-tools"><button type="button" class="icon-button add-button" data-action="add" aria-label="添加引用" title="添加引用"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg></button><span class="tool-divider" aria-hidden="true"></span><button type="button" class="quiet-button mode-button" data-action="mode"><span>标准</span><svg class="icon tiny" aria-hidden="true"><use href="#i-chevron"/></svg></button><button type="button" class="quiet-button model-button" data-action="model"><svg class="icon small" aria-hidden="true"><use href="#i-model"/></svg><span>选择模型</span><svg class="icon tiny" aria-hidden="true"><use href="#i-chevron"/></svg></button></div>
+              <button type="button" id="send" class="send-button" disabled aria-label="发送（请先配置文本模型）" title="请先配置文本模型"><svg class="icon" aria-hidden="true"><use href="#i-send"/></svg></button>
+            </div>
+          </div>
+          <p class="composer-hint">选择文本模型后，即可开始对话</p>
+        </div>
+      </footer>
+
+      <dialog id="interaction-dialog" aria-labelledby="dialog-title" aria-describedby="dialog-description">
+        <div class="dialog-top"><span class="dialog-eyebrow">交互示意</span><button class="icon-button" type="button" id="close-dialog" aria-label="关闭说明"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+        <h2 id="dialog-title"></h2><p id="dialog-description"></p>
+        <div id="dialog-extra"></div>
+        <div class="dialog-actions"><button type="button" id="dialog-secondary" class="dialog-secondary">返回设计稿</button><button type="button" id="dialog-primary" class="dialog-primary">知道了</button></div>
+      </dialog>
+
+      <dialog id="wizard-dialog" class="creation-wizard" aria-labelledby="wizard-title" aria-describedby="wizard-description">
+        <header class="wizard-header">
+          <div><h2 id="wizard-title">创作向导</h2><p id="wizard-description">先定位作品方向，再挑选起手模板；确定后填入输入框，由你修改后再发送。</p></div>
+          <button type="button" class="icon-button" id="wizard-close" aria-label="关闭创作向导"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+        </header>
+        <div class="wizard-filters" id="wizard-filters" aria-label="作品定位条件"></div>
+        <p class="wizard-error" id="wizard-error" role="alert" hidden></p>
+        <div class="wizard-body">
+          <nav class="wizard-categories" id="wizard-categories" aria-label="模板环节"></nav>
+          <div class="wizard-templates" id="wizard-templates" aria-label="起手模板"></div>
+        </div>
+        <footer class="wizard-footer">
+          <p id="wizard-summary" class="wizard-summary"></p>
+          <div id="wizard-replace-row" class="wizard-replace-row" hidden><span>将替换输入框已有内容，确认？</span><button type="button" class="dialog-secondary" id="wizard-replace-back">返回</button><button type="button" class="dialog-primary" id="wizard-replace">仍要替换</button></div>
+          <div class="wizard-footer-actions" id="wizard-footer-actions"><button type="button" class="dialog-secondary" id="wizard-cancel">取消</button><button type="button" class="dialog-primary" id="wizard-confirm">确定</button></div>
+        </footer>
+        <div id="wizard-detail" class="wizard-detail" role="dialog" aria-modal="true" aria-labelledby="wizard-detail-title" hidden>
+          <section class="wizard-detail-surface">
+            <header><h3 id="wizard-detail-title"></h3><button type="button" class="icon-button" id="wizard-detail-close" aria-label="关闭模板详情"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></header>
+            <p id="wizard-detail-meta" class="wizard-detail-meta"></p><pre id="wizard-detail-prompt"></pre>
+            <footer><button type="button" class="dialog-primary" id="wizard-detail-use">使用此模板</button></footer>
+          </section>
+        </div>
+      </dialog>
+    </section>
+  </main>
+
+  <footer class="review-footer"><span><span class="review-indicator"></span>待审核 · 仅 AI 对话区域</span><span>悬停 Logo 与按钮，查看逐帧动效</span><span><a href="research.md">01 调研</a><a href="product-design.md">02 产品设计</a><span id="dimensions">1000 × 760</span></span></footer>
+</body>
+</html>

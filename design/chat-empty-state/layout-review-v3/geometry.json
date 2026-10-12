@@ -1,0 +1,2561 @@
+{
+  "cssSha256": "2c0b7b25d3368be929613452d48b88330ef81b1a44d9432dd4c01fcde6488bcc",
+  "observations": [
+    {
+      "theme": "ink",
+      "width": 560,
+      "height": 760,
+      "cards": [
+        {
+          "action": "book",
+          "card": {
+            "x": 381,
+            "right": 634,
+            "y": 321.3125,
+            "bottom": 435.3125,
+            "width": 253,
+            "height": 114
+          },
+          "copy": {
+            "x": 396,
+            "right": 519,
+            "y": 375.078125,
+            "bottom": 414.546875,
+            "width": 123,
+            "height": 39.46875
+          },
+          "symbol": {
+            "x": 396,
+            "right": 422,
+            "y": 342.078125,
+            "bottom": 368.078125,
+            "width": 26,
+            "height": 26
+          },
+          "art": {
+            "x": 523,
+            "right": 633,
+            "y": 323.3125,
+            "bottom": 433.3125,
+            "width": 110,
+            "height": 110
+          },
+          "textOverflow": 0
+        },
+        {
+          "action": "character",
+          "card": {
+            "x": 646,
+            "right": 899,
+            "y": 321.3125,
+            "bottom": 435.3125,
+            "width": 253,
+            "height": 114
+          },
+          "copy": {
+            "x": 661,
+            "right": 784,
+            "y": 375.078125,
+            "bottom": 414.546875,
+            "width": 123,
+            "height": 39.46875
+          },
+          "symbol": {
+            "x": 661,
+            "right": 687,
+            "y": 342.078125,
+            "bottom": 368.078125,
+            "width": 26,
+            "height": 26
+          },
+          "art": {
+            "x": 788,
+            "right": 898,
+            "y": 323.3125,
+            "bottom": 433.3125,
+            "width": 110,
+            "height": 110
+          },
+          "textOverflow": 0
+        },
+        {
+          "action": "world",
+          "card": {
+            "x": 381,
+            "right": 634,
+            "y": 447.3125,
+            "bottom": 539.3125,
+            "width": 253,
+            "height": 92
+          },
+          "copy": {
+            "x": 396,
+            "right": 541,
+            "y": 499.359375,
+            "bottom": 518.25,
+            "width": 145,
+            "height": 18.890625
+          },
+          "symbol": {
+            "x": 396,
+            "right": 420,
+            "y": 468.359375,
+            "bottom": 492.359375,
+            "width": 24,
+            "height": 24
+          },
+          "art": {
+            "x": 545,
+            "right": 633,
+            "y": 449.3125,
+            "bottom": 537.3125,
+            "width": 88,
+            "height": 88
+          },
+          "textOverflow": 0
+        },
+        {
+          "action": "scene",
+          "card": {
+            "x": 646,
+            "right": 899,
+            "y": 447.3125,
+            "bottom": 539.3125,
+            "width": 253,
+            "height": 92
+          },
+          "copy": {
+            "x": 661,
+            "right": 806,
+            "y": 499.359375,
+            "bottom": 518.25,
+            "width": 145,
+            "height": 18.890625
+          },
+          "symbol": {
+            "x": 661,
+            "right": 685,
+            "y": 468.359375,
+            "bottom": 492.359375,
+            "width": 24,
+            "height": 24
+          },
+          "art": {
+            "x": 810,
+            "right": 898,
+            "y": 449.3125,
+            "bottom": 537.3125,
+            "width": 88,
+            "height": 88
+          },
+          "textOverflow": 0
+        }
+      ],
+      "genres": [
+        {
+          "action": "genre-xianxia",
+          "card": {
+            "x": 381,
+            "right": 545.65625,
+            "y": 551.3125,
+            "bottom": 651.3125,
+            "width": 164.65625,
+            "height": 100
+          },
+          "copy": {
+            "x": 394,
+            "right": 476.84375,
+            "y": 587.046875,
+            "bottom": 639.3125,
+            "width": 82.84375,
+            "height": 52.265625
+          },
+          "imagePosition": "70% 50%"
+        },
+        {
+          "action": "genre-history",
+          "card": {
+            "x": 557.65625,
+            "right": 722.328125,
+            "y": 551.3125,
+            "bottom": 651.3125,
+            "width": 164.671875,
+            "height": 100
+          },
+          "copy": {
+            "x": 570.65625,
+            "right": 653.5,
+            "y": 587.046875,
+            "bottom": 639.3125,
+            "width": 82.84375,
+            "height": 52.265625
+          },
+          "imagePosition": "72% 50%"
+        },
+        {
+          "action": "genre-scifi",
+          "card": {
+            "x": 734.328125,
+            "right": 899,
+            "y": 551.3125,
+            "bottom": 651.3125,
+            "width": 164.671875,
+            "height": 100
+          },
+          "copy": {
+            "x": 747.328125,
+            "right": 830.171875,
+            "y": 587.046875,
+            "bottom": 639.3125,
+            "width": 82.84375,
+            "height": 52.265625
+          },
+          "imagePosition": "80% 50%"
+        }
+      ]
+    },
+    {
+      "theme": "ink",
+      "width": 480,
+      "height": 760,
+      "cards": [
+        {
+          "action": "book",
+          "card": {
+            "x": 421,
+            "right": 634,
+            "y": 321.3125,
+            "bottom": 435.3125,
+            "width": 213,
+            "height": 114
+          },
+          "copy": {
+            "x": 436,
+            "right": 527,
+            "y": 375.078125,
+            "bottom": 414.546875,
+            "width": 91,
+            "height": 39.46875
+          },
+          "symbol": {
+            "x": 436,
+            "right": 462,
+            "y": 342.078125,
+            "bottom": 368.078125,
+            "width": 26,
+            "height": 26
+          },
+          "art": {
+            "x": 531,
+            "right": 633,
+            "y": 327.3125,
+            "bottom": 429.3125,
+            "width": 102,
+            "height": 102
+          },
+          "textOverflow": 0
+        },
+        {
+          "action": "character",
+          "card": {
+            "x": 646,
+            "right": 859,
+            "y": 321.3125,
+            "bottom": 435.3125,
+            "width": 213,
+            "height": 114
+          },
+          "copy": {
+            "x": 661,
+            "right": 752,
+            "y": 367.46875,
+            "bottom": 422.15625,
+            "width": 91,
+            "height": 54.6875
+          },
+          "symbol": {
+            "x": 661,
+            "right": 687,
+            "y": 334.46875,
+            "bottom": 360.46875,
+            "width": 26,
+            "height": 26
+          },
+          "art": {
+            "x": 756,
+            "right": 858,
+            "y": 327.3125,
+            "bottom": 429.3125,
+            "width": 102,
+            "height": 102
+          },
+          "textOverflow": 0
+        },
+        {
+          "action": "world",
+          "card": {
+            "x": 421,
+            "right": 634,
+            "y": 447.3125,
+            "bottom": 539.3125,
+            "width": 213,
+            "height": 92
+          },
+          "copy": {
+            "x": 436,
+            "right": 541,
+            "y": 499.359375,
+            "bottom": 518.25,
+            "width": 105,
+            "height": 18.890625
+          },
+          "symbol": {
+            "x": 436,
+            "right": 460,
+            "y": 468.359375,
+            "bottom": 492.359375,
+            "width": 24,
+            "height": 24
+          },
+          "art": {
+            "x": 545,
+            "right": 633,
+            "y": 449.3125,
+            "bottom": 537.3125,
+            "width": 88,
+            "height": 88
+          },
+          "textOverflow": 0
+        },
+        {
+          "action": "scene",
+          "card": {
+            "x": 646,
+            "right": 859,
+            "y": 447.3125,
+            "bottom": 539.3125,
+            "width": 213,
+            "height": 92
+          },
+          "copy": {
+            "x": 661,
+            "right": 766,
+            "y": 499.359375,
+            "bottom": 518.25,
+            "width": 105,
+            "height": 18.890625
+          },
+          "symbol": {
+            "x": 661,
+            "right": 685,
+            "y": 468.359375,
+            "bottom": 492.359375,
+            "width": 24,
+            "height": 24
+          },
+          "art": {
+            "x": 770,
+            "right": 858,
+            "y": 449.3125,
+            "bottom": 537.3125,
+            "width": 88,
+            "height": 88
+          },
+          "textOverflow": 0
+        }
+      ],
+      "genres": [
+        {
+          "action": "genre-xianxia",
+          "card": {
+            "x": 421,
+            "right": 559,
+            "y": 551.3125,
+            "bottom": 651.3125,
+            "width": 138,
+            "height": 100
+          },
+          "copy": {
+            "x": 434,
+            "right": 500.3125,
+            "y": 587.046875,
+            "bottom": 639.3125,
+            "width": 66.3125,
+            "height": 52.265625
+          },
+          "imagePosition": "70% 50%"
+        },
+        {
+          "action": "genre-history",
+          "card": {
+            "x": 571,
+            "right": 709,
+            "y": 551.3125,
+            "bottom": 651.3125,
+            "width": 138,
+            "height": 100
+          },
+          "copy": {
+            "x": 584,
+            "right": 650.3125,
+            "y": 587.046875,
+            "bottom": 639.3125,
+            "width": 66.3125,
+            "height": 52.265625
+          },
+          "imagePosition": "72% 50%"
+        },
+        {
+          "action": "genre-scifi",
+          "card": {
+            "x": 721,
+            "right": 859,
+            "y": 551.3125,
+            "bottom": 651.3125,
+            "width": 138,
+            "height": 100
+          },
+          "copy": {
+            "x": 734,
+            "right": 800.3125,
+            "y": 587.046875,
+            "bottom": 639.3125,
+            "width": 66.3125,
+            "height": 52.265625
+          },
+          "imagePosition": "80% 50%"
+        }
+      ]
+    },
+    {
+      "theme": "ink",
+      "width": 420,
+      "height": 760,
+      "cards": [
+        {
+          "action": "book",
+          "card": {
+            "x": 451,
+            "right": 829,
+            "y": 309.390625,
+            "bottom": 423.390625,
+            "width": 378,
+            "height": 114
+          },
+          "copy": {
+            "x": 470,
+            "right": 670,
+            "y": 362.796875,
+            "bottom": 402.984375,
+            "width": 200,
+            "height": 40.1875
+          },
+          "symbol": {
+            "x": 470,
+            "right": 496,
+            "y": 329.796875,
+            "bottom": 355.796875,
+            "width": 26,
+            "height": 26
+          },
+          "art": {
+            "x": 678,
+            "right": 828,
+            "y": 291.390625,
+            "bottom": 441.390625,
+            "width": 150,
+            "height": 150
+          },
+          "textOverflow": 0
+        },
+        {
+          "action": "character",
+          "card": {
+            "x": 451,
+            "right": 829,
+            "y": 435.390625,
+            "bottom": 549.390625,
+            "width": 378,
+            "height": 114
+          },
+          "copy": {
+            "x": 470,
+            "right": 670,
+            "y": 488.796875,
+            "bottom": 528.984375,
+            "width": 200,
+            "height": 40.1875
+          },
+          "symbol": {
+            "x": 470,
+            "right": 496,
+            "y": 455.796875,
+            "bottom": 481.796875,
+            "width": 26,
+            "height": 26
+          },
+          "art": {
+            "x": 678,
+            "right": 828,
+            "y": 417.390625,
+            "bottom": 567.390625,
+            "width": 150,
+            "height": 150
+          },
+          "textOverflow": 0
+        },
+        {
+          "action": "world",
+          "card": {
+            "x": 451,
+            "right": 829,
+            "y": 561.390625,
+            "bottom": 653.390625,
+            "width": 378,
+            "height": 92
+          },
+          "copy": {
+            "x": 470,
+            "right": 700,
+            "y": 613.4375,
+            "bottom": 632.328125,
+            "width": 230,
+            "height": 18.890625
+          },
+          "symbol": {
+            "x": 470,
+            "right": 494,
+            "y": 582.4375,
+            "bottom": 606.4375,
+            "width": 24,
+            "height": 24
+          },
+          "art": {
+            "x": 708,
+            "right": 828,
+            "y": 547.390625,
+            "bottom": 667.390625,
+            "width": 120,
+            "height": 120
+          },
+          "textOverflow": 0
+        },
+        {
+          "action": "scene",
+          "card": {
+            "x": 451,
+            "right": 829,
+            "y": 665.390625,
+            "bottom": 757.390625,
+            "width": 378,
+            "height": 92
+          },
+          "copy": {
+            "x": 470,
+            "right": 700,
+            "y": 717.4375,
+            "bottom": 736.328125,
+            "width": 230,
+            "height": 18.890625
+          },
+          "symbol": {
+            "x": 470,
+            "right": 494,
+            "y": 686.4375,
+            "bottom": 710.4375,
+            "width": 24,
+            "height": 24
+          },
+          "art": {
+            "x": 708,
+            "right": 828,
+            "y": 651.390625,
+            "bottom": 771.390625,
+            "width": 120,
+            "height": 120
+          },
+          "textOverflow": 0
+        }
+      ],
+      "genres": [
+        {
+          "action": "genre-xianxia",
+          "card": {
+            "x": 451,
+            "right": 829,
+            "y": 769.390625,
+            "bottom": 873.390625,
+            "width": 378,
+            "height": 104
+          },
+          "copy": {
+            "x": 468,
+            "right": 679.109375,
+            "y": 823.8125,
+            "bottom": 861.390625,
+            "width": 211.109375,
+            "height": 37.578125
+          },
+          "imagePosition": "70% 50%"
+        },
+        {
+          "action": "genre-history",
+          "card": {
+            "x": 451,
+            "right": 829,
+            "y": 885.390625,
+            "bottom": 989.390625,
+            "width": 378,
+            "height": 104
+          },
+          "copy": {
+            "x": 468,
+            "right": 679.109375,
+            "y": 939.8125,
+            "bottom": 977.390625,
+            "width": 211.109375,
+            "height": 37.578125
+          },
+          "imagePosition": "72% 50%"
+        },
+        {
+          "action": "genre-scifi",
+          "card": {
+            "x": 451,
+            "right": 829,
+            "y": 1001.390625,
+            "bottom": 1105.390625,
+            "width": 378,
+            "height": 104
+          },
+          "copy": {
+            "x": 468,
+            "right": 679.109375,
+            "y": 1055.8125,
+            "bottom": 1093.390625,
+            "width": 211.109375,
+            "height": 37.578125
+          },
+          "imagePosition": "80% 50%"
+        }
+      ]
+    },
+    {
+      "theme": "ink",
+      "width": 320,
+      "height": 760,
+      "cards": [
+        {
+          "action": "book",
+          "card": {
+            "x": 493,
+            "right": 787,
+            "y": 305.09375,
+            "bottom": 419.09375,
+            "width": 294,
+            "height": 114
+          },
+          "copy": {
+            "x": 510,
+            "right": 628,
+            "y": 358.5,
+            "bottom": 398.6875,
+            "width": 118,
+            "height": 40.1875
+          },
+          "symbol": {
+            "x": 510,
+            "right": 536,
+            "y": 325.5,
+            "bottom": 351.5,
+            "width": 26,
+            "height": 26
+          },
+          "art": {
+            "x": 636,
+            "right": 786,
+            "y": 287.09375,
+            "bottom": 437.09375,
+            "width": 150,
+            "height": 150
+          },
+          "textOverflow": 0
+        },
+        {
+          "action": "character",
+          "card": {
+            "x": 493,
+            "right": 787,
+            "y": 431.09375,
+            "bottom": 545.09375,
+            "width": 294,
+            "height": 114
+          },
+          "copy": {
+            "x": 510,
+            "right": 628,
+            "y": 484.5,
+            "bottom": 524.6875,
+            "width": 118,
+            "height": 40.1875
+          },
+          "symbol": {
+            "x": 510,
+            "right": 536,
+            "y": 451.5,
+            "bottom": 477.5,
+            "width": 26,
+            "height": 26
+          },
+          "art": {
+            "x": 636,
+            "right": 786,
+            "y": 413.09375,
+            "bottom": 563.09375,
+            "width": 150,
+            "height": 150
+          },
+          "textOverflow": 0
+        },
+        {
+          "action": "world",
+          "card": {
+            "x": 493,
+            "right": 787,
+            "y": 557.09375,
+            "bottom": 649.09375,
+            "width": 294,
+            "height": 92
+          },
+          "copy": {
+            "x": 510,
+            "right": 658,
+            "y": 609.140625,
+            "bottom": 628.03125,
+            "width": 148,
+            "height": 18.890625
+          },
+          "symbol": {
+            "x": 510,
+            "right": 534,
+            "y": 578.140625,
+            "bottom": 602.140625,
+            "width": 24,
+            "height": 24
+          },
+          "art": {
+            "x": 666,
+            "right": 786,
+            "y": 543.09375,
+            "bottom": 663.09375,
+            "width": 120,
+            "height": 120
+          },
+          "textOverflow": 0
+        },
+        {
+          "action": "scene",
+          "card": {
+            "x": 493,
+            "right": 787,
+            "y": 661.09375,
+            "bottom": 753.09375,
+            "width": 294,
+            "height": 92
+          },
+          "copy": {
+            "x": 510,
+            "right": 658,
+            "y": 713.140625,
+            "bottom": 732.03125,
+            "width": 148,
+            "height": 18.890625
+          },
+          "symbol": {
+            "x": 510,
+            "right": 534,
+            "y": 682.140625,
+            "bottom": 706.140625,
+            "width": 24,
+            "height": 24
+          },
+          "art": {
+            "x": 666,
+            "right": 786,
+            "y": 647.09375,
+            "bottom": 767.09375,
+            "width": 120,
+            "height": 120
+          },
+          "textOverflow": 0
+        }
+      ],
+      "genres": [
+        {
+          "action": "genre-xianxia",
+          "card": {
+            "x": 493,
+            "right": 787,
+            "y": 765.09375,
+            "bottom": 869.09375,
+            "width": 294,
+            "height": 104
+          },
+          "copy": {
+            "x": 510,
+            "right": 669.03125,
+            "y": 819.515625,
+            "bottom": 857.09375,
+            "width": 159.03125,
+            "height": 37.578125
+          },
+          "imagePosition": "70% 50%"
+        },
+        {
+          "action": "genre-history",
+          "card": {
+            "x": 493,
+            "right": 787,
+            "y": 881.09375,
+            "bottom": 985.09375,
+            "width": 294,
+            "height": 104
+          },
+          "copy": {
+            "x": 510,
+            "right": 669.03125,
+            "y": 935.515625,
+            "bottom": 973.09375,
+            "width": 159.03125,
+            "height": 37.578125
+          },
+          "imagePosition": "72% 50%"
+        },
+        {
+          "action": "genre-scifi",
+          "card": {
+            "x": 493,
+            "right": 787,
+            "y": 997.09375,
+            "bottom": 1101.09375,
+            "width": 294,
+            "height": 104
+          },
+          "copy": {
+            "x": 510,
+            "right": 669.03125,
+            "y": 1051.515625,
+            "bottom": 1089.09375,
+            "width": 159.03125,
+            "height": 37.578125
+          },
+          "imagePosition": "80% 50%"
+        }
+      ]
+    },
+    {
+      "theme": "ink",
+      "width": 560,
+      "height": 520,
+      "cards": [
+        {
+          "action": "book",
+          "card": {
+            "x": 381,
+            "right": 634,
+            "y": 282.59375,
+            "bottom": 396.59375,
+            "width": 253,
+            "height": 114
+          },
+          "copy": {
+            "x": 396,
+            "right": 519,
+            "y": 336.359375,
+            "bottom": 375.828125,
+            "width": 123,
+            "height": 39.46875
+          },
+          "symbol": {
+            "x": 396,
+            "right": 422,
+            "y": 303.359375,
+            "bottom": 329.359375,
+            "width": 26,
+            "height": 26
+          },
+          "art": {
+            "x": 523,
+            "right": 633,
+            "y": 284.59375,
+            "bottom": 394.59375,
+            "width": 110,
+            "height": 110
+          },
+          "textOverflow": 0
+        },
+        {
+          "action": "character",
+          "card": {
+            "x": 646,
+            "right": 899,
+            "y": 282.59375,
+            "bottom": 396.59375,
+            "width": 253,
+            "height": 114
+          },
+          "copy": {
+            "x": 661,
+            "right": 784,
+            "y": 336.359375,
+            "bottom": 375.828125,
+            "width": 123,
+            "height": 39.46875
+          },
+          "symbol": {
+            "x": 661,
+            "right": 687,
+            "y": 303.359375,
+            "bottom": 329.359375,
+            "width": 26,
+            "height": 26
+          },
+          "art": {
+            "x": 788,
+            "right": 898,
+            "y": 284.59375,
+            "bottom": 394.59375,
+            "width": 110,
+            "height": 110
+          },
+          "textOverflow": 0
+        },
+        {
+          "action": "world",
+          "card": {
+            "x": 381,
+            "right": 634,
+            "y": 408.59375,
+            "bottom": 500.59375,
+            "width": 253,
+            "height": 92
+          },
+          "copy": {
+            "x": 396,
+            "right": 541,
+            "y": 460.640625,
+            "bottom": 479.53125,
+            "width": 145,
+            "height": 18.890625
+          },
+          "symbol": {
+            "x": 396,
+            "right": 420,
+            "y": 429.640625,
+            "bottom": 453.640625,
+            "width": 24,
+            "height": 24
+          },
+          "art": {
+            "x": 545,
+            "right": 633,
+            "y": 410.59375,
+            "bottom": 498.59375,
+            "width": 88,
+            "height": 88
+          },
+          "textOverflow": 0
+        },
+        {
+          "action": "scene",
+          "card": {
+            "x": 646,
+            "right": 899,
+            "y": 408.59375,
+            "bottom": 500.59375,
+            "width": 253,
+            "height": 92
+          },
+          "copy": {
+            "x": 661,
+            "right": 806,
+            "y": 460.640625,
+            "bottom": 479.53125,
+            "width": 145,
+            "height": 18.890625
+          },
+          "symbol": {
+            "x": 661,
+            "right": 685,
+            "y": 429.640625,
+            "bottom": 453.640625,
+            "width": 24,
+            "height": 24
+          },
+          "art": {
+            "x": 810,
+            "right": 898,
+            "y": 410.59375,
+            "bottom": 498.59375,
+            "width": 88,
+            "height": 88
+          },
+          "textOverflow": 0
+        }
+      ],
+      "genres": [
+        {
+          "action": "genre-xianxia",
+          "card": {
+            "x": 381,
+            "right": 545.65625,
+            "y": 512.59375,
+            "bottom": 612.59375,
+            "width": 164.65625,
+            "height": 100
+          },
+          "copy": {
+            "x": 394,
+            "right": 476.84375,
+            "y": 548.328125,
+            "bottom": 600.59375,
+            "width": 82.84375,
+            "height": 52.265625
+          },
+          "imagePosition": "70% 50%"
+        },
+        {
+          "action": "genre-history",
+          "card": {
+            "x": 557.65625,
+            "right": 722.328125,
+            "y": 512.59375,
+            "bottom": 612.59375,
+            "width": 164.671875,
+            "height": 100
+          },
+          "copy": {
+            "x": 570.65625,
+            "right": 653.5,
+            "y": 548.328125,
+            "bottom": 600.59375,
+            "width": 82.84375,
+            "height": 52.265625
+          },
+          "imagePosition": "72% 50%"
+        },
+        {
+          "action": "genre-scifi",
+          "card": {
+            "x": 734.328125,
+            "right": 899,
+            "y": 512.59375,
+            "bottom": 612.59375,
+            "width": 164.671875,
+            "height": 100
+          },
+          "copy": {
+            "x": 747.328125,
+            "right": 830.171875,
+            "y": 548.328125,
+            "bottom": 600.59375,
+            "width": 82.84375,
+            "height": 52.265625
+          },
+          "imagePosition": "80% 50%"
+        }
+      ]
+    },
+    {
+      "theme": "ink",
+      "width": 320,
+      "height": 420,
+      "cards": [
+        {
+          "action": "book",
+          "card": {
+            "x": 493,
+            "right": 787,
+            "y": 281.09375,
+            "bottom": 395.09375,
+            "width": 294,
+            "height": 114
+          },
+          "copy": {
+            "x": 510,
+            "right": 628,
+            "y": 334.5,
+            "bottom": 374.6875,
+            "width": 118,
+            "height": 40.1875
+          },
+          "symbol": {
+            "x": 510,
+            "right": 536,
+            "y": 301.5,
+            "bottom": 327.5,
+            "width": 26,
+            "height": 26
+          },
+          "art": {
+            "x": 636,
+            "right": 786,
+            "y": 263.09375,
+            "bottom": 413.09375,
+            "width": 150,
+            "height": 150
+          },
+          "textOverflow": 0
+        },
+        {
+          "action": "character",
+          "card": {
+            "x": 493,
+            "right": 787,
+            "y": 407.09375,
+            "bottom": 521.09375,
+            "width": 294,
+            "height": 114
+          },
+          "copy": {
+            "x": 510,
+            "right": 628,
+            "y": 460.5,
+            "bottom": 500.6875,
+            "width": 118,
+            "height": 40.1875
+          },
+          "symbol": {
+            "x": 510,
+            "right": 536,
+            "y": 427.5,
+            "bottom": 453.5,
+            "width": 26,
+            "height": 26
+          },
+          "art": {
+            "x": 636,
+            "right": 786,
+            "y": 389.09375,
+            "bottom": 539.09375,
+            "width": 150,
+            "height": 150
+          },
+          "textOverflow": 0
+        },
+        {
+          "action": "world",
+          "card": {
+            "x": 493,
+            "right": 787,
+            "y": 533.09375,
+            "bottom": 625.09375,
+            "width": 294,
+            "height": 92
+          },
+          "copy": {
+            "x": 510,
+            "right": 658,
+            "y": 585.140625,
+            "bottom": 604.03125,
+            "width": 148,
+            "height": 18.890625
+          },
+          "symbol": {
+            "x": 510,
+            "right": 534,
+            "y": 554.140625,
+            "bottom": 578.140625,
+            "width": 24,
+            "height": 24
+          },
+          "art": {
+            "x": 666,
+            "right": 786,
+            "y": 519.09375,
+            "bottom": 639.09375,
+            "width": 120,
+            "height": 120
+          },
+          "textOverflow": 0
+        },
+        {
+          "action": "scene",
+          "card": {
+            "x": 493,
+            "right": 787,
+            "y": 637.09375,
+            "bottom": 729.09375,
+            "width": 294,
+            "height": 92
+          },
+          "copy": {
+            "x": 510,
+            "right": 658,
+            "y": 689.140625,
+            "bottom": 708.03125,
+            "width": 148,
+            "height": 18.890625
+          },
+          "symbol": {
+            "x": 510,
+            "right": 534,
+            "y": 658.140625,
+            "bottom": 682.140625,
+            "width": 24,
+            "height": 24
+          },
+          "art": {
+            "x": 666,
+            "right": 786,
+            "y": 623.09375,
+            "bottom": 743.09375,
+            "width": 120,
+            "height": 120
+          },
+          "textOverflow": 0
+        }
+      ],
+      "genres": [
+        {
+          "action": "genre-xianxia",
+          "card": {
+            "x": 493,
+            "right": 787,
+            "y": 741.09375,
+            "bottom": 845.09375,
+            "width": 294,
+            "height": 104
+          },
+          "copy": {
+            "x": 510,
+            "right": 669.03125,
+            "y": 795.515625,
+            "bottom": 833.09375,
+            "width": 159.03125,
+            "height": 37.578125
+          },
+          "imagePosition": "70% 50%"
+        },
+        {
+          "action": "genre-history",
+          "card": {
+            "x": 493,
+            "right": 787,
+            "y": 857.09375,
+            "bottom": 961.09375,
+            "width": 294,
+            "height": 104
+          },
+          "copy": {
+            "x": 510,
+            "right": 669.03125,
+            "y": 911.515625,
+            "bottom": 949.09375,
+            "width": 159.03125,
+            "height": 37.578125
+          },
+          "imagePosition": "72% 50%"
+        },
+        {
+          "action": "genre-scifi",
+          "card": {
+            "x": 493,
+            "right": 787,
+            "y": 973.09375,
+            "bottom": 1077.09375,
+            "width": 294,
+            "height": 104
+          },
+          "copy": {
+            "x": 510,
+            "right": 669.03125,
+            "y": 1027.515625,
+            "bottom": 1065.09375,
+            "width": 159.03125,
+            "height": 37.578125
+          },
+          "imagePosition": "80% 50%"
+        }
+      ]
+    },
+    {
+      "theme": "paper",
+      "width": 560,
+      "height": 760,
+      "cards": [
+        {
+          "action": "book",
+          "card": {
+            "x": 381,
+            "right": 634,
+            "y": 321.3125,
+            "bottom": 435.3125,
+            "width": 253,
+            "height": 114
+          },
+          "copy": {
+            "x": 396,
+            "right": 519,
+            "y": 375.078125,
+            "bottom": 414.546875,
+            "width": 123,
+            "height": 39.46875
+          },
+          "symbol": {
+            "x": 396,
+            "right": 422,
+            "y": 342.078125,
+            "bottom": 368.078125,
+            "width": 26,
+            "height": 26
+          },
+          "art": {
+            "x": 523,
+            "right": 633,
+            "y": 323.3125,
+            "bottom": 433.3125,
+            "width": 110,
+            "height": 110
+          },
+          "textOverflow": 0
+        },
+        {
+          "action": "character",
+          "card": {
+            "x": 646,
+            "right": 899,
+            "y": 321.3125,
+            "bottom": 435.3125,
+            "width": 253,
+            "height": 114
+          },
+          "copy": {
+            "x": 661,
+            "right": 784,
+            "y": 375.078125,
+            "bottom": 414.546875,
+            "width": 123,
+            "height": 39.46875
+          },
+          "symbol": {
+            "x": 661,
+            "right": 687,
+            "y": 342.078125,
+            "bottom": 368.078125,
+            "width": 26,
+            "height": 26
+          },
+          "art": {
+            "x": 788,
+            "right": 898,
+            "y": 323.3125,
+            "bottom": 433.3125,
+            "width": 110,
+            "height": 110
+          },
+          "textOverflow": 0
+        },
+        {
+          "action": "world",
+          "card": {
+            "x": 381,
+            "right": 634,
+            "y": 447.3125,
+            "bottom": 539.3125,
+            "width": 253,
+            "height": 92
+          },
+          "copy": {
+            "x": 396,
+            "right": 541,
+            "y": 499.359375,
+            "bottom": 518.25,
+            "width": 145,
+            "height": 18.890625
+          },
+          "symbol": {
+            "x": 396,
+            "right": 420,
+            "y": 468.359375,
+            "bottom": 492.359375,
+            "width": 24,
+            "height": 24
+          },
+          "art": {
+            "x": 545,
+            "right": 633,
+            "y": 449.3125,
+            "bottom": 537.3125,
+            "width": 88,
+            "height": 88
+          },
+          "textOverflow": 0
+        },
+        {
+          "action": "scene",
+          "card": {
+            "x": 646,
+            "right": 899,
+            "y": 447.3125,
+            "bottom": 539.3125,
+            "width": 253,
+            "height": 92
+          },
+          "copy": {
+            "x": 661,
+            "right": 806,
+            "y": 499.359375,
+            "bottom": 518.25,
+            "width": 145,
+            "height": 18.890625
+          },
+          "symbol": {
+            "x": 661,
+            "right": 685,
+            "y": 468.359375,
+            "bottom": 492.359375,
+            "width": 24,
+            "height": 24
+          },
+          "art": {
+            "x": 810,
+            "right": 898,
+            "y": 449.3125,
+            "bottom": 537.3125,
+            "width": 88,
+            "height": 88
+          },
+          "textOverflow": 0
+        }
+      ],
+      "genres": [
+        {
+          "action": "genre-xianxia",
+          "card": {
+            "x": 381,
+            "right": 545.65625,
+            "y": 551.3125,
+            "bottom": 651.3125,
+            "width": 164.65625,
+            "height": 100
+          },
+          "copy": {
+            "x": 394,
+            "right": 476.84375,
+            "y": 587.046875,
+            "bottom": 639.3125,
+            "width": 82.84375,
+            "height": 52.265625
+          },
+          "imagePosition": "70% 50%"
+        },
+        {
+          "action": "genre-history",
+          "card": {
+            "x": 557.65625,
+            "right": 722.328125,
+            "y": 551.3125,
+            "bottom": 651.3125,
+            "width": 164.671875,
+            "height": 100
+          },
+          "copy": {
+            "x": 570.65625,
+            "right": 653.5,
+            "y": 587.046875,
+            "bottom": 639.3125,
+            "width": 82.84375,
+            "height": 52.265625
+          },
+          "imagePosition": "72% 50%"
+        },
+        {
+          "action": "genre-scifi",
+          "card": {
+            "x": 734.328125,
+            "right": 899,
+            "y": 551.3125,
+            "bottom": 651.3125,
+            "width": 164.671875,
+            "height": 100
+          },
+          "copy": {
+            "x": 747.328125,
+            "right": 830.171875,
+            "y": 587.046875,
+            "bottom": 639.3125,
+            "width": 82.84375,
+            "height": 52.265625
+          },
+          "imagePosition": "80% 50%"
+        }
+      ]
+    },
+    {
+      "theme": "paper",
+      "width": 480,
+      "height": 760,
+      "cards": [
+        {
+          "action": "book",
+          "card": {
+            "x": 421,
+            "right": 634,
+            "y": 321.3125,
+            "bottom": 435.3125,
+            "width": 213,
+            "height": 114
+          },
+          "copy": {
+            "x": 436,
+            "right": 527,
+            "y": 375.078125,
+            "bottom": 414.546875,
+            "width": 91,
+            "height": 39.46875
+          },
+          "symbol": {
+            "x": 436,
+            "right": 462,
+            "y": 342.078125,
+            "bottom": 368.078125,
+            "width": 26,
+            "height": 26
+          },
+          "art": {
+            "x": 531,
+            "right": 633,
+            "y": 327.3125,
+            "bottom": 429.3125,
+            "width": 102,
+            "height": 102
+          },
+          "textOverflow": 0
+        },
+        {
+          "action": "character",
+          "card": {
+            "x": 646,
+            "right": 859,
+            "y": 321.3125,
+            "bottom": 435.3125,
+            "width": 213,
+            "height": 114
+          },
+          "copy": {
+            "x": 661,
+            "right": 752,
+            "y": 367.46875,
+            "bottom": 422.15625,
+            "width": 91,
+            "height": 54.6875
+          },
+          "symbol": {
+            "x": 661,
+            "right": 687,
+            "y": 334.46875,
+            "bottom": 360.46875,
+            "width": 26,
+            "height": 26
+          },
+          "art": {
+            "x": 756,
+            "right": 858,
+            "y": 327.3125,
+            "bottom": 429.3125,
+            "width": 102,
+            "height": 102
+          },
+          "textOverflow": 0
+        },
+        {
+          "action": "world",
+          "card": {
+            "x": 421,
+            "right": 634,
+            "y": 447.3125,
+            "bottom": 539.3125,
+            "width": 213,
+            "height": 92
+          },
+          "copy": {
+            "x": 436,
+            "right": 541,
+            "y": 499.359375,
+            "bottom": 518.25,
+            "width": 105,
+            "height": 18.890625
+          },
+          "symbol": {
+            "x": 436,
+            "right": 460,
+            "y": 468.359375,
+            "bottom": 492.359375,
+            "width": 24,
+            "height": 24
+          },
+          "art": {
+            "x": 545,
+            "right": 633,
+            "y": 449.3125,
+            "bottom": 537.3125,
+            "width": 88,
+            "height": 88
+          },
+          "textOverflow": 0
+        },
+        {
+          "action": "scene",
+          "card": {
+            "x": 646,
+            "right": 859,
+            "y": 447.3125,
+            "bottom": 539.3125,
+            "width": 213,
+            "height": 92
+          },
+          "copy": {
+            "x": 661,
+            "right": 766,
+            "y": 499.359375,
+            "bottom": 518.25,
+            "width": 105,
+            "height": 18.890625
+          },
+          "symbol": {
+            "x": 661,
+            "right": 685,
+            "y": 468.359375,
+            "bottom": 492.359375,
+            "width": 24,
+            "height": 24
+          },
+          "art": {
+            "x": 770,
+            "right": 858,
+            "y": 449.3125,
+            "bottom": 537.3125,
+            "width": 88,
+            "height": 88
+          },
+          "textOverflow": 0
+        }
+      ],
+      "genres": [
+        {
+          "action": "genre-xianxia",
+          "card": {
+            "x": 421,
+            "right": 559,
+            "y": 551.3125,
+            "bottom": 651.3125,
+            "width": 138,
+            "height": 100
+          },
+          "copy": {
+            "x": 434,
+            "right": 500.3125,
+            "y": 587.046875,
+            "bottom": 639.3125,
+            "width": 66.3125,
+            "height": 52.265625
+          },
+          "imagePosition": "70% 50%"
+        },
+        {
+          "action": "genre-history",
+          "card": {
+            "x": 571,
+            "right": 709,
+            "y": 551.3125,
+            "bottom": 651.3125,
+            "width": 138,
+            "height": 100
+          },
+          "copy": {
+            "x": 584,
+            "right": 650.3125,
+            "y": 587.046875,
+            "bottom": 639.3125,
+            "width": 66.3125,
+            "height": 52.265625
+          },
+          "imagePosition": "72% 50%"
+        },
+        {
+          "action": "genre-scifi",
+          "card": {
+            "x": 721,
+            "right": 859,
+            "y": 551.3125,
+            "bottom": 651.3125,
+            "width": 138,
+            "height": 100
+          },
+          "copy": {
+            "x": 734,
+            "right": 800.3125,
+            "y": 587.046875,
+            "bottom": 639.3125,
+            "width": 66.3125,
+            "height": 52.265625
+          },
+          "imagePosition": "80% 50%"
+        }
+      ]
+    },
+    {
+      "theme": "paper",
+      "width": 420,
+      "height": 760,
+      "cards": [
+        {
+          "action": "book",
+          "card": {
+            "x": 451,
+            "right": 829,
+            "y": 309.390625,
+            "bottom": 423.390625,
+            "width": 378,
+            "height": 114
+          },
+          "copy": {
+            "x": 470,
+            "right": 670,
+            "y": 362.796875,
+            "bottom": 402.984375,
+            "width": 200,
+            "height": 40.1875
+          },
+          "symbol": {
+            "x": 470,
+            "right": 496,
+            "y": 329.796875,
+            "bottom": 355.796875,
+            "width": 26,
+            "height": 26
+          },
+          "art": {
+            "x": 678,
+            "right": 828,
+            "y": 291.390625,
+            "bottom": 441.390625,
+            "width": 150,
+            "height": 150
+          },
+          "textOverflow": 0
+        },
+        {
+          "action": "character",
+          "card": {
+            "x": 451,
+            "right": 829,
+            "y": 435.390625,
+            "bottom": 549.390625,
+            "width": 378,
+            "height": 114
+          },
+          "copy": {
+            "x": 470,
+            "right": 670,
+            "y": 488.796875,
+            "bottom": 528.984375,
+            "width": 200,
+            "height": 40.1875
+          },
+          "symbol": {
+            "x": 470,
+            "right": 496,
+            "y": 455.796875,
+            "bottom": 481.796875,
+            "width": 26,
+            "height": 26
+          },
+          "art": {
+            "x": 678,
+            "right": 828,
+            "y": 417.390625,
+            "bottom": 567.390625,
+            "width": 150,
+            "height": 150
+          },
+          "textOverflow": 0
+        },
+        {
+          "action": "world",
+          "card": {
+            "x": 451,
+            "right": 829,
+            "y": 561.390625,
+            "bottom": 653.390625,
+            "width": 378,
+            "height": 92
+          },
+          "copy": {
+            "x": 470,
+            "right": 700,
+            "y": 613.4375,
+            "bottom": 632.328125,
+            "width": 230,
+            "height": 18.890625
+          },
+          "symbol": {
+            "x": 470,
+            "right": 494,
+            "y": 582.4375,
+            "bottom": 606.4375,
+            "width": 24,
+            "height": 24
+          },
+          "art": {
+            "x": 708,
+            "right": 828,
+            "y": 547.390625,
+            "bottom": 667.390625,
+            "width": 120,
+            "height": 120
+          },
+          "textOverflow": 0
+        },
+        {
+          "action": "scene",
+          "card": {
+            "x": 451,
+            "right": 829,
+            "y": 665.390625,
+            "bottom": 757.390625,
+            "width": 378,
+            "height": 92
+          },
+          "copy": {
+            "x": 470,
+            "right": 700,
+            "y": 717.4375,
+            "bottom": 736.328125,
+            "width": 230,
+            "height": 18.890625
+          },
+          "symbol": {
+            "x": 470,
+            "right": 494,
+            "y": 686.4375,
+            "bottom": 710.4375,
+            "width": 24,
+            "height": 24
+          },
+          "art": {
+            "x": 708,
+            "right": 828,
+            "y": 651.390625,
+            "bottom": 771.390625,
+            "width": 120,
+            "height": 120
+          },
+          "textOverflow": 0
+        }
+      ],
+      "genres": [
+        {
+          "action": "genre-xianxia",
+          "card": {
+            "x": 451,
+            "right": 829,
+            "y": 769.390625,
+            "bottom": 873.390625,
+            "width": 378,
+            "height": 104
+          },
+          "copy": {
+            "x": 468,
+            "right": 679.109375,
+            "y": 823.8125,
+            "bottom": 861.390625,
+            "width": 211.109375,
+            "height": 37.578125
+          },
+          "imagePosition": "70% 50%"
+        },
+        {
+          "action": "genre-history",
+          "card": {
+            "x": 451,
+            "right": 829,
+            "y": 885.390625,
+            "bottom": 989.390625,
+            "width": 378,
+            "height": 104
+          },
+          "copy": {
+            "x": 468,
+            "right": 679.109375,
+            "y": 939.8125,
+            "bottom": 977.390625,
+            "width": 211.109375,
+            "height": 37.578125
+          },
+          "imagePosition": "72% 50%"
+        },
+        {
+          "action": "genre-scifi",
+          "card": {
+            "x": 451,
+            "right": 829,
+            "y": 1001.390625,
+            "bottom": 1105.390625,
+            "width": 378,
+            "height": 104
+          },
+          "copy": {
+            "x": 468,
+            "right": 679.109375,
+            "y": 1055.8125,
+            "bottom": 1093.390625,
+            "width": 211.109375,
+            "height": 37.578125
+          },
+          "imagePosition": "80% 50%"
+        }
+      ]
+    },
+    {
+      "theme": "paper",
+      "width": 320,
+      "height": 760,
+      "cards": [
+        {
+          "action": "book",
+          "card": {
+            "x": 493,
+            "right": 787,
+            "y": 305.09375,
+            "bottom": 419.09375,
+            "width": 294,
+            "height": 114
+          },
+          "copy": {
+            "x": 510,
+            "right": 628,
+            "y": 358.5,
+            "bottom": 398.6875,
+            "width": 118,
+            "height": 40.1875
+          },
+          "symbol": {
+            "x": 510,
+            "right": 536,
+            "y": 325.5,
+            "bottom": 351.5,
+            "width": 26,
+            "height": 26
+          },
+          "art": {
+            "x": 636,
+            "right": 786,
+            "y": 287.09375,
+            "bottom": 437.09375,
+            "width": 150,
+            "height": 150
+          },
+          "textOverflow": 0
+        },
+        {
+          "action": "character",
+          "card": {
+            "x": 493,
+            "right": 787,
+            "y": 431.09375,
+            "bottom": 545.09375,
+            "width": 294,
+            "height": 114
+          },
+          "copy": {
+            "x": 510,
+            "right": 628,
+            "y": 484.5,
+            "bottom": 524.6875,
+            "width": 118,
+            "height": 40.1875
+          },
+          "symbol": {
+            "x": 510,
+            "right": 536,
+            "y": 451.5,
+            "bottom": 477.5,
+            "width": 26,
+            "height": 26
+          },
+          "art": {
+            "x": 636,
+            "right": 786,
+            "y": 413.09375,
+            "bottom": 563.09375,
+            "width": 150,
+            "height": 150
+          },
+          "textOverflow": 0
+        },
+        {
+          "action": "world",
+          "card": {
+            "x": 493,
+            "right": 787,
+            "y": 557.09375,
+            "bottom": 649.09375,
+            "width": 294,
+            "height": 92
+          },
+          "copy": {
+            "x": 510,
+            "right": 658,
+            "y": 609.140625,
+            "bottom": 628.03125,
+            "width": 148,
+            "height": 18.890625
+          },
+          "symbol": {
+            "x": 510,
+            "right": 534,
+            "y": 578.140625,
+            "bottom": 602.140625,
+            "width": 24,
+            "height": 24
+          },
+          "art": {
+            "x": 666,
+            "right": 786,
+            "y": 543.09375,
+            "bottom": 663.09375,
+            "width": 120,
+            "height": 120
+          },
+          "textOverflow": 0
+        },
+        {
+          "action": "scene",
+          "card": {
+            "x": 493,
+            "right": 787,
+            "y": 661.09375,
+            "bottom": 753.09375,
+            "width": 294,
+            "height": 92
+          },
+          "copy": {
+            "x": 510,
+            "right": 658,
+            "y": 713.140625,
+            "bottom": 732.03125,
+            "width": 148,
+            "height": 18.890625
+          },
+          "symbol": {
+            "x": 510,
+            "right": 534,
+            "y": 682.140625,
+            "bottom": 706.140625,
+            "width": 24,
+            "height": 24
+          },
+          "art": {
+            "x": 666,
+            "right": 786,
+            "y": 647.09375,
+            "bottom": 767.09375,
+            "width": 120,
+            "height": 120
+          },
+          "textOverflow": 0
+        }
+      ],
+      "genres": [
+        {
+          "action": "genre-xianxia",
+          "card": {
+            "x": 493,
+            "right": 787,
+            "y": 765.09375,
+            "bottom": 869.09375,
+            "width": 294,
+            "height": 104
+          },
+          "copy": {
+            "x": 510,
+            "right": 669.03125,
+            "y": 819.515625,
+            "bottom": 857.09375,
+            "width": 159.03125,
+            "height": 37.578125
+          },
+          "imagePosition": "70% 50%"
+        },
+        {
+          "action": "genre-history",
+          "card": {
+            "x": 493,
+            "right": 787,
+            "y": 881.09375,
+            "bottom": 985.09375,
+            "width": 294,
+            "height": 104
+          },
+          "copy": {
+            "x": 510,
+            "right": 669.03125,
+            "y": 935.515625,
+            "bottom": 973.09375,
+            "width": 159.03125,
+            "height": 37.578125
+          },
+          "imagePosition": "72% 50%"
+        },
+        {
+          "action": "genre-scifi",
+          "card": {
+            "x": 493,
+            "right": 787,
+            "y": 997.09375,
+            "bottom": 1101.09375,
+            "width": 294,
+            "height": 104
+          },
+          "copy": {
+            "x": 510,
+            "right": 669.03125,
+            "y": 1051.515625,
+            "bottom": 1089.09375,
+            "width": 159.03125,
+            "height": 37.578125
+          },
+          "imagePosition": "80% 50%"
+        }
+      ]
+    },
+    {
+      "theme": "paper",
+      "width": 560,
+      "height": 520,
+      "cards": [
+        {
+          "action": "book",
+          "card": {
+            "x": 381,
+            "right": 634,
+            "y": 282.59375,
+            "bottom": 396.59375,
+            "width": 253,
+            "height": 114
+          },
+          "copy": {
+            "x": 396,
+            "right": 519,
+            "y": 336.359375,
+            "bottom": 375.828125,
+            "width": 123,
+            "height": 39.46875
+          },
+          "symbol": {
+            "x": 396,
+            "right": 422,
+            "y": 303.359375,
+            "bottom": 329.359375,
+            "width": 26,
+            "height": 26
+          },
+          "art": {
+            "x": 523,
+            "right": 633,
+            "y": 284.59375,
+            "bottom": 394.59375,
+            "width": 110,
+            "height": 110
+          },
+          "textOverflow": 0
+        },
+        {
+          "action": "character",
+          "card": {
+            "x": 646,
+            "right": 899,
+            "y": 282.59375,
+            "bottom": 396.59375,
+            "width": 253,
+            "height": 114
+          },
+          "copy": {
+            "x": 661,
+            "right": 784,
+            "y": 336.359375,
+            "bottom": 375.828125,
+            "width": 123,
+            "height": 39.46875
+          },
+          "symbol": {
+            "x": 661,
+            "right": 687,
+            "y": 303.359375,
+            "bottom": 329.359375,
+            "width": 26,
+            "height": 26
+          },
+          "art": {
+            "x": 788,
+            "right": 898,
+            "y": 284.59375,
+            "bottom": 394.59375,
+            "width": 110,
+            "height": 110
+          },
+          "textOverflow": 0
+        },
+        {
+          "action": "world",
+          "card": {
+            "x": 381,
+            "right": 634,
+            "y": 408.59375,
+            "bottom": 500.59375,
+            "width": 253,
+            "height": 92
+          },
+          "copy": {
+            "x": 396,
+            "right": 541,
+            "y": 460.640625,
+            "bottom": 479.53125,
+            "width": 145,
+            "height": 18.890625
+          },
+          "symbol": {
+            "x": 396,
+            "right": 420,
+            "y": 429.640625,
+            "bottom": 453.640625,
+            "width": 24,
+            "height": 24
+          },
+          "art": {
+            "x": 545,
+            "right": 633,
+            "y": 410.59375,
+            "bottom": 498.59375,
+            "width": 88,
+            "height": 88
+          },
+          "textOverflow": 0
+        },
+        {
+          "action": "scene",
+          "card": {
+            "x": 646,
+            "right": 899,
+            "y": 408.59375,
+            "bottom": 500.59375,
+            "width": 253,
+            "height": 92
+          },
+          "copy": {
+            "x": 661,
+            "right": 806,
+            "y": 460.640625,
+            "bottom": 479.53125,
+            "width": 145,
+            "height": 18.890625
+          },
+          "symbol": {
+            "x": 661,
+            "right": 685,
+            "y": 429.640625,
+            "bottom": 453.640625,
+            "width": 24,
+            "height": 24
+          },
+          "art": {
+            "x": 810,
+            "right": 898,
+            "y": 410.59375,
+            "bottom": 498.59375,
+            "width": 88,
+            "height": 88
+          },
+          "textOverflow": 0
+        }
+      ],
+      "genres": [
+        {
+          "action": "genre-xianxia",
+          "card": {
+            "x": 381,
+            "right": 545.65625,
+            "y": 512.59375,
+            "bottom": 612.59375,
+            "width": 164.65625,
+            "height": 100
+          },
+          "copy": {
+            "x": 394,
+            "right": 476.84375,
+            "y": 548.328125,
+            "bottom": 600.59375,
+            "width": 82.84375,
+            "height": 52.265625
+          },
+          "imagePosition": "70% 50%"
+        },
+        {
+          "action": "genre-history",
+          "card": {
+            "x": 557.65625,
+            "right": 722.328125,
+            "y": 512.59375,
+            "bottom": 612.59375,
+            "width": 164.671875,
+            "height": 100
+          },
+          "copy": {
+            "x": 570.65625,
+            "right": 653.5,
+            "y": 548.328125,
+            "bottom": 600.59375,
+            "width": 82.84375,
+            "height": 52.265625
+          },
+          "imagePosition": "72% 50%"
+        },
+        {
+          "action": "genre-scifi",
+          "card": {
+            "x": 734.328125,
+            "right": 899,
+            "y": 512.59375,
+            "bottom": 612.59375,
+            "width": 164.671875,
+            "height": 100
+          },
+          "copy": {
+            "x": 747.328125,
+            "right": 830.171875,
+            "y": 548.328125,
+            "bottom": 600.59375,
+            "width": 82.84375,
+            "height": 52.265625
+          },
+          "imagePosition": "80% 50%"
+        }
+      ]
+    },
+    {
+      "theme": "paper",
+      "width": 320,
+      "height": 420,
+      "cards": [
+        {
+          "action": "book",
+          "card": {
+            "x": 493,
+            "right": 787,
+            "y": 281.09375,
+            "bottom": 395.09375,
+            "width": 294,
+            "height": 114
+          },
+          "copy": {
+            "x": 510,
+            "right": 628,
+            "y": 334.5,
+            "bottom": 374.6875,
+            "width": 118,
+            "height": 40.1875
+          },
+          "symbol": {
+            "x": 510,
+            "right": 536,
+            "y": 301.5,
+            "bottom": 327.5,
+            "width": 26,
+            "height": 26
+          },
+          "art": {
+            "x": 636,
+            "right": 786,
+            "y": 263.09375,
+            "bottom": 413.09375,
+            "width": 150,
+            "height": 150
+          },
+          "textOverflow": 0
+        },
+        {
+          "action": "character",
+          "card": {
+            "x": 493,
+            "right": 787,
+            "y": 407.09375,
+            "bottom": 521.09375,
+            "width": 294,
+            "height": 114
+          },
+          "copy": {
+            "x": 510,
+            "right": 628,
+            "y": 460.5,
+            "bottom": 500.6875,
+            "width": 118,
+            "height": 40.1875
+          },
+          "symbol": {
+            "x": 510,
+            "right": 536,
+            "y": 427.5,
+            "bottom": 453.5,
+            "width": 26,
+            "height": 26
+          },
+          "art": {
+            "x": 636,
+            "right": 786,
+            "y": 389.09375,
+            "bottom": 539.09375,
+            "width": 150,
+            "height": 150
+          },
+          "textOverflow": 0
+        },
+        {
+          "action": "world",
+          "card": {
+            "x": 493,
+            "right": 787,
+            "y": 533.09375,
+            "bottom": 625.09375,
+            "width": 294,
+            "height": 92
+          },
+          "copy": {
+            "x": 510,
+            "right": 658,
+            "y": 585.140625,
+            "bottom": 604.03125,
+            "width": 148,
+            "height": 18.890625
+          },
+          "symbol": {
+            "x": 510,
+            "right": 534,
+            "y": 554.140625,
+            "bottom": 578.140625,
+            "width": 24,
+            "height": 24
+          },
+          "art": {
+            "x": 666,
+            "right": 786,
+            "y": 519.09375,
+            "bottom": 639.09375,
+            "width": 120,
+            "height": 120
+          },
+          "textOverflow": 0
+        },
+        {
+          "action": "scene",
+          "card": {
+            "x": 493,
+            "right": 787,
+            "y": 637.09375,
+            "bottom": 729.09375,
+            "width": 294,
+            "height": 92
+          },
+          "copy": {
+            "x": 510,
+            "right": 658,
+            "y": 689.140625,
+            "bottom": 708.03125,
+            "width": 148,
+            "height": 18.890625
+          },
+          "symbol": {
+            "x": 510,
+            "right": 534,
+            "y": 658.140625,
+            "bottom": 682.140625,
+            "width": 24,
+            "height": 24
+          },
+          "art": {
+            "x": 666,
+            "right": 786,
+            "y": 623.09375,
+            "bottom": 743.09375,
+            "width": 120,
+            "height": 120
+          },
+          "textOverflow": 0
+        }
+      ],
+      "genres": [
+        {
+          "action": "genre-xianxia",
+          "card": {
+            "x": 493,
+            "right": 787,
+            "y": 741.09375,
+            "bottom": 845.09375,
+            "width": 294,
+            "height": 104
+          },
+          "copy": {
+            "x": 510,
+            "right": 669.03125,
+            "y": 795.515625,
+            "bottom": 833.09375,
+            "width": 159.03125,
+            "height": 37.578125
+          },
+          "imagePosition": "70% 50%"
+        },
+        {
+          "action": "genre-history",
+          "card": {
+            "x": 493,
+            "right": 787,
+            "y": 857.09375,
+            "bottom": 961.09375,
+            "width": 294,
+            "height": 104
+          },
+          "copy": {
+            "x": 510,
+            "right": 669.03125,
+            "y": 911.515625,
+            "bottom": 949.09375,
+            "width": 159.03125,
+            "height": 37.578125
+          },
+          "imagePosition": "72% 50%"
+        },
+        {
+          "action": "genre-scifi",
+          "card": {
+            "x": 493,
+            "right": 787,
+            "y": 973.09375,
+            "bottom": 1077.09375,
+            "width": 294,
+            "height": 104
+          },
+          "copy": {
+            "x": 510,
+            "right": 669.03125,
+            "y": 1027.515625,
+            "bottom": 1065.09375,
+            "width": 159.03125,
+            "height": 37.578125
+          },
+          "imagePosition": "80% 50%"
+        }
+      ]
+    }
+  ]
+}

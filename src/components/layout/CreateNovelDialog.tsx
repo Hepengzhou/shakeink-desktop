@@ -11,7 +11,7 @@
  * 样式令牌注意：--chat-line/--chat-surface 仅声明在 .chatpane 作用域（globals.css §3.12），
  * 本对话框是 portal 浮层，DialogContent 自带 chatpane 类补作用域，否则令牌解析失败回退 currentColor。
  */
-import { useEffect, useMemo, useRef, useState, type ComponentProps, type ReactNode } from "react"
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ComponentProps, type ReactNode, type RefObject } from "react"
 import {
   Check,
   Globe,
@@ -35,7 +35,6 @@ import { POSITION_TAG_LIMIT, positionFromFilters } from "@/lib/creation-wizard/p
 import { composeWizardDraft } from "@/lib/creation-wizard/compose"
 import { fallbackTitle } from "@/lib/creation-wizard/fallback-title"
 import {
-  DEFAULT_FILTERS,
   WIZARD_CATEGORIES,
   genresForChannel,
   isTemplateVisible,
@@ -61,6 +60,7 @@ import {
 import { useWizardTemplates } from "@/lib/desktop/use-wizard-templates"
 import { cn } from "@/lib/utils"
 import { useChatStore } from "@/stores/chat"
+import { freshWizardFilters, type WizardPreset } from "@/lib/creation-wizard/presets"
 
 const CATEGORY_META: Record<WizardCategory, { name: string; icon: LucideIcon }> = {
   theme: { name: "主题", icon: Lightbulb },
@@ -71,11 +71,6 @@ const CATEGORY_META: Record<WizardCategory, { name: string; icon: LucideIcon }> 
 
 
 const BLANK_PICKS: WizardPicks = { theme: "blank", world: "blank", character: "blank", plot: "blank" }
-
-/** DEFAULT_FILTERS 的 tags 是模块级 Set，状态必须持有独立副本（所有变更走新建 Set，不原地改） */
-function freshFilters(): WizardFilters {
-  return { ...DEFAULT_FILTERS, tags: { sub: new Set(), bg: new Set(), style: new Set(), flow: new Set() } }
-}
 
 /** 详情层元数据 chip（与预览稿同序：频道/题材/篇幅/主角类型/标签；空数组项省略） */
 function detailMeta(t: WizardTemplate): string[] {
@@ -175,20 +170,36 @@ export function CreateNovelDialog({
   open,
   onOpenChange,
   novels,
+  initialPreset,
+  draftFocusRef,
 }: {
   open: boolean
   onOpenChange: (open: boolean) => void
   novels: { id: string; title: string }[]
+  initialPreset?: WizardPreset
+  /** Only the chat welcome supplies this; cancel keeps the original trigger focus behavior. */
+  draftFocusRef?: RefObject<HTMLElement | null>
 }) {
   const { templates, loading: templatesLoading, error: templatesError, reload: reloadTemplates } = useWizardTemplates(open)
   const templateById = useMemo(() => new Map(templates.map(template => [template.id, template])), [templates])
-  const [filters, setFilters] = useState<WizardFilters>(freshFilters)
+  const [filters, setFilters] = useState<WizardFilters>(() => freshWizardFilters(initialPreset))
   const [tagError, setTagError] = useState("")
   const [cat, setCat] = useState<WizardCategory>("theme")
   const [picks, setPicks] = useState<WizardPicks>(() => ({ ...BLANK_PICKS }))
   const [detail, setDetail] = useState<WizardTemplate | "blank" | null>(null)
   const [confirmReplace, setConfirmReplace] = useState(false)
   const gridRef = useRef<HTMLDivElement>(null)
+  const wasOpen = useRef(false)
+  const prepared = useRef(false)
+  // Initialize before paint, only on an actual opening; ordinary rerenders never override author edits.
+  useLayoutEffect(() => {
+    if (open && !wasOpen.current) {
+      prepared.current = false
+      setFilters(freshWizardFilters(initialPreset))
+      setTagError(""); setCat("theme"); setPicks({...BLANK_PICKS}); setDetail(null); setConfirmReplace(false)
+    }
+    wasOpen.current = open
+  }, [open, initialPreset])
 
   const genres = useMemo(() => genresForChannel(filters.channel), [filters.channel])
   const styles = useMemo(() => stylesForChannel(filters.channel), [filters.channel])
@@ -272,7 +283,7 @@ export function CreateNovelDialog({
 
   const reset = () => {
     setTagError("")
-    setFilters(freshFilters())
+    setFilters(freshWizardFilters())
     setCat("theme")
     setPicks({ ...BLANK_PICKS })
     setDetail(null)
@@ -314,6 +325,7 @@ export function CreateNovelDialog({
       pendingNovelTitle: fallbackTitle(novels),
       pendingNovelPosition: positionFromFilters(filters),
     })
+    prepared.current = true
     closeWizard()
   }
 
@@ -321,7 +333,7 @@ export function CreateNovelDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleDialogOpenChange}>
-      <DialogContent className="chatpane flex h-[min(880px,92dvh)] flex-col gap-0 overflow-hidden p-0 sm:max-w-[1280px]">
+      <DialogContent finalFocus={draftFocusRef ? () => prepared.current ? draftFocusRef.current : true : undefined} className="chatpane flex h-[min(880px,92dvh)] flex-col gap-0 overflow-hidden p-0 sm:max-w-[1280px]">
         <DialogHeader className="shrink-0 px-[22px] pt-[18px] pb-3 pr-12">
           <DialogTitle className="text-[17px] font-semibold">创作向导</DialogTitle>
           <DialogDescription className="text-[12.5px]">
