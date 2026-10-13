@@ -43,7 +43,7 @@ export function extractVariables(content: string): string[] {
 export function HighlightedContent({ content }: { content: string }) {
   const parts = content.split(/(\{\{\s*[\w.-]+\s*\}\})/g)
   return (
-    <div className="max-h-64 overflow-y-auto rounded-lg border bg-muted/30 p-3 font-mono text-xs leading-relaxed whitespace-pre-wrap">
+    <div data-text-preview className="max-h-64 overflow-y-auto rounded-lg border bg-muted/30 p-3 font-mono text-xs leading-relaxed whitespace-pre-wrap">
       {parts.map((part, i) =>
         /^\{\{.*\}\}$/.test(part) ? (
           <mark key={i} className="rounded bg-primary/15 px-0.5 text-primary">

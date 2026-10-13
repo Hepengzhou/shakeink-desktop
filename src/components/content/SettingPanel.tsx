@@ -359,7 +359,7 @@ export function SettingEditor({
             </div>
           ) : (
             <div className="flex min-h-0 flex-col gap-3">
-              <div className="max-h-80 overflow-y-auto rounded-lg bg-muted/60 p-3 text-sm whitespace-pre-wrap">
+              <div data-text-preview className="max-h-80 overflow-y-auto rounded-lg bg-muted/60 p-3 text-sm whitespace-pre-wrap">
                 {assistText}
               </div>
               <DialogFooter>

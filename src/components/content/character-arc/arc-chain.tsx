@@ -141,6 +141,7 @@ function ArcStageCard({
   onDelete,
 }: ArcStageCardProps) {
   const brief = summarizeStage(stage)
+  const briefPrefix = brief.match(/^(压力|选择|代价)：/)?.[0] ?? ""
   const markers = stage.markers.slice(0, 3)
   const overflow = stage.markers.length - markers.length
   const causalDetails = stage.description.split("\n").filter(line => /^(压力|选择|代价)：/.test(line))
@@ -265,12 +266,12 @@ function ArcStageCard({
           !brief && "opacity-60"
         )}
       >
-        {brief || "暂无描述"}
+        {brief ? <>{briefPrefix}<span data-text-preview>{brief.slice(briefPrefix.length)}</span></> : "暂无描述"}
       </p>
       {causalDetails.length > 0 && <dl className="mt-2 space-y-1 text-xs leading-relaxed">
         {causalDetails.map((line, index) => {
           const split = line.indexOf("：")
-          return <div key={index} className="flex gap-2"><dt className="shrink-0 text-muted-foreground">{line.slice(0, split)}</dt><dd className="min-w-0 break-words text-foreground">{line.slice(split + 1)}</dd></div>
+          return <div key={index} className="flex gap-2"><dt className="shrink-0 text-muted-foreground">{line.slice(0, split)}</dt><dd data-text-preview className="min-w-0 break-words text-foreground">{line.slice(split + 1)}</dd></div>
         })}
       </dl>}
       {!!sources?.length && <div className={cn("mt-1.5 text-xs", sourcesStale ? "text-primary" : "text-muted-foreground")}>

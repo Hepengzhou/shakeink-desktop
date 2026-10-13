@@ -174,13 +174,13 @@ export function ImproveContentDialog({ novelId, report, onClose }: { novelId: st
         <div className="min-w-0 flex-1 text-[12.5px] leading-[1.55]">
           <div className="flex items-baseline gap-1.5">
             <span className="shrink-0 rounded-full bg-primary/10 px-2 text-[11px] leading-[1.7] text-primary">{row.label}</span>
-            <span className="line-clamp-2 min-w-0 text-foreground/90">{row.text}</span>
+            <span data-text-preview={row.group === "dimension" ? undefined : ""} className="line-clamp-2 min-w-0 text-foreground/90">{row.text}</span>
           </div>
           {row.suggestion && (
-            <p className="line-clamp-2 text-[11.5px] text-muted-foreground"><b className="font-medium">建议：</b>{row.suggestion}</p>
+            <p className="line-clamp-2 text-[11.5px] text-muted-foreground"><b className="font-medium">建议：</b><span data-text-preview>{row.suggestion}</span></p>
           )}
           {row.quote && (
-            <p className="mt-0.5 truncate border-l-2 border-primary/60 pl-1.5 text-[11px] text-muted-foreground/85">{row.quote}</p>
+            <p data-text-preview className="mt-0.5 truncate border-l-2 border-primary/60 pl-1.5 text-[11px] text-muted-foreground/85">{row.quote}</p>
           )}
         </div>
         {row.group === "custom" && (

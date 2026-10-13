@@ -65,7 +65,7 @@ export function ReferenceInfo({ entries, novelId, onNavigate, onMenuOpenChange }
           aria-label={`打开伏笔：${foreshadow.title}`} onClick={() => navigate(() => openForeshadowTouch(novelId, foreshadow.id, touch.id))}>
           <Flag className="mt-0.5 size-3.5 shrink-0 text-ink-blue" /><span className="min-w-0 flex-1">{foreshadow.title}</span><ArrowUpRight className="mt-0.5 size-3.5 shrink-0 text-muted-foreground" />
         </button>
-        <p className="mb-3 mt-1 px-1 text-xs leading-relaxed text-muted-foreground" data-foreshadow-brief>{foreshadowBrief(foreshadow.content)}</p>
+        <p data-text-preview={!!foreshadow.content.replace(/\[([^\]]+)\]\([^)]*\)/g, "$1").replace(/[`*_#>]/g, "").trim() || undefined} className="mb-3 mt-1 px-1 text-xs leading-relaxed text-muted-foreground" data-foreshadow-brief>{foreshadowBrief(foreshadow.content)}</p>
         {groups.length > 0 && <div className="border-t border-border pt-2">
           <p className="mb-1 px-1 text-[11px] text-muted-foreground">伏笔引用</p>
           {groups.map(group => {
@@ -92,7 +92,7 @@ export function ReferenceInfo({ entries, novelId, onNavigate, onMenuOpenChange }
                       onClick={() => navigate(() => openReference(novelId, reference))}>
                       <Icon className="mt-0.5 size-3.5 shrink-0 text-muted-foreground" />
                       <span className="min-w-0 flex-1"><span className="flex items-center gap-1.5"><span className={cn("shrink-0", KIND_COLORS[group.kind])}>{REFERENCE_TARGET_LABELS[reference.targetType]}</span><span className="truncate" title={reference.label}>{reference.label}</span></span>
-                        <span className="mt-1 line-clamp-2 text-[11px] leading-relaxed text-muted-foreground">{reference.quote || sourceTouch.summary || "打开引用位置"}</span>
+                        <span data-text-preview={reference.quote || sourceTouch.summary ? true : undefined} className="mt-1 line-clamp-2 text-[11px] leading-relaxed text-muted-foreground">{reference.quote || sourceTouch.summary || "打开引用位置"}</span>
                         {reference.status !== "located" && <span className="mt-1 block text-[10px] text-muted-foreground">{reference.missing ? "来源已删除" : reference.status === "changed" ? "原文已改动" : "待定位"}</span>}
                       </span><ArrowUpRight className="mt-0.5 size-3 shrink-0 text-muted-foreground" />
                     </Menu.Item>
@@ -159,7 +159,7 @@ export function ReferencePicker({ target, selection, onClose }: { target: Foresh
   })
   return <Dialog open onOpenChange={open => { if (!open && !mutation.isPending) onClose() }}><DialogContent className="max-w-lg" onPointerDown={e => e.stopPropagation()} onClick={e => e.stopPropagation()}>
     <DialogHeader><DialogTitle>{selection ? "标注伏笔" : "引用伏笔"}</DialogTitle><DialogDescription>选择这次埋入、提及或回收的触点。同一触点可在多个位置引用。</DialogDescription></DialogHeader>
-    {selection && <blockquote className="max-h-24 overflow-y-auto rounded-md border-l-2 border-ink-blue bg-ink-blue/5 p-3 text-sm" aria-label="选中的原文">{selection.quote}</blockquote>}
+    {selection && <blockquote data-text-preview className="max-h-24 overflow-y-auto rounded-md border-l-2 border-ink-blue bg-ink-blue/5 p-3 text-sm" aria-label="选中的原文">{selection.quote}</blockquote>}
     <input aria-label="搜索伏笔或触点" value={search} onChange={e => setSearch(e.target.value)} placeholder="搜索伏笔、触点摘要…" className="h-9 rounded-md border bg-background px-3 text-sm" />
     <div className="flex max-h-64 flex-col gap-1 overflow-y-auto" role="group" aria-label="选择触点">
       {query.isLoading && <p className="p-3 text-sm text-muted-foreground">加载伏笔…</p>}
@@ -168,7 +168,7 @@ export function ReferencePicker({ target, selection, onClose }: { target: Foresh
         onClick={() => { setTouchId(t.id); setRelocateId(selection ? t.references.find(r => r.targetType === target.targetType && r.targetId === target.targetId && (r.status === "unlocated" || r.anchorSource === "summary" || r.anchorSource === "evidence"))?.id ?? "" : "") }}
         className={cn("rounded-lg border p-3 text-left text-sm", touchId === t.id ? "border-ink-blue bg-ink-blue/10" : "border-transparent hover:bg-hover-wash")}>
         <span className="flex items-center gap-2"><Flag className="size-3.5 text-ink-blue" />{f.title}<span className="ml-auto text-xs text-muted-foreground">{TOUCH_KIND_LABELS[t.kind]}</span></span>
-        <span className="mt-1 block text-xs text-muted-foreground">{t.summary || "无触点摘要"}</span>
+        <span data-text-preview={t.summary ? true : undefined} className="mt-1 block text-xs text-muted-foreground">{t.summary || "无触点摘要"}</span>
       </button>)}
       {!query.isLoading && !query.error && !choices.length && <p className="p-3 text-sm text-muted-foreground">先到伏笔面板创建档案和触点，即可在这里引用。</p>}
     </div>
@@ -187,7 +187,7 @@ export function ReferenceStrip({ target, detailed = false, allowAdd = true }: { 
   return <div className="foreshadow-strip" onPointerDown={e => e.stopPropagation()} onClick={e => e.stopPropagation()} onDoubleClick={e => e.stopPropagation()}>
     {unique.map(entry => <div key={entry.touch.id} className={detailed ? "w-full" : undefined}>
       <ReferenceChip entry={entry} novelId={target.novelId} />
-      {detailed && <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{entry.touch.summary}</p>}
+      {detailed && <p data-text-preview className="mt-1 text-xs leading-relaxed text-muted-foreground">{entry.touch.summary}</p>}
     </div>)}
     {error && <button className="text-xs text-destructive" onClick={() => void refetch()}>伏笔加载失败 · 重试</button>}
     {allowAdd && <button type="button" className="foreshadow-add" onClick={() => setPicker(true)} aria-label="引用伏笔"><Plus className="size-3" />引用伏笔</button>}
@@ -203,7 +203,7 @@ export function TouchReferenceList({ novelId, fid, touch }: { novelId: string; f
     {touch.references.map(ref => <div key={ref.id} className="group flex items-start gap-1 rounded-md hover:bg-hover-wash">
       <button type="button" disabled={ref.missing} className="min-w-0 flex-1 rounded-md p-2 text-left text-xs disabled:opacity-60" onClick={() => openReference(novelId, ref)}>
         <span className="flex items-center gap-2"><span className="shrink-0 text-ink-blue">{REFERENCE_TARGET_LABELS[ref.targetType]}</span><span className="truncate">{ref.label}</span><ArrowUpRight className="ml-auto size-3 shrink-0" /></span>
-        {ref.quote && <span className="mt-1 line-clamp-2 block text-muted-foreground">「{ref.quote}」</span>}
+        {ref.quote && <span data-text-preview className="mt-1 line-clamp-2 block text-muted-foreground">「{ref.quote}」</span>}
         {(ref.anchorSource === "summary" || ref.anchorSource === "evidence") && <span className="mt-1 block text-muted-foreground">根据触点内容定位 · 可框选调整</span>}
         {ref.status !== "located" && <span className="mt-1 block text-warning">{ref.status === "missing" ? "来源已删除" : ref.status === "changed" ? "原文已改动 · 打开后框选重新定位" : "待定位 · 打开后框选原文"}</span>}
       </button>

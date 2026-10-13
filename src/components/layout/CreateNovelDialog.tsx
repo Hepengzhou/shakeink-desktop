@@ -516,7 +516,7 @@ export function CreateNovelDialog({
                     ))}
                   </div>
                 )}
-                <div className="rounded-lg border border-(--chat-line) bg-chat-surface p-4 text-[13px] leading-[1.8] whitespace-pre-wrap">
+                <div data-text-preview={detailTemplate ? true : undefined} className="rounded-lg border border-(--chat-line) bg-chat-surface p-4 text-[13px] leading-[1.8] whitespace-pre-wrap">
                   {detailTemplate ? detailTemplate.prompt : BLANK_DETAIL_TEXT}
                 </div>
               </div>

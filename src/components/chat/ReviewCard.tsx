@@ -89,7 +89,7 @@ export function ReviewCards({
             AI 评审员 · {e.objectName}
           </div>
           {e.summary && (
-            <p className="mt-1.5 line-clamp-2 text-[13px] leading-[1.7] text-foreground">
+            <p data-text-preview className="mt-1.5 line-clamp-2 text-[13px] leading-[1.7] text-foreground">
               {e.summary}
             </p>
           )}

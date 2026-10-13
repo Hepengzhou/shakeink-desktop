@@ -285,12 +285,12 @@ function TurnBlock({
           </span>
         )}
       </div>
-      {turn.direction && <div className="sc-direction">旁白指示：{turn.direction}</div>}
+      {turn.direction && <div className="sc-direction">旁白指示：<span data-text-preview>{turn.direction}</span></div>}
       {turn.flow.length > 0 ? (
         <FlowItems turn={turn} avatarById={avatarById} />
       ) : (
         <>
-          {turn.narrative.trim() && <div className="sc-narr">{turn.narrative}</div>}
+          {turn.narrative.trim() && <div data-text-preview className="sc-narr">{turn.narrative}</div>}
           {turn.beats.map((beat, i) =>
             beat.control === "user" ? (
               <UserBeatBubble key={`${beat.characterId}-${i}`} beat={beat} />
@@ -331,7 +331,7 @@ function FlowItems({
   return groups.map((group, i) => {
     if (!Array.isArray(group)) {
       return (
-        <div key={i} className="sc-narr">
+        <div key={i} data-text-preview className="sc-narr">
           {group.content}
         </div>
       )
@@ -356,9 +356,9 @@ function FlowItems({
 }
 
 function FlowItemContent({ item }: { item: ScenarioFlowItem }) {
-  if (item.kind === "say") return <div className="sc-beat-say">{item.content}</div>
-  if (item.kind === "act") return <div className="sc-beat-act">{item.content}</div>
-  return <div className="sc-beat-think">（内心：{item.content}）</div>
+  if (item.kind === "say") return <div data-text-preview className="sc-beat-say">{item.content}</div>
+  if (item.kind === "act") return <div data-text-preview className="sc-beat-act">{item.content}</div>
+  return <div className="sc-beat-think">（内心：<span data-text-preview>{item.content}</span>）</div>
 }
 
 function AiFlowBubble({
@@ -399,9 +399,9 @@ function UserFlowBubble({ name, items }: { name: string; items: ScenarioFlowItem
         </div>
         {items.map((item, j) =>
           item.kind === "act" ? (
-            <div key={j} className="sc-beat-act">{item.content}</div>
+            <div key={j} data-text-preview className="sc-beat-act">{item.content}</div>
           ) : (
-            <div key={j}>{item.content}</div>
+            <div key={j} data-text-preview>{item.content}</div>
           )
         )}
       </div>
@@ -441,9 +441,9 @@ function AiBeatBubble({
           <span className="sc-beat-name">{beat.name}</span>
           {beat.emotion && <span className="sc-emo">{beat.emotion}</span>}
         </div>
-        {beat.say && <div className="sc-beat-say">{beat.say}</div>}
-        {beat.act && <div className="sc-beat-act">{beat.act}</div>}
-        {beat.think && <div className="sc-beat-think">（内心：{beat.think}）</div>}
+        {beat.say && <div data-text-preview className="sc-beat-say">{beat.say}</div>}
+        {beat.act && <div data-text-preview className="sc-beat-act">{beat.act}</div>}
+        {beat.think && <div className="sc-beat-think">（内心：<span data-text-preview>{beat.think}</span>）</div>}
       </div>
     </div>
   )
@@ -458,8 +458,8 @@ function UserBeatBubble({ beat }: { beat: ScenarioBeat }) {
             我 · {beat.name}
           </span>
         </div>
-        {beat.say && <div>{beat.say}</div>}
-        {beat.act && <div className="sc-beat-act">{beat.act}</div>}
+        {beat.say && <div data-text-preview>{beat.say}</div>}
+        {beat.act && <div data-text-preview className="sc-beat-act">{beat.act}</div>}
       </div>
     </div>
   )

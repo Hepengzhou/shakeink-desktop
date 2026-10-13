@@ -1,3 +1,26 @@
+/* UI text is non-selectable by default. Only authored content/input boundaries
+   opt in; the inherited token lets a preview inside a button, or a control inside
+   a preview, establish its own policy without affecting adjacent UI text. */
+:root { --desktop-text-selection:none; }
+:root *,
+:root .foreshadow-mark[role="link"],
+:root .monaco-hover,
+:root .monaco-editor .marker-widget .descriptioncontainer,
+:root .action-list-submenu-hover-header,
+:root .monaco-editor .tokens-inspect-widget {
+  -webkit-user-select:var(--desktop-text-selection);
+  user-select:var(--desktop-text-selection);
+}
+:root :is(button, summary, label, select, option, [role="button"], [role="tab"],
+  [role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"],
+  [role="checkbox"], [role="radio"], [role="switch"], [contenteditable="false"],
+  [data-text-ui], .chat-caret) { --desktop-text-selection:none; }
+:root :is([data-text-preview], [data-text-input], .monaco-editor .native-edit-context, textarea, input:not([type]),
+  input[type="text"], input[type="search"], input[type="url"], input[type="tel"],
+  input[type="email"], input[type="password"], input[type="number"], input[type="date"],
+  input[type="datetime-local"], input[type="month"], input[type="week"], input[type="time"],
+  [contenteditable="true"], [contenteditable="plaintext-only"]) { --desktop-text-selection:text; }
+
 /* Approved notification surfaces are local to the final Sonner theme, including
    an explicit caller theme. Keep global theme and other overlay tokens intact. */
 .desktop-toaster[data-sonner-toaster][data-sonner-theme="light"] {

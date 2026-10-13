@@ -251,7 +251,7 @@ function CharacterHoverBody({
           <div className="truncate text-[11px] text-muted-foreground">{info.role}</div>
         </div>
       </div>
-      {info.blurb && <p className="line-clamp-2 text-xs leading-[1.6] text-foreground/85">{info.blurb}</p>}
+      {info.blurb && <p data-text-preview className="line-clamp-2 text-xs leading-[1.6] text-foreground/85">{info.blurb}</p>}
       <button
         type="button"
         className="w-fit text-[11.5px] text-primary transition-colors hover:underline"
@@ -296,5 +296,5 @@ function ItemChipHoverBody({
 function SceneChipHoverBody({hover, index, novelId, onClose}: {hover: Extract<HoverState, {kind: "scene"}>; index?: EntityIndex; novelId: string; onClose: () => void}) {
  const info = index?.hoverInfo("scene", hover.ref.id)
  if (!info) return <p className="text-xs text-muted-foreground">场景已删除或不属于当前作品</p>
- return <><strong className="text-sm">{info.name}</strong><p className="text-xs text-muted-foreground">{info.role}</p><p className="text-xs">{info.blurb}</p><button className="text-left text-xs text-primary" onClick={() => {openEntityRef({kind: "scene", id: hover.ref.id, name: info.name}, novelId); onClose()}}>查看场景 →</button></>
+ return <><strong className="text-sm">{info.name}</strong><p className="text-xs text-muted-foreground">{info.role}</p><p data-text-preview className="text-xs">{info.blurb}</p><button className="text-left text-xs text-primary" onClick={() => {openEntityRef({kind: "scene", id: hover.ref.id, name: info.name}, novelId); onClose()}}>查看场景 →</button></>
 }

@@ -178,7 +178,7 @@ function VolumeCard({ novelId, volume }: { novelId: string; volume: OutlineVolum
                   </span>
                 </span>
                 {chapter.outline && (
-                  <span className="mt-0.5 line-clamp-2 block text-xs text-muted-foreground">
+                  <span data-text-preview className="mt-0.5 line-clamp-2 block text-xs text-muted-foreground">
                     {chapter.outline}
                   </span>
                 )}

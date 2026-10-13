@@ -108,7 +108,7 @@ export function SearchPalette({
                   <span className="shrink-0 pt-px text-[11px] text-muted-foreground">
                     {h.role === "user" ? "你" : "参谋"}
                   </span>
-                  <span className="min-w-0 flex-1 truncate text-xs text-foreground/85">
+                  <span data-text-preview className="min-w-0 flex-1 truncate text-xs text-foreground/85">
                     {h.snippet}
                   </span>
                 </button>

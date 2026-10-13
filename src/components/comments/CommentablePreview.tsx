@@ -141,7 +141,7 @@ interface AddButtonState { top: number; left: number; snapshot: ComposerState }
  * 与用户正在进行的选区一起被抹掉(预览框选高亮一闪即没的根因)。
  */
 const PreviewBlock = memo(function PreviewBlock({ index, html }: { index: number; html: string }) {
-  return <div data-block={index} dangerouslySetInnerHTML={{ __html: html }} />
+  return <div data-text-preview data-block={index} dangerouslySetInnerHTML={{ __html: html }} />
 })
 
 export function CommentablePreview({

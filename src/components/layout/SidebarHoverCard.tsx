@@ -42,6 +42,8 @@ export interface HoverCardData {
   subtitle?: string
   /** 简介正文（首句/截断，clamp-3） */
   blurb?: string | null
+  /** 简介来自真实内容；静态帮助、名单与空态保持 UI 禁选。 */
+  blurbIsPreview?: boolean
   /** 底部统计行（11px muted，「 · 」分隔） */
   meta?: string[]
   imageUrl?: string | null
@@ -93,7 +95,7 @@ export function SidebarHoverCard({ data }: { data: HoverCardData }) {
         </div>
       </div>
       {data.blurb && (
-        <p className="line-clamp-3 text-xs leading-[1.6] text-foreground/85">{data.blurb}</p>
+        <p data-text-preview={data.blurbIsPreview || undefined} className="line-clamp-3 text-xs leading-[1.6] text-foreground/85">{data.blurb}</p>
       )}
       {data.meta && data.meta.length > 0 && (
         <div className="text-[11px] text-muted-foreground">{data.meta.join(" · ")}</div>
@@ -276,6 +278,7 @@ export function NovelHoverCard({ novel }: { novel: NovelSummary }) {
         roundImage: false,
         icon: BookOpen,
         blurb: firstSentence(detail.theme?.synopsis),
+        blurbIsPreview: true,
         meta: [
           `${detail.volumes.length} 卷 · ${chapterCount} 章`,
           `${detail.characters.length} 位角色`,
@@ -300,6 +303,7 @@ export function ThemeHoverCard({ novel }: { novel: NovelSummary }) {
         title: theme.title || "主题",
         subtitle: "主题",
         blurb: firstSentence(theme.synopsis),
+        blurbIsPreview: true,
         meta: [
           theme.channel,
           theme.genre,

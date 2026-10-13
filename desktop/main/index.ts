@@ -676,7 +676,7 @@ async function executeCommand(id: string, fromRenderer=false) {
     if (process.platform === "darwin") { app.setAboutPanelOptions({ applicationName: "玄印写作", applicationVersion: app.getVersion(), copyright: "GPL-3.0 · XaanInk" }); app.showAboutPanel() }
     else {
       const about = new BrowserWindow({ width: 400, height: 260, resizable: false, minimizable: false, maximizable: false, parent: window ?? undefined, modal: true, title: "关于玄印写作", webPreferences: { sandbox: true, contextIsolation: true, nodeIntegration: false } })
-      about.setMenu(null); await about.loadURL("data:text/html;charset=utf-8," + encodeURIComponent(`<html lang="zh-CN"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'"><title>关于玄印写作</title><body style="font:15px system-ui;text-align:center;margin:0;padding:20px"><h1 style="font-size:26px;margin:0 0 12px">玄印写作</h1><p>版本 ${app.getVersion()}</p><p>本地创作，由你的模型驱动</p><p>GPL-3.0 · XaanInk</p></body></html>`))
+      about.setMenu(null); await about.loadURL("data:text/html;charset=utf-8," + encodeURIComponent(`<html lang="zh-CN"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'"><title>关于玄印写作</title><body style="font:15px system-ui;text-align:center;margin:0;padding:20px;-webkit-user-select:none;user-select:none"><h1 style="font-size:26px;margin:0 0 12px">玄印写作</h1><p>版本 ${app.getVersion()}</p><p>本地创作，由你的模型驱动</p><p>GPL-3.0 · XaanInk</p></body></html>`))
     }
     return
   }

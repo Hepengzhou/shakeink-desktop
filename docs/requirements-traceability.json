@@ -3068,5 +3068,128 @@
       "NSIS 安装器未本轮重打；win-unpacked 已验证"
     ],
     "note": "验收标准全覆盖：缺失自动初始化进引导（SR-R-01/打包件）、文件丢失先修复（SR-R-02）、无法修复对话框两选项+二次确认+重置重建进引导（SR-R-03/05）、退出保留现状（SR-R-05）、无只能退出的死局。"
+  },
+  "uiTextSelection": {
+    "date": "2026-10-13",
+    "requirement": "所有非输入性、非预览性的UI文字不可选取；输入和预览原文保留选取",
+    "status": "implemented-scoped-validated",
+    "research": "docs/reviews/2026-10-13-text-selection-research.md",
+    "plan": "docs/reviews/2026-10-13-text-selection-plan.md",
+    "cases": "docs/reviews/2026-10-13-text-selection-test-cases.md",
+    "implementation": [
+      "src/app/desktop.css",
+      "src/app/providers.tsx",
+      "src/components/admin/PromptsClient.tsx",
+      "src/components/chat/CandidateDrawCard.tsx",
+      "src/components/chat/ComposerChipHoverCard.tsx",
+      "src/components/chat/EntityHoverCard.tsx",
+      "src/components/chat/QueueRow.tsx",
+      "src/components/chat/ReviewCard.tsx",
+      "src/components/chat/SearchPalette.tsx",
+      "src/components/chat/ToolCallCard.tsx",
+      "src/components/chat/TurnProgressCard.tsx",
+      "src/components/comments/CommentBubble.tsx",
+      "src/components/comments/CommentablePreview.tsx",
+      "src/components/content/AttributesPanel.tsx",
+      "src/components/content/CascadePanel.tsx",
+      "src/components/content/ChapterHistory.tsx",
+      "src/components/content/CharacterPanel.tsx",
+      "src/components/content/CharactersPanel.tsx",
+      "src/components/content/ItemsPanel.tsx",
+      "src/components/content/OutlinePanel.tsx",
+      "src/components/content/ReviewCard.tsx",
+      "src/components/content/SettingPanel.tsx",
+      "src/components/content/SubAgentPanel.tsx",
+      "src/components/content/TropePanel.tsx",
+      "src/components/content/character-arc/arc-chain.tsx",
+      "src/components/content/level-card-parts.tsx",
+      "src/components/content/planning/PlanningWorkspace.tsx",
+      "src/components/content/scenario/beats/BeatsView.tsx",
+      "src/components/content/scenario/chat/ChatView.tsx",
+      "src/components/content/scenario/trunk/TrunkView.tsx",
+      "src/components/content/scene/SceneWorkspace.tsx",
+      "src/components/editor/MarkdownPreview.tsx",
+      "src/components/foreshadow/references.tsx",
+      "src/components/layout/ChatPanel.tsx",
+      "src/components/layout/CreateNovelDialog.tsx",
+      "src/components/layout/SidebarHoverCard.tsx",
+      "src/components/layout/SidebarTree.tsx",
+      "src/components/score/ImproveContentDialog.tsx",
+      "src/components/score/ReviewCommentsSection.tsx",
+      "src/components/score/ScoreReportPanel.tsx",
+      "desktop/main/index.ts",
+      "src/lib/desktop/text-selection.ts"
+    ],
+    "boundaryInventory": "docs/reviews/2026-10-13-text-selection-plan-review.md",
+    "testIds": [
+      "TS-01~09",
+      "TS-CARD-56",
+      "TS-W01~03",
+      "TS-ABOUT"
+    ],
+    "tests": [
+      "tests/browser/text-selection.test.ts",
+      "tests/browser/text-selection-cards.test.ts",
+      "scripts/verify-text-selection.mjs",
+      "tests/browser/about-text-selection.test.ts"
+    ],
+    "reviews": [
+      "docs/reviews/2026-10-13-text-selection-plan-review.md",
+      "docs/reviews/2026-10-13-text-selection-test-review.md",
+      "docs/reviews/2026-10-13-text-selection-code-review.md",
+      "docs/reviews/2026-10-13-text-selection-content-code-review.md"
+    ],
+    "evidence": "docs/evidence/text-selection",
+    "limits": [
+      "真实Windows开发构建；macOS和新安装包未执行",
+      "单元/集成Windows基线失败与本次目标验证分开",
+      "真实零模型composer仍true；false输入边界由组件用例验证",
+      "Renderer网络观察从firstWindow之后开始，不替代main/worker网络审计",
+      "Monaco单次拖选诊断仍失败，比较关闭新CSS相同，保留待物理鼠标复核"
+    ],
+    "implementationDocument": "docs/reviews/2026-10-13-text-selection-implementation.md",
+    "verificationDocument": "docs/reviews/2026-10-13-text-selection-verification.md",
+    "summary": "docs/reviews/2026-10-13-text-selection-summary.md",
+    "verification": {
+      "featureBrowser": {
+        "tests": 65,
+        "pass": 65,
+        "fail": 0
+      },
+      "fullBrowser": {
+        "tests": 424,
+        "pass": 424,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "evidence": "docs/evidence/text-selection/browser-full-final.tap"
+      },
+      "subsequentAbout": {
+        "browserTests": 1,
+        "browserPass": 1,
+        "relatedUnitTests": 18,
+        "relatedUnitPass": 18,
+        "evidence": "docs/evidence/text-selection/about-green.tap"
+      },
+      "currentBrowserTotal": 425,
+      "core": {
+        "tests": 1951,
+        "pass": 1907,
+        "fail": 39,
+        "cancelled": 3,
+        "skipped": 2,
+        "newFailureTitles": 0,
+        "evidence": "docs/evidence/text-selection/core-comparison.json"
+      },
+      "typecheck": "passed",
+      "build": "passed",
+      "windows": {
+        "status": "passed-scoped",
+        "checks": 19,
+        "evidence": "docs/evidence/text-selection/windows-electron.json",
+        "monacoSingleDrag": "failed in CDP/Electron and global-CSS-disabled diagnostic; not marked passed"
+      },
+      "allAcceptancePassed": false
+    }
   }
 }

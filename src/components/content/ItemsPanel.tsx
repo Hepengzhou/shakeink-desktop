@@ -180,7 +180,7 @@ export function ItemsPanel({ novelId }: ContentPanelProps) {
                       </p>
                     )}
                     {/* 简介两行截断 */}
-                    <p className="mt-1 line-clamp-2 min-h-[2.6em] text-[12.5px] leading-[1.65] text-muted-foreground">
+                    <p data-text-preview={item.description ? "" : undefined} className="mt-1 line-clamp-2 min-h-[2.6em] text-[12.5px] leading-[1.65] text-muted-foreground">
                       {item.description || "暂无介绍"}
                     </p>
                     {/* 等级行（≤2 + +N，金色 chip；空省略） */}

@@ -132,6 +132,7 @@ export function TrunkView({ novelId, labId, detail }: TrunkViewProps) {
                   />
                 ) : (
                   <p
+                    data-text-preview
                     className="mt-1 cursor-text text-[12.5px] leading-relaxed"
                     title="双击编辑"
                     onDoubleClick={() => {

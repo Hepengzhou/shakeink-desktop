@@ -91,10 +91,10 @@ export function ReviewCard({
             {comments.map((item, i) => (
               <li key={i} className="rounded-lg bg-muted/50 px-3 py-2 text-sm">
                 <div className="font-medium">{item.aspect}</div>
-                {item.issue && <div className="mt-0.5 text-muted-foreground">{item.issue}</div>}
-                {item.suggestion && <div className="mt-0.5">建议：{item.suggestion}</div>}
+                {item.issue && <div data-text-preview className="mt-0.5 text-muted-foreground">{item.issue}</div>}
+                {item.suggestion && <div className="mt-0.5">建议：<span data-text-preview>{item.suggestion}</span></div>}
                 {item.excerpt && (
-                  <blockquote className="mt-1 border-l-2 pl-2 text-xs text-muted-foreground">
+                  <blockquote data-text-preview className="mt-1 border-l-2 pl-2 text-xs text-muted-foreground">
                     {item.excerpt}
                   </blockquote>
                 )}
@@ -137,7 +137,7 @@ export function ReviewCard({
         ) : (
           review.humanComment && (
             <p className="border-t pt-2 text-sm text-muted-foreground">
-              人工附言：{review.humanComment}
+              人工附言：<span data-text-preview>{review.humanComment}</span>
             </p>
           )
         )}

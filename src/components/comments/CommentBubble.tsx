@@ -54,6 +54,7 @@ function CommentMarkdown({ content }: { content: string }) {
   const html = useMemo(() => renderMarkdown(content), [content])
   return (
     <div
+      data-text-preview
       className="markdown-body chat-message text-sm"
       dangerouslySetInnerHTML={{ __html: html }}
     />
@@ -121,7 +122,7 @@ export function CommentBubble({
 
       {/* 引用条:孤儿评论(原文已改动、锚点高亮已失)或 showQuote 场景展示——锚点有效且有原文高亮语境时不重复显示 */}
       {quoteVisible && (
-        <blockquote className={cn("comment-quote mt-2", rejected && "line-through opacity-60")}>
+        <blockquote data-text-preview className={cn("comment-quote mt-2", rejected && "line-through opacity-60")}>
           {thread.quote}
         </blockquote>
       )}

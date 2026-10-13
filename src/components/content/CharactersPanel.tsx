@@ -170,7 +170,7 @@ export function CharactersPanel({ novelId }: ContentPanelProps) {
                         <p className="text-xs text-muted-foreground">
                           {[c.age, c.occupation].filter(Boolean).join(" · ") || "资料待完善"}
                         </p>
-                        <p className="line-clamp-2 text-sm text-muted-foreground">
+                        <p data-text-preview={c.bio || c.personality ? "" : undefined} className="line-clamp-2 text-sm text-muted-foreground">
                           {c.bio || c.personality || "暂无简介"}
                         </p>
                       </CardContent>

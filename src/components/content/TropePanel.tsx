@@ -195,11 +195,11 @@ export function TropePanel({ novelId }: ContentPanelProps) {
                           >
                             {item.selected && <Check className="size-3" />}
                           </span>
-                          <p className="min-w-0 flex-1 text-sm leading-relaxed">{item.content}</p>
+                          <p data-text-preview className="min-w-0 flex-1 text-sm leading-relaxed">{item.content}</p>
                         </div>
                         {item.referenceCase && (
                           <p className="pl-6.5 text-xs text-muted-foreground">
-                            参考：{item.referenceCase}
+                            参考：<span data-text-preview>{item.referenceCase}</span>
                           </p>
                         )}
                         <div className="absolute top-2 right-2 flex items-center gap-1">

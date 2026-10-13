@@ -22,6 +22,7 @@ export function MarkdownPreview({ source, novel, className }: MarkdownPreviewPro
   return (
     <div className={cn("markdown-body no-scrollbar h-full overflow-y-auto", novel && "novel", className)}>
       <div
+        data-text-preview
         className="mx-auto max-w-[720px] px-11 pb-24 pt-8"
         dangerouslySetInnerHTML={{ __html: html }}
       />

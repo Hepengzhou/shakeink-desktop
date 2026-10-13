@@ -55,6 +55,7 @@ export function LevelCardBody({ node }: { node: LevelNode }) {
         <p className="mt-0.5 truncate text-xs text-muted-foreground">{node.aliases.join(" / ")}</p>
       )}
       <p
+        data-text-preview={node.description.trim() ? "" : undefined}
         className={cn(
           "mt-1 line-clamp-2 text-[13px] leading-relaxed",
           node.description.trim() ? "text-muted-foreground" : "text-muted-foreground/60"
@@ -132,6 +133,7 @@ export function PathwayCardBody({ pathway }: { pathway: LevelPathway }) {
         <p className="mt-0.5 truncate text-xs text-muted-foreground">{pathway.aliases.join(" / ")}</p>
       )}
       <p
+        data-text-preview={pathway.description.trim() ? "" : undefined}
         className={cn(
           "mt-1 line-clamp-2 text-[13px] leading-relaxed",
           pathway.description.trim() ? "text-muted-foreground" : "text-muted-foreground/60"

@@ -172,13 +172,13 @@ function RevisionItem({
           <div className="grid grid-cols-2 gap-3">
             <div className="flex min-h-0 flex-col gap-1">
               <span className="text-xs font-medium text-muted-foreground">修订前</span>
-              <div className="max-h-96 overflow-y-auto rounded-md border bg-muted/30 p-3 text-sm whitespace-pre-wrap">
+              <div data-text-preview={item.before ? "" : undefined} className="max-h-96 overflow-y-auto rounded-md border bg-muted/30 p-3 text-sm whitespace-pre-wrap">
                 {item.before || "（空）"}
               </div>
             </div>
             <div className="flex min-h-0 flex-col gap-1">
               <span className="text-xs font-medium text-muted-foreground">修订后</span>
-              <div className="max-h-96 overflow-y-auto rounded-md border border-primary/30 bg-primary/5 p-3 text-sm whitespace-pre-wrap">
+              <div data-text-preview={item.after ? "" : undefined} className="max-h-96 overflow-y-auto rounded-md border border-primary/30 bg-primary/5 p-3 text-sm whitespace-pre-wrap">
                 {item.after || "（空）"}
               </div>
             </div>

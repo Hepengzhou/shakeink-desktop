@@ -88,6 +88,7 @@ function CollapsedCommentCard({
       )}
       {preview && (
         <span
+          data-text-preview
           className={cn(
             "min-w-0 flex-1 truncate text-xs text-muted-foreground",
             rejected && "line-through opacity-60"

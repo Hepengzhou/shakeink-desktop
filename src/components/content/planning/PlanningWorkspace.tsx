@@ -519,7 +519,7 @@ function PlanningWorkspace({
     );
   }
   function materialNotes(refs: MaterialRef[]) {
-    return refs.length ? <div className={s.notice} aria-label="关联创作资料">{refs.map((ref, i) => <p key={`${ref.kind}:${ref.id}:${i}`}>{MATERIAL_LABELS[ref.kind]}「{query.data?.materials?.find(m => m.kind === ref.kind && m.id === ref.id)?.title ?? "资料已失效"}」· {MATERIAL_ROLE_LABELS[ref.role]}：{ref.note}</p>)}</div> : null;
+    return refs.length ? <div className={s.notice} aria-label="关联创作资料">{refs.map((ref, i) => <p key={`${ref.kind}:${ref.id}:${i}`}>{MATERIAL_LABELS[ref.kind]}「{query.data?.materials?.find(m => m.kind === ref.kind && m.id === ref.id)?.title ?? "资料已失效"}」· {MATERIAL_ROLE_LABELS[ref.role]}：<span data-text-preview>{ref.note}</span></p>)}</div> : null;
   }
   function chip(character: string | null, narrator = "待定") {
     const person = query.data?.characters.find((c) => c.id === character);
@@ -801,7 +801,7 @@ function PlanningWorkspace({
             </button>
           ))}
         </div>
-        <p>{telling.intent}</p>
+        <p data-text-preview>{telling.intent}</p>
         {materialNotes(telling.materialRefs)}
         {c.jump && (
           <div className={s.notice}>
@@ -827,11 +827,11 @@ function PlanningWorkspace({
           <summary>本次披露与事实参照</summary>
           {telling.refs.map((r, i) => (
             <div key={i}>
-              <p>披露：{r.reveal}</p>
-              <p className={s.muted}>暂不披露：{r.withheld}</p>
+              <p>披露：<span data-text-preview>{r.reveal}</span></p>
+              <p className={s.muted}>暂不披露：<span data-text-preview>{r.withheld}</span></p>
               <details>
                 <summary>作者事实</summary>
-                <p>{findEvent(data, r.line, r.event)?.fact}</p>
+                <p data-text-preview>{findEvent(data, r.line, r.event)?.fact}</p>
               </details>
             </div>
           ))}
@@ -1279,7 +1279,7 @@ function PlanningWorkspace({
                   <h2>{v.title}</h2>
                   <p className={s.muted}>
                     {chapters.filter((ch) => (ch.volume || "") === v.id).length}{" "}
-                    章{v.summary ? ` · ${v.summary}` : ""}
+                    章{v.summary && <> · <span data-text-preview>{v.summary}</span></>}
                   </p>
                 </div>
                 <div className={s.row}>
@@ -4188,9 +4188,9 @@ function PlanningWorkspace({
                           <h3>
                             {c.title} · {t.narrator}
                           </h3>
-                          <p>{t.intent}</p>
+                          <p data-text-preview>{t.intent}</p>
                           {t.refs.map((r, i) => (
-                            <p key={i}>{r.reveal}</p>
+                            <p key={i} data-text-preview>{r.reveal}</p>
                           ))}
                         </section>
                       )),
@@ -4384,7 +4384,7 @@ function PlanningWorkspace({
                           {String(op.value.title || op.value.name || "")}
                         </strong>
                         {typeof op.value.fact === "string" && (
-                          <p>{op.value.fact}</p>
+                          <p data-text-preview>{op.value.fact}</p>
                         )}
                         {Array.isArray(op.value.materialRefs) && materialNotes(op.value.materialRefs.flatMap(r => { const parsed = materialRefSchema.safeParse(r); return parsed.success ? [parsed.data] : []; }))}
                         {Array.isArray(op.value.tellings) &&
@@ -4395,12 +4395,12 @@ function PlanningWorkspace({
                                 <p>
                                   {telling.data.narrator} ·{" "}
                                   {telling.data.reliability}：
-                                  {telling.data.intent}
+                                  <span data-text-preview>{telling.data.intent}</span>
                                 </p>
                                 {materialNotes(telling.data.materialRefs)}
                                 {telling.data.refs.map((r, k) => (
                                   <p key={k}>
-                                    披露：{r.reveal}；保留：{r.withheld}
+                                    披露：<span data-text-preview>{r.reveal}</span>；保留：<span data-text-preview>{r.withheld}</span>
                                   </p>
                                 ))}
                               </div>
@@ -4654,11 +4654,11 @@ function BudgetForm({
             {c.tellings.map((t) => (
               <div className={s.chapterTelling} key={t.id}>
                 <span className={s.muted}>{t.narrator || "待定视角"}</span>
-                {t.intent && <p>{t.intent}</p>}
+                {t.intent && <p data-text-preview>{t.intent}</p>}
                 {t.refs.map(
                   (r, i) =>
                     r.reveal && (
-                      <p className={s.muted} key={i}>
+                      <p data-text-preview className={s.muted} key={i}>
                         {r.reveal}
                       </p>
                     ),

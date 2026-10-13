@@ -27,7 +27,7 @@ export function QueueRows({ onSendNow }: { onSendNow: (id: string) => void }) {
           key={q.id}
           className="group/q flex items-center gap-2 rounded-inner border border-(--chat-line) bg-chat-surface px-2.5 py-1.5 text-xs"
         >
-          <span className="min-w-0 flex-1 truncate text-foreground/80">{q.text}</span>
+          <span data-text-preview className="min-w-0 flex-1 truncate text-foreground/80">{q.text}</span>
           {/* 立即发送 = 提到队首 + 停止当前流（停止触发的自动按序发送自然拿起队首，不会双发） */}
           <button
             type="button"

@@ -219,7 +219,7 @@ function EntityBody({
         </div>
       </div>
       {hover.info.blurb && (
-        <p className="line-clamp-2 text-xs leading-[1.6] text-foreground/85">{hover.info.blurb}</p>
+        <p data-text-preview className="line-clamp-2 text-xs leading-[1.6] text-foreground/85">{hover.info.blurb}</p>
       )}
       <OpenLink
         onClick={() => {
@@ -265,7 +265,7 @@ export function ItemHoverBody({ info, onOpen }: { info: EntityHoverInfo; onOpen:
         <p className="truncate text-[11.5px] text-muted-foreground">{aliases.join(" / ")}</p>
       )}
       {info.blurb && (
-        <p className="line-clamp-2 text-xs leading-[1.6] text-foreground/85">{info.blurb}</p>
+        <p data-text-preview className="line-clamp-2 text-xs leading-[1.6] text-foreground/85">{info.blurb}</p>
       )}
       {(levels.length > 0 || tags.length > 0) && (
         <div className="flex flex-col gap-1">
@@ -388,7 +388,7 @@ function SettingBrief({
       {!setting ? (
         <p className="text-xs text-muted-foreground">正在读取…</p>
       ) : blurb ? (
-        <p className="line-clamp-2 text-xs leading-[1.6] text-foreground/85">{blurb}</p>
+        <p data-text-preview className="line-clamp-2 text-xs leading-[1.6] text-foreground/85">{blurb}</p>
       ) : null}
     </>
   )
@@ -422,7 +422,7 @@ function WorldBody({
           <div className="truncate text-[11px] text-muted-foreground">世界</div>
         </div>
       </div>
-      {blurb && <p className="line-clamp-2 text-xs leading-[1.6] text-foreground/85">{blurb}</p>}
+      {blurb && <p data-text-preview className="line-clamp-2 text-xs leading-[1.6] text-foreground/85">{blurb}</p>}
       <OpenLink
         onClick={() => {
           onClose()

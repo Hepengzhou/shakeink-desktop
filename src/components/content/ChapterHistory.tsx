@@ -163,7 +163,7 @@ export function ChapterHistory({ novelId, chapterId, mode, boundary, onClose, be
             <div className="mt-2 max-h-44 overflow-y-auto whitespace-pre-wrap break-words">
               {diff.every(part => part.kind === "equal") && <p className="text-muted-foreground">此版本与当前正文相同</p>}
               {diff.filter(part => part.kind !== "equal").map((part, index) => <p key={index} className={part.kind === "removed" ? "bg-destructive/10 text-destructive" : "bg-primary/10 text-primary"}>
-                <span aria-label={part.kind === "removed" ? "移除" : "增加"}>{part.kind === "removed" ? "− " : "+ "}</span>{part.text}
+                <span aria-label={part.kind === "removed" ? "移除" : "增加"}>{part.kind === "removed" ? "− " : "+ "}</span><span data-text-preview>{part.text}</span>
               </p>)}
             </div>
           </details>
@@ -199,7 +199,7 @@ export function ChapterHistory({ novelId, chapterId, mode, boundary, onClose, be
         {selected.checks?.map(check => <p key={check.code} className={check.hard ? "text-sm text-destructive" : "text-sm text-muted-foreground"}>{check.message}</p>)}
         <details className="shrink-0 rounded-card border bg-editor p-2 text-sm">
           <summary className="cursor-pointer">查看段落差异 · 移除 {diff.filter(p => p.kind === "removed").length} 段 / 增加 {diff.filter(p => p.kind === "added").length} 段</summary>
-          <div className="mt-2 max-h-44 overflow-auto whitespace-pre-wrap break-words">{diff.filter(p => p.kind !== "equal").map((part, index) => <p key={index} className={part.kind === "removed" ? "bg-destructive/10 text-destructive" : "bg-primary/10 text-primary"}><span aria-label={part.kind === "removed" ? "移除" : "增加"}>{part.kind === "removed" ? "− " : "+ "}</span>{part.text}</p>)}</div>
+          <div className="mt-2 max-h-44 overflow-auto whitespace-pre-wrap break-words">{diff.filter(p => p.kind !== "equal").map((part, index) => <p key={index} className={part.kind === "removed" ? "bg-destructive/10 text-destructive" : "bg-primary/10 text-primary"}><span aria-label={part.kind === "removed" ? "移除" : "增加"}>{part.kind === "removed" ? "− " : "+ "}</span><span data-text-preview>{part.text}</span></p>)}</div>
         </details>
         <div className="grid min-h-0 flex-1 gap-3 overflow-auto md:grid-cols-2">
           <section className="min-w-0"><h3 className="mb-2 text-sm font-medium">当前稿 · 修订 {boundary.expectedVersion}</h3><MarkdownPreview source={boundary.content} novel className="h-80 rounded-card border bg-editor" /></section>

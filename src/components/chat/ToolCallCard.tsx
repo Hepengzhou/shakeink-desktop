@@ -7,19 +7,28 @@ import { cn } from "@/lib/utils"
 
 import { summarizeOutput, TOOL_ICONS, fieldLabel, isInternalToolCall, toolLabel, type ToolCallView } from "./types"
 
+/** 正文类字段与结果/状态/标识分开；长度本身不能证明字符串属于内容预览。 */
+const CONTENT_FIELDS = new Set([
+  "content", "outline", "text", "markdown", "description", "synopsis", "summary",
+  "bio", "personality", "appearance", "background", "backstory", "arc", "growthArc",
+  "motivations", "rules", "prompt", "guidance", "referenceCase", "note", "intent",
+  "fact", "reveal", "withheld", "feedback", "issue", "suggestion", "detail", "comment",
+  "prefix", "suffix",
+])
+
 /** 详情字段值的人话呈现（§3.11 字段化：不展示结构语法） */
-function FieldValue({ value }: { value: unknown }) {
+function FieldValue({ label, value }: { label: string; value: unknown }) {
   if (value == null) return <span className="text-muted-foreground">（空）</span>
   if (typeof value === "string") {
     if (value.length > 120) {
       // 长文本（正文/大纲内容）：截断预览块，展示自然文本
       return (
-        <span className="mt-0.5 line-clamp-3 block rounded-inner bg-hover-wash px-2 py-1 whitespace-pre-wrap">
+        <span data-text-preview={CONTENT_FIELDS.has(label) || undefined} className="mt-0.5 line-clamp-3 block rounded-inner bg-hover-wash px-2 py-1 whitespace-pre-wrap">
           {value}
         </span>
       )
     }
-    return <span className="whitespace-pre-wrap">{value}</span>
+    return <span data-text-preview={CONTENT_FIELDS.has(label) || undefined} className="whitespace-pre-wrap">{value}</span>
   }
   if (typeof value === "number" || typeof value === "boolean") {
     return <span className="tabular-nums">{String(value)}</span>
@@ -45,9 +54,9 @@ function KV({ label, value }: { label: string; value: unknown }) {
       <span className="min-w-0 flex-1 leading-[1.7] text-foreground">
         {/* 引述类字段（行内评论 quote）走 §4.8 稿纸引用块，不用普通文本 */}
         {label === "quote" && typeof value === "string" ? (
-          <span className="quote-block mt-0.5 mb-0 block">{value}</span>
+          <span data-text-preview className="quote-block mt-0.5 mb-0 block">{value}</span>
         ) : (
-          <FieldValue value={value} />
+          <FieldValue label={label} value={value} />
         )}
       </span>
     </div>

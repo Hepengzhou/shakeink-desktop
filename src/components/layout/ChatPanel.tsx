@@ -273,6 +273,7 @@ function UserMessage({
       >
         <div
           ref={innerRef}
+          data-text-preview
           className="whitespace-pre-wrap"
           dangerouslySetInnerHTML={{ __html: html }}
         />
@@ -323,7 +324,7 @@ const AssistantBlock = memo(function AssistantBlock({ html, entityIndex, caret }
     const tail = /<\/(p|li|h1|h2|h3|h4|blockquote)>\s*$/
     return tail.test(linked) ? linked.replace(tail, `<span class="chat-caret">▍</span>$&`) : `${linked}<span class="chat-caret">▍</span>`
   }, [html, entityIndex, caret])
-  return <div dangerouslySetInnerHTML={{ __html: rendered }} />
+  return <div data-text-preview dangerouslySetInnerHTML={{ __html: rendered }} />
 })
 
 /** 本轮写工具的量化成果（§4.1「字数即增量」）：累计正文写工具返回的 wordCount，无字段不回填假数字 */
@@ -442,6 +443,7 @@ function ThinkingRow({
       <Collapse open={isOpen} className="mt-0.5 ml-2 border-l border-border/70 pl-4">
         <div
           ref={bodyRef}
+          data-text-preview
           onScroll={(e) => {
             const el = e.currentTarget
             setStickBottom(el.scrollHeight - el.scrollTop - el.clientHeight < 40)
@@ -748,7 +750,7 @@ function AssistantMessage({
             {message.error}
           </p>
           {message.hasWriteEffects && <p className="text-xs text-muted-foreground">请先在内容面板查看已保存的改动，确认剩余工作后再继续。</p>}
-          {message.savedEffects && message.savedEffects.length > 0 && <details className="text-xs text-muted-foreground"><summary className="cursor-pointer">查看已保存改动（{message.savedEffects.length} 条记录）</summary><pre className="mt-2 max-h-48 overflow-auto whitespace-pre-wrap">{JSON.stringify(message.savedEffects, null, 2)}</pre></details>}
+          {message.savedEffects && message.savedEffects.length > 0 && <details className="text-xs text-muted-foreground"><summary className="cursor-pointer">查看已保存改动（{message.savedEffects.length} 条记录）</summary><pre data-text-preview className="mt-2 max-h-48 overflow-auto whitespace-pre-wrap">{JSON.stringify(message.savedEffects, null, 2)}</pre></details>}
           {onResend && (
             <div className="flex items-center gap-2">
               <button
@@ -772,7 +774,7 @@ function AssistantMessage({
             {message.error}
           </p>
           {message.hasWriteEffects && <p className="text-xs text-muted-foreground">请先在内容面板查看已保存的改动，确认剩余工作后再继续。</p>}
-          {message.savedEffects && message.savedEffects.length > 0 && <details className="text-xs text-muted-foreground"><summary className="cursor-pointer">查看已保存改动（{message.savedEffects.length} 条记录）</summary><pre className="mt-2 max-h-48 overflow-auto whitespace-pre-wrap">{JSON.stringify(message.savedEffects, null, 2)}</pre></details>}
+          {message.savedEffects && message.savedEffects.length > 0 && <details className="text-xs text-muted-foreground"><summary className="cursor-pointer">查看已保存改动（{message.savedEffects.length} 条记录）</summary><pre data-text-preview className="mt-2 max-h-48 overflow-auto whitespace-pre-wrap">{JSON.stringify(message.savedEffects, null, 2)}</pre></details>}
           <div className="flex items-center gap-2">
             {onRefreshNavigation && (
               <button
@@ -1967,6 +1969,7 @@ export function ChatPanel({
           <div
             ref={textareaRef}
             contentEditable={canSend}
+            data-text-input
             aria-readonly={!canSend}
             role="textbox"
             aria-multiline="true"

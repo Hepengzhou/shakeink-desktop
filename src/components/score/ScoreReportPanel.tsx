@@ -88,14 +88,14 @@ function AgentCard({
 
   const renderItem = (item: ScoreAgentItem, i: number) => (
     <div key={i} className="sp-comment">
-      {item.issue && <div className="sc-issue">{item.issue}</div>}
+      {item.issue && <div data-text-preview className="sc-issue">{item.issue}</div>}
       {item.suggestion && (
         <div className="sc-sugg">
           <b>建议：</b>
-          {item.suggestion}
+          <span data-text-preview>{item.suggestion}</span>
         </div>
       )}
-      {item.excerpt && <div className="sc-quote">{item.excerpt}</div>}
+      {item.excerpt && <div data-text-preview className="sc-quote">{item.excerpt}</div>}
     </div>
   )
 
@@ -159,14 +159,14 @@ function AgentCard({
           agent.items.map((item, i) => (
             <div key={i} className="sp-comment">
               <div className="sc-dimname">{item.aspect}</div>
-              {item.issue && <div className="sc-issue">{item.issue}</div>}
+              {item.issue && <div data-text-preview className="sc-issue">{item.issue}</div>}
               {item.suggestion && (
                 <div className="sc-sugg">
                   <b>建议：</b>
-                  {item.suggestion}
+                  <span data-text-preview>{item.suggestion}</span>
                 </div>
               )}
-              {item.excerpt && <div className="sc-quote">{item.excerpt}</div>}
+              {item.excerpt && <div data-text-preview className="sc-quote">{item.excerpt}</div>}
             </div>
           ))
         ) : (
@@ -174,11 +174,11 @@ function AgentCard({
         )
       ) : (
         <>
-          {agent.summary && <div className="sa-summary">{agent.summary}</div>}
+          {agent.summary && <div data-text-preview className="sa-summary">{agent.summary}</div>}
           {agent.items.map((item, i) => (
             <div key={i} className="sa-imp">
               <b>{item.aspect}</b>
-              {item.detail ? `：${item.detail}` : ""}
+              {item.detail ? <>：<span data-text-preview>{item.detail}</span></> : ""}
             </div>
           ))}
         </>

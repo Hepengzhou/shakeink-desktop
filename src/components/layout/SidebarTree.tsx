@@ -427,6 +427,7 @@ function CharacterSubtree({
                         roundImage: true,
                         icon: UserRound,
                         blurb: firstSentence(c.bio || c.personality || c.appearance),
+                        blurbIsPreview: true,
                         meta: [c.occupation, c.age, c.gender].filter((x) => !!x?.trim()),
                       }}
                     />
@@ -631,6 +632,7 @@ function ForeshadowCharacterSection({
                   subtitle: "伏笔角色",
                   icon: Ghost,
                   blurb: firstSentence(fc.note),
+                  blurbIsPreview: true,
                   meta: [fc.revealedCharacterId ? "已揭示" : "未揭示"],
                 }}
               />
@@ -972,6 +974,7 @@ function WorldSubtree({
                 subtitle: world.parentId ? "子世界" : "主世界",
                 icon: Globe,
                 blurb: firstSentence(world.description),
+                blurbIsPreview: true,
                 meta: [...(children.length > 0 ? [`${children.length} 个子世界`] : []), ...(forest.anomalies.has(world.id) ? ["名称或层级待核对，原记录已保留"] : [])],
               }}
             />

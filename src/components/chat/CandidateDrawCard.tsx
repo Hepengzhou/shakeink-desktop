@@ -307,7 +307,7 @@ function CandidateThumb({
           {statusBadgeLabel(candidate)}
         </span>
       </div>
-      <p className="line-clamp-4 min-h-[6.2em] text-[12px] leading-[1.55] whitespace-pre-wrap text-muted-foreground">
+      <p data-text-preview className="line-clamp-4 min-h-[6.2em] text-[12px] leading-[1.55] whitespace-pre-wrap text-muted-foreground">
         {candidate.excerpt}
       </p>
       <WordCountLine candidate={candidate} wordMin={wordMin} wordBudget={wordBudget} />
@@ -341,7 +341,7 @@ export function CandidateDrawCard({
           title={draw.basedOn.feedback || undefined}
         >
           {draw.basedOn.kind === "current" ? "基于当前正文改进（正文改进对话框）" : "基于候选改进"}
-          {draw.basedOn.feedback ? ` · 作者意见：${draw.basedOn.feedback}` : ""}
+          {draw.basedOn.feedback && <> · 作者意见：<span data-text-preview>{draw.basedOn.feedback}</span></>}
         </div>
       )}
       <div className="grid grid-cols-1 gap-2 md:grid-cols-3">

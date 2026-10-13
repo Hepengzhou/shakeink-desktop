@@ -121,7 +121,7 @@ export function TurnProgressCard({
             <FileText className="size-3 shrink-0" />
             <span className="min-w-0 truncate">{progress.draft.title} · 草稿预览</span>
           </div>
-          <p className="mt-1 line-clamp-3 text-xs leading-[1.7] whitespace-pre-wrap text-foreground/80">{progress.draft.preview}</p>
+          <p data-text-preview className="mt-1 line-clamp-3 text-xs leading-[1.7] whitespace-pre-wrap text-foreground/80">{progress.draft.preview}</p>
         </div>
       )}
       {/* 最近完成步骤（默认折叠的历史步） */}

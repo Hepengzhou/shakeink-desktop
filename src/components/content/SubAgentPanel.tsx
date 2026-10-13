@@ -134,11 +134,11 @@ function JudgeReplay({ transcript }: { transcript: JudgeTranscript }) {
               className="rounded-inner border border-border bg-card px-3 py-2 text-[12.5px] leading-[1.7]"
             >
               <div className="font-medium text-foreground">{c.aspect || "综合"}</div>
-              {c.issue && <div className="mt-0.5 text-foreground/85">{c.issue}</div>}
+              {c.issue && <div data-text-preview className="mt-0.5 text-foreground/85">{c.issue}</div>}
               {c.suggestion && (
-                <div className="mt-0.5 text-muted-foreground">建议：{c.suggestion}</div>
+                <div className="mt-0.5 text-muted-foreground">建议：<span data-text-preview>{c.suggestion}</span></div>
               )}
-              {c.excerpt && <div className="comment-quote mt-1.5">{c.excerpt}</div>}
+              {c.excerpt && <div data-text-preview className="comment-quote mt-1.5">{c.excerpt}</div>}
             </div>
           ))}
         </div>
@@ -154,9 +154,9 @@ function JudgeReplay({ transcript }: { transcript: JudgeTranscript }) {
               className="rounded-inner border border-border bg-card px-3 py-2 text-[12.5px] leading-[1.7]"
             >
               <div className="font-mono text-[11px] text-primary">{f.targetNode}</div>
-              {f.issue && <div className="mt-0.5 text-foreground/85">{f.issue}</div>}
+              {f.issue && <div data-text-preview className="mt-0.5 text-foreground/85">{f.issue}</div>}
               {f.suggestion && (
-                <div className="mt-0.5 text-muted-foreground">建议：{f.suggestion}</div>
+                <div className="mt-0.5 text-muted-foreground">建议：<span data-text-preview>{f.suggestion}</span></div>
               )}
             </div>
           ))}
@@ -172,7 +172,7 @@ function ReaderReplay({ transcript }: { transcript: ReaderTranscript }) {
     <div className="flex flex-col gap-3">
       {typeof transcript.score === "number" && <ScoreBlock score={transcript.score} />}
       {transcript.summary && (
-        <p className="text-[13px] leading-[1.7] text-foreground/90">{transcript.summary}</p>
+        <p data-text-preview className="text-[13px] leading-[1.7] text-foreground/90">{transcript.summary}</p>
       )}
       {impressions.length > 0 && (
         <div className="flex flex-col gap-2.5">
@@ -182,7 +182,7 @@ function ReaderReplay({ transcript }: { transcript: ReaderTranscript }) {
               className="rounded-inner border border-border bg-card px-3 py-2 text-[12.5px] leading-[1.7]"
             >
               <div className="font-medium text-foreground">{imp.aspect || "感受"}</div>
-              {imp.detail && <div className="mt-0.5 text-foreground/85">{imp.detail}</div>}
+              {imp.detail && <div data-text-preview className="mt-0.5 text-foreground/85">{imp.detail}</div>}
             </div>
           ))}
         </div>
@@ -216,11 +216,11 @@ function CharacterReplay({ transcript }: { transcript: CharacterTranscript }) {
         </div>
       )}
       {transcript.summary && (
-        <p className="text-[13px] leading-[1.7] text-foreground/90">{transcript.summary}</p>
+        <p data-text-preview className="text-[13px] leading-[1.7] text-foreground/90">{transcript.summary}</p>
       )}
       {transcript.suggestion && (
         <p className="text-[12.5px] leading-[1.7] text-muted-foreground">
-          建议：{transcript.suggestion}
+          建议：<span data-text-preview>{transcript.suggestion}</span>
         </p>
       )}
       {comments.length > 0 && (
@@ -231,11 +231,11 @@ function CharacterReplay({ transcript }: { transcript: CharacterTranscript }) {
               className="rounded-inner border border-border bg-card px-3 py-2 text-[12.5px] leading-[1.7]"
             >
               <div className="font-medium text-foreground">{c.aspect || c.dimension || "综合"}</div>
-              {c.issue && <div className="mt-0.5 text-foreground/85">{c.issue}</div>}
+              {c.issue && <div data-text-preview className="mt-0.5 text-foreground/85">{c.issue}</div>}
               {c.suggestion && (
-                <div className="mt-0.5 text-muted-foreground">建议：{c.suggestion}</div>
+                <div className="mt-0.5 text-muted-foreground">建议：<span data-text-preview>{c.suggestion}</span></div>
               )}
-              {c.excerpt && <div className="comment-quote mt-1.5">{c.excerpt}</div>}
+              {c.excerpt && <div data-text-preview className="comment-quote mt-1.5">{c.excerpt}</div>}
             </div>
           ))}
         </div>
@@ -251,7 +251,7 @@ function EditorReplay({ transcript }: { transcript: EditorTranscript }) {
     <div className="flex flex-col gap-3">
       {typeof transcript.score === "number" && <ScoreBlock score={transcript.score} />}
       {transcript.verdict && (
-        <p className="text-[13px] leading-[1.7] font-medium text-foreground/90">
+        <p data-text-preview className="text-[13px] leading-[1.7] font-medium text-foreground/90">
           {transcript.verdict}
         </p>
       )}
@@ -259,7 +259,7 @@ function EditorReplay({ transcript }: { transcript: EditorTranscript }) {
         <div className="flex flex-col gap-1.5">
           <div className="text-[12px] font-medium text-muted-foreground">风险</div>
           {risks.map((r, i) => (
-            <div key={i} className="rounded-inner border border-border bg-card px-3 py-2 text-[12.5px] leading-[1.7] text-foreground/85">
+            <div key={i} data-text-preview className="rounded-inner border border-border bg-card px-3 py-2 text-[12.5px] leading-[1.7] text-foreground/85">
               {r}
             </div>
           ))}
@@ -269,7 +269,7 @@ function EditorReplay({ transcript }: { transcript: EditorTranscript }) {
         <div className="flex flex-col gap-1.5">
           <div className="text-[12px] font-medium text-muted-foreground">方向建议</div>
           {suggestions.map((s, i) => (
-            <div key={i} className="rounded-inner border border-border bg-card px-3 py-2 text-[12.5px] leading-[1.7] text-foreground/85">
+            <div key={i} data-text-preview className="rounded-inner border border-border bg-card px-3 py-2 text-[12.5px] leading-[1.7] text-foreground/85">
               {s}
             </div>
           ))}
@@ -288,7 +288,7 @@ function PlaywrightReplay({ transcript }: { transcript: PlaywrightTranscript }) 
     <div className="flex flex-col gap-3">
       {title && <div className="text-[14px] font-semibold text-foreground">{title}</div>}
       {body && (
-        <div className="rounded-inner border border-border bg-card px-3 py-2 text-[12.5px] leading-[1.7] whitespace-pre-wrap text-foreground/85">
+        <div data-text-preview className="rounded-inner border border-border bg-card px-3 py-2 text-[12.5px] leading-[1.7] whitespace-pre-wrap text-foreground/85">
           {body}
         </div>
       )}
@@ -302,7 +302,7 @@ function PlaywrightReplay({ transcript }: { transcript: PlaywrightTranscript }) 
               <span className="font-medium text-foreground">
                 {c.index != null ? `第 ${c.index} 章` : "·"}《{c.title}》
               </span>
-              {c.outline && <span className="text-foreground/75">　{c.outline}</span>}
+              {c.outline && <span data-text-preview className="text-foreground/75">　{c.outline}</span>}
             </div>
           ))}
         </div>
@@ -311,7 +311,7 @@ function PlaywrightReplay({ transcript }: { transcript: PlaywrightTranscript }) 
         <div className="flex flex-col gap-1.5">
           <div className="text-[12px] font-medium text-muted-foreground">需要作者拍板的问题</div>
           {questions.map((q, i) => (
-            <div key={i} className="rounded-inner border border-border bg-card px-3 py-2 text-[12.5px] leading-[1.7] text-foreground/85">
+            <div key={i} data-text-preview className="rounded-inner border border-border bg-card px-3 py-2 text-[12.5px] leading-[1.7] text-foreground/85">
               {q}
             </div>
           ))}
@@ -331,7 +331,7 @@ function WriterReplay({ transcript }: { transcript: WriterTranscript }) {
       )}
       {transcript.preview && (
         <div className="rounded-inner border border-border bg-card px-3 py-2 text-[12.5px] leading-[1.7] whitespace-pre-wrap text-foreground/85">
-          {transcript.preview}…
+          <span data-text-preview>{transcript.preview}</span>…
         </div>
       )}
       <div className="text-[12px] text-muted-foreground">完整正文请打开对应章节正文 tab 阅读。</div>
@@ -357,7 +357,7 @@ function ScenarioReplay({ transcript }: { transcript: ScenarioTranscript }) {
       {outputText && (
         <div className="flex flex-col gap-1.5">
           <div className="text-[12px] font-medium text-muted-foreground">输出</div>
-          <div className="rounded-inner border border-border bg-card px-3 py-2 font-mono text-[12px] leading-[1.7] whitespace-pre-wrap text-foreground/85">
+          <div data-text-preview className="rounded-inner border border-border bg-card px-3 py-2 font-mono text-[12px] leading-[1.7] whitespace-pre-wrap text-foreground/85">
             {outputText}
           </div>
         </div>
@@ -367,7 +367,7 @@ function ScenarioReplay({ transcript }: { transcript: ScenarioTranscript }) {
           <summary className="cursor-pointer text-[12px] font-medium text-muted-foreground select-none">
             输入上下文（{transcript.prompt.length.toLocaleString()} 字）
           </summary>
-          <div className="mt-2 text-[12px] leading-[1.7] whitespace-pre-wrap text-foreground/75">
+          <div data-text-preview className="mt-2 text-[12px] leading-[1.7] whitespace-pre-wrap text-foreground/75">
             {transcript.prompt}
           </div>
         </details>

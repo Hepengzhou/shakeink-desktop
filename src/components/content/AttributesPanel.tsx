@@ -245,7 +245,7 @@ export function AttributesPanel({ novelId }: ContentPanelProps) {
                       <Trash2 className="size-3.5 text-muted-foreground" />
                     </Button>
                   </div>
-                  <p className="line-clamp-2 text-sm text-muted-foreground">
+                  <p data-text-preview={d.description ? "" : undefined} className="line-clamp-2 text-sm text-muted-foreground">
                     {d.description || "暂无介绍"}
                   </p>
                   {d.valueType === "SELECT" && d.options.length > 0 && (
