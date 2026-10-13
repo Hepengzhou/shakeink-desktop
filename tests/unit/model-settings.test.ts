@@ -262,6 +262,19 @@ test("agent settings: disabled defaults stay explicit and cannot offer active th
   }finally{ui.finish()}
 })
 
+test("IP-06: retained current choice is displayed without joining menu items; matching menu choice wins",()=>{
+  const options=[{id:"openai",label:"OpenAI"}],legacy={id:"google",label:"Google",provider:"google"}
+  for(const [value,fallback,expected] of [["google",legacy,legacy],["openai",{id:"openai",label:"wrong"},options[0]],["missing",legacy,null]] as const){
+    const ui=component("ModelChoiceSelect","ModelChoiceSelect",{label:"供应商",value,options,selectedOption:fallback,onChange(){}})
+    try{
+      const root=ui.all().find(surface=>surface.element.type==="Root")!
+      assert.deepEqual(root.element.props.items,options)
+      assert.deepEqual(root.element.props.value,expected)
+      assert.equal(root.element.props.multiple,false)
+    }finally{ui.finish()}
+  }
+})
+
 test("model configuration: catalog choices replace one draft, disable duplicates and retain a failed save for retry",async()=>{
   let fail=true
   const existing=sample({id:"00000000-0000-4000-8000-000000000002",modelId:"gpt-duplicate"})
@@ -378,6 +391,7 @@ test("settings outside dismissal: pointer cancellation or window blur cannot con
     "./ShortcutSettings":{ShortcutSettings:"ShortcutSettings"},"./AppearanceNumber":{AppearanceNumber:"AppearanceNumber"},
     "./ModelSettings":{ModelSettings:"ModelSettings"},"./AgentSettings":{AgentSettings:"AgentSettings"},
     "./ProfileSettings":{ProfileSettings:"ProfileSettings"},
+    "./ProjectStarPrompt":{ProjectStarPrompt:"ProjectStarPrompt"},
     "./ConfigurationTransfer":{ConfigurationImportButton:"ConfigurationImportButton",ConfigurationExportButton:"ConfigurationExportButton"},
     "./DataRootMigrationButton":{DataRootMigrationButton:"DataRootMigrationButton"},
     "@/lib/desktop/appearance":{localFontFamilies:async()=>[]},

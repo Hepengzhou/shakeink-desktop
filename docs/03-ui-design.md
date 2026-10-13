@@ -1,5 +1,7 @@
 # 桌面 UI 设计
 
+> **2026-10-13 最新供应商范围：** 字节跳动展示名称及供应商 Logo 改为火山引擎；文生图供应商下拉仅提供火山引擎、OpenAI，覆盖下文旧八家及自定义约束。已有其它文生图配置保留并可编辑，文本供应商范围保持。实施记录：`reviews/2026-10-13-image-provider-plan.md`。
+
 <!-- USER-2026-10-08-CANCEL-BACKUPS CURRENT-SCOPE BEGIN -->
 > **当前范围（2026-10-08）：用户取消全部备份功能。** 通用页的备份间隔/份数/立即备份/查看备份退役；恢复对话框保留草稿列表/预览/复制/导出。备份恢复选包/启用页面退役；目录选择/迁移进度/失联重定位、保存失败重试/导出/取消关闭保持。下方旧UI备份项是历史，不能进安装版；其它Web复用/窗控/菜单/设置契约不变。
 > 活动清单：[acceptance-active-scope.json](acceptance-active-scope.json)；原文和退役明细：[backup-scope-retirement.json](backup-scope-retirement.json)。此处不声明实现完成或验收通过。

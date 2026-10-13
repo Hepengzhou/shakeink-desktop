@@ -174,6 +174,16 @@ export function selectedEditorText(root: HTMLElement): string | null {
   return editorToText(fragment)
 }
 
+/** Quote visible entity names without carrying their stable identity payload. */
+export function selectedEditorVisibleText(root:HTMLElement):string|null {
+  if(isDesktopEmptyCaret(root))return null
+  const selection=root.ownerDocument.getSelection(),range=selection?.rangeCount===1?selection.getRangeAt(0):null
+  if(!range||range.collapsed||!root.contains(range.startContainer)||!root.contains(range.endContainer))return null
+  const fragment=root.ownerDocument.createElement('div');fragment.appendChild(range.cloneContents())
+  for(const chip of fragment.querySelectorAll<HTMLElement>('.composer-chip[data-insert]'))chip.replaceWith(root.ownerDocument.createTextNode(chip.querySelector('.composer-chip-name')?.textContent??''))
+  return editorToText(fragment)
+}
+
 /** DocumentFragment 的纯文本长度（chip 按 data-insert 全长计） */
 function fragmentTextLength(frag: DocumentFragment): number {
   let len = 0
@@ -306,6 +316,15 @@ export function insertTextAtCaret(root: HTMLElement, text: string) {
   range.collapse(true)
   sel.removeAllRanges()
   sel.addRange(range)
+}
+
+/** Insert literal text with source BRs, without parsing mention tokens. */
+export function insertPlainDraftAtCaret(root:HTMLElement,text:string){
+ const document=root.ownerDocument,selection=document.getSelection(),range=selection?.rangeCount===1?selection.getRangeAt(0):null
+ if(!root.isConnected||!root.isContentEditable||document.activeElement!==root||!range||!root.contains(range.startContainer)||!root.contains(range.endContainer))throw new Error('消息输入框已变化，未加入引用')
+ const safe=document.createElement('div')
+ text.split('\n').forEach((line,index)=>{if(index){const br=document.createElement('br');br.setAttribute('data-composer-break','true');safe.appendChild(br)}if(line)safe.appendChild(document.createTextNode(line))})
+ if(text&&!document.execCommand('insertHTML',false,safe.innerHTML))throw new Error('消息输入框无法加入引用')
 }
 
 /** 粘贴草稿序列时水合引用，保留已有 DOM 与释放后的光标。 */

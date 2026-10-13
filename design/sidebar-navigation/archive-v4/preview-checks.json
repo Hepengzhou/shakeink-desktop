@@ -1,0 +1,370 @@
+{
+  "revision": "v4",
+  "scope": "Offline synthetic HTML design in headless Windows Chrome. Not real React product, Electron, installed package, macOS or physical keyboard acceptance.",
+  "status": "passed",
+  "checks": [
+    {
+      "name": "v4 new-conversation label and circle-plus icon; 32px rows, 4px gap, 14/20px centred typography and 72/52/32px account",
+      "sidebar": 260,
+      "createHeights": [
+        32,
+        32
+      ],
+      "createGap": 4,
+      "footerHeight": 72,
+      "accountHeight": 52,
+      "avatar": 32,
+      "createTypography": [
+        {
+          "fontSize": "14px",
+          "lineHeight": "20px",
+          "fontWeight": "500",
+          "paddingLeft": "12px",
+          "paddingRight": "12px",
+          "gap": "10px",
+          "iconCentreError": 0,
+          "textCentreError": 0
+        },
+        {
+          "fontSize": "14px",
+          "lineHeight": "20px",
+          "fontWeight": "500",
+          "paddingLeft": "12px",
+          "paddingRight": "12px",
+          "gap": "10px",
+          "iconCentreError": 0,
+          "textCentreError": 0
+        }
+      ],
+      "icons": [
+        {
+          "name": "NotebookPen",
+          "size": 18,
+          "stroke": "1.7px"
+        },
+        {
+          "name": "MessageCirclePlus",
+          "size": 18,
+          "stroke": "1.7px"
+        }
+      ]
+    },
+    {
+      "name": "No attribute entry; scene/scenario are single entries without expand arrows, children or inline empty states; scene opens original destination"
+    },
+    {
+      "name": "Short labels have no mask; titles remain complete",
+      "shortLabels": 42
+    },
+    {
+      "name": "Creation buttons demonstrate their original destinations without creating actual data"
+    },
+    {
+      "name": "Both themes use existing sidebar palette and geometry"
+    },
+    {
+      "name": "Long names fade only their last 24px across works/worlds/characters/chapters/conversations/unavailable works/account and matching Tabs",
+      "overflowLabels": [
+        "尚未建档的很长一段脑洞讨论及关于人物成长的补充思考",
+        "目录暂不可用的很长作品名称与补充说明",
+        "雨灯纪事：一部跨越山海与旧城的长篇幻想小说",
+        "青石城及其外海群岛与旧王朝的世界设定",
+        "林舟与长夜行船者的另一重身份",
+        "第一章 · 雨灯长明与旅人尚未说出口的约定",
+        "我想从一场雨夜开始这个故事，并讨论长篇作品的角色关系与主线走向",
+        "风渡行记：穿过群山与古城的第二部长篇作品",
+        "这是一个用来审核渐隐效果的很长的示意用户名称",
+        "long.review.account.name@example.invalid",
+        "第一章 · 雨灯长明与旅人的约定"
+      ]
+    },
+    {
+      "name": "Main-role badge and scenario action retain fixed visible space"
+    },
+    {
+      "name": "Resize recalculates overflow; a previously clipped label becomes fully visible at 420px"
+    },
+    {
+      "name": "200px wide / 500px high retains fixed top and account while tree scrolls; no horizontal overflow"
+    },
+    {
+      "name": "Account menu includes conditional fading for name/email; arrow navigation and Escape restore trigger focus"
+    },
+    {
+      "name": "Single scenario entry opens managed list with unchanged navigation, and closes to the entry"
+    },
+    {
+      "name": "Direct plus creation cancellation returns to plus without opening a list"
+    },
+    {
+      "name": "Creation opened from library returns to library new button on cancellation"
+    },
+    {
+      "name": "Scenario empty/loading/error/retry remain distinct and create stays reachable"
+    },
+    {
+      "name": "Rename cancellation and successful synthetic rename return to the original record"
+    },
+    {
+      "name": "Delete cancellation preserves list; synthetic confirmed deletion restores new button focus"
+    },
+    {
+      "name": "Opening a synthetic existing record closes list and highlights the single scenario entry"
+    },
+    {
+      "name": "Synthetic create success demonstrates opening original detail without adding tree children"
+    },
+    {
+      "name": "Empty/loading/error work states preserve creation and account; retry returns populated view"
+    },
+    {
+      "name": "480px review viewport fits 420px sidebar and bounds management dialog",
+      "dialog": {
+        "x": 16,
+        "y": 246.015625,
+        "width": 448,
+        "height": 307.96875
+      }
+    },
+    {
+      "name": "Five single-row category Tabs replace works heading; one selected item, one tab stop and a labelled panel"
+    },
+    {
+      "name": "Each filtered view covers both works and exclusively its requested category; reference content node remains mounted",
+      "views": [
+        {
+          "name": "设定",
+          "kinds": [
+            "setting",
+            "setting",
+            "world",
+            "world",
+            "setting",
+            "setting",
+            "setting",
+            "setting",
+            "setting",
+            "world",
+            "world",
+            "setting",
+            "setting",
+            "setting"
+          ],
+          "works": 2
+        },
+        {
+          "name": "角色",
+          "kinds": [
+            "character",
+            "character",
+            "character",
+            "character",
+            "character",
+            "character",
+            "character",
+            "character",
+            "character",
+            "character"
+          ],
+          "works": 2
+        },
+        {
+          "name": "正文",
+          "kinds": [
+            "volume",
+            "chapter",
+            "chapter",
+            "volume",
+            "chapter",
+            "chapter"
+          ],
+          "works": 2
+        },
+        {
+          "name": "对话",
+          "kinds": [
+            "conversation",
+            "conversation",
+            "conversation"
+          ],
+          "works": 2
+        }
+      ]
+    },
+    {
+      "name": "Characters flatten names with identity badges and include foreshadow characters; original item destination remains selectable"
+    },
+    {
+      "name": "Synthetic foreshadow-query failure is an error, not empty; formal roles and other work stay visible, retry restores list"
+    },
+    {
+      "name": "Manuscript retains volumes/chapters and whole-work menu; empty body still allows add-volume and never points to outline"
+    },
+    {
+      "name": "Per-work empty labels stay distinct; unbound conversations remain accessible even alongside empty work conversation lists"
+    },
+    {
+      "name": "Arrow keys, Home/End, wrapping and Space operate category Tabs with focus on the selected item"
+    },
+    {
+      "name": "Each view restores its scroll and expansion; filtered contents do not depend on collapsed works or unbound guide"
+    },
+    {
+      "name": "Both themes, all three widths and five views fit five complete 28px Tab buttons without horizontal overflow",
+      "combinations": 30
+    },
+    {
+      "name": "Filtered work headings and character names use the same conditional fade without masking role badges"
+    },
+    {
+      "name": "Multiple-work scene/scenario destinations retain ownership and independent synthetic records"
+    },
+    {
+      "name": "v4 Tab group has more room above and below: 16px top / 12px bottom without increasing option height",
+      "marginTop": "16px",
+      "marginBottom": "12px",
+      "above": 16,
+      "below": 12,
+      "height": 36
+    },
+    {
+      "name": "Short role badges follow the name by 6px on the left, preserve full accessible identity and no longer align to the row end",
+      "roles": [
+        {
+          "name": "林舟",
+          "tag": "主",
+          "gap": 6,
+          "rightSpace": 86.5,
+          "within": true,
+          "accessibleName": "林舟，主角",
+          "identity": "主角"
+        },
+        {
+          "name": "顾雨",
+          "tag": "配",
+          "gap": 6,
+          "rightSpace": 86.5,
+          "within": true,
+          "accessibleName": "顾雨，配角",
+          "identity": "配角"
+        },
+        {
+          "name": "苏禾",
+          "tag": "配",
+          "gap": 6,
+          "rightSpace": 86.5,
+          "within": true,
+          "accessibleName": "苏禾，配角",
+          "identity": "配角"
+        },
+        {
+          "name": "江临",
+          "tag": "反",
+          "gap": 6,
+          "rightSpace": 86.5,
+          "within": true,
+          "accessibleName": "江临，反派",
+          "identity": "反派"
+        },
+        {
+          "name": "渡船客",
+          "tag": "伏笔",
+          "gap": 6,
+          "rightSpace": 64,
+          "within": true,
+          "accessibleName": "渡船客，伏笔角色",
+          "identity": "伏笔角色"
+        },
+        {
+          "name": "宋遥",
+          "tag": "主",
+          "gap": 6,
+          "rightSpace": 86.5,
+          "within": true,
+          "accessibleName": "宋遥，主角",
+          "identity": "主角"
+        },
+        {
+          "name": "温宁",
+          "tag": "配",
+          "gap": 6,
+          "rightSpace": 86.5,
+          "within": true,
+          "accessibleName": "温宁，配角",
+          "identity": "配角"
+        },
+        {
+          "name": "明溪",
+          "tag": "配",
+          "gap": 6,
+          "rightSpace": 86.5,
+          "within": true,
+          "accessibleName": "明溪，配角",
+          "identity": "配角"
+        },
+        {
+          "name": "秦川",
+          "tag": "反",
+          "gap": 6,
+          "rightSpace": 86.5,
+          "within": true,
+          "accessibleName": "秦川，反派",
+          "identity": "反派"
+        },
+        {
+          "name": "持伞人",
+          "tag": "伏笔",
+          "gap": 6,
+          "rightSpace": 64,
+          "within": true,
+          "accessibleName": "持伞人，伏笔角色",
+          "identity": "伏笔角色"
+        }
+      ]
+    },
+    {
+      "name": "Long role names fade before the inline fixed-width identity tag",
+      "gap": 6,
+      "tagWidth": 17.5,
+      "tagMask": "none"
+    },
+    {
+      "name": "Actual close/open clicks translate and clip a fixed-width sidebar; every sampled row/name/tag/Tab/footer keeps geometry, fonts, lines and fade; hidden focus leaves navigation",
+      "closeFrames": 105,
+      "openFrames": 140,
+      "width": 260
+    },
+    {
+      "name": "Drawer fixed-shape animation verified in both themes and 200/260/420px, including all inline role badges and long-name masks",
+      "cases": 12
+    },
+    {
+      "name": "Mid-animation reversal starts at the same position and returns to the exact open endpoint without squeezing or remounting",
+      "before": -144.641,
+      "after": -144.641,
+      "width": 420
+    },
+    {
+      "name": "Reduced-motion preference switches directly between complete closed/open endpoints"
+    },
+    {
+      "name": "Existing multiline unavailable-work help and nested works retain identical line-box geometry while the drawer moves"
+    },
+    {
+      "name": "No browser errors or HTTP requests; all inspected production source hashes unchanged"
+    }
+  ],
+  "pageErrors": [],
+  "httpRequests": [],
+  "sourceHashes": {
+    "src/components/layout/SidebarTree.tsx": "0217efce432a30aafa32eb456f71a03b41901a0919be0a219ad5a8c466d63cef",
+    "src/components/layout/ContentTabs.tsx": "7fbb7ae0915410d9fa62b501c06f27f9c98f85b35f6fb23b5dec979be39a40d3",
+    "src/components/layout/DashboardShell.tsx": "096856e0820166db756ab20f7b925a73de917fddfb28d77c0deddb721ee44b72",
+    "src/components/content/scene/SceneTree.tsx": "8911a145ef8091dd7e17ccba9746e7f72426a8dc8ba45acd87323a65a50814c7",
+    "src/components/desktop/UnavailableWorks.tsx": "a23a00d96430dfd259bea3a064615783196806d55b8b1338e912fd194d3f7ea8",
+    "src/app/desktop.css": "ae4edb7764953083023ded07d4d04ec9706f173ed20f4b2b033d144c785d9063"
+  },
+  "productTests": "not-run",
+  "nativeAcceptance": "not-run",
+  "browser": "154.0.8037.98"
+}

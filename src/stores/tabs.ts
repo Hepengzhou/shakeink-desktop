@@ -212,6 +212,8 @@ interface TabsState {
   setSubTab: (tabId: string, subTab: string) => void
   /** 打开 tab：已存在则激活，否则追加到末尾并激活 */
   openTab: (tab: Tab) => void
+  /** 可等待的导航开启；取消或源/目标失效时不改变当前激活。 */
+  openTabForNavigation: (tab: Tab, signal: AbortSignal) => Promise<boolean>
   /** 关闭 tab：若关闭的是激活 tab，则激活相邻（优先左侧）tab */
   closeTab: (id: string) => void
   activateTab: (id: string) => void
@@ -237,10 +239,30 @@ interface TabsState {
 }
 
 function afterSceneLeave(action: () => void, destination?: string) {
-  const active = useTabsStore.getState().activeTabId
+  const before = useTabsStore.getState()
+  const active = before.activeTabId
   const guard = active !== destination ? sceneLeaveGuard(active) : undefined
-  if (guard) void guard().then(action).catch(error => toast.error(error instanceof Error ? error.message : "草稿尚未保存，请重试或明确放弃"))
+  if (guard) void guard().then(() => {
+    const current = useTabsStore.getState()
+    if (current.activeTabId === active && current.activationNonce === before.activationNonce) action()
+  }).catch(error => toast.error(error instanceof Error ? error.message : "草稿尚未保存，请重试或明确放弃"))
   else action()
+}
+
+/** Abort releases the caller immediately; the guard may still be saving a draft. */
+function awaitNavigationGuard(guard: () => Promise<void>, signal: AbortSignal): Promise<boolean> {
+  if (signal.aborted) return Promise.resolve(false)
+  return new Promise<boolean>((resolve, reject) => {
+    const abort = () => { signal.removeEventListener("abort", abort); resolve(false) }
+    signal.addEventListener("abort", abort, { once: true })
+    try {
+      guard().then(() => { signal.removeEventListener("abort", abort); resolve(!signal.aborted) }, error => {
+        signal.removeEventListener("abort", abort)
+        if (signal.aborted) resolve(false)
+        else reject(error)
+      })
+    } catch (error) { signal.removeEventListener("abort", abort); reject(error) }
+  })
 }
 function activation(state: TabsState, id: string) {
   return state.tabs.some(tab => tab.id === id) ? { activeTabId: id, activationNonce: state.activationNonce + 1 } : state
@@ -266,6 +288,21 @@ export const useTabsStore = create<TabsState>((set, get) => ({
         activationNonce: state.activationNonce + 1,
       }
     }), tab.id),
+
+  openTabForNavigation: async (tab, signal) => {
+    const before = get(), target = before.tabs.find(item => item.id === tab.id)
+    if (signal.aborted) return false
+    const guard = before.activeTabId !== tab.id ? sceneLeaveGuard(before.activeTabId) : undefined
+    if (guard && !await awaitNavigationGuard(guard, signal)) return false
+    const current = get()
+    if (signal.aborted || current.activeTabId !== before.activeTabId || current.activationNonce !== before.activationNonce || current.tabs.find(item => item.id === tab.id) !== target) return false
+    set(state => ({
+      tabs: target ? state.tabs : [...state.tabs, tab],
+      activeTabId: tab.id,
+      activationNonce: state.activationNonce + 1,
+    }))
+    return true
+  },
 
   closeTab: (id) =>
     afterSceneLeave(() => set((state) => {

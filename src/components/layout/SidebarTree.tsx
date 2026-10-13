@@ -1,12 +1,12 @@
 "use client"
-import { GlobalSceneTree, openAllScenes } from "@/components/content/scene/SceneWorkspace"
+import { openAllScenes } from "@/components/content/scene/SceneWorkspace"
 import { worldDisplayName } from "@/lib/world-schema"
 import { worldForest } from "@/lib/world-tree"
 import { useDesktopCommands } from "@/lib/desktop/use-command-target"
 import { useNovelList } from "@/lib/novel-list"
 import { UnavailableWorks } from "@/components/desktop/UnavailableWorks"
 
-import { useEffect, useRef, useState, useSyncExternalStore } from "react"
+import { useEffect, useId, useLayoutEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from "react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import {
   AlertCircle,
@@ -16,6 +16,8 @@ import {
   ClipboardCheck,
   Eye,
   FileText,
+  FolderClosed,
+  FolderOpen,
   Flag,
   FlaskConical,
   Ghost,
@@ -26,17 +28,17 @@ import {
   Loader2,
   MapPin,
   MessageSquare,
-  MessageSquarePlus,
+  MessageCirclePlus,
   MoreHorizontal,
   Package,
   Palette,
-  PanelLeft,
   Pencil,
   Plus,
+  Pointer,
+  NotebookPen,
   RefreshCw,
   Settings,
   Settings2,
-  SlidersHorizontal,
   Trash2,
   UserRound,
   Users,
@@ -44,7 +46,7 @@ import {
   type LucideIcon,
 } from "lucide-react"
 import { SidebarWindowControls } from "@/components/desktop/WindowControls"
-import { updateDesktopSettings } from "@/stores/desktop"
+import { updateDesktopSettings, useDesktopStore } from "@/stores/desktop"
 
 import { useTheme } from "next-themes"
 import { toast } from "sonner"
@@ -59,8 +61,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import {
-  DropdownMenu,
-  DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
@@ -113,7 +113,10 @@ import {
   staticHoverCard,
   useSidebarHover,
 } from "./SidebarHoverCard"
-import { ScenarioCreateDialog, type ScenarioCreatePayload } from "./ScenarioCreateDialog"
+import { Seal } from "../marketing/seal"
+import { NavigationLabel } from "./NavigationLabel"
+import { ScenarioLibraryDialog, type ScenarioLibrarySession } from "./ScenarioLibraryDialog"
+import { NAVIGATION_LABELS, NAVIGATION_VIEWS, ROLE_TAGS, ROLE_TONES, NavigationMenu, NavigationMenuContent, NavigationTransientBoundary, settingTone, useNavigationScroll, useNavigationTransient, type NavigationTone, type NavigationView } from "./sidebar-navigation-state"
 import {
   normalizeCrop,
   type CharacterRecord,
@@ -141,6 +144,11 @@ interface TreeNodeProps {
   dimmed?: boolean
   onToggle?: () => void
   onClick?: () => void
+  iconTone?: NavigationTone
+  roleType?: CharacterRoleType | "FORESHADOW"
+  accessibleLabel?: string
+  /** Exact row element used as a modal return-focus target. */
+  onActivate?: (element: HTMLElement) => void
   /** 名字后的小标记（如主角「主」签） */
   tag?: React.ReactNode
   /** 替换默认图标的自定义节点（如角色头像缩略图） */
@@ -165,6 +173,10 @@ function TreeNode({
   dimmed,
   onToggle,
   onClick,
+  onActivate,
+  iconTone,
+  roleType,
+  accessibleLabel,
   tag,
   avatar,
   action,
@@ -172,6 +184,7 @@ function TreeNode({
   dragChip,
 }: TreeNodeProps) {
   const hover = useSidebarHover()
+  const { paused, epoch } = useNavigationTransient()
   const ownerRef = useRef<symbol>(Symbol())
   const rowRef = useRef<HTMLDivElement | null>(null)
   const showTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -183,16 +196,17 @@ function TreeNode({
       if (showTimer.current) clearTimeout(showTimer.current)
       hover?.hideNow(owner)
     }
-  }, [hover])
+  }, [hover, paused, epoch])
 
   const showNow = () => {
+    if (paused) return
     const rect = rowRef.current?.getBoundingClientRect()
     if (rect && hoverCard) {
       hover?.show(ownerRef.current, hoverCard, { x: rect.right + 8, y: rect.top })
     }
   }
   const onRowEnter = () => {
-    if (!hoverCard || !hover) return
+    if (paused || !hoverCard || !hover) return
     if (hover.ownsCurrent(ownerRef.current)) return
     // 卡片已在别处打开：零延迟原位切换（无「先收再弹」过渡）
     if (hover.isOpen()) {
@@ -218,12 +232,17 @@ function TreeNode({
     <div
       ref={rowRef}
       role="button"
+      aria-label={accessibleLabel ?? label}
+      aria-expanded={expandable ? expanded : undefined}
+      data-icon-tone={iconTone}
+      data-role={roleType}
       tabIndex={0}
       draggable={!!dragChip}
       onDragStart={dragChip ? (e) => startChipDrag(e, dragChip) : undefined}
       title={dragChip ? "可拖拽到对话输入框引用" : undefined}
-      onClick={() => {
+      onClick={(event) => {
         hover?.hideNow(ownerRef.current)
+        onActivate?.(event.currentTarget)
         onClick?.()
       }}
       onMouseEnter={onRowEnter}
@@ -232,21 +251,23 @@ function TreeNode({
         if (e.target !== e.currentTarget) return
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault()
+          onActivate?.(e.currentTarget)
           onClick?.()
         }
       }}
       className={cn(
-        "group relative flex h-7 cursor-pointer items-center gap-[5px] rounded-[5px] pr-1.5 text-[13px] select-none",
+        "tree-row group relative flex h-7 cursor-pointer items-center gap-[5px] rounded-[5px] pr-1.5 text-[13px] select-none",
         active
           ? "bg-active-wash font-medium text-primary"
           : "hover:bg-hover-wash",
         dimmed && "text-muted-foreground"
       )}
-      style={{ paddingLeft: `${depth * 14 + 6}px` }}
+      style={{ paddingLeft: `${depth * 14 + 6}px`, ...(iconTone ? { "--node-icon-color": `var(--icon-${iconTone})` } : {}) } as CSSProperties}
     >
       {expandable ? (
         <button
           type="button"
+          aria-expanded={expanded}
           aria-label={expanded ? "收起" : "展开"}
           onClick={(e) => {
             e.stopPropagation()
@@ -263,14 +284,14 @@ function TreeNode({
       )}
       {avatar ?? (
         <Icon
+          aria-hidden="true"
           className={cn(
             "size-3.5 shrink-0",
-            active ? "text-primary" : "text-muted-foreground"
+            iconTone ? "nav-node-icon" : active ? "text-primary" : "text-muted-foreground"
           )}
         />
       )}
-      <span className="min-w-0 flex-1 truncate">{label}</span>
-      {tag}
+      {roleType && tag ? <span className="role-name-group flex min-w-0 flex-1 items-center gap-1.5"><NavigationLabel>{label}</NavigationLabel>{tag}</span> : <><NavigationLabel className="flex-1">{label}</NavigationLabel>{tag}</>}
       {action && <span
         className="flex shrink-0"
         onClick={event => event.stopPropagation()}
@@ -284,16 +305,6 @@ function TreeNode({
   )
 }
 
-/** GET /api/novels/[id]/scenarios 列表项（附回合/情节点计数） */
-interface ScenarioSummary {
-  id: string
-  novelId: string
-  title: string
-  status: string
-  turnCount: number
-  nodeCount: number
-}
-
 /** GET /api/novels/[id]/foreshadow-characters 列表项 */
 interface ForeshadowCharacterRecord {
   id: string
@@ -304,15 +315,36 @@ interface ForeshadowCharacterRecord {
   revealedCharacterId: string | null
 }
 
+/** A filter heading controls navigation visibility, never a content Tab. */
+function NavigationWorkGroup({ id, title, view, collapsed, onToggle, action, children }: { id: string; title: string; view: NavigationView; collapsed: boolean; onToggle(): void; action?: React.ReactNode; children: React.ReactNode }) {
+  const bodyId = useId()
+  const button = useRef<HTMLButtonElement>(null)
+  const body = useRef<HTMLDivElement>(null)
+  const toggleGroup = () => {
+    if (!collapsed && body.current?.contains(document.activeElement)) button.current?.focus()
+    onToggle()
+  }
+  return <div className="nav-work-group" data-work-id={id} data-view={view} data-icon-tone="work" style={{ "--node-icon-color": "var(--icon-work)" } as CSSProperties}>
+    <div className="nav-group-heading group flex min-w-0 items-center">
+      <button ref={button} type="button" className="nav-group-toggle flex h-7 min-w-0 flex-1 items-center gap-[5px] rounded-[5px] px-1.5 text-left text-[13px] hover:bg-hover-wash" aria-label={title} aria-expanded={!collapsed} aria-controls={bodyId} onClick={toggleGroup}>
+        <ChevronRight aria-hidden="true" className={cn("nav-group-chevron size-3 shrink-0 text-muted-foreground", !collapsed && "rotate-90")} />
+        {collapsed ? <FolderClosed aria-hidden="true" className="nav-node-icon size-3.5 shrink-0" /> : <FolderOpen aria-hidden="true" className="nav-node-icon size-3.5 shrink-0" />}
+        <NavigationLabel className="flex-1">{title}</NavigationLabel>
+      </button>
+      {action}
+    </div>
+    <NavigationTransientBoundary paused={collapsed}>
+      <div ref={body} id={bodyId} className="nav-group-body" hidden={collapsed} inert={collapsed}>{children}</div>
+    </NavigationTransientBoundary>
+  </div>
+}
+
 type DialogState =
   | { type: "rename"; novel: NovelSummary }
   | { type: "delete"; novel: NovelSummary }
   | { type: "world-create"; novel: NovelSummary; parentWorld?: WorldRecord }
   | { type: "world-rename"; novel: NovelSummary; world: WorldRecord }
   | { type: "world-delete"; novel: NovelSummary; world: WorldRecord }
-  | { type: "scenario-create"; novel: NovelSummary }
-  | { type: "scenario-rename"; novel: NovelSummary; scenario: ScenarioSummary }
-  | { type: "scenario-delete"; novel: NovelSummary; scenario: ScenarioSummary }
   | null
 
 const CHARACTER_ROLE_ORDER: CharacterRoleType[] = [
@@ -326,15 +358,17 @@ function CharacterSubtree({
   novel,
   expanded,
   toggle,
+  flat = false,
 }: {
   novel: NovelSummary
   expanded: Record<string, boolean>
   toggle: (key: string) => void
+  flat?: boolean
 }) {
   const openTab = useTabsStore((s) => s.openTab)
   const activeTabId = useTabsStore((s) => s.activeTabId)
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["characters", novel.id],
     queryFn: async () => {
       const res = await fetch(`/api/novels/${novel.id}/characters`)
@@ -342,12 +376,19 @@ function CharacterSubtree({
       return (await res.json()) as { characters: CharacterRecord[] }
     },
   })
+  const foreshadowQuery = useQuery({ queryKey: ["foreshadow-characters", novel.id], enabled: flat, queryFn: async () => {
+    const response = await fetch(`/api/novels/${novel.id}/foreshadow-characters`)
+    if (!response.ok) throw new Error("加载伏笔角色失败")
+    return (await response.json()) as { foreshadowCharacters: ForeshadowCharacterRecord[] }
+  } })
+
+  if (isError) return <><div role="alert" className="px-5 py-2 text-xs text-destructive">{error.message}<Button variant="outline" size="sm" onClick={() => void refetch()}>重试角色</Button></div><ForeshadowCharacterSection novel={novel} expanded={expanded} toggle={toggle} flat={flat} /></>
 
   if (isLoading) {
     return (
-      <div className="flex justify-center py-2 text-muted-foreground">
+      <><div className="flex justify-center py-2 text-muted-foreground">
         <Loader2 className="size-4 animate-spin" />
-      </div>
+      </div>{flat && <ForeshadowCharacterSection novel={novel} expanded={expanded} toggle={toggle} flat />}</>
     )
   }
 
@@ -355,8 +396,8 @@ function CharacterSubtree({
   if (characters.length === 0) {
     return (
       <>
-        <TreeNode icon={Users} label="暂无角色" depth={2} dimmed />
-        <ForeshadowCharacterSection novel={novel} expanded={expanded} toggle={toggle} />
+        {(!flat || (foreshadowQuery.isSuccess && !foreshadowQuery.data.foreshadowCharacters.length)) && <TreeNode icon={Users} iconTone="characters" label="暂无角色" depth={flat ? 1 : 2} dimmed />}
+        <ForeshadowCharacterSection novel={novel} expanded={expanded} toggle={toggle} flat={flat} />
       </>
     )
   }
@@ -367,11 +408,12 @@ function CharacterSubtree({
         const group = characters.filter((c) => c.roleType === roleType)
         if (group.length === 0) return null
         const groupKey = `${novel.id}:character:${roleType}`
-        const groupExpanded = expanded[groupKey] ?? true
+        const groupExpanded = flat || (expanded[groupKey] ?? true)
         return (
           <div key={roleType}>
-            <TreeNode
+            {!flat && <TreeNode
               icon={Users}
+              iconTone={ROLE_TONES[roleType]}
               label={`${CHARACTER_ROLE_LABELS[roleType]}（${group.length}）`}
               depth={2}
               expandable
@@ -387,12 +429,15 @@ function CharacterSubtree({
                   }}
                 />
               )}
-            />
+            />}
             {groupExpanded &&
               group.map((c) => (
                 <TreeNode
                   key={c.id}
                   icon={UserRound}
+                  iconTone={ROLE_TONES[roleType]}
+                  roleType={roleType}
+                  accessibleLabel={`${c.name} · ${CHARACTER_ROLE_LABELS[roleType]}`}
                   dragChip={buildCharacterChip({ name: c.name, avatarUrl: c.avatarUrl })}
                   avatar={
                     c.avatarUrl ? (
@@ -406,16 +451,12 @@ function CharacterSubtree({
                     ) : undefined
                   }
                   label={c.name}
-                  depth={3}
+                  depth={flat ? 1 : 3}
                   active={
                     activeTabId === buildTabId("character", novel.id, { refId: c.id })
                   }
                   tag={
-                    roleType === "PROTAGONIST" ? (
-                      <span className="shrink-0 rounded-[3px] border border-primary/30 bg-active-wash px-1 text-[9.5px] leading-[1.5] text-primary">
-                        主
-                      </span>
-                    ) : undefined
+                    <span className="role-tag shrink-0 rounded-[3px] px-1 text-[9.5px] leading-[1.5]">{ROLE_TAGS[roleType]}</span>
                   }
                   hoverCard={() => (
                     <SidebarHoverCard
@@ -446,7 +487,7 @@ function CharacterSubtree({
           </div>
         )
       })}
-      <ForeshadowCharacterSection novel={novel} expanded={expanded} toggle={toggle} />
+      <ForeshadowCharacterSection novel={novel} expanded={expanded} toggle={toggle} flat={flat} />
     </>
   )
 }
@@ -460,10 +501,12 @@ function ForeshadowCharacterSection({
   novel,
   expanded,
   toggle,
+  flat = false,
 }: {
   novel: NovelSummary
   expanded: Record<string, boolean>
   toggle: (key: string) => void
+  flat?: boolean
 }) {
   const queryClient = useQueryClient()
   const openTab = useTabsStore((s) => s.openTab)
@@ -478,7 +521,7 @@ function ForeshadowCharacterSection({
   const [nameInput, setNameInput] = useState("")
   const [revealTargetId, setRevealTargetId] = useState("")
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["foreshadow-characters", novel.id],
     queryFn: async () => {
       const res = await fetch(`/api/novels/${novel.id}/foreshadow-characters`)
@@ -584,18 +627,21 @@ function ForeshadowCharacterSection({
   })
 
   const foreshadows = data?.foreshadowCharacters ?? []
-  if (isLoading || foreshadows.length === 0) return null
+  if (isError) return <div role="alert" className="px-5 py-2 text-xs text-destructive">{error.message}<Button variant="outline" size="sm" onClick={() => void refetch()}>重试伏笔角色</Button></div>
+  if (isLoading) return flat ? <p className="px-5 py-2 text-xs text-muted-foreground">伏笔角色加载中…</p> : null
+  if (foreshadows.length === 0) return null
 
   const groupKey = `${novel.id}:character:foreshadow`
-  const groupExpanded = expanded[groupKey] ?? true
+  const groupExpanded = flat || (expanded[groupKey] ?? true)
   const characters = charactersData?.characters ?? []
   const confirmPending =
     promoteMutation.isPending || revealMutation.isPending || deleteMutation.isPending
 
   return (
     <>
-      <TreeNode
+      {!flat && <TreeNode
         icon={Ghost}
+        iconTone="foreshadow-character"
         label={`伏笔角色（${foreshadows.length}）`}
         depth={2}
         expandable
@@ -612,19 +658,22 @@ function ForeshadowCharacterSection({
             }}
           />
         )}
-      />
+      />}
       {groupExpanded &&
         foreshadows.map((fc) => (
           <TreeNode
             key={fc.id}
             icon={UserRound}
+            iconTone="foreshadow-character"
+            roleType="FORESHADOW"
+            accessibleLabel={`${fc.name} · 伏笔角色`}
             avatar={
-              <span className="flex size-5 shrink-0 items-center justify-center rounded-full border border-dashed border-gold/70 text-[10px] leading-none text-gold select-none">
+              <span className="character-letter flex size-5 shrink-0 items-center justify-center rounded-full border border-dashed text-[10px] leading-none select-none">
                 {fc.name.slice(0, 1)}
               </span>
             }
             label={fc.name}
-            depth={3}
+            depth={flat ? 1 : 3}
             hoverCard={() => (
               <SidebarHoverCard
                 data={{
@@ -638,12 +687,12 @@ function ForeshadowCharacterSection({
               />
             )}
             tag={
-              <span className="shrink-0 rounded-[3px] border border-gold/40 bg-gold/10 px-1 text-[9.5px] leading-[1.5] text-gold">
+              <span className="role-tag shrink-0 rounded-[3px] px-1 text-[9.5px] leading-[1.5]">
                 伏笔
               </span>
             }
             action={
-              <DropdownMenu>
+              <NavigationMenu>
                 <DropdownMenuTrigger
                   render={
                     <button
@@ -656,7 +705,7 @@ function ForeshadowCharacterSection({
                 >
                   <MoreHorizontal className="size-4" />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-auto min-w-36">
+                <NavigationMenuContent align="start" className="w-auto min-w-36">
                   <DropdownMenuItem
                     onClick={() => {
                       setNameInput(fc.name)
@@ -690,8 +739,8 @@ function ForeshadowCharacterSection({
                     <Trash2 />
                     删除
                   </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                </NavigationMenuContent>
+              </NavigationMenu>
             }
           />
         ))}
@@ -812,104 +861,6 @@ function ForeshadowCharacterSection({
 }
 
 /**
- * 「情景试验场」分组下的试验场子树：叶子点击打开 scenario 面板 tab；
- * 悬停菜单支持重命名/删除（模式同其他子树）。
- */
-function ScenarioSubtree({
-  novel,
-  onRename,
-  onDelete,
-}: {
-  novel: NovelSummary
-  onRename: (scenario: ScenarioSummary) => void
-  onDelete: (scenario: ScenarioSummary) => void
-}) {
-  const openTab = useTabsStore((s) => s.openTab)
-  const activeTabId = useTabsStore((s) => s.activeTabId)
-
-  const { data, isLoading } = useQuery({
-    queryKey: ["scenarios", novel.id],
-    queryFn: async () => {
-      const res = await fetch(`/api/novels/${novel.id}/scenarios`)
-      if (!res.ok) throw new Error("加载情景试验场失败")
-      return (await res.json()) as { scenarios: ScenarioSummary[] }
-    },
-  })
-
-  if (isLoading) {
-    return (
-      <div className="flex justify-center py-2 text-muted-foreground">
-        <Loader2 className="size-4 animate-spin" />
-      </div>
-    )
-  }
-
-  const scenarios = data?.scenarios ?? []
-  if (scenarios.length === 0) {
-    return <TreeNode icon={FlaskConical} label="暂无试验场，点上方 + 新建" depth={2} dimmed />
-  }
-
-  return (
-    <>
-      {scenarios.map((scenario) => (
-        <TreeNode
-          key={scenario.id}
-          icon={FlaskConical}
-          label={scenario.title}
-          hoverCard={() => (
-            <SidebarHoverCard
-              data={{
-                title: scenario.title,
-                subtitle: "情景试验场",
-                icon: FlaskConical,
-                meta: [`${scenario.turnCount} 回合`, `${scenario.nodeCount} 个情节点`],
-              }}
-            />
-          )}
-          depth={2}
-          active={activeTabId === buildTabId("scenario", novel.id, { refId: scenario.id })}
-          onClick={() =>
-            openTab({
-              id: buildTabId("scenario", novel.id, { refId: scenario.id }),
-              type: "scenario",
-              novelId: novel.id,
-              refId: scenario.id,
-              title: scenario.title,
-            })
-          }
-          action={
-            <DropdownMenu>
-              <DropdownMenuTrigger
-                render={
-                  <button
-                    type="button"
-                    aria-label="试验场操作"
-                    onClick={(e) => e.stopPropagation()}
-                    className="flex size-6 shrink-0 items-center justify-center rounded-md text-muted-foreground opacity-0 group-hover:opacity-100 hover:bg-muted-foreground/15 data-popup-open:opacity-100"
-                  />
-                }
-              >
-                <MoreHorizontal className="size-4" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-auto min-w-28">
-                <DropdownMenuItem onClick={() => onRename(scenario)}>
-                  <Pencil />
-                  重命名
-                </DropdownMenuItem>
-                <DropdownMenuItem variant="destructive" onClick={() => onDelete(scenario)}>
-                  <Trash2 />
-                  删除
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          }
-        />
-      ))}
-    </>
-  )
-}
-
-/**
  * 「世界观」分组下的世界子树：多世界树形嵌套（大千世界 → 小千世界），
  * 点击世界节点打开 world tab；悬停菜单支持添加子世界/重命名/删除。
  */
@@ -920,6 +871,8 @@ function WorldSubtree({
   onCreateChild,
   onRename,
   onDelete,
+  depth = 3,
+  pruneExpanded,
 }: {
   novel: NovelSummary
   expanded: Record<string, boolean>
@@ -927,11 +880,13 @@ function WorldSubtree({
   onCreateChild: (parent: WorldRecord) => void
   onRename: (world: WorldRecord) => void
   onDelete: (world: WorldRecord) => void
+  depth?: number
+  pruneExpanded?: (prefix: string, keys: string[]) => void
 }) {
   const openTab = useTabsStore((s) => s.openTab)
   const activeTabId = useTabsStore((s) => s.activeTabId)
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["worlds", novel.id],
     queryFn: async () => {
       const res = await fetch(`/api/novels/${novel.id}/worlds`)
@@ -939,6 +894,10 @@ function WorldSubtree({
       return (await res.json()) as { worlds: WorldRecord[] }
     },
   })
+
+  useEffect(() => { if (data) pruneExpanded?.(`${novel.id}:world:`, data.worlds.map(world => `${novel.id}:world:${world.id}`)) }, [data, novel.id, pruneExpanded])
+
+  if (isError) return <div role="alert" className="px-5 py-2 text-xs text-destructive">{error.message}<Button size="sm" variant="outline" onClick={() => void refetch()}>重试世界</Button></div>
 
   if (isLoading) {
     return (
@@ -950,7 +909,7 @@ function WorldSubtree({
 
   const worlds = data?.worlds ?? []
   if (worlds.length === 0) {
-    return <TreeNode icon={Globe} label="还没有世界，点上方 + 创建" depth={3} dimmed />
+    return <TreeNode icon={Globe} iconTone="world" label="还没有世界，点上方 + 创建" depth={depth} dimmed />
   }
 
   const forest = worldForest(worlds)
@@ -958,13 +917,14 @@ function WorldSubtree({
 
   const renderWorld = (world: WorldRecord, depth: number): React.ReactNode => {
     const children = childrenOf(world.id)
-    const key = `world:${world.id}`
+    const key = `${novel.id}:world:${world.id}`
     const worldExpanded = expanded[key] ?? true
     const tabId = buildTabId("world", novel.id, { refId: world.id })
     return (
       <div key={world.id} data-world-id={world.id}>
         <TreeNode
           icon={Globe}
+          iconTone="world"
           label={worldDisplayName(world.name)}
           depth={depth}
           hoverCard={() => (
@@ -993,7 +953,7 @@ function WorldSubtree({
             })
           }
           action={
-            <DropdownMenu>
+            <NavigationMenu>
               <DropdownMenuTrigger
                 render={
                   <button
@@ -1006,7 +966,7 @@ function WorldSubtree({
               >
                 <MoreHorizontal className="size-4" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-auto min-w-28">
+              <NavigationMenuContent align="start" className="w-auto min-w-28">
                 <DropdownMenuItem onClick={() => onCreateChild(world)}>
                   <Plus />
                   添加子世界
@@ -1019,8 +979,8 @@ function WorldSubtree({
                   <Trash2 />
                   删除
                 </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+              </NavigationMenuContent>
+            </NavigationMenu>
           }
         />
         {worldExpanded && children.map((c) => renderWorld(c, depth + 1))}
@@ -1028,7 +988,7 @@ function WorldSubtree({
     )
   }
 
-  return <>{forest.roots.map((w) => renderWorld(w, 3))}</>
+  return <>{forest.roots.map((w) => renderWorld(w, depth))}</>
 }
 
 /**
@@ -1040,16 +1000,20 @@ function OutlineSubtree({
   kind,
   expanded,
   toggle,
+  depth = 2,
+  pruneExpanded,
 }: {
   novel: NovelSummary
   kind: "outline" | "content"
   expanded: Record<string, boolean>
   toggle: (key: string) => void
+  depth?: number
+  pruneExpanded?: (prefix: string, keys: string[]) => void
 }) {
   const openTab = useTabsStore((s) => s.openTab)
   const activeTabId = useTabsStore((s) => s.activeTabId)
 
-  const { data, isLoading } = useQuery<{ novel: NovelDetail }>({
+  const { data, isLoading, isError, error, refetch } = useQuery<{ novel: NovelDetail }>({
     queryKey: ["novels", novel.id],
     queryFn: async () => {
       const res = await fetch(`/api/novels/${novel.id}`)
@@ -1057,6 +1021,8 @@ function OutlineSubtree({
       return res.json()
     },
   })
+  useEffect(() => { if (data) pruneExpanded?.(`${novel.id}:${kind}:volume:`, data.novel.volumes.map(volume => `${novel.id}:${kind}:volume:${volume.id}`)) }, [data, novel.id, kind, pruneExpanded])
+  if (isError) return <div role="alert" className="px-5 py-2 text-xs text-destructive">{error.message}<Button variant="outline" size="sm" onClick={() => void refetch()}>重试正文</Button></div>
 
   if (isLoading) {
     return (
@@ -1068,11 +1034,12 @@ function OutlineSubtree({
 
   const volumes = data?.novel.volumes ?? []
   if (volumes.length === 0) {
+    if (kind === "content") return <TreeNode icon={FileText} iconTone="content" label="暂无正文" depth={depth} dimmed />
     return (
       <TreeNode
         icon={ListTree}
         label="暂无大纲，去生成"
-        depth={2}
+        depth={depth}
         dimmed
         onClick={() =>
           openTab({
@@ -1097,8 +1064,9 @@ function OutlineSubtree({
           <div key={volume.id}>
             <TreeNode
               icon={volumeIcon}
+              iconTone={kind === "content" ? "content" : "outline"}
               label={manuscriptTitle(volume.index, volume.title, "卷")}
-              depth={2}
+              depth={depth}
               expandable
               expanded={volumeExpanded}
               onToggle={() => toggle(volumeKey)}
@@ -1127,7 +1095,7 @@ function OutlineSubtree({
                   key={chapter.id}
                   icon={CHAPTER_STATUS_ICONS[chapter.status]}
                   label={manuscriptTitle(chapter.index, chapter.title)}
-                  depth={3}
+                  depth={depth + 1}
                   hoverCard={() => (
                     <SidebarHoverCard
                       data={{
@@ -1186,6 +1154,7 @@ function CascadeNode({ novel }: { novel: NovelSummary }) {
   return (
     <TreeNode
       icon={RefreshCw}
+      iconTone="cascade"
       label="级联修订"
       hoverCard={() => (
         <SidebarHoverCard
@@ -1232,22 +1201,24 @@ async function fetchConversationSummaries(): Promise<ConversationSummary[]> {
  * 作为作品阁顶部的可折叠分组展示，点击子会话回到共创；没有时不占位置。
  * 与小说内「对话」节点共享 ["chat-conversations"] 缓存。
  */
-function UnboundConversations() {
+function UnboundConversations({ expanded: groupExpanded, onToggle }: { expanded: boolean; onToggle(): void }) {
   const conversationId = useChatStore((s) => s.conversationId)
-  const [groupExpanded, setGroupExpanded] = useState(true)
-  const { data } = useQuery({ queryKey: ["chat-conversations"], queryFn: fetchConversationSummaries })
+  const { data, isPending, isError, error, refetch } = useQuery({ queryKey: ["chat-conversations"], queryFn: fetchConversationSummaries })
+  if (isPending) return <p role="status" className="flex items-center gap-2 px-5 py-2 text-xs text-muted-foreground"><Loader2 className="size-3.5 animate-spin" />指引会话加载中…</p>
+  if (isError) return <div role="alert" className="px-5 py-2 text-xs text-destructive">{error.message}<Button size="sm" variant="outline" onClick={() => void refetch()}>重试指引会话</Button></div>
   const unbound = (data ?? []).filter((c) => c.novelId === null)
   if (!unbound.length) return null
   return (
     <div>
       <TreeNode
         icon={Lightbulb}
+        iconTone="theme"
         label={`小说创作指引（${unbound.length}）`}
         depth={0}
         expandable
         expanded={groupExpanded}
-        onToggle={() => setGroupExpanded((v) => !v)}
-        onClick={() => setGroupExpanded((v) => !v)}
+        onToggle={onToggle}
+        onClick={onToggle}
         hoverCard={() => (
           <SidebarHoverCard
             data={{
@@ -1264,6 +1235,7 @@ function UnboundConversations() {
           <TreeNode
             key={c.id}
             icon={MessageSquare}
+            iconTone="conversations"
             label={c.title || "未命名会话"}
             depth={1}
             hoverCard={() => (
@@ -1293,16 +1265,18 @@ function ConversationsNode({
   novel,
   expanded,
   toggle,
+  flat = false,
 }: {
   novel: NovelSummary
   expanded: Record<string, boolean>
   toggle: (key: string) => void
+  flat?: boolean
 }) {
   const conversationId = useChatStore((s) => s.conversationId)
   const convKey = `${novel.id}:conversations`
-  const convExpanded = expanded[convKey] ?? true
+  const convExpanded = flat || (expanded[convKey] ?? true)
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["chat-conversations"],
     queryFn: fetchConversationSummaries,
   })
@@ -1313,8 +1287,9 @@ function ConversationsNode({
 
   return (
     <>
-      <TreeNode
+      {!flat && <TreeNode
         icon={MessageSquare}
+        iconTone="conversations"
         label="对话"
         depth={1}
         hoverCard={staticHoverCard("对话", MessageSquare, "与创作参谋的历史会话，点击切换接着聊。")}
@@ -1322,21 +1297,22 @@ function ConversationsNode({
         expanded={convExpanded}
         onToggle={() => toggle(convKey)}
         onClick={() => toggle(convKey)}
-      />
+      />}
       {convExpanded &&
         (isLoading ? (
           <div className="flex justify-center py-1.5 text-muted-foreground">
             <Loader2 className="size-3.5 animate-spin" />
           </div>
-        ) : conversations.length === 0 ? (
-          <TreeNode icon={MessageSquare} label="暂无会话" depth={2} dimmed />
+        ) : isError ? <div role="alert" className="px-5 py-2 text-xs text-destructive">{error.message}<Button size="sm" variant="outline" onClick={() => void refetch()}>重试对话</Button></div> : conversations.length === 0 ? (
+          <TreeNode icon={MessageSquare} iconTone="conversations" label={flat ? "暂无对话" : "暂无会话"} depth={flat ? 1 : 2} dimmed />
         ) : (
           conversations.map((c) => (
             <TreeNode
               key={c.id}
               icon={MessageSquare}
+              iconTone="conversations"
               label={c.title || "未命名会话"}
-              depth={2}
+              depth={flat ? 1 : 2}
               hoverCard={() => (
                 <SidebarHoverCard
                   data={{
@@ -1361,21 +1337,19 @@ interface SidebarTreeProps {
   user: { id: string; name: string; email: string; avatarUrl?: string }
   /** 隐藏左侧导航栏（顶栏右侧的折叠按钮） */
   onToggleSidebar?: () => void
+  /** The fixed drawer remains mounted while moving or hidden. */
+  interactionPaused?: boolean
 }
 
-export function SidebarTree({ user, onToggleSidebar }: SidebarTreeProps) {
+export function SidebarTree({ user, onToggleSidebar, interactionPaused = false }: SidebarTreeProps) {
   const queryClient = useQueryClient()
   const openTab = useTabsStore((s) => s.openTab)
   const activeTabId = useTabsStore((s) => s.activeTabId)
+  const activeTab = useTabsStore(s => s.tabs.find(tab => tab.id === s.activeTabId))
   const closeAllTabsOfNovel = useTabsStore((s) => s.closeAllTabsOfNovel)
   const closeWorldTab = useTabsStore((s) => s.closeWorldTab)
   const renameNovelTab = useTabsStore((s) => s.renameNovelTab)
   const renameWorldTab = useTabsStore((s) => s.renameWorldTab)
-  const closeTab = useTabsStore((s) => s.closeTab)
-  const renameScenarioTab = useTabsStore((s) => s.renameScenarioTab)
-  const conversationId = useChatStore((s) => s.conversationId)
-  /** 当前处于未落库的新对话（点「创建对话」后 / 首条消息发出前）时按钮呈选中态 */
-  const isNewConversation = conversationId === null
 
   const { theme } = useTheme()
   // SSR false、客户端 true，避免 hydration 不一致（与 ThemeSwitcher 同款守卫）
@@ -1385,7 +1359,40 @@ export function SidebarTree({ user, onToggleSidebar }: SidebarTreeProps) {
     () => false
   )
 
-  const [expanded, setExpanded] = useState<Record<string, boolean>>({})
+  const dataRoot = useDesktopStore(state => state.bootstrap?.dataRoot ?? "")
+  const scope = `${user.id}:${dataRoot}`
+  const navigationId = useId()
+  const [view, setView] = useState<NavigationView>("works")
+  const [expandedByView, setExpandedByView] = useState<Partial<Record<NavigationView, Record<string, boolean>>>>({})
+  const expanded = expandedByView[view] ?? {}
+  const setExpanded = (update: (previous: Record<string, boolean>) => Record<string, boolean>) => setExpandedByView(previous => { const before = previous[view] ?? {}, after = update(before); return after === before ? previous : { ...previous, [view]: after } })
+  const pruneExpanded = (prefix: string, keys: string[]) => {
+    const valid = new Set(keys)
+    setExpandedByView(previous => {
+      let changed = false
+      const next = Object.fromEntries(Object.entries(previous).map(([name, values]) => {
+        const entries = Object.entries(values ?? {}).filter(([key]) => !key.startsWith(prefix) || valid.has(key))
+        if (entries.length === Object.keys(values ?? {}).length) return [name, values]
+        changed = true; return [name, Object.fromEntries(entries)]
+      }))
+      return changed ? next : previous
+    })
+  }
+  const [collapsedByView, setCollapsedByView] = useState<Partial<Record<NavigationView, Record<string, boolean>>>>({})
+  const collapsed = collapsedByView[view] ?? {}
+  const [transientEpoch, setTransientEpoch] = useState(0)
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const lastNavigationFocus = useRef<{ element: HTMLElement; workId?: string } | null>(null)
+  const tabRefs = useRef<Record<NavigationView, HTMLButtonElement | null>>({ works: null, settings: null, characters: null, content: null, conversations: null })
+  const scroll = useNavigationScroll(view, scope, scrollRef)
+  const [scenarioSession, setScenarioSession] = useState<ScenarioLibrarySession | null>(null)
+  const scenarioSequence = useRef(0)
+  const openScenario = (novel: NovelSummary, initialMode: "library" | "create", launcher: HTMLElement) => setScenarioSession({ id: ++scenarioSequence.current, novel, initialMode, launcher })
+  const chooseView = (next: NavigationView) => { scroll.capture(); setTransientEpoch(value => value + 1); setView(next) }
+  const toggleGroup = (id: string) => setCollapsedByView(previous => ({ ...previous, [view]: { ...previous[view], [id]: !previous[view]?.[id] } }))
+  useLayoutEffect(() => {
+    setView("works"); setExpandedByView({}); setCollapsedByView({}); setScenarioSession(null); setDialog(null); setCreateOpen(false); setTransientEpoch(value => value + 1)
+  }, [scope])
   const [dialog, setDialog] = useState<DialogState>(null)
   const [titleInput, setTitleInput] = useState("")
   /** 创建作品两步向导（书名 + 创作切入方式） */
@@ -1395,6 +1402,26 @@ export function SidebarTree({ user, onToggleSidebar }: SidebarTreeProps) {
   const { data: novelList, isPending, isError, isFetching, refetch } = useNovelList()
   const novels = novelList?.novels
   const unavailableWorks = novelList?.unavailableWorks ?? []
+  useLayoutEffect(() => {
+    if (!novelList) return
+    const ids = new Set([...novelList.novels.map(novel => novel.id), ...novelList.unavailableWorks.map(work => work.workId)])
+    setCollapsedByView(previous => Object.fromEntries(Object.entries(previous).map(([key, values]) => [key, Object.fromEntries(Object.entries(values ?? {}).filter(([id]) => ids.has(id)))])))
+    setExpandedByView(previous => Object.fromEntries(Object.entries(previous).map(([key, values]) => [key, Object.fromEntries(Object.entries(values ?? {}).filter(([id]) => id === "@unbound" || [...ids].some(owner => id === owner || id.startsWith(owner + ":"))))])))
+    if (scenarioSession && !novelList.novels.some(novel => novel.id === scenarioSession.novel.id)) setScenarioSession(null)
+  }, [novelList, scenarioSession])
+  useEffect(() => {
+    const node = scrollRef.current
+    if (!node) return
+    const observer = new MutationObserver(() => {
+      const remembered = lastNavigationFocus.current
+      if (!remembered || remembered.element.isConnected || (document.activeElement !== document.body && !document.activeElement?.closest("[hidden], [inert]"))) return
+      const group = [...node.querySelectorAll<HTMLElement>(".nav-work-group")].find(element => element.dataset.workId === remembered.workId)
+      const target = group?.querySelector<HTMLButtonElement>(".nav-group-toggle") ?? tabRefs.current[view]
+      target?.focus()
+    })
+    observer.observe(node, { childList: true, subtree: true })
+    return () => observer.disconnect()
+  }, [view, scope])
 
   const invalidateNovels = () =>
     queryClient.invalidateQueries({ queryKey: ["novels"] })
@@ -1468,7 +1495,7 @@ export function SidebarTree({ user, onToggleSidebar }: SidebarTreeProps) {
       setExpanded((prev) => ({
         ...prev,
         [`${novel.id}:worlds`]: true,
-        ...(parentWorld ? { [`world:${parentWorld.id}`]: true } : {}),
+        ...(parentWorld ? { [`${novel.id}:world:${parentWorld.id}`]: true } : {}),
       }))
     },
     onError: (err) => toast.error(err.message),
@@ -1532,87 +1559,6 @@ export function SidebarTree({ user, onToggleSidebar }: SidebarTreeProps) {
     onError: (err) => toast.error(err.message),
   })
 
-  const invalidateScenarios = (novelId: string) =>
-    queryClient.invalidateQueries({ queryKey: ["scenarios", novelId] })
-
-  const createScenarioMutation = useMutation({
-    mutationFn: async ({
-      novel,
-      title,
-      cast,
-    }: {
-      novel: NovelSummary
-      title: string
-      cast: ScenarioCreatePayload["cast"]
-    }) => {
-      const res = await fetch(`/api/novels/${novel.id}/scenarios`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, ...(cast.length > 0 ? { cast } : {}) }),
-      })
-      if (!res.ok) throw new Error(await readError(res, "创建失败"))
-      return (await res.json()) as { scenario: ScenarioSummary }
-    },
-    onSuccess: ({ scenario }, { novel }) => {
-      toast.success(`情景试验场「${scenario.title}」已创建`)
-      invalidateScenarios(novel.id)
-      setDialog(null)
-      openTab({
-        id: buildTabId("scenario", novel.id, { refId: scenario.id }),
-        type: "scenario",
-        novelId: novel.id,
-        refId: scenario.id,
-        title: scenario.title,
-      })
-      // 展开试验场分组，让新试验场立即可见
-      setExpanded((prev) => ({ ...prev, [`${novel.id}:scenario`]: true }))
-    },
-    onError: (err) => toast.error(err.message),
-  })
-
-  const renameScenarioMutation = useMutation({
-    mutationFn: async ({
-      scenario,
-      title,
-    }: {
-      novel: NovelSummary
-      scenario: ScenarioSummary
-      title: string
-    }) => {
-      const res = await fetch(`/api/novels/${scenario.novelId}/scenarios/${scenario.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title }),
-      })
-      if (!res.ok) throw new Error(await readError(res, "重命名失败"))
-      return (await res.json()) as { scenario: ScenarioSummary }
-    },
-    onSuccess: ({ scenario }) => {
-      toast.success("已重命名")
-      renameScenarioTab(scenario.id, scenario.title)
-      invalidateScenarios(scenario.novelId)
-      setDialog(null)
-    },
-    onError: (err) => toast.error(err.message),
-  })
-
-  const deleteScenarioMutation = useMutation({
-    mutationFn: async ({ scenario }: { novel: NovelSummary; scenario: ScenarioSummary }) => {
-      const res = await fetch(`/api/novels/${scenario.novelId}/scenarios/${scenario.id}`, {
-        method: "DELETE",
-      })
-      if (!res.ok) throw new Error(await readError(res, "删除失败"))
-    },
-    onSuccess: (_data, { novel, scenario }) => {
-      toast.success(`情景试验场「${scenario.title}」已删除`)
-      // 被删试验场的 tab（若开着）一并关闭；未开时 closeTab 为空操作
-      closeTab(buildTabId("scenario", novel.id, { refId: scenario.id }))
-      invalidateScenarios(novel.id)
-      setDialog(null)
-    },
-    onError: (err) => toast.error(err.message),
-  })
-
   const toggle = (key: string) =>
     setExpanded((prev) => ({ ...prev, [key]: !(prev[key] ?? true) }))
 
@@ -1661,54 +1607,168 @@ export function SidebarTree({ user, onToggleSidebar }: SidebarTreeProps) {
     }
   }
 
+  const renderSettings = (novel: NovelSummary, depth: number) => <>
+                        <TreeNode
+                          icon={Lightbulb}
+                          iconTone="theme"
+                          label="主题"
+                          depth={depth}
+                          hoverCard={() => <ThemeHoverCard novel={novel} />}
+                          active={activeTabId === buildTabId("theme", novel.id)}
+                          onClick={() => openSimpleTab("theme", novel, "主题")}
+                        />
+                        {/* 文风是整书唯一的写作基调，紧跟主题展示；侧栏简称「文风」 */}
+                        <TreeNode
+                          icon={getTabIcon({ type: "setting", settingType: "STYLE" })}
+                          iconTone="style"
+                          label="文风"
+                          depth={depth}
+                          hoverCard={() => (
+                            <SettingTypeHoverCard novel={novel} settingType="STYLE" />
+                          )}
+                          active={
+                            activeTabId === buildTabId("setting", novel.id, { settingType: "STYLE" })
+                          }
+                          onClick={() => openSettingTab(novel, "STYLE")}
+                        />
+                        <TreeNode
+                          icon={Globe}
+                          iconTone="world"
+                          label="世界观"
+                          depth={depth}
+                          hoverCard={staticHoverCard("世界观", Globe, "世界与子世界的树状容器，设定条目挂在具体世界之下。")}
+                          expandable
+                          expanded={expanded[`${novel.id}:worlds`] ?? true}
+                          onToggle={() => toggle(`${novel.id}:worlds`)}
+                          onClick={() => toggle(`${novel.id}:worlds`)}
+                          action={
+                            <button
+                              type="button"
+                              aria-label="创建世界"
+                              title="创建世界"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                openTitleDialog({ type: "world-create", novel })
+                              }}
+                              className="mr-1 flex size-5 shrink-0 items-center justify-center rounded-md text-muted-foreground opacity-0 group-hover:opacity-100 hover:bg-muted-foreground/15"
+                            >
+                              <Plus className="size-3.5" />
+                            </button>
+                          }
+                        />
+                        {(expanded[`${novel.id}:worlds`] ?? true) && (
+                          <WorldSubtree
+                            depth={depth + 1}
+                            pruneExpanded={pruneExpanded}
+                            novel={novel}
+                            expanded={expanded}
+                            toggle={toggle}
+                            onCreateChild={(parent) =>
+                              openTitleDialog({ type: "world-create", novel, parentWorld: parent })
+                            }
+                            onRename={(world) =>
+                              openTitleDialog({ type: "world-rename", novel, world })
+                            }
+                            onDelete={(world) => setDialog({ type: "world-delete", novel, world })}
+                          />
+                        )}
+                        {NOVEL_SETTING_TYPE_ORDER.filter((t) => t !== "STYLE").map((settingType) => (
+                          <TreeNode
+                            key={settingType}
+                            icon={settingType === "GOLD_FINGER" ? Pointer : getTabIcon({ type: "setting", settingType })}
+                            iconTone={settingTone(settingType)}
+                            label={SETTING_TYPE_LABELS[settingType]}
+                            depth={depth}
+                            hoverCard={() => (
+                              <SettingTypeHoverCard novel={novel} settingType={settingType} />
+                            )}
+                            active={
+                              activeTabId ===
+                              buildTabId("setting", novel.id, { settingType })
+                            }
+                            onClick={() => openSettingTab(novel, settingType)}
+                          />
+                        ))}
+                        {/* 伏笔：情节线索档案（金手指下方，埋入/提及/回收追踪） */}
+                        <TreeNode
+                          icon={Flag}
+                          iconTone="foreshadow"
+                          label="伏笔"
+                          depth={depth}
+                          hoverCard={staticHoverCard("伏笔", Flag, "情节线索档案：追踪每条伏笔的埋入、提及与回收位置，生成与评审时自动带入上下文。")}
+                          active={activeTabId === buildTabId("foreshadow", novel.id)}
+                          onClick={() => openSimpleTab("foreshadow", novel, "伏笔")}
+                        />
+                        <TreeNode
+                          icon={Heart}
+                          iconTone="trope"
+                          label="爽点/泪点"
+                          depth={depth}
+                          hoverCard={staticHoverCard("爽点/泪点", Heart, "选中的爽点与泪点条目，生成大纲与正文时的情绪坐标。")}
+                          active={activeTabId === buildTabId("trope", novel.id)}
+                          onClick={() => openSimpleTab("trope", novel, "爽点/泪点")}
+                        />
+
+
+  </>
+  const renderSettingExtras = (novel: NovelSummary) => <>
+                    {/* 物品：纯入口（不再平铺物品子节点），点击打开管理面板；详情 tab 从面板卡片/芯片/悬停卡进入 */}
+                    <TreeNode
+                      icon={Package}
+                      iconTone="items"
+                      label="物品"
+                      depth={1}
+                      hoverCard={staticHoverCard("物品", Package, "道具、法宝、信物等物件档案，可在正文中按名引用。")}
+                      active={activeTabId === buildTabId("items", novel.id)}
+                      onClick={() => openSimpleTab("items", novel, "物品")}
+                    />
+                    <TreeNode icon={FlaskConical} iconTone="scenario" label="情景试验场" depth={1}
+                      hoverCard={staticHoverCard("情景试验场", FlaskConical, "多代理跑一段假设剧情，验证设定与角色反应的试验台。")}
+                      active={activeTab?.type === "scenario" && activeTab.novelId === novel.id}
+                      onActivate={element => openScenario(novel, "library", element)}
+                      action={<button type="button" aria-label="新建情景试验场" title="新建情景试验场" onClick={event => { event.stopPropagation(); openScenario(novel, "create", event.currentTarget) }} className="mr-1 flex size-5 shrink-0 items-center justify-center rounded-md text-muted-foreground opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 hover:bg-muted-foreground/15"><Plus className="size-3.5" /></button>}
+                    />
+                    <TreeNode icon={MapPin} iconTone="scenes" label="场景" depth={1}
+                      hoverCard={staticHoverCard("场景", MapPin, "反复出现的地点场景档案，供正文与对话引用。")}
+                      active={!!activeTab && ["scenes", "scene", "scene-image"].includes(activeTab.type) && activeTab.novelId === novel.id}
+                      onClick={() => openAllScenes(novel.id)}
+                    />
+                    <TreeNode icon={ChartNoAxesGantt} iconTone="worldline" label="世界线" depth={1} active={activeTabId === buildTabId("worldline", novel.id)} onClick={() => openSimpleTab("worldline", novel, "世界线")} />
+                    <TreeNode icon={ListTree} iconTone="narrative" label="叙事线" depth={1} active={activeTabId === buildTabId("narrative", novel.id)} onClick={() => openSimpleTab("narrative", novel, "叙事线")} />
+                    <TreeNode
+                      icon={ListTree}
+                      iconTone="outline"
+                      label="大纲"
+                      depth={1}
+                      hoverCard={staticHoverCard("大纲", ListTree, "叙事线分卷定章后的只读投影，前往叙事线修改。")}
+                      active={activeTabId === buildTabId("outline", novel.id)}
+                      onClick={() => openSimpleTab("outline", novel, "大纲")}
+                    />
+
+  </>
+
   const submitting =
     renameMutation.isPending ||
     createWorldMutation.isPending ||
     renameWorldMutation.isPending
 
   return (
-    <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground">
+    <NavigationTransientBoundary paused={interactionPaused} epoch={transientEpoch}><SidebarHoverProvider>
+    <div className="sidebar-navigation flex h-full flex-col bg-sidebar text-sidebar-foreground" onFocusCapture={event => { if (event.currentTarget.contains(event.target)) lastNavigationFocus.current = { element: event.target, workId: event.target.closest<HTMLElement>(".nav-work-group")?.dataset.workId } }}>
       <SidebarWindowControls onToggleSidebar={onToggleSidebar} />
-      <div className="flex shrink-0 items-start gap-1 px-1.5 pt-1.5">
-        <div className="min-w-0 flex-1">
-          <button
-            type="button"
-            onClick={() => setCreateOpen(true)}
-            className="flex h-7 w-full items-center gap-[7px] rounded-[5px] px-1.5 text-[13px] transition-colors hover:bg-hover-wash"
-          >
-            <Plus className="size-3.5 text-muted-foreground" />
-            创建作品
-          </button>
-          <button
-            type="button"
-            onClick={() => useChatStore.getState().requestNewConversation()}
-            className={cn(
-              "relative flex h-7 w-full items-center gap-[7px] rounded-[5px] px-1.5 text-[13px] transition-colors",
-              isNewConversation
-                ? "bg-active-wash font-medium text-primary"
-                : "hover:bg-hover-wash"
-            )}
-          >
-            <MessageSquarePlus
-              className={cn(
-                "size-3.5",
-                isNewConversation ? "text-primary" : "text-muted-foreground"
-              )}
-            />
-            创建对话
-          </button>
-        </div>
+      <div className="sidebar-brand"><span aria-hidden="true"><Seal variant="mark" className="brand-logo size-[30px]" /></span><span className="brand-title">玄印写作</span></div>
+      <div className="create-actions">
+        <button type="button" className="create-action" onClick={() => setCreateOpen(true)}><NotebookPen aria-hidden="true" size={18} strokeWidth={1.7} /><NavigationLabel>创建作品</NavigationLabel></button>
+        <button type="button" className="create-action" onClick={() => useChatStore.getState().requestNewConversation()}><MessageCirclePlus aria-hidden="true" size={18} strokeWidth={1.7} /><NavigationLabel>新对话</NavigationLabel></button>
       </div>
-      <div className="shrink-0 px-3 pt-2.5 pb-1.5">
-        <span className="font-serif text-[13px] font-semibold tracking-[0.1em]">
-          作品阁
-        </span>
+      <div role="tablist" aria-label="导航分类" className="nav-tabs">
+        {NAVIGATION_VIEWS.map(item => <button key={item} ref={node => { tabRefs.current[item] = node }} id={navigationId + "-" + item} role="tab" type="button" aria-selected={view === item} aria-controls={navigationId + "-panel"} tabIndex={view === item ? 0 : -1} className="nav-tab" onClick={() => chooseView(item)} onKeyDown={event => { const index = NAVIGATION_VIEWS.indexOf(item); const next = event.key === "ArrowRight" ? (index + 1) % 5 : event.key === "ArrowLeft" ? (index + 4) % 5 : event.key === "Home" ? 0 : event.key === "End" ? 4 : -1; if (next >= 0) { event.preventDefault(); chooseView(NAVIGATION_VIEWS[next]); tabRefs.current[NAVIGATION_VIEWS[next]]?.focus() } }}><NavigationLabel>{NAVIGATION_LABELS[item]}</NavigationLabel></button>)}
       </div>
 
-      <div className="min-h-0 flex-1 overflow-y-auto px-1.5 pt-0.5 pb-3">
-        <SidebarHoverProvider>
-        <UnboundConversations />
-        {!isError && <UnavailableWorks works={unavailableWorks} retrying={isFetching} retry={() => void refetch()}/>}
+      <div ref={scrollRef} id={navigationId + "-panel"} role="tabpanel" aria-labelledby={navigationId + "-" + view} className="tree-scroll min-h-0 flex-1 overflow-y-auto px-1.5 pt-0.5 pb-3">
+        <div className="nav-panel-content">
+        {(view === "works" || view === "conversations") && <UnboundConversations expanded={expanded["@unbound"] ?? true} onToggle={() => toggle("@unbound")} />}
+        <UnavailableWorks works={isError ? [] : unavailableWorks} scope={scope} retrying={isFetching} retry={() => void refetch()} renderWork={view === "works" ? undefined : (work, details) => <NavigationWorkGroup id={work.workId} title={work.title} view={view} collapsed={!!collapsed[work.workId]} onToggle={() => toggleGroup(work.workId)}>{details}</NavigationWorkGroup>} />
         {isError && (
           <div role="alert" className="flex flex-col items-center gap-2 px-4 py-6 text-center">
             <AlertCircle className="size-6 text-destructive" />
@@ -1746,13 +1806,15 @@ export function SidebarTree({ user, onToggleSidebar }: SidebarTreeProps) {
             const novelTabId = buildTabId("novel", novel.id)
             const settingKey = `${novel.id}:setting`
             const characterKey = `${novel.id}:character`
-            const scenarioKey = `${novel.id}:scenario`
-            const sceneKey = `${novel.id}:scene`
             const contentKey = `${novel.id}:content`
+            if (view !== "works") return <NavigationWorkGroup key={`${scope}:${novel.id}`} id={novel.id} title={novel.title} view={view} collapsed={!!collapsed[novel.id]} onToggle={() => toggleGroup(novel.id)} action={view === "content" ? <OutlineTreeMenu novel={novel} kind="content" /> : undefined}>
+              {view === "settings" ? <>{renderSettings(novel, 1)}{renderSettingExtras(novel)}</> : view === "characters" ? <CharacterSubtree novel={novel} expanded={expanded} toggle={toggle} flat /> : view === "content" ? <OutlineSubtree novel={novel} kind="content" expanded={expanded} toggle={toggle} depth={1} pruneExpanded={pruneExpanded} /> : <ConversationsNode novel={novel} expanded={expanded} toggle={toggle} flat />}
+            </NavigationWorkGroup>
             return (
-              <div key={novel.id}>
+              <div key={`${scope}:${novel.id}`}>
                 <TreeNode
-                  icon={BookOpen}
+                  icon={novelExpanded ? FolderOpen : FolderClosed}
+                  iconTone="work"
                   avatar={
                     novel.coverUrl ? (
                       <span className="relative aspect-[2/3] h-5 shrink-0 overflow-hidden rounded-[3px]">
@@ -1778,7 +1840,7 @@ export function SidebarTree({ user, onToggleSidebar }: SidebarTreeProps) {
                     if (!novelExpanded) toggle(novel.id)
                   }}
                   action={
-                    <DropdownMenu>
+                    <NavigationMenu>
                       <DropdownMenuTrigger
                         render={
                           <button
@@ -1791,7 +1853,7 @@ export function SidebarTree({ user, onToggleSidebar }: SidebarTreeProps) {
                       >
                         <MoreHorizontal className="size-4" />
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="start" className="w-auto min-w-28">
+                      <NavigationMenuContent align="start" className="w-auto min-w-28">
                         <DropdownMenuItem
                           onClick={() => openTitleDialog({ type: "rename", novel })}
                         >
@@ -1805,8 +1867,8 @@ export function SidebarTree({ user, onToggleSidebar }: SidebarTreeProps) {
                           <Trash2 />
                           删除
                         </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                      </NavigationMenuContent>
+                    </NavigationMenu>
                   }
                 />
 
@@ -1814,6 +1876,7 @@ export function SidebarTree({ user, onToggleSidebar }: SidebarTreeProps) {
                   <>
                     <TreeNode
                       icon={Settings2}
+                      iconTone="settings"
                       label="设定"
                       depth={1}
                       hoverCard={staticHoverCard("设定", Settings2, "主题、世界观与金手指/文风等作品级设定的档案区。")}
@@ -1824,110 +1887,12 @@ export function SidebarTree({ user, onToggleSidebar }: SidebarTreeProps) {
                     />
                     {(expanded[settingKey] ?? true) && (
                       <>
-                        <TreeNode
-                          icon={Lightbulb}
-                          label="主题"
-                          depth={2}
-                          hoverCard={() => <ThemeHoverCard novel={novel} />}
-                          active={activeTabId === buildTabId("theme", novel.id)}
-                          onClick={() => openSimpleTab("theme", novel, "主题")}
-                        />
-                        {/* 文风是整书唯一的写作基调，紧跟主题展示；侧栏简称「文风」 */}
-                        <TreeNode
-                          icon={getTabIcon({ type: "setting", settingType: "STYLE" })}
-                          label="文风"
-                          depth={2}
-                          hoverCard={() => (
-                            <SettingTypeHoverCard novel={novel} settingType="STYLE" />
-                          )}
-                          active={
-                            activeTabId === buildTabId("setting", novel.id, { settingType: "STYLE" })
-                          }
-                          onClick={() => openSettingTab(novel, "STYLE")}
-                        />
-                        <TreeNode
-                          icon={Globe}
-                          label="世界观"
-                          depth={2}
-                          hoverCard={staticHoverCard("世界观", Globe, "世界与子世界的树状容器，设定条目挂在具体世界之下。")}
-                          expandable
-                          expanded={expanded[`${novel.id}:worlds`] ?? true}
-                          onToggle={() => toggle(`${novel.id}:worlds`)}
-                          onClick={() => toggle(`${novel.id}:worlds`)}
-                          action={
-                            <button
-                              type="button"
-                              aria-label="创建世界"
-                              title="创建世界"
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                openTitleDialog({ type: "world-create", novel })
-                              }}
-                              className="mr-1 flex size-5 shrink-0 items-center justify-center rounded-md text-muted-foreground opacity-0 group-hover:opacity-100 hover:bg-muted-foreground/15"
-                            >
-                              <Plus className="size-3.5" />
-                            </button>
-                          }
-                        />
-                        {(expanded[`${novel.id}:worlds`] ?? true) && (
-                          <WorldSubtree
-                            novel={novel}
-                            expanded={expanded}
-                            toggle={toggle}
-                            onCreateChild={(parent) =>
-                              openTitleDialog({ type: "world-create", novel, parentWorld: parent })
-                            }
-                            onRename={(world) =>
-                              openTitleDialog({ type: "world-rename", novel, world })
-                            }
-                            onDelete={(world) => setDialog({ type: "world-delete", novel, world })}
-                          />
-                        )}
-                        {NOVEL_SETTING_TYPE_ORDER.filter((t) => t !== "STYLE").map((settingType) => (
-                          <TreeNode
-                            key={settingType}
-                            icon={getTabIcon({ type: "setting", settingType })}
-                            label={SETTING_TYPE_LABELS[settingType]}
-                            depth={2}
-                            hoverCard={() => (
-                              <SettingTypeHoverCard novel={novel} settingType={settingType} />
-                            )}
-                            active={
-                              activeTabId ===
-                              buildTabId("setting", novel.id, { settingType })
-                            }
-                            onClick={() => openSettingTab(novel, settingType)}
-                          />
-                        ))}
-                        {/* 伏笔：情节线索档案（金手指下方，埋入/提及/回收追踪） */}
-                        <TreeNode
-                          icon={Flag}
-                          label="伏笔"
-                          depth={2}
-                          hoverCard={staticHoverCard("伏笔", Flag, "情节线索档案：追踪每条伏笔的埋入、提及与回收位置，生成与评审时自动带入上下文。")}
-                          active={activeTabId === buildTabId("foreshadow", novel.id)}
-                          onClick={() => openSimpleTab("foreshadow", novel, "伏笔")}
-                        />
-                        <TreeNode
-                          icon={Heart}
-                          label="爽点/泪点"
-                          depth={2}
-                          hoverCard={staticHoverCard("爽点/泪点", Heart, "选中的爽点与泪点条目，生成大纲与正文时的情绪坐标。")}
-                          active={activeTabId === buildTabId("trope", novel.id)}
-                          onClick={() => openSimpleTab("trope", novel, "爽点/泪点")}
-                        />
-                        <TreeNode
-                          icon={SlidersHorizontal}
-                          label="属性"
-                          depth={2}
-                          hoverCard={staticHoverCard("属性", SlidersHorizontal, "角色/物品/场景的自定义属性定义，各面板按定义填值。")}
-                          active={activeTabId === buildTabId("attributes", novel.id)}
-                          onClick={() => openSimpleTab("attributes", novel, "属性")}
-                        />
+                        {renderSettings(novel, 2)}
                       </>
                     )}
                     <TreeNode
                       icon={Users}
+                      iconTone="characters"
                       label="角色"
                       depth={1}
                       hoverCard={() => <CharactersHeaderHoverCard novel={novel} />}
@@ -1943,80 +1908,10 @@ export function SidebarTree({ user, onToggleSidebar }: SidebarTreeProps) {
                     {(expanded[characterKey] ?? true) && (
                       <CharacterSubtree novel={novel} expanded={expanded} toggle={toggle} />
                     )}
-                    {/* 物品：纯入口（不再平铺物品子节点），点击打开管理面板；详情 tab 从面板卡片/芯片/悬停卡进入 */}
-                    <TreeNode
-                      icon={Package}
-                      label="物品"
-                      depth={1}
-                      hoverCard={staticHoverCard("物品", Package, "道具、法宝、信物等物件档案，可在正文中按名引用。")}
-                      active={activeTabId === buildTabId("items", novel.id)}
-                      onClick={() => openSimpleTab("items", novel, "物品")}
-                    />
-                    <TreeNode
-                      icon={FlaskConical}
-                      label="情景试验场"
-                      depth={1}
-                      hoverCard={staticHoverCard("情景试验场", FlaskConical, "多代理跑一段假设剧情，验证设定与角色反应的试验台。")}
-                      expandable
-                      expanded={expanded[scenarioKey] ?? true}
-                      onToggle={() => toggle(scenarioKey)}
-                      onClick={() => toggle(scenarioKey)}
-                      action={
-                        <button
-                          type="button"
-                          aria-label="新建情景试验场"
-                          title="新建情景试验场"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            setDialog({ type: "scenario-create", novel })
-                          }}
-                          className="mr-1 flex size-5 shrink-0 items-center justify-center rounded-md text-muted-foreground opacity-0 group-hover:opacity-100 hover:bg-muted-foreground/15"
-                        >
-                          <Plus className="size-3.5" />
-                        </button>
-                      }
-                    />
-                    {(expanded[scenarioKey] ?? true) && (
-                      <ScenarioSubtree
-                        novel={novel}
-                        onRename={(scenario) => {
-                          setTitleInput(scenario.title)
-                          setDialog({ type: "scenario-rename", novel, scenario })
-                        }}
-                        onDelete={(scenario) =>
-                          setDialog({ type: "scenario-delete", novel, scenario })
-                        }
-                      />
-                    )}
-                    <TreeNode
-                      icon={MapPin}
-                      label="场景"
-                      depth={1}
-                      hoverCard={staticHoverCard("场景", MapPin, "反复出现的地点场景档案，供正文与对话引用。")}
-                      expandable
-                      expanded={expanded[sceneKey] ?? true}
-                      active={activeTabId === buildTabId("scenes", novel.id)}
-                      onToggle={() => toggle(sceneKey)}
-                      onClick={() => {
-                        openAllScenes(novel.id)
-                        if (!(expanded[sceneKey] ?? true)) toggle(sceneKey)
-                      }}
-                    />
-                    {(expanded[sceneKey] ?? true) && (
-                      <GlobalSceneTree novelId={novel.id}/>
-                    )}
-                    <TreeNode icon={ChartNoAxesGantt} label="世界线" depth={1} active={activeTabId === buildTabId("worldline", novel.id)} onClick={() => openSimpleTab("worldline", novel, "世界线")} />
-                    <TreeNode icon={ListTree} label="叙事线" depth={1} active={activeTabId === buildTabId("narrative", novel.id)} onClick={() => openSimpleTab("narrative", novel, "叙事线")} />
-                    <TreeNode
-                      icon={ListTree}
-                      label="大纲"
-                      depth={1}
-                      hoverCard={staticHoverCard("大纲", ListTree, "叙事线分卷定章后的只读投影，前往叙事线修改。")}
-                      active={activeTabId === buildTabId("outline", novel.id)}
-                      onClick={() => openSimpleTab("outline", novel, "大纲")}
-                    />
+                    {renderSettingExtras(novel)}
                     <TreeNode
                       icon={FileText}
+                      iconTone="content"
                       label="正文"
                       depth={1}
                       hoverCard={staticHoverCard("正文", FileText, "章节正文写作区，含字数与写作/定稿状态。")}
@@ -2029,6 +1924,7 @@ export function SidebarTree({ user, onToggleSidebar }: SidebarTreeProps) {
                     {(expanded[contentKey] ?? true) && (
                       <OutlineSubtree
                         novel={novel}
+                        pruneExpanded={pruneExpanded}
                         kind="content"
                         expanded={expanded}
                         toggle={toggle}
@@ -2036,6 +1932,7 @@ export function SidebarTree({ user, onToggleSidebar }: SidebarTreeProps) {
                     )}
                     <TreeNode
                       icon={Workflow}
+                      iconTone="progress"
                       label="创作进度"
                       depth={1}
                       hoverCard={staticHoverCard("创作进度", Workflow, "六环节进度、待审核产物与设定评审入口。")}
@@ -2044,6 +1941,7 @@ export function SidebarTree({ user, onToggleSidebar }: SidebarTreeProps) {
                     />
                     <TreeNode
                       icon={ClipboardCheck}
+                      iconTone="review"
                       label="创作评审"
                       depth={1}
                       hoverCard={staticHoverCard("创作评审", ClipboardCheck, "全部创作检查点的评分与评审意见总览。")}
@@ -2058,34 +1956,30 @@ export function SidebarTree({ user, onToggleSidebar }: SidebarTreeProps) {
             )
           })
         )}
-        </SidebarHoverProvider>
+        </div>
       </div>
 
-      <div className="flex shrink-0 items-center justify-between gap-2 border-t border-sidebar-border px-2.5 py-2">
-        <DropdownMenu>
+      <div className="account-footer flex shrink-0 items-center justify-between gap-2 border-t border-sidebar-border">
+        <NavigationMenu>
           <DropdownMenuTrigger
             render={
               <button
                 type="button"
-                aria-label="账号菜单"
-                className="flex min-w-0 flex-1 items-center gap-2 rounded-[7px] px-1.5 py-1 text-left transition-colors hover:bg-hover-wash"
+                aria-label={`账号菜单：${user.name} ${user.email}`}
+                className="account-button flex min-w-0 flex-1 items-center rounded-[7px] text-left transition-colors hover:bg-hover-wash"
               />
             }
           >
-            <span className="relative flex size-6 shrink-0 items-center justify-center overflow-hidden rounded-full bg-active-wash text-[11px] font-semibold text-primary">
+            <span className="avatar relative flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-active-wash text-[11px] font-semibold text-primary">
               {user.name.slice(0, 1).toUpperCase()}
               {user.avatarUrl && <img key={user.avatarUrl} src={user.avatarUrl} alt="" className="absolute inset-0 size-full object-cover" onError={event => { event.currentTarget.hidden = true }} />}
             </span>
-            <span className="flex min-w-0 flex-col">
-              <span className="truncate text-[12.5px] leading-[1.3] font-medium">
-                {user.name}
-              </span>
-              <span className="truncate font-mono text-[10.5px] leading-[1.3] text-muted-foreground">
-                {user.email}
-              </span>
+            <span className="account-text flex min-w-0 flex-1 flex-col">
+              <NavigationLabel className="account-name font-medium">{user.name}</NavigationLabel>
+              {user.email && <NavigationLabel className="account-email font-mono text-muted-foreground">{user.email}</NavigationLabel>}
             </span>
           </DropdownMenuTrigger>
-          <DropdownMenuContent side="top" align="start">
+          <NavigationMenuContent side="top" align="start">
             {/* 用户信息（Label 不可点击）：头像 + 用户名（大字）+ 邮箱（小字 muted） */}
             <DropdownMenuGroup>
               <DropdownMenuLabel className="flex items-center gap-2.5 px-2 py-2">
@@ -2094,12 +1988,8 @@ export function SidebarTree({ user, onToggleSidebar }: SidebarTreeProps) {
                   {user.avatarUrl && <img key={user.avatarUrl} src={user.avatarUrl} alt="" className="absolute inset-0 size-full object-cover" onError={event => { event.currentTarget.hidden = true }} />}
                 </span>
                 <span className="flex min-w-0 flex-col">
-                  <span className="truncate text-[15px] leading-[1.35] font-semibold text-foreground">
-                    {user.name}
-                  </span>
-                  <span className="truncate font-mono text-[11px] leading-[1.4] text-muted-foreground">
-                    {user.email}
-                  </span>
+                  <NavigationLabel className="text-[15px] leading-[1.35] font-semibold text-foreground">{user.name}</NavigationLabel>
+                  {user.email && <NavigationLabel className="font-mono text-[11px] leading-[1.4] text-muted-foreground">{user.email}</NavigationLabel>}
                 </span>
               </DropdownMenuLabel>
             </DropdownMenuGroup>
@@ -2124,8 +2014,8 @@ export function SidebarTree({ user, onToggleSidebar }: SidebarTreeProps) {
               <Settings />
               设置
             </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+          </NavigationMenuContent>
+        </NavigationMenu>
 
       </div>
 
@@ -2231,107 +2121,8 @@ export function SidebarTree({ user, onToggleSidebar }: SidebarTreeProps) {
         novels={novels ?? []}
       />
 
-      {/* 新建情景试验场：标题 + 参演角色多选（AI 演/我来演）；场景与开场剧情在面板内配置 */}
-      {dialog?.type === "scenario-create" && (
-        <ScenarioCreateDialog
-          novel={dialog.novel}
-          open
-          pending={createScenarioMutation.isPending}
-          onOpenChange={(open) => {
-            if (!open) setDialog(null)
-          }}
-          onSubmit={(payload) => {
-            if (dialog?.type !== "scenario-create") return
-            createScenarioMutation.mutate({
-              novel: dialog.novel,
-              title: payload.title,
-              cast: payload.cast,
-            })
-          }}
-        />
-      )}
-
-      {/* 重命名情景试验场 */}
-      <Dialog
-        open={dialog?.type === "scenario-rename"}
-        onOpenChange={(open) => {
-          if (!open) setDialog(null)
-        }}
-      >
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>重命名情景试验场</DialogTitle>
-            <DialogDescription>为这个试验场起一个新名字。</DialogDescription>
-          </DialogHeader>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault()
-              const title = titleInput.trim()
-              if (dialog?.type === "scenario-rename" && title) {
-                renameScenarioMutation.mutate({
-                  novel: dialog.novel,
-                  scenario: dialog.scenario,
-                  title,
-                })
-              }
-            }}
-            className="flex flex-col gap-4"
-          >
-            <Input
-              autoFocus
-              value={titleInput}
-              onChange={(e) => setTitleInput(e.target.value)}
-              placeholder="如：雨夜客栈的相遇"
-              maxLength={100}
-            />
-            <DialogFooter>
-              <Button
-                type="submit"
-                disabled={!titleInput.trim() || renameScenarioMutation.isPending}
-              >
-                {renameScenarioMutation.isPending && <Loader2 className="animate-spin" />}
-                保存
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
-
-      {/* 删除情景试验场确认 */}
-      <Dialog
-        open={dialog?.type === "scenario-delete"}
-        onOpenChange={(open) => {
-          if (!open) setDialog(null)
-        }}
-      >
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>删除情景试验场</DialogTitle>
-            <DialogDescription>
-              {dialog?.type === "scenario-delete"
-                ? `确定要删除试验场「${dialog.scenario.title}」吗？推演记录、情节点、分镜卡与样文将一并删除，该操作不可撤销。`
-                : ""}
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setDialog(null)}>
-              取消
-            </Button>
-            <Button
-              variant="destructive"
-              disabled={deleteScenarioMutation.isPending}
-              onClick={() => {
-                if (dialog?.type === "scenario-delete") {
-                  deleteScenarioMutation.mutate({ novel: dialog.novel, scenario: dialog.scenario })
-                }
-              }}
-            >
-              {deleteScenarioMutation.isPending && <Loader2 className="animate-spin" />}
-              确认删除
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <ScenarioLibraryDialog session={scenarioSession} scope={scope} onClose={() => setScenarioSession(null)} fallbackFocus={() => tabRefs.current[view]} />
     </div>
+    </SidebarHoverProvider></NavigationTransientBoundary>
   )
 }

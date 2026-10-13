@@ -1,5 +1,7 @@
 # 模型 UI 预设依据
 
+> 2026-10-13 最新用户要求：供应商「字节跳动」展示名及供应商 Logo 改为「火山引擎」。文生图菜单仅保留火山引擎和 OpenAI，不再提供其它供应商或自定义；文本供应商范围保持。已保存的其它文生图配置保留并可编辑。内部 bytedance ID、方舟端点与协议保持兼容。实施与验证见 `reviews/2026-10-13-image-provider-plan.md`。
+
 日期：2026-10-07。范围：预设隐藏元数据与官方依据，不构成真实模型接口验收。UI v0.11 非自定义仅显示 Key/模型搜索下拉；协议/端点不是可见复杂字段。安装版按作者所选供应商/Key发现完整目录，当前原型不联网。主协议只有 OpenAI / Anthropic。
 
 | 供应商 | 隐藏的默认协议/端点 | 官方依据与注意事项 |
@@ -15,7 +17,7 @@
 | 阿里巴巴 | OpenAI / https://dashscope.aliyuncs.com/compatible-mode/v1 | [官方兼容说明](https://www.alibabacloud.com/help/en/model-studio/compatibility-of-openai-with-dashscope)；北京预设依据 [官方端点](https://help.aliyun.com/en/model-studio/base-url)；区域/工作空间 Key 隔离，其他端点走自定义，不静默替换 |
 | MiniMax | OpenAI / https://api.minimax.io/v1 | [官方 OpenAI 格式](https://platform.minimax.io/docs/api-reference/text-openai-api)；模型 ID/计划与接口能力单独确认 |
 | 腾讯 | OpenAI / https://tokenhub.tencentmaas.com/v1 | [2026-09-30 旧平台停服及迁移公告](https://cloud.tencent.com/document/product/1729/131925)：新增配置使用 TokenHub 国内站 Key；不自动修改已有端点或迁移旧 Key，图像预设的国际站凭据另行配置 |
-| 字节跳动 | OpenAI / https://ark.cn-beijing.volces.com/api/v3 | [方舟快速开始](https://docs.volcengine.com/docs/ark/quick-start?lang=zh)；北京区域，目录与 Key 权限分开核验 |
+| 火山引擎 | OpenAI / https://ark.cn-beijing.volces.com/api/v3 | [方舟快速开始](https://docs.volcengine.com/docs/ark/quick-start?lang=zh)；北京区域，目录与 Key 权限分开核验 |
 | 自定义 | 协议空值，用户选择 OpenAI / Anthropic | 用户填写名称、端点、模型 ID；HTTPS 或本机回环 HTTP，禁止 URL 内凭据，草稿改地址/协议须重新输入 Key，成功保存才撤销旧授权 |
 
 模型配置使用独立草稿，「保存模型 / 测试连接 / 取消」右对齐。外观、快捷键、智能体即时更新，用户资料独立保存。非自定义隐藏协议/地址/参数；必要参数由真实模型元数据与原 Web 契约决定，未支持字段不发送。草稿取消不改旧模型，成功提交供应商/协议/地址变更或替换 Key（含同一端点）才撤销旧授权并增加授权版本；新 Key 不沿用旧权限验证状态。

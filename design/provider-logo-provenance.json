@@ -5,6 +5,16 @@
   "integrity": "sha512-Hw7EPPgVnC4NZLXBfTNJG6hyQgqECfUPC11VVXodPSr1aebKcFxDZlSpxhWwYNdCc6bhxps/x5TtXoPmfKH2ag==",
   "assets": [
     {
+      "target": "public/brands/providers/volcengine.svg",
+      "packageAsset": "volcengine-color.svg",
+      "originalSha256": "84f9e2cd1da7e73dc6c9a0f2521745d39cae96c008752cdb1baf57a8c94393a1",
+      "sha256": "84f9e2cd1da7e73dc6c9a0f2521745d39cae96c008752cdb1baf57a8c94393a1",
+      "method": "unaltered color SVG from the pinned package; archive SHA-512 checked against this manifest integrity",
+      "license": "MIT package asset; Volcengine trademark belongs to its owner",
+      "reference": "https://www.volcengine.com/",
+      "checkedAt": "2026-10-13"
+    },
+    {
       "target": "design/assets/providers/openai.svg",
       "packageAsset": "openai.svg",
       "originalSha256": "a595df6b423920c67a7f8f73c063e4bfb72d415948097b6cac063a2366bb5186",

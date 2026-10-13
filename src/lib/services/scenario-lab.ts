@@ -356,7 +356,7 @@ export async function updateScenarioLab(
   data: UpdateScenarioLabInput
 ): Promise<ScenarioLabDTO> {
   return prisma.$transaction(async tx => {
-  const existing = await prisma.scenarioLab.findUnique({ where: { id: labId } })
+  const existing = await tx.scenarioLab.findUnique({ where: { id: labId } })
   if (!existing) throw new ScenarioLabNotFoundError()
 
   await lockSceneTree(tx, existing.novelId)

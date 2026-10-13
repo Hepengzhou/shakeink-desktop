@@ -1,0 +1,37 @@
+{
+  "scope": "Offline HTML review artifact in headless Windows Chrome; not product, native Electron menu, real system clipboard, macOS, or physical IME acceptance.",
+  "checks": [
+    {
+      "name": "Initial body preview has precise selection and seven-item menu without undo/redo or empty history separators"
+    },
+    {
+      "name": "Quote appends exact selected text to existing draft and focuses composer; send stays disabled"
+    },
+    {
+      "name": "Real mouse selection and single right click on AI 对话"
+    },
+    {
+      "name": "Real mouse selection and single right click on Markdown 预览"
+    },
+    {
+      "name": "Real mouse selection and single right click on 正文预览"
+    },
+    {
+      "name": "User-sent chat message partial mouse selection can be copied"
+    }
+  ],
+  "pageErrors": [],
+  "httpRequests": [],
+  "sourceHashes": {
+    "src/components/layout/ChatPanel.tsx": "a00444df1f152938545938aaa85462feb9c40e870179560f787a9df711942a4e",
+    "src/components/editor/MarkdownPreview.tsx": "cfffcdbc52c76aee3ea13269524c50fcca7724ba4a019bf3754dd56bd5445a4b",
+    "src/components/editor/MonacoMarkdownEditor.tsx": "d66661a71f6cc81c9a26b9a485f5eacaf591c4dd70c2a7513b6b0300f8e87549",
+    "src/lib/desktop/input-commands.ts": "275ee130276836764044f7368c569dbd06dd96b7014a19339cbca713fa38e532",
+    "src/lib/desktop/native-text-edits.ts": "8fa026d2f4505e2a6f2e33a690d0ce523b51ba04a00018f2eafb5fda55a6884e",
+    "desktop/main/input-context-menu.ts": "5af75ec62e718fa01b5011cc56fb535f07fb8b6ff0025442a5bb8be3dbdf27d5",
+    "desktop/shared/input-context-menu.ts": "fccaa869ae96fbd2a9a8c12542f7dedcf48cf59c9dad121d30dda5c1b2a338db",
+    "src/app/desktop.css": "ae4edb7764953083023ded07d4d04ec9706f173ed20f4b2b033d144c785d9063"
+  },
+  "status": "failed",
+  "failure": "AssertionError [ERR_ASSERTION]: A whole user-message selection may end at its parent boundary and must remain copyable\n    at file:///D:/Projects/xaanink-desktop/design/text-context-menu/verify-preview.mjs:79:10"
+}

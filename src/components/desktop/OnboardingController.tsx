@@ -3,6 +3,7 @@ import {useEffect,useRef,useState} from 'react'
 import {ArrowRight,Check,LoaderCircle} from 'lucide-react'
 import {Dialog,DialogContent,DialogTitle,DialogDescription} from '@/components/ui/dialog'
 import {Button} from '@/components/ui/button'
+import {ProjectStarPrompt} from './ProjectStarPrompt'
 import {ProfileEditorDialog} from './ProfileSettings'
 import {ModelConfigurationDialog} from './ModelConfigurationDialog'
 import {useDesktopStore,createDesktopOnboardingCommit} from '@/stores/desktop'
@@ -79,7 +80,7 @@ export function OnboardingController({request,suspended,onExit,finalFocus}:{requ
     <span className="desktop-onboarding-theme-meta"><strong className="desktop-onboarding-theme-name">{theme.name}</strong><span className="desktop-onboarding-theme-check" aria-hidden="true">{bootstrap.settings.appearance.theme===theme.id&&<Check size={13}/>}</span></span><span className="desktop-onboarding-theme-caption">{theme.caption}</span>
    </label>)}</div>}
    {step==='image-choice'&&<><div className="desktop-onboarding-choice-feature"><button type="button" className="choice-art-trigger" aria-label="配置文生图模型" disabled={busy||confirmationPending} onClick={()=>action({type:'image-choice',choice:'configure'})}><img className="choice-collage" src="/onboarding/xianxia-character-scene-v2.png" width="1774" height="887" alt="仙侠角色与云海山峦、楼阁场景的拼贴展示图"/><span className="choice-art-shade" aria-hidden="true"/><span className="choice-art-caption" aria-hidden="true"><span className="choice-art-label">配置文生图模型</span></span></button><div className="desktop-onboarding-choice-copy"><strong>给文字添一幅画</strong><p>封面、角色与场景图片<br/>使用你自己配置的文生图模型。</p></div></div><p className="desktop-onboarding-choice-info">这一步可以跳过。<br/>以后可在“设置 → 模型”中添加，不影响文本创作。</p></>}
-   {step==='welcome'&&<><p className="desktop-onboarding-welcome-greeting">{bootstrap.settings.user.penName}，你好。</p><p className="desktop-onboarding-welcome-copy">从一个灵感、一段文字开始，<br/>写出属于你的作品。</p></>}
+   {step==='welcome'&&<><p className="desktop-onboarding-welcome-greeting">{bootstrap.settings.user.penName}，你好。</p><p className="desktop-onboarding-welcome-copy">从一个灵感、一段文字开始，<br/>写出属于你的作品。</p><ProjectStarPrompt surface="welcome"/></>}
    {step==='entry'&&<p className="desktop-onboarding-choice-info">主题与用户信息保留，无需再次填写。<br/>暂不配置也可以继续使用本地写作功能。</p>}
    {feedback}
   </div>

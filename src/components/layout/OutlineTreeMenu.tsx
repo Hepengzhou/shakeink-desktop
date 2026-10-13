@@ -12,10 +12,11 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { DropdownMenuItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import type { ManuscriptExportFormat } from "@/lib/manuscript-export"
 import type { OutlineCollection, OutlineDeletionPreview, OutlineDeletionReceipt, OutlineExportKind } from "@/lib/outline-collection"
 import { buildTabId, useTabsStore } from "@/stores/tabs"
+import { NavigationMenu, NavigationMenuContent } from "./sidebar-navigation-state"
 
 type Action = "add-volume" | "add-chapter" | "rename" | "delete" | null
 
@@ -123,11 +124,11 @@ export function OutlineTreeMenu({ novel, volume, kind }: {
   }
 
   return <>
-    <DropdownMenu>
+    <NavigationMenu>
       <DropdownMenuTrigger render={<button type="button" aria-label={label} className="flex size-6 shrink-0 items-center justify-center rounded-md text-muted-foreground opacity-0 hover:bg-muted-foreground/15 group-hover:opacity-100 group-focus-within:opacity-100 data-popup-open:opacity-100" />}>
         <MoreHorizontal aria-hidden="true" className="size-4" />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="w-48">
+      <NavigationMenuContent align="start" className="w-48">
         {/* 根部菜单同样提供「添加卷」：侧栏大纲树退役后正文树是唯一手工卷章入口，删除全部卷章后的重建依赖它 */}
         <DropdownMenuItem onClick={() => openDialog(volume ? "add-chapter" : "add-volume")}>
           {volume ? <FilePlus2 aria-hidden="true" /> : <FolderPlus aria-hidden="true" />}{volume ? "添加章节" : "添加卷"}
@@ -143,8 +144,8 @@ export function OutlineTreeMenu({ novel, volume, kind }: {
         </DropdownMenuSub>)}
         <DropdownMenuSeparator />
         <DropdownMenuItem variant="destructive" onClick={() => openDialog("delete")}><Trash2 aria-hidden="true" />{volume ? "删除本卷" : "删除全部卷章"}</DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+      </NavigationMenuContent>
+    </NavigationMenu>
     <Dialog open={dialog !== null} onOpenChange={open => { if (!open && !busy) setDialog(null) }}>
       <DialogContent showCloseButton={!busy}>
         <form className="contents" onSubmit={event => { event.preventDefault(); void submit() }}>

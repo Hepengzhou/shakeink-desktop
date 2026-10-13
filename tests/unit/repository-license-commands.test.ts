@@ -3,6 +3,8 @@ import { readFileSync } from "node:fs"
 import { test } from "node:test"
 import ts from "typescript"
 import { transformSync } from "esbuild"
+import {displayAppVersion} from '../../desktop/shared/project-info'
+import {projectAboutHtml,installProjectAboutLinks} from '../../desktop/main/project-about'
 
 // Exercise the actual command dispatcher with controlled native dependencies.
 // These checks do not constitute native Electron acceptance.
@@ -16,12 +18,14 @@ function rig(platform = "darwin", closingFlow = false, closed = false) {
   let shown = 0
   const app = { getVersion: () => "0.2.3", setAboutPanelOptions: (options: unknown) => panels.push(options), showAboutPanel: () => { shown++ } }
   class BrowserWindow {
+    webContents={on(){},setWindowOpenHandler(){}}
     setMenu() {}
     async loadURL(url: string) { aboutPages.push(url) }
   }
-  const execute = new Function("process", "closingFlow", "businessGate", "commands", "shell", "app", "BrowserWindow", "window", `${code}\nreturn executeCommand`)(
+  const execute = new Function("process", "closingFlow", "businessGate", "commands", "shell", "app", "BrowserWindow", "window", "displayAppVersion", "projectAboutHtml", "installProjectAboutLinks", "repository", "nativeTheme", "dialog", `${code}\nreturn executeCommand`)(
     { platform }, closingFlow, { closed }, { commands: [{ id: "help.feedback" }, { id: "app.about" }] },
     { openExternal: async (url: string) => { urls.push(url) } }, app, BrowserWindow, undefined,
+    displayAppVersion,projectAboutHtml,installProjectAboutLinks,{read:async()=>({settings:{appearance:{theme:'paper'}}})},{shouldUseDarkColors:false},{showMessageBox:async()=>{}},
   ) as (id: string) => Promise<void>
   return { execute, urls, panels, aboutPages, shown: () => shown }
 }
@@ -35,7 +39,7 @@ test("feedback opens the current desktop repository", async () => {
 test("macOS About shows GPL-3.0 and the installed version", async () => {
   const r = rig()
   await r.execute("app.about")
-  assert.deepEqual(r.panels, [{ applicationName: "玄印写作", applicationVersion: "0.2.3", copyright: "GPL-3.0 · XaanInk" }])
+  assert.deepEqual(r.panels, [{ applicationName: "玄印写作", applicationVersion: "0.2.3", version: "", copyright: "GPL-3.0 · XaanInk" }])
   assert.equal(r.shown(), 1)
 })
 

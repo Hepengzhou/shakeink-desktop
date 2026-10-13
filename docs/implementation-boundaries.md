@@ -1,5 +1,17 @@
 # UI 批准与实施边界
 
+<!-- USER-2026-10-13-CONTENT-DRAWER BEGIN -->
+> **2026-10-13 用户“UI 交互审核通过，可以继续”，批准右侧内容抽屉设计。** 来源为 `design/content-drawer/product-design.md` 和对应 HTML：收放期间完整宽度及布局固定、向右平移与裁切，沿用左侧曲线和时长；快速换向、状态保活、焦点、窄窗口及 resize 边界按设计落实。本范围覆盖原总体显隐动画不得修改的限制，继续复用真实 DashboardShell、Group/Panel、ContentTabs、29 类面板和 MarkdownEditor。按技术方案及独立审核、用例及独立审核、TDD、code review、回归和实际目标验证自动推进；批准不代表实现或测试通过。
+<!-- USER-2026-10-13-CONTENT-DRAWER END -->
+
+<!-- USER-2026-10-13-SIDEBAR-NAVIGATION BEGIN -->
+> **2026-10-13 用户“UI 设计审核通过，可以继续”，批准左侧导航 v8。** 实施来源为 `design/sidebar-navigation/product-design.md`、对应 HTML 与正式技术方案：五分类 Tabs、真实作品分组折叠、品牌、入口及图标/身份色、条件渐隐、场景/试验场单行入口与固定形态抽屉。此范围覆盖下表导航原排版和收放动画的限制；仍复用真实 SidebarTree、DashboardShell、Group/Panel，保留真实业务查询、操作与右侧面板。ChatPanel/ContentTabs 仅允许 caption 恢复入口联动，不改业务渲染。按独立方案审核、用例审核、TDD、code review、回归和实际目标验证继续，无须重复 UI 批准；批准不代表测试通过。
+<!-- USER-2026-10-13-SIDEBAR-NAVIGATION END -->
+
+<!-- USER-2026-10-13-TEXT-CONTEXT-MENU BEGIN -->
+> **2026-10-13 用户“UI 设计审核通过，可以继续”，批准文本右键菜单修订稿。** 依据 `design/text-context-menu/product-design.md` 与对应HTML：覆盖已有可选文本，引用追加现有草稿不发送；非输入框/非编辑文字无撤销重做；用户聊天消息部分/整段选区可复制。真实产品复用Web组件并使用Electron原生菜单。按独立方案审核、用例审核、TDD、code review和实际验收继续；此批准不代表已完成实现或测试。
+<!-- USER-2026-10-13-TEXT-CONTEXT-MENU END -->
+
 <!-- USER-2026-10-12-CHAT-EMPTY-STATE BEGIN -->
 > **最新批准（2026-10-12）：用户“UI 审核通过，可以继续”，批准 AI 对话首屏 v3.4。** 对纯净空态允许采用 `design/chat-empty-state/product-design.md` 与对应 HTML 的中央 Logo/标题/七卡、底部输入框、双主题和悬停动画；四功能卡同尺寸、左图标固定，宣纸右图暖黄灰，题材入口预选原创作向导，三功能入口填入提示词。此范围覆盖下表对话行“保留原排版”的空态限制；消息/业务状态仍保留原真实 React、同一 composer 及原向导，不将 HTML 或模拟数据导入产品。无模型可准备草稿但发送禁用。方案、用例、代码审核和真实目标验证仍按 AGENTS.md 顺序执行。实施记录见 `docs/reviews/2026-10-12-chat-empty-state-plan.md`，此批准不代表实现或验收已完成。
 <!-- USER-2026-10-12-CHAT-EMPTY-STATE END -->

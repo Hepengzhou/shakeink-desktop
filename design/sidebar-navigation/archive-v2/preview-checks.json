@@ -1,0 +1,147 @@
+{
+  "revision": "v2",
+  "scope": "Offline synthetic HTML design in headless Windows Chrome. Not real React product, Electron, installed package, macOS or physical keyboard acceptance.",
+  "status": "passed",
+  "checks": [
+    {
+      "name": "v2 32px creation rows, 4px gap, 14/20px typography, centred 18px icons; retained 72/52/32px account area",
+      "sidebar": 260,
+      "createHeights": [
+        32,
+        32
+      ],
+      "createGap": 4,
+      "footerHeight": 72,
+      "accountHeight": 52,
+      "avatar": 32,
+      "createTypography": [
+        {
+          "fontSize": "14px",
+          "lineHeight": "20px",
+          "fontWeight": "500",
+          "paddingLeft": "12px",
+          "paddingRight": "12px",
+          "gap": "10px",
+          "iconCentreError": 0,
+          "textCentreError": 0
+        },
+        {
+          "fontSize": "14px",
+          "lineHeight": "20px",
+          "fontWeight": "500",
+          "paddingLeft": "12px",
+          "paddingRight": "12px",
+          "gap": "10px",
+          "iconCentreError": 0,
+          "textCentreError": 0
+        }
+      ],
+      "icons": [
+        {
+          "name": "NotebookPen",
+          "size": 18,
+          "stroke": "1.7px"
+        },
+        {
+          "name": "MessageCircle",
+          "size": 18,
+          "stroke": "1.7px"
+        }
+      ]
+    },
+    {
+      "name": "No attribute entry; scenario has no expand arrow, child records or inline empty state"
+    },
+    {
+      "name": "Short labels have no mask; titles remain complete",
+      "shortLabels": 34
+    },
+    {
+      "name": "Creation buttons demonstrate their original destinations without creating actual data"
+    },
+    {
+      "name": "Both themes use existing sidebar palette and geometry"
+    },
+    {
+      "name": "Long names fade only their last 24px across works/worlds/characters/scenes/conversations/unavailable works/account and matching Tabs",
+      "overflowLabels": [
+        "尚未建档的很长一段脑洞讨论及关于人物成长的补充思考",
+        "目录暂不可用的很长作品名称与补充说明",
+        "雨灯纪事：一部跨越山海与旧城的长篇幻想小说",
+        "青石城及其外海群岛与旧王朝的世界设定",
+        "林舟与长夜行船者的另一重身份",
+        "长街尽头的灯铺与连接旧城的石桥",
+        "旧渡口西侧穿过雨幕仍可看见的第一盏灯",
+        "第一章 · 雨灯长明与旅人尚未说出口的约定",
+        "我想从一场雨夜开始这个故事，并讨论长篇作品的角色关系与主线走向",
+        "这是一个用来审核渐隐效果的很长的示意用户名称",
+        "long.review.account.name@example.invalid",
+        "第一章 · 雨灯长明与旅人的约定"
+      ]
+    },
+    {
+      "name": "Main-role badge and scenario action retain fixed visible space"
+    },
+    {
+      "name": "Resize recalculates overflow; a previously clipped label becomes fully visible at 420px"
+    },
+    {
+      "name": "200px wide / 500px high retains fixed top and account while tree scrolls; no horizontal overflow"
+    },
+    {
+      "name": "Account menu includes conditional fading for name/email; arrow navigation and Escape restore trigger focus"
+    },
+    {
+      "name": "Single scenario entry opens managed list with unchanged navigation, and closes to the entry"
+    },
+    {
+      "name": "Direct plus creation cancellation returns to plus without opening a list"
+    },
+    {
+      "name": "Creation opened from library returns to library new button on cancellation"
+    },
+    {
+      "name": "Scenario empty/loading/error/retry remain distinct and create stays reachable"
+    },
+    {
+      "name": "Rename cancellation and successful synthetic rename return to the original record"
+    },
+    {
+      "name": "Delete cancellation preserves list; synthetic confirmed deletion restores new button focus"
+    },
+    {
+      "name": "Opening a synthetic existing record closes list and highlights the single scenario entry"
+    },
+    {
+      "name": "Synthetic create success demonstrates opening original detail without adding tree children"
+    },
+    {
+      "name": "Empty/loading/error work states preserve creation and account; retry returns populated view"
+    },
+    {
+      "name": "480px review viewport fits 420px sidebar and bounds management dialog",
+      "dialog": {
+        "x": 16,
+        "y": 246.015625,
+        "width": 448,
+        "height": 307.96875
+      }
+    },
+    {
+      "name": "No browser errors or HTTP requests; all inspected production source hashes unchanged"
+    }
+  ],
+  "pageErrors": [],
+  "httpRequests": [],
+  "sourceHashes": {
+    "src/components/layout/SidebarTree.tsx": "0217efce432a30aafa32eb456f71a03b41901a0919be0a219ad5a8c466d63cef",
+    "src/components/layout/ContentTabs.tsx": "7fbb7ae0915410d9fa62b501c06f27f9c98f85b35f6fb23b5dec979be39a40d3",
+    "src/components/layout/DashboardShell.tsx": "096856e0820166db756ab20f7b925a73de917fddfb28d77c0deddb721ee44b72",
+    "src/components/content/scene/SceneTree.tsx": "8911a145ef8091dd7e17ccba9746e7f72426a8dc8ba45acd87323a65a50814c7",
+    "src/components/desktop/UnavailableWorks.tsx": "a23a00d96430dfd259bea3a064615783196806d55b8b1338e912fd194d3f7ea8",
+    "src/app/desktop.css": "ae4edb7764953083023ded07d4d04ec9706f173ed20f4b2b033d144c785d9063"
+  },
+  "productTests": "not-run",
+  "nativeAcceptance": "not-run",
+  "browser": "154.0.8037.98"
+}

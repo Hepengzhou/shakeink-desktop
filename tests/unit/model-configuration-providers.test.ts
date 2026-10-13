@@ -5,12 +5,12 @@ import { setImmediate as tick } from "node:timers/promises"
 import { ModelGateway } from "../../desktop/core/model-authorization"
 import { defaultState } from "../../desktop/core/settings"
 import { ModelConfigurationService, type ModelConfigurationOptions } from "../../desktop/main/model-configuration"
-import { presetsFor, type ConfigurationDraft } from "../../desktop/shared/model-catalog"
+import { PROVIDER_PRESETS, type ConfigurationDraft } from "../../desktop/shared/model-catalog"
 
 const secret = "provider-test-key-main-only"
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status })
 function draft(provider: ConfigurationDraft["provider"], kind: ConfigurationDraft["kind"] = "TEXT", modelId = "test-model"): ConfigurationDraft {
-  const preset = presetsFor(kind).find(p => p.id === provider)!
+  const preset = PROVIDER_PRESETS.find(p => p.id === provider)!
   return { provider, kind, protocol: preset.protocol ?? "openai", endpoint: (kind === "TEXT" ? preset.textEndpoint : preset.imageEndpoint)!, apiKey: secret, modelId }
 }
 function fixture(fetcher: typeof fetch, options: Partial<ModelConfigurationOptions> = {}) {

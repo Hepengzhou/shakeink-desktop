@@ -73,7 +73,7 @@ export const PROVIDER_PRESETS: readonly ProviderPreset[] = [
   { id: "xiaomi", name: "Xiaomi", protocol: "openai", textEndpoint: "https://api.xiaomimimo.com/v1", sources: ["https://mimo.mi.com/docs/en-US/api/model/list-models", "https://platform.xiaomimimo.com/docs/en-US/usage-guide/passing-back-reasoning_content"] },
   { id: "minimax", name: "MiniMax", protocol: "openai", textEndpoint: "https://api.minimax.cn/v1", imageEndpoint: "https://api.minimax.cn/v1", sources: ["https://platform.minimax.cn/docs/api-reference/text-openai-api", "https://platform.minimax.cn/docs/api-reference/image-generation-t2i"] },
   { id: "tencent", name: "腾讯", protocol: "openai", textEndpoint: "https://tokenhub.tencentmaas.com/v1", imageEndpoint: "https://tokenhub-intl.tencentcloudmaas.com/v1", sources: ["https://cloud.tencent.com/document/product/1729/131925", "https://intl.cloud.tencent.com/zh/document/product/1300/83708"] },
-  { id: "bytedance", name: "字节跳动", protocol: "openai", textEndpoint: "https://ark.cn-beijing.volces.com/api/v3", imageEndpoint: "https://ark.cn-beijing.volces.com/api/v3", sources: ["https://docs.volcengine.com/docs/ark/model-list?lang=zh", "https://docs.volcengine.com/docs/ark/image-generation-api?lang=zh"] },
+  { id: "bytedance", name: "火山引擎", protocol: "openai", textEndpoint: "https://ark.cn-beijing.volces.com/api/v3", imageEndpoint: "https://ark.cn-beijing.volces.com/api/v3", sources: ["https://docs.volcengine.com/docs/ark/model-list?lang=zh", "https://docs.volcengine.com/docs/ark/image-generation-api?lang=zh"] },
   { id: "openai", name: "OpenAI", protocol: "openai", textEndpoint: "https://api.openai.com/v1", imageEndpoint: "https://api.openai.com/v1", sources: ["https://developers.openai.com/api/reference/resources/models/methods/list"] },
   { id: "anthropic", name: "Anthropic", protocol: "anthropic", textEndpoint: "https://api.anthropic.com", sources: ["https://platform.claude.com/docs/en/api/http/models"] },
   { id: "google", name: "Google", protocol: "openai", textEndpoint: "https://generativelanguage.googleapis.com/v1beta/openai", imageEndpoint: "https://generativelanguage.googleapis.com/v1beta", sources: ["https://ai.google.dev/api/models", "https://ai.google.dev/gemini-api/docs/image-generation"] },
@@ -81,5 +81,5 @@ export const PROVIDER_PRESETS: readonly ProviderPreset[] = [
   { id: "custom", name: "自定义供应商", sources: [] },
 ]
 export function presetsFor(kind: ConfigurationKind): ProviderPreset[] {
-  return PROVIDER_PRESETS.filter(preset => preset.id === "custom" || !!(kind === "TEXT" ? preset.textEndpoint : preset.imageEndpoint)).map(preset => ({ ...preset, sources: [...preset.sources] }))
+  return PROVIDER_PRESETS.filter(preset => kind === "IMAGE" ? preset.id === "bytedance" || preset.id === "openai" : preset.id === "custom" || !!preset.textEndpoint).map(preset => ({ ...preset, sources: [...preset.sources] }))
 }

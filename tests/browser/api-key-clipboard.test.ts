@@ -16,7 +16,7 @@ import {Input} from './src/components/ui/input';import {DesktopCommandController
 import {useDesktopStore} from './src/stores/desktop';import {defaultState} from './desktop/core/settings';
 globalThis.keyState='public-fixture';globalThis.clipboard='paste-fixture';globalThis.writes=[];globalThis.menus=[];globalThis.errors=[];
 let writeGate=null,menuGate=null;
-window.desktop={writeClipboardText:async text=>{globalThis.writes.push(text);await writeGate?.promise},readClipboardText:async()=>globalThis.clipboard,showInputContextMenu:async state=>{globalThis.menus.push(state);return await menuGate?.promise??null}};
+window.desktop={writeClipboardText:async text=>{globalThis.writes.push(text);await writeGate?.promise},readClipboardText:async()=>globalThis.clipboard,showTextContextMenu:async state=>{globalThis.menus.push(state);return {requestId:state.requestId,command:await menuGate?.promise??null}},cancelTextContextMenu:async()=>{}};
 useDesktopStore.setState({bootstrap:{...defaultState,platform:'darwin'}});
 function App(){const [value,setValue]=useState('public-fixture');return <><DesktopCommandController/><Input aria-label='API Key' type='password' data-desktop-clipboard='api-key' value={value} onChange={e=>{globalThis.keyState=e.target.value;setValue(e.target.value)}}/><input id='outside'/><input id='ordinary' type='password' defaultValue='ordinary-fixture'/></>}
 const root=createRoot(document.getElementById('app'));flushSync(()=>root.render(<App/>));

@@ -1,17 +1,15 @@
 import test from "node:test"
 import assert from "node:assert/strict"
-import { readFile } from "node:fs/promises"
+import {projectAboutHtml} from '../../desktop/main/project-about'
 import { chromium } from "playwright-core"
 
 test("TS-ABOUT standalone production About document prevents selecting all UI text", async () => {
-  const source = await readFile("desktop/main/index.ts", "utf8")
-  const template = source.match(/encodeURIComponent\(`(<html lang="zh-CN"><meta[^`]*<\/html>)`\)/)?.[1]
-  assert.ok(template, "test must use the actual standalone About document")
+  const template = projectAboutHtml('0.synthetic','paper')
   const browser = await chromium.launch({ headless: true, ...(process.env.XAANINK_TEST_CHROMIUM ? { executablePath: process.env.XAANINK_TEST_CHROMIUM } : {}) })
   try {
-    const page = await browser.newPage({ viewport: { width: 400, height: 260 } })
+    const page = await browser.newPage({ viewport: { width: 440, height: 380 } })
     await page.route("**/*", route => route.abort())
-    await page.setContent(template.replace("${app.getVersion()}", "0.synthetic"))
+    await page.setContent(template)
     assert.equal(await page.locator("body").evaluate(el => getComputedStyle(el).userSelect), "none")
     for (const node of await page.locator("h1,p").all()) {
       await page.evaluate(() => window.getSelection()?.removeAllRanges())

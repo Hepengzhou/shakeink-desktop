@@ -7,7 +7,7 @@ import {join} from 'node:path'
 import {transformSync} from 'esbuild'
 import {ModelRepository} from '../../desktop/main/model-repository'
 import {defaultState,settingsSchema,parseContextWindow} from '../../desktop/core/settings'
-import {presetsFor} from '../../desktop/shared/model-catalog'
+import {PROVIDER_PRESETS,presetsFor} from '../../desktop/shared/model-catalog'
 import {modelChoices,excludedBuiltinModel} from '../../desktop/shared/builtin-model-catalog'
 import {onboardingStartup,onboardingDialogGuard} from '../../src/lib/desktop/onboarding-flow'
 import * as store from '../../src/stores/desktop'
@@ -32,12 +32,13 @@ function screen(){
    if(name==='@/components/ui/input')return primitives(['Input'])
    if(name==='./ModelChoiceSelect')return primitives(['ModelChoiceSelect'])
    if(name==='@desktop/core/settings')return{settingsSchema,parseContextWindow}
-   if(name==='@desktop/shared/model-catalog')return{presetsFor}
+   if(name==='@desktop/shared/model-catalog')return{PROVIDER_PRESETS,presetsFor}
    if(name==='@desktop/shared/builtin-model-catalog')return{modelChoices,excludedBuiltinModel}
    if(name==='@/lib/desktop/onboarding-flow')return{onboardingStartup,onboardingDialogGuard}
    if(name==='@/stores/desktop')return{...store,useDesktopStore:(select:any)=>select(store.useDesktopStore.getState())}
    if(name==='./ModelConfigurationDialog')return load('ModelConfigurationDialog')
    if(name==='./ProfileSettings')return primitives(['ProfileEditorDialog'])
+   if(name==='./ProjectStarPrompt')return primitives(['ProjectStarPrompt'])
    throw Error(`Unexpected integration dependency: ${name}`)
   });return module.exports
  }
@@ -67,11 +68,13 @@ for(const kind of ['TEXT','IMAGE']as const)test(`ONB-08 real ${kind} editor retr
   const bootstrap=async()=>({...await repo.read(),draftSessionId:sessionId,platform:'win32' as const,systemDark:false,version:'fixture',dataRoot:root})
   Object.defineProperty(globalThis,'window',{configurable:true,value:{desktop:{bootstrap,onboarding:async(action:OnboardingAction)=>{calls.push(structuredClone(action));return repo.commitOnboarding(action,()=>{})},cancelModelConfiguration:async()=>{}}}})
   store.useDesktopStore.setState({bootstrap:await bootstrap(),saving:0,error:null});ui=screen()
-  ui.fill('供应商','custom');ui.fill('协议','openai');ui.fill('供应商名称','专项夹具');ui.fill('展示名称',`${kind}新增`);ui.fill('Base URL','https://fixture.invalid/v1');ui.fill('模型 ID',`${kind.toLowerCase()}-new`);ui.fill('API Key','synthetic-integration-secret')
+  if(kind==='TEXT'){ui.fill('供应商','custom');ui.fill('协议','openai');ui.fill('供应商名称','专项夹具');ui.fill('展示名称',`${kind}新增`);ui.fill('Base URL','https://fixture.invalid/v1');ui.fill('模型 ID',`${kind.toLowerCase()}-new`)}
+  else{ui.fill('供应商','openai');ui.fill('可用模型',modelChoices('openai','IMAGE',null).find(item=>item.available!==false)!.id)}
+  ui.fill('API Key','synthetic-integration-secret')
   const initialEncryption=encrypted;fail=true;ui.click('继续')
   async function wait(predicate:()=>boolean){for(let n=0;n<150;n++){if(predicate())return;await new Promise(resolve=>setTimeout(resolve,10))}throw Error(`Integration condition timed out: calls=${calls.length}, alerts=${ui!.alerts().join(';')}`)}
   await wait(()=>store.useDesktopStore.getState().saving===0&&!!store.useDesktopStore.getState().error)
-  assert.equal(ui.find('展示名称').disabled,true);assert.equal(ui.find('继续').disabled,false);assert.equal(calls.length,1);assert.equal((await repo.read()).models.filter(m=>m.kind===kind).length,1);assert.equal(encrypted-initialEncryption,1)
+  assert.equal(ui.find(kind==='TEXT'?'展示名称':'可用模型').disabled,true);assert.equal(ui.find('继续').disabled,false);assert.equal(calls.length,1);assert.equal((await repo.read()).models.filter(m=>m.kind===kind).length,1);assert.equal(encrypted-initialEncryption,1)
   fail=false;ui.click('继续');await wait(()=>store.useDesktopStore.getState().saving===0&&calls.length===2)
   assert.deepEqual(calls[1],calls[0]);assert.equal(encrypted-initialEncryption,1);assert.equal((await repo.read()).models.filter(m=>m.kind===kind).length,1)
   assert.equal(ui.has('DialogTitle',kind==='TEXT'?'要配置文生图模型吗？':'欢迎使用'),true);await store.flushDesktopSettings()

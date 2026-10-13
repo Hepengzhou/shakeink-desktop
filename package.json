@@ -1,6 +1,6 @@
 {
   "name": "xaanink",
-  "version": "0.1.0",
+  "version": "0.10.0-alpha",
   "private": true,
   "scripts": {
     "test": "node --import tsx --test tests/unit/*.test.ts tests/integration/*.test.ts",

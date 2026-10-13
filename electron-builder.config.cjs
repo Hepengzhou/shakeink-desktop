@@ -29,6 +29,7 @@ module.exports = {
     '!out/**/{database,backups,.xuanxiang,.xuanxiang-storage,.xaanink,.xaanink-storage}/**/*',
   ],
   mac: {
+    extraFiles: [{from: 'build/Credits.html', to: 'Resources/Credits.html'}],
     icon: 'build/icon.icns',
     category: 'public.app-category.productivity',
     identity: null,

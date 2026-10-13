@@ -63,9 +63,11 @@ function controller(overrides:Record<string,string[]>={},mention:object|null=nul
  new Function("useDesktopCommands","textareaRef","canSend","isGenerating","mention","stop","handleSend","historyInput","flatMentionItems","setMentionIndex","selectMention","mentionIndex","mentionDismissedRef","setMention","insertToken","dispatchChatUiEvent","CHAT_OPEN_MODEL_PICKER_EVENT","useChatStore","setSearchOpen","document","syncFromEditor","hasLiveModel",registrations)(register,{current:composer},true,true,mention,()=>calls.push("stop"),()=>calls.push("send"),()=>{},[{}],()=>{},()=>calls.push("mention"),0,{current:null},()=>calls.push("close"),()=>{},()=>{},"models",{getState:()=>({requestChatFocus(){}})},()=>{},document,()=>{},()=>true)
  const dependencies:Record<string,unknown>={
   react:{useEffect(effect:()=>()=>void){cleanup.push(effect())}},sonner:{toast:{info(){},error(){}}},
-  "@/stores/desktop":{useDesktopStore:store,updateDesktopSettings:async()=>{}},"@/stores/tabs":{useTabsStore:{getState:()=>({activeTabId:null})}},
+  "@/stores/desktop":{useDesktopStore:store,updateDesktopSettings:async()=>{}},"@/stores/tabs":{useTabsStore:{getState:()=>({activeTabId:null}),subscribe:()=>()=>{}}},
+  "@/stores/chat":{useChatStore:{getState:()=>({accountId:"local",conversationId:null,draftId:"shortcut-fixture",draftNovelId:null,recoveryStatus:"ready",creatingNovel:false,requestedConversationId:null,newConversationRequested:false}),subscribe:()=>()=>{}}},
   "@desktop/core/shortcut-dispatch":{ShortcutDispatcher},"@desktop/core/shortcuts":shortcutKeys,
   "@/lib/desktop/input-commands":{installInputCommands:()=>()=>{},installInputContextMenu:()=>()=>{},isAPIKeyControl:()=>false},"@/lib/desktop/native-text-edits":{nativeTextEdits:()=>({run(){},dispose(){}})},
+  "@/lib/desktop/text-context-menu":{installTextContextMenu:()=>()=>{}},
   "@/lib/desktop/composer-text-commands":{installComposerTextCommands:()=>()=>{}},
   "@/lib/desktop/command-scope":{commandScope},
   "@/lib/desktop/command-runtime":{desktopCommandCatalog:()=>platformCommands("darwin"),desktopCommandTargets:bus,desktopCommandTarget:()=>remembered,desktopEditorTarget:()=>editor,rememberDesktopCommandTarget:(next:ElementFixture)=>{remembered=next}},

@@ -68,7 +68,7 @@ require(${JSON.stringify(resolve('dist/main/index.cjs'))});
   await page.getByRole('button', { name: '模型', exact: true }).click()
   await page.getByRole('button', { name: '添加文本模型', exact: true }).click()
   let dialog = page.getByRole('dialog', { name: '配置模型', exact: true })
-  const providers={TEXT:['OpenAI','Anthropic','Google','xAI','深度求索','月之暗面','智谱','Xiaomi','阿里巴巴','MiniMax','腾讯','字节跳动'],IMAGE:['OpenAI','Google','xAI','智谱','阿里巴巴','MiniMax','腾讯','字节跳动']}
+  const providers={TEXT:['OpenAI','Anthropic','Google','xAI','深度求索','月之暗面','智谱','Xiaomi','阿里巴巴','MiniMax','腾讯','火山引擎'],IMAGE:['火山引擎','OpenAI']}
   for(const kind of ['TEXT','IMAGE']){
   if(kind==='IMAGE'){await dialog.getByRole('button',{name:'取消',exact:true}).click();await page.getByRole('button',{name:'添加文生图模型',exact:true}).click()}
   for (const name of providers[kind]) {

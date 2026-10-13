@@ -4,8 +4,8 @@ import { Combobox } from "@base-ui/react/combobox"
 import { Check, ChevronDown } from "lucide-react"
 import { ProviderLogo } from "@/components/chat/provider-logos"
 export interface ModelChoiceOption { id: string; label: string; provider?: string; hint?: string; disabled?: boolean; disabledLabel?: string }
-export function ModelChoiceSelect({ label, value, options, onChange, onOpen, disabled, provider = false, placeholder = "请选择" }: { label: string; value: string | null; options: ModelChoiceOption[]; onChange(value: string): void; onOpen?(): void; disabled?: boolean; provider?: boolean; placeholder?: string }) {
-  const selected = options.find(option => option.id === value) ?? null
+export function ModelChoiceSelect({ label, value, options, selectedOption, onChange, onOpen, disabled, provider = false, placeholder = "请选择" }: { label: string; value: string | null; options: ModelChoiceOption[]; selectedOption?: ModelChoiceOption; onChange(value: string): void; onOpen?(): void; disabled?: boolean; provider?: boolean; placeholder?: string }) {
+  const selected = options.find(option => option.id === value) ?? (selectedOption?.id === value ? selectedOption : null)
   const [open,setOpen] = useState(false)
   const highlighted = useRef<ModelChoiceOption | null>(null)
   const trigger = useRef<HTMLButtonElement>(null)

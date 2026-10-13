@@ -1,0 +1,113 @@
+// Offline design QA, never product/native acceptance. Uses only synthetic fixtures.
+import assert from 'node:assert/strict'
+import { chromium } from 'playwright'
+import { createHash } from 'node:crypto'
+import { readFile, writeFile } from 'node:fs/promises'
+import { resolve, join } from 'node:path'
+import { pathToFileURL } from 'node:url'
+const directory=resolve('design/sidebar-navigation')
+const sources=['src/components/layout/SidebarTree.tsx','src/components/layout/ContentTabs.tsx','src/components/layout/DashboardShell.tsx','src/components/content/scene/SceneTree.tsx','src/components/desktop/UnavailableWorks.tsx','src/app/desktop.css']
+const hashes=async()=>Object.fromEntries(await Promise.all(sources.map(async path=>[path,createHash('sha256').update(await readFile(path)).digest('hex')])))
+const before=await hashes()
+const report={scope:'Offline synthetic HTML design in headless Windows Chrome. Not real React product, Electron, installed package, macOS or physical keyboard acceptance.',status:'running',checks:[],pageErrors:[],httpRequests:[],sourceHashes:before,productTests:'not-run',nativeAcceptance:'not-run'}
+const browser=await chromium.launch({headless:true,executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe'})
+const page=await browser.newPage({viewport:{width:1440,height:1200}})
+page.setDefaultTimeout(8000)
+page.on('pageerror',error=>report.pageErrors.push(error.message))
+page.on('request',request=>{if(/^https?:/i.test(request.url()))report.httpRequests.push(request.url())})
+await page.route(/^https?:\/\//,route=>route.abort())
+const check=(name,evidence={})=>report.checks.push({name,...evidence})
+const screenshot=async name=>{await page.screenshot({path:join(directory,`${name}.png`),fullPage:true});return `${name}.png`}
+const sidebar=page.getByRole('complementary',{name:'左侧导航设计示意'})
+const library=page.getByRole('dialog',{name:'情景试验场',exact:true})
+const navScenario=sidebar.locator('[data-node="scenario"] .row-main')
+const waitMeasured=async()=>{
+  await page.waitForFunction(()=>Array.from(document.querySelectorAll('.nav-label')).filter(el=>el.getBoundingClientRect().width>0).every(el=>el.dataset.overflow===String(el.scrollWidth>el.clientWidth+1)))
+}
+const inspectLabels=()=>page.locator('.nav-label').evaluateAll(elements=>elements.filter(el=>el.getBoundingClientRect().width>0).map(el=>({text:el.textContent,width:el.clientWidth,scrollWidth:el.scrollWidth,overflow:el.dataset.overflow,mask:getComputedStyle(el).maskImage,textOverflow:getComputedStyle(el).textOverflow,title:el.title})))
+const focusIs=async selector=>{await page.waitForFunction(selector=>document.querySelector(selector)===document.activeElement,selector);assert.equal(await page.locator(selector).evaluate(el=>el===document.activeElement),true,`focus ${selector}`)}
+try{
+  await page.goto(pathToFileURL(join(directory,'index.html')).href);await page.evaluate(()=>document.fonts.ready);await waitMeasured()
+  report.browser=await browser.version()
+  const geometry=await sidebar.evaluate(el=>{
+    const buttons=[...el.querySelectorAll('.create-action')].map(el=>el.getBoundingClientRect())
+    const footer=el.querySelector('.account-footer').getBoundingClientRect(),account=el.querySelector('.account-button').getBoundingClientRect(),avatar=el.querySelector('.avatar').getBoundingClientRect()
+    return {sidebar:el.getBoundingClientRect().width,createHeights:buttons.map(r=>r.height),createGap:buttons[1].top-buttons[0].bottom,footerHeight:footer.height,accountHeight:account.height,avatar:avatar.width,icons:[...el.querySelectorAll('.create-action')].map(el=>({name:el.dataset.icon,size:el.querySelector('svg').getBoundingClientRect().width,stroke:getComputedStyle(el.querySelector('svg')).strokeWidth}))}
+  })
+  assert.equal(geometry.sidebar,260);assert.deepEqual(geometry.createHeights,[44,44]);assert.equal(geometry.createGap,6);assert.equal(geometry.footerHeight,72);assert.equal(geometry.accountHeight,52);assert.equal(geometry.avatar,32)
+  assert.deepEqual(geometry.icons.map(i=>i.name),['NotebookPen','MessageCircle']);assert.ok(geometry.icons.every(i=>i.size===18&&i.stroke==='1.7px'))
+  check('44px creation rows, 6px gap, new 18px Lucide icons, 72/52/32px account area',geometry)
+  assert.equal(await sidebar.getByRole('button',{name:'属性',exact:true}).count(),0)
+  assert.equal(await sidebar.locator('[data-node="scenario"] .row-toggle').count(),0)
+  assert.equal(await sidebar.locator('[data-node^="trial-"]').count(),0)
+  assert.equal(await sidebar.getByText('暂无试验场',{exact:true}).count(),0)
+  check('No attribute entry; scenario has no expand arrow, child records or inline empty state')
+  const short=await inspectLabels();assert.ok(short.some(label=>label.overflow==='false'&&label.mask==='none'))
+  check('Short labels have no mask; titles remain complete', {shortLabels:short.filter(label=>label.overflow==='false').length})
+  await sidebar.getByRole('button',{name:'创建作品',exact:true}).click();assert.ok((await page.locator('.review-message').innerText()).includes('现有创建作品向导'))
+  await sidebar.getByRole('button',{name:'创建对话',exact:true}).click();assert.ok((await page.locator('.review-message').innerText()).includes('新对话'))
+  check('Creation buttons demonstrate their original destinations without creating actual data')
+  await screenshot('preview-ink')
+  await page.getByRole('button',{name:'宣纸',exact:true}).click();assert.equal(await page.locator('html').getAttribute('class'),'paper');await screenshot('preview-paper')
+  check('Both themes use existing sidebar palette and geometry')
+  await page.getByLabel('内容',{exact:true}).selectOption('long');await waitMeasured()
+  const long=await inspectLabels();assert.ok(long.filter(item=>item.overflow==='true').length>=7)
+  for(const item of long){assert.equal(item.textOverflow,'clip');assert.equal(item.title,item.text);assert.equal(item.mask!=='none',item.overflow==='true');if(item.overflow==='true')assert.ok(item.mask.includes('24px'))}
+  for(const id of ['novel','world','character','scene','scene-child','conversation'])assert.equal(await page.getByTestId(`label-${id}`).getAttribute('data-overflow'),'true',id)
+  assert.equal(await page.getByTestId('unavailable-title').getAttribute('data-overflow'),'true')
+  assert.ok(long.some(item=>item.text.includes('long.review')&&item.overflow==='true'))
+  check('Long names fade only their last 24px across works/worlds/characters/scenes/conversations/unavailable works/account and matching Tabs', {overflowLabels:long.filter(item=>item.overflow==='true').map(item=>item.text)})
+  const tag=await sidebar.locator('.role-tag').boundingBox(),row=await sidebar.locator('[data-node="character"]').boundingBox();assert.ok(tag.x+tag.width<=row.x+row.width)
+  await sidebar.locator('[data-node="scenario"]').hover();assert.equal(await sidebar.locator('.row-action').evaluate(el=>getComputedStyle(el).opacity),'1')
+  check('Main-role badge and scenario action retain fixed visible space')
+  await screenshot('preview-long-paper')
+  await page.getByRole('button',{name:'玄墨',exact:true}).click();await screenshot('preview-long-ink')
+  for(const value of ['200','420','260']){await page.getByLabel('栏宽',{exact:true}).selectOption(value);await waitMeasured();assert.equal((await sidebar.boundingBox()).width,Number(value))}
+  await page.getByLabel('栏宽',{exact:true}).selectOption('420');await waitMeasured();assert.equal(await page.getByTestId('unavailable-title').getAttribute('data-overflow'),'false')
+  check('Resize recalculates overflow; a previously clipped label becomes fully visible at 420px')
+  await page.getByLabel('栏宽',{exact:true}).selectOption('200');await page.getByLabel('窗口高度',{exact:true}).selectOption('500');await waitMeasured()
+  const tree=sidebar.locator('.tree-scroll'),fixedBefore=await sidebar.locator('.create-actions,.account-footer').evaluateAll(els=>els.map(el=>({top:el.getBoundingClientRect().top,height:el.getBoundingClientRect().height})))
+  assert.ok(await tree.evaluate(el=>el.scrollHeight>el.clientHeight));await tree.hover();await page.mouse.wheel(0,1200);await page.waitForFunction(()=>document.querySelector('.tree-scroll').scrollTop>0)
+  assert.deepEqual(await sidebar.locator('.create-actions,.account-footer').evaluateAll(els=>els.map(el=>({top:el.getBoundingClientRect().top,height:el.getBoundingClientRect().height}))),fixedBefore)
+  assert.equal(await sidebar.evaluate(el=>el.scrollWidth>el.clientWidth),false)
+  await screenshot('preview-short-narrow');check('200px wide / 500px high retains fixed top and account while tree scrolls; no horizontal overflow')
+  await page.getByLabel('窗口高度',{exact:true}).selectOption('640');assert.equal((await sidebar.boundingBox()).height,640)
+  await page.getByLabel('窗口高度',{exact:true}).selectOption('900');await page.getByLabel('栏宽',{exact:true}).selectOption('260');await waitMeasured()
+  await sidebar.getByRole('button',{name:/^账号菜单/}).click();const accountMenu=sidebar.getByRole('menu',{name:'账号菜单',exact:true});await accountMenu.waitFor();await waitMeasured()
+  assert.equal(await accountMenu.locator('.account-name').getAttribute('data-overflow'),'true');assert.equal(await accountMenu.locator('.account-email').getAttribute('data-overflow'),'true')
+  await page.keyboard.press('ArrowDown');await focusIs('.account-menu [role="menuitem"]:nth-of-type(2)');await page.keyboard.press('Escape');await accountMenu.waitFor({state:'hidden'});await focusIs('.account-button')
+  check('Account menu includes conditional fading for name/email; arrow navigation and Escape restore trigger focus')
+  await sidebar.getByRole('button',{name:/^账号菜单/}).click();await screenshot('preview-account');await page.keyboard.press('Escape')
+  await navScenario.click();await library.waitFor();await focusIs('[data-focus="new-scenario"]')
+  assert.equal(await library.locator('.scenario-item').count(),2);assert.equal(await sidebar.locator('[data-node^="trial-"]').count(),0)
+  await screenshot('preview-scenario-library');await page.keyboard.press('Escape');await library.waitFor({state:'hidden'});await focusIs('[data-node="scenario"] .row-main')
+  check('Single scenario entry opens managed list with unchanged navigation, and closes to the entry')
+  await sidebar.getByRole('button',{name:'新建情景试验场',exact:true}).click();await page.getByRole('dialog',{name:'新建情景试验场',exact:true}).waitFor();await page.keyboard.press('Escape');await focusIs('.row-action');assert.equal(await library.isVisible(),false)
+  check('Direct plus creation cancellation returns to plus without opening a list')
+  await navScenario.click();await library.getByRole('button',{name:'新建情景试验场',exact:true}).click();await page.getByRole('dialog',{name:'新建情景试验场',exact:true}).getByRole('button',{name:'取消',exact:true}).click();await focusIs('[data-focus="new-scenario"]')
+  check('Creation opened from library returns to library new button on cancellation')
+  await library.getByLabel('试验场示意状态').selectOption('empty');assert.equal(await library.getByText('暂无试验场',{exact:true}).count(),1)
+  await library.getByLabel('试验场示意状态').selectOption('loading');assert.equal(await library.getByRole('status').count(),1)
+  await library.getByLabel('试验场示意状态').selectOption('error');assert.equal(await library.getByRole('alert').count(),1);await library.getByRole('button',{name:'重试',exact:true}).click();assert.equal(await library.locator('.scenario-item').count(),2)
+  check('Scenario empty/loading/error/retry remain distinct and create stays reachable')
+  const more=library.locator('.scenario-more').first();await more.click();await library.getByRole('menuitem',{name:'重命名',exact:true}).click();await page.getByRole('dialog',{name:'重命名情景试验场',exact:true}).getByRole('button',{name:'取消',exact:true}).click();await focusIs('[data-focus="open-trial-1"]')
+  await more.click();await library.getByRole('menuitem',{name:'重命名',exact:true}).click();await page.getByLabel('名称',{exact:true}).fill('重命名后的合成试验场');await page.getByRole('dialog',{name:'重命名情景试验场',exact:true}).getByRole('button',{name:'保存',exact:true}).click();await focusIs('[data-focus="open-trial-1"]');assert.equal(await library.getByRole('button',{name:'重命名后的合成试验场',exact:true}).count(),1)
+  check('Rename cancellation and successful synthetic rename return to the original record')
+  await more.click();await library.getByRole('menuitem',{name:'删除',exact:true}).click();await page.getByRole('dialog',{name:'删除情景试验场',exact:true}).getByRole('button',{name:'取消',exact:true}).click();await focusIs('[data-focus="open-trial-1"]')
+  await more.click();await library.getByRole('menuitem',{name:'删除',exact:true}).click();await page.getByRole('dialog',{name:'删除情景试验场',exact:true}).getByRole('button',{name:'确认删除',exact:true}).click();await focusIs('[data-focus="new-scenario"]');assert.equal(await library.locator('.scenario-item').count(),1)
+  check('Delete cancellation preserves list; synthetic confirmed deletion restores new button focus')
+  await library.locator('.scenario-open').first().click();await library.waitFor({state:'hidden'});assert.ok((await page.locator('.review-message').innerText()).includes('原情景试验场详情 Tab'));assert.ok((await sidebar.locator('[data-node="scenario"]').getAttribute('class')).includes('active'))
+  check('Opening a synthetic existing record closes list and highlights the single scenario entry')
+  await navScenario.click();await library.getByRole('button',{name:'新建情景试验场',exact:true}).click();await page.getByLabel('名称',{exact:true}).fill('新建的合成试验场');await page.getByRole('dialog',{name:'新建情景试验场',exact:true}).getByRole('button',{name:'创建',exact:true}).click();await library.waitFor({state:'hidden'});assert.ok((await page.locator('.review-message').innerText()).includes('新建的合成试验场'))
+  check('Synthetic create success demonstrates opening original detail without adding tree children')
+  for(const state of ['empty','loading','error']){await page.getByLabel('内容',{exact:true}).selectOption(state);assert.equal(await sidebar.locator('.create-action').count(),2);assert.equal((await sidebar.locator('.account-footer').boundingBox()).height,72);assert.equal(await sidebar.locator('[data-node="scenario"]').count(),0)}
+  await sidebar.getByRole('button',{name:'重新加载作品',exact:true}).click();await waitMeasured();assert.equal(await navScenario.count(),1)
+  check('Empty/loading/error work states preserve creation and account; retry returns populated view')
+  await page.getByLabel('内容',{exact:true}).selectOption('long');await page.setViewportSize({width:480,height:800});await page.getByLabel('栏宽',{exact:true}).selectOption('420');await waitMeasured()
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth),false);await navScenario.click();await library.waitFor();const rect=await library.boundingBox();assert.ok(rect.x>=16&&rect.x+rect.width<=464&&rect.y>=16&&rect.y+rect.height<=784)
+  await screenshot('preview-small-viewer');await page.keyboard.press('Escape');check('480px review viewport fits 420px sidebar and bounds management dialog', {dialog:rect})
+  assert.deepEqual(report.pageErrors,[]);assert.deepEqual(report.httpRequests,[]);assert.deepEqual(await hashes(),before)
+  check('No browser errors or HTTP requests; all inspected production source hashes unchanged')
+  report.status='passed'
+}catch(error){report.status='failed';report.failure=error.stack;await screenshot('preview-failure').catch(()=>{});throw error}
+finally{await writeFile(join(directory,'preview-checks.json'),JSON.stringify(report,null,2)+'\n');await browser.close();console.log(JSON.stringify({scope:'sidebar-html-only',status:report.status,checks:report.checks.length,pageErrors:report.pageErrors,httpRequests:report.httpRequests}))}

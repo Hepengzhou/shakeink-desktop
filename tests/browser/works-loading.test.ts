@@ -40,7 +40,9 @@ async function scenario(options: Record<string, unknown>, run: (page: Page) => P
     await page.route('**/*', route => route.abort()); await page.setContent('<div id="app"></div>')
     await page.addScriptTag({ content: await bundle })
     await page.evaluate(options => (window as any).mountWorksFixture(options), options)
-    await page.getByText('作品阁', { exact: true }).waitFor()
+    // v8 replaces the former heading with the real semantic navigation Tabs.
+    await page.getByRole('tablist', { name: '导航分类', exact: true }).waitFor()
+    assert.equal(await page.getByRole('tablist', { name: '导航分类', exact: true }).getByRole('tab').count(), 5)
     await run(page); assert.deepEqual(errors, [])
   } finally { await page.close() }
 }

@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useState } from "react"
 import { useNovelList } from "@/lib/novel-list"
-import { ChevronDown, Maximize2, Minimize2, PanelRight, X } from "lucide-react"
+import { ChevronDown, Maximize2, Minimize2, PanelLeft, PanelRight, X } from "lucide-react"
 
 import { renderTabContent } from "@/components/content/registry"
 import { StagedInterceptionBootstrap, StagedSaveSurface } from "@/components/content/StagedSaveSurface"
@@ -20,6 +20,8 @@ export function ContentTabs({
   fullscreen,
   onToggleFullscreen,
   onToggleContent,
+  sidebarHidden = false,
+  onShowSidebar,
 }: {
   /** 全屏态（中间 AI 对话面板已隐藏），用于切换按钮的图标与按下态 */
   fullscreen: boolean
@@ -27,6 +29,9 @@ export function ContentTabs({
   onToggleFullscreen: () => void
   /** 隐藏整个内容面板（隐藏后经对话区头部按钮或侧栏树重新打开 tab 恢复） */
   onToggleContent: () => void
+  /** Caption-only restore/reverse control while the navigation drawer is unavailable. */
+  sidebarHidden?: boolean
+  onShowSidebar?: () => void
 }) {
   const tabs = useTabsStore((s) => s.tabs)
   const activeTabId = useTabsStore((s) => s.activeTabId)
@@ -49,6 +54,7 @@ export function ContentTabs({
     const suffix = tab.type === "chapter-content" ? "正文" : tab.type === "chapter-outline" ? "大纲" : tab.type === "chapter-candidate" ? "候选稿" : null
     return suffix ? `${tab.title} · ${suffix}` : tab.title
   }
+  const sidebarRestore = sidebarHidden && onShowSidebar ? <button type="button" data-sidebar-restore aria-label="显示左侧导航栏" title="显示左侧导航栏" onClick={onShowSidebar} className="sidebar-caption-restore content-tabs-tool" style={desktopBootstrap?.platform === "darwin" ? { marginLeft: `calc(${88 / desktopBootstrap.settings.appearance.zoom}px - 8px)` } : undefined}><PanelLeft /></button> : null
 
   return (
     <div className="content-tabs flex h-full flex-col bg-editor">
@@ -63,6 +69,7 @@ export function ContentTabs({
             paddingRight: `calc(max(100vw - env(titlebar-area-width, calc(100vw - 138px)), ${138 / desktopBootstrap.settings.appearance.zoom}px) + ${28 / desktopBootstrap.settings.appearance.zoom}px + 12px)`,
           } : undefined}
         >
+          {sidebarRestore}
           <button
             type="button"
             aria-label="隐藏内容面板"
@@ -83,6 +90,7 @@ export function ContentTabs({
             justifyContent: "flex-end",
           } : undefined}
         >
+          {sidebarRestore}
           <div ref={strip.viewportRef} className="content-tabs-viewport" role="tablist" aria-label="内容标签" aria-orientation="horizontal" onClickCapture={strip.onClickCapture}>
             <div ref={strip.trackRef} className="content-tabs-track">
             {tabs.map((tab) => {

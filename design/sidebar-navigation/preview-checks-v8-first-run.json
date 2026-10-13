@@ -1,0 +1,234 @@
+{
+  "revision": "v8",
+  "scope": "Offline synthetic HTML design in headless Windows Chrome. Not real React product, Electron, installed package, macOS or physical keyboard acceptance.",
+  "status": "failed",
+  "checks": [
+    {
+      "name": "v8 new-conversation label and circle-plus icon; 32px rows, 4px gap, 14/20px centred typography and 72/52/32px account",
+      "sidebar": 260,
+      "createHeights": [
+        32,
+        32
+      ],
+      "createGap": 4,
+      "footerHeight": 72,
+      "accountHeight": 52,
+      "avatar": 32,
+      "createTypography": [
+        {
+          "fontSize": "14px",
+          "lineHeight": "20px",
+          "fontWeight": "500",
+          "paddingLeft": "12px",
+          "paddingRight": "12px",
+          "gap": "10px",
+          "iconCentreError": 0,
+          "textCentreError": 0
+        },
+        {
+          "fontSize": "14px",
+          "lineHeight": "20px",
+          "fontWeight": "500",
+          "paddingLeft": "12px",
+          "paddingRight": "12px",
+          "gap": "10px",
+          "iconCentreError": 0,
+          "textCentreError": 0
+        }
+      ],
+      "icons": [
+        {
+          "name": "NotebookPen",
+          "size": 18,
+          "stroke": "1.7px"
+        },
+        {
+          "name": "MessageCirclePlus",
+          "size": 18,
+          "stroke": "1.7px"
+        }
+      ]
+    },
+    {
+      "name": "Local app mark and 17/24px serif title appear above creation, with 30px Logo, 10px gap, 16px box-to-action space and independent 44px caption",
+      "title": "玄印写作",
+      "height": 44,
+      "width": 258,
+      "logoWidth": 30,
+      "logoHeight": 30,
+      "fontSize": "17px",
+      "lineHeight": "24px",
+      "weight": "600",
+      "fontFamily": "\"Noto Serif SC\", \"Source Han Serif SC\", \"Songti SC\", SimSun, serif",
+      "letterSpacing": "1.02px",
+      "marginTop": "4px",
+      "marginBottom": "8px",
+      "firstActionGap": 16,
+      "logoActionLeftDelta": 0,
+      "logoTitleGap": 10,
+      "visibleImages": 1,
+      "asset": "../../public/brand/seal-mark-ink.svg",
+      "loaded": true,
+      "titleOverflow": false,
+      "within": true,
+      "noFocusable": true,
+      "captionHeight": 44
+    },
+    {
+      "name": "No attribute entry; scene/scenario are single entries without expand arrows, children or inline empty states; scene opens original destination"
+    },
+    {
+      "name": "Short labels have no mask; titles remain complete",
+      "shortLabels": 42
+    },
+    {
+      "name": "New conversation is an ordinary action before and after activation: no selected background, text/icon branch or selected/pressed semantics",
+      "background": "rgba(0, 0, 0, 0)",
+      "color": "rgb(236, 231, 225)",
+      "iconColor": "rgb(154, 145, 138)",
+      "fontWeight": "500",
+      "active": false,
+      "selected": null,
+      "pressed": null
+    },
+    {
+      "name": "Creation buttons demonstrate their original destinations without creating actual data"
+    },
+    {
+      "name": "Both themes use existing sidebar palette and geometry"
+    },
+    {
+      "name": "Long names fade only their last 24px across works/worlds/characters/chapters/conversations/unavailable works/account and matching Tabs",
+      "overflowLabels": [
+        "尚未建档的很长一段脑洞讨论及关于人物成长的补充思考",
+        "目录暂不可用的很长作品名称与补充说明",
+        "雨灯纪事：一部跨越山海与旧城的长篇幻想小说",
+        "青石城及其外海群岛与旧王朝的世界设定",
+        "林舟与长夜行船者的另一重身份",
+        "第一章 · 雨灯长明与旅人尚未说出口的约定",
+        "我想从一场雨夜开始这个故事，并讨论长篇作品的角色关系与主线走向",
+        "风渡行记：穿过群山与古城的第二部长篇作品",
+        "这是一个用来审核渐隐效果的很长的示意用户名称",
+        "long.review.account.name@example.invalid",
+        "第一章 · 雨灯长明与旅人的约定"
+      ]
+    },
+    {
+      "name": "Main-role badge and scenario action retain fixed visible space"
+    },
+    {
+      "name": "Resize recalculates overflow; a previously clipped label becomes fully visible at 420px"
+    },
+    {
+      "name": "200px wide / 500px high retains fixed top and account while tree scrolls; no horizontal overflow"
+    },
+    {
+      "name": "Account menu includes conditional fading for name/email; arrow navigation and Escape restore trigger focus"
+    },
+    {
+      "name": "Single scenario entry opens managed list with unchanged navigation, and closes to the entry"
+    },
+    {
+      "name": "Direct plus creation cancellation returns to plus without opening a list"
+    },
+    {
+      "name": "Creation opened from library returns to library new button on cancellation"
+    },
+    {
+      "name": "Scenario empty/loading/error/retry remain distinct and create stays reachable"
+    },
+    {
+      "name": "Rename cancellation and successful synthetic rename return to the original record"
+    },
+    {
+      "name": "Delete cancellation preserves list; synthetic confirmed deletion restores new button focus"
+    },
+    {
+      "name": "Opening a synthetic existing record closes list and highlights the single scenario entry"
+    },
+    {
+      "name": "Synthetic create success demonstrates opening original detail without adding tree children"
+    },
+    {
+      "name": "Empty/loading/error work states preserve creation and account; retry returns populated view"
+    },
+    {
+      "name": "480px review viewport fits 420px sidebar and bounds management dialog",
+      "dialog": {
+        "x": 16,
+        "y": 246.015625,
+        "width": 448,
+        "height": 307.96875
+      }
+    },
+    {
+      "name": "Five single-row category Tabs replace works heading; one selected item, one tab stop and a labelled panel"
+    },
+    {
+      "name": "Default project folder switches open/closed with real prototype expansion, work activation still expands; golden finger uses the installed Pointer hand icon"
+    },
+    {
+      "name": "Every work in all four filtered views has keyboard-operable disclosure, matching folder, stable body identity, hidden/inert focus exclusion and no business activation",
+      "groups": [
+        {
+          "view": "设定",
+          "work": "novel"
+        },
+        {
+          "view": "设定",
+          "work": "novel-2"
+        },
+        {
+          "view": "角色",
+          "work": "novel"
+        },
+        {
+          "view": "角色",
+          "work": "novel-2"
+        },
+        {
+          "view": "正文",
+          "work": "novel"
+        },
+        {
+          "view": "正文",
+          "work": "novel-2"
+        },
+        {
+          "view": "对话",
+          "work": "novel"
+        },
+        {
+          "view": "对话",
+          "work": "novel-2"
+        }
+      ]
+    },
+    {
+      "name": "Filtered work folds persist per view and do not alter nested world expansion or the original full works tree"
+    },
+    {
+      "name": "Collapsed/empty manuscript retains its separate menu and Tab focus; expanded empty/error states stay distinct and recover after folding"
+    },
+    {
+      "name": "Unavailable indexed work also folds in every filtered view, retaining its full title, error and reload action rather than becoming an empty list"
+    }
+  ],
+  "pageErrors": [],
+  "httpRequests": [],
+  "sourceHashes": {
+    "src/components/layout/SidebarTree.tsx": "0217efce432a30aafa32eb456f71a03b41901a0919be0a219ad5a8c466d63cef",
+    "src/components/layout/ContentTabs.tsx": "7fbb7ae0915410d9fa62b501c06f27f9c98f85b35f6fb23b5dec979be39a40d3",
+    "src/components/layout/DashboardShell.tsx": "096856e0820166db756ab20f7b925a73de917fddfb28d77c0deddb721ee44b72",
+    "src/components/content/scene/SceneTree.tsx": "8911a145ef8091dd7e17ccba9746e7f72426a8dc8ba45acd87323a65a50814c7",
+    "src/components/desktop/UnavailableWorks.tsx": "a23a00d96430dfd259bea3a064615783196806d55b8b1338e912fd194d3f7ea8",
+    "src/app/desktop.css": "617348a46dba74442fc80d59958fa79d23f437815aad0b509a0bcb532099424b",
+    "src/components/marketing/seal.tsx": "21d8d6ae6faec89b0d2551a42a0d71bc77735b8cb41014f294d447bc362551a6",
+    "public/brand/seal-mark-paper.svg": "539388e660960efb034573498bfc641d67f6c1c369a3258c1ed6080b7a5e1b23",
+    "public/brand/seal-mark-ink.svg": "70f455112c0ae48f40207dbef4d50cca9ba79dd23a616642c3f86331d8e1276a"
+  },
+  "productTests": "not-run",
+  "nativeAcceptance": "not-run",
+  "browser": "154.0.8037.98",
+  "failure": "page.waitForFunction: Timeout 8000ms exceeded.\n    at D:\\Projects\\xaanink-desktop\\design\\sidebar-navigation\\verify-preview.mjs:145:936"
+}

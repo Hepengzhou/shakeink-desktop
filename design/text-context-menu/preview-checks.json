@@ -1,0 +1,81 @@
+{
+  "scope": "Offline HTML review artifact in headless Windows Chrome; not product, native Electron menu, real system clipboard, macOS, or physical IME acceptance.",
+  "checks": [
+    {
+      "name": "Initial body preview has precise selection and seven-item menu without undo/redo or empty history separators"
+    },
+    {
+      "name": "Quote appends exact selected text to existing draft and focuses composer; send stays disabled"
+    },
+    {
+      "name": "Real mouse selection and single right click on AI 对话"
+    },
+    {
+      "name": "Real mouse selection and single right click on Markdown 预览"
+    },
+    {
+      "name": "Real mouse selection and single right click on 正文预览"
+    },
+    {
+      "name": "User-sent chat message partial mouse selection can be copied"
+    },
+    {
+      "name": "User-sent chat message double-click word selection can be copied"
+    },
+    {
+      "name": "User-sent chat message triple-click whole-paragraph selection remains copyable without history items"
+    },
+    {
+      "name": "Parent-spanning range copies only the right-clicked user message, excluding the neighboring AI reply; range is constructed for this boundary case"
+    },
+    {
+      "name": "Unrelated AI-reply selection does not enable user-message copy or quote; range is constructed for this ownership case"
+    },
+    {
+      "name": "Same-source multi-paragraph quote preserves rendered line breaks; range is constructed for this boundary case"
+    },
+    {
+      "name": "Editable composer offers cut and plain-text paste"
+    },
+    {
+      "name": "Input cut and paste use original selection and update editable text"
+    },
+    {
+      "name": "Deletion preserves Chromium undo history in the design fixture"
+    },
+    {
+      "name": "Keyboard menu focuses first enabled item; arrows navigate and Escape restores source focus"
+    },
+    {
+      "name": "Readonly input permits select-all and rejects mutation"
+    },
+    {
+      "name": "Empty input still opens menu with paste available"
+    },
+    {
+      "name": "Synthetic marked API Key retains copy while quote is disabled and review sidebar remains masked"
+    },
+    {
+      "name": "Both themes and macOS shortcut labels render; platform selection is design-only"
+    },
+    {
+      "name": "Narrow viewport avoids horizontal overflow, bounds menu and closes on outside click"
+    },
+    {
+      "name": "No browser errors, no HTTP requests, and inspected production source hashes unchanged"
+    }
+  ],
+  "pageErrors": [],
+  "httpRequests": [],
+  "sourceHashes": {
+    "src/components/layout/ChatPanel.tsx": "a00444df1f152938545938aaa85462feb9c40e870179560f787a9df711942a4e",
+    "src/components/editor/MarkdownPreview.tsx": "cfffcdbc52c76aee3ea13269524c50fcca7724ba4a019bf3754dd56bd5445a4b",
+    "src/components/editor/MonacoMarkdownEditor.tsx": "d66661a71f6cc81c9a26b9a485f5eacaf591c4dd70c2a7513b6b0300f8e87549",
+    "src/lib/desktop/input-commands.ts": "275ee130276836764044f7368c569dbd06dd96b7014a19339cbca713fa38e532",
+    "src/lib/desktop/native-text-edits.ts": "8fa026d2f4505e2a6f2e33a690d0ce523b51ba04a00018f2eafb5fda55a6884e",
+    "desktop/main/input-context-menu.ts": "5af75ec62e718fa01b5011cc56fb535f07fb8b6ff0025442a5bb8be3dbdf27d5",
+    "desktop/shared/input-context-menu.ts": "fccaa869ae96fbd2a9a8c12542f7dedcf48cf59c9dad121d30dda5c1b2a338db",
+    "src/app/desktop.css": "ae4edb7764953083023ded07d4d04ec9706f173ed20f4b2b033d144c785d9063"
+  },
+  "status": "passed"
+}

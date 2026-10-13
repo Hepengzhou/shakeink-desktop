@@ -6,6 +6,7 @@ import { ContentError } from "../../src/lib/content-errors"
 import { getDatabaseContext, LOCAL_AUTHOR_ID } from "./context"
 import { restoreTaskDefaults, type TaskDefaults } from "../shared/task-defaults"
 import { currentChatExecution } from '../../src/lib/chat-execution'
+import { officialHostedContextWindow } from '../shared/provider-capabilities'
 
 type Call = <T>(method: string, value?: unknown) => Promise<T>
 let callMain: Call | undefined
@@ -45,9 +46,11 @@ export async function resolveLocalModel(userId: string, role: "text" | "review" 
   }
 }
 export function localModelRecord(model: PublicModel): AIModel {
-  // This is the original prompt guard's budget, not an advertised provider capacity.
-  // The immutable public snapshot retains 0 when capacity is unknown.
-  const record: AIModel = { id: model.id, name: model.name, provider: model.provider, modelId: model.modelId, apiKeyEncrypted: "", baseUrl: model.endpoint, tier: "NORMAL", kind: model.kind, inputCostPer1k: model.inputCostPer1k ?? 0, outputCostPer1k: model.outputCostPer1k ?? 0, contextWindow: model.contextWindow || 16_000, free: false, enabled: false, createdAt: new Date(0), updatedAt: new Date(0) }
+  // Explicit configuration wins; missing first-party capacity can use exact
+  // published metadata. Unknown models retain the conservative guard budget.
+  // The immutable public snapshot always preserves the saved configuration.
+  const contextWindow = model.contextWindow || officialHostedContextWindow(model) || 16_000
+  const record: AIModel = { id: model.id, name: model.name, provider: model.provider, modelId: model.modelId, apiKeyEncrypted: "", baseUrl: model.endpoint, tier: "NORMAL", kind: model.kind, inputCostPer1k: model.inputCostPer1k ?? 0, outputCostPer1k: model.outputCostPer1k ?? 0, contextWindow, free: false, enabled: false, createdAt: new Date(0), updatedAt: new Date(0) }
   snapshots.set(record, structuredClone(model))
   return record
 }

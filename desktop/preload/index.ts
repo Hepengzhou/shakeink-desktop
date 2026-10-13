@@ -24,9 +24,12 @@ const bridge: DesktopBridge = {
   repairWorkLease: action=>ipcRenderer.invoke("desktop:work-lease",action),
   chooseDirectory: purpose => ipcRenderer.invoke("desktop:directory", purpose),
   command: id => ipcRenderer.invoke("desktop:command", id),
+  openProjectRepository: () => ipcRenderer.invoke("desktop:open-project-repository"),
   readClipboardText: () => ipcRenderer.invoke("desktop:clipboard-read"),
   writeClipboardText: text => ipcRenderer.invoke("desktop:clipboard-write", text),
   showInputContextMenu: state => ipcRenderer.invoke("desktop:input-context-menu", state),
+  showTextContextMenu: request => ipcRenderer.invoke('desktop:text-context-menu',request),
+  cancelTextContextMenu: requestId => ipcRenderer.invoke('desktop:text-context-menu-cancel',requestId),
   subscribe(listener) {
     const receive = (_event: unknown, event: DesktopEvent) => listener(event)
     ipcRenderer.on("desktop:event", receive)

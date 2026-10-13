@@ -6,7 +6,7 @@
  * 注意：Dialog 走 portal 渲染在 .scpane 之外，内部一律用 ui 组件与全局 Tailwind 令牌（不用 sc-* 作用域类）。
  */
 
-import { useState } from "react"
+import { useState, type Ref } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { Bot, Loader2, UserRound } from "lucide-react"
 
@@ -36,6 +36,9 @@ interface ScenarioCreateDialogProps {
   pending: boolean
   onOpenChange: (open: boolean) => void
   onSubmit: (payload: ScenarioCreatePayload) => void
+  /** Reuse the real cast form inside the library's single Dialog Root. */
+  contentOnly?: boolean
+  inputRef?: Ref<HTMLInputElement>
 }
 
 interface CastDraft {
@@ -50,6 +53,8 @@ export function ScenarioCreateDialog({
   pending,
   onOpenChange,
   onSubmit,
+  contentOnly = false,
+  inputRef,
 }: ScenarioCreateDialogProps) {
   const [title, setTitle] = useState("")
   const [cast, setCast] = useState<CastDraft[]>([])
@@ -98,9 +103,8 @@ export function ScenarioCreateDialog({
 
   const characters = charactersQuery.data?.characters ?? []
 
-  return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent>
+  const content = (
+    <>
         <DialogHeader>
           <DialogTitle>新建情景试验场</DialogTitle>
           <DialogDescription>
@@ -111,17 +115,18 @@ export function ScenarioCreateDialog({
           onSubmit={(e) => {
             e.preventDefault()
             const trimmed = title.trim()
-            if (!trimmed) return
+            if (!trimmed || pending) return
             onSubmit({
               title: trimmed,
               cast: cast.map((m) => ({ characterId: m.characterId, control: m.control })),
             })
-            reset()
           }}
           className="flex flex-col gap-4"
         >
           <Input
+            ref={inputRef}
             autoFocus
+            disabled={pending}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="标题，如：雨夜客栈的相遇、如果张三提前知道真相"
@@ -208,13 +213,14 @@ export function ScenarioCreateDialog({
           </div>
 
           <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => handleOpenChange(false)}>取消</Button>
             <Button type="submit" disabled={!title.trim() || pending}>
               {pending && <Loader2 className="animate-spin" />}
               创建
             </Button>
           </DialogFooter>
         </form>
-      </DialogContent>
-    </Dialog>
+    </>
   )
+  return contentOnly ? content : <Dialog open={open} onOpenChange={handleOpenChange}><DialogContent>{content}</DialogContent></Dialog>
 }

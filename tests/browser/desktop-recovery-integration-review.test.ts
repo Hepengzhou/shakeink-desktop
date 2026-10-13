@@ -1,13 +1,19 @@
 import assert from "node:assert/strict"
 import { test } from "node:test"
-import { readFileSync,readdirSync } from "node:fs"
+import { readFileSync } from "node:fs"
+import { resolve } from "node:path"
 import { build } from "esbuild"
+import postcss from "postcss"
+import tailwindcss from "@tailwindcss/postcss"
 import { chromium, type Browser, type Page } from "playwright-core"
 
 // Mount the current original shell and current RecoveryDialog, actual React,
 // Base UI and installed react-resizable-panels. Business children, command
 // dispatch, notifications and clipboard/export IPC are controlled substitutes.
-const css = readdirSync(".next/static/chunks").filter(file=>file.endsWith(".css")).sort().map(file=>readFileSync(".next/static/chunks/"+file,"utf8")).join("\n")
+// Compile the current product styles, including the approved drawer mode rules;
+// stale .next CSS predates the current Shell's max-[900px] switcher contract.
+const cssPath = resolve("src/app/globals.css")
+const css = postcss([tailwindcss()]).process(readFileSync(cssPath, "utf8"), { from: cssPath }).then(result => result.css + "\n" + readFileSync("src/app/desktop.css", "utf8"))
 const mocks: Record<string, string> = {
   ChatPanel: `import React from 'react';export function ChatPanel(p){return React.createElement('div',{'data-business':'chat'},React.createElement('button',{onClick:p.onShowContent},'打开内容'),React.createElement('button',{onClick:p.onShowSidebar},'打开侧栏'))}`,
   SidebarTree: `import React from 'react';export function SidebarTree(p){return React.createElement('button',{onClick:p.onToggleSidebar},'收起侧栏')}`,
@@ -58,7 +64,7 @@ async function scenario(width: number, run: (page: Page) => Promise<void>) {
   try {
     await page.route("**/*", route => route.request().isNavigationRequest() ? route.fulfill({ contentType: "text/html", body: '<div id="app"></div>' }) : route.abort())
     await page.goto("http://127.0.0.1:1/recovery-isolated")
-    await page.addStyleTag({ content: css }); await page.addScriptTag({ content: await bundle })
+    await page.addStyleTag({ content: await css }); await page.addScriptTag({ content: await bundle })
     await run(page); assert.deepEqual(errors, [])
   } finally { await page.close() }
 }

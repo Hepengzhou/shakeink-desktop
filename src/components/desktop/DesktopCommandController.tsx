@@ -7,7 +7,9 @@ import {ShortcutDispatcher} from "@desktop/core/shortcut-dispatch"
 import {bindingsFor,canonicalKey,capturedKey} from "@desktop/core/shortcuts"
 import {desktopCommandCatalog,desktopCommandTargets,desktopCommandTarget,desktopEditorTarget,rememberDesktopCommandTarget} from "@/lib/desktop/command-runtime"
 import {useDesktopCommands} from "@/lib/desktop/use-command-target"
-import {installInputCommands,installInputContextMenu,isAPIKeyControl} from "@/lib/desktop/input-commands"
+import {installInputCommands,isAPIKeyControl} from "@/lib/desktop/input-commands"
+import {installTextContextMenu} from '@/lib/desktop/text-context-menu'
+import {useChatStore} from '@/stores/chat'
 import {nativeTextEdits} from "@/lib/desktop/native-text-edits"
 import {installComposerTextCommands} from "@/lib/desktop/composer-text-commands"
 import {commandScope as scope} from "@/lib/desktop/command-scope"
@@ -30,7 +32,10 @@ export function DesktopCommandController(){
  useEffect(()=>{
   const textEdits=nativeTextEdits(document,()=>{if(!window.desktop)throw new Error("本地剪贴板尚未就绪");return window.desktop.readClipboardText()})
   const disposeInputs=installInputCommands({document,nativeEdit:textEdits.run})
-  const disposeInputMenu=installInputContextMenu({document,show:state=>{if(!window.desktop)throw Error("本地菜单尚未就绪");return window.desktop.showInputContextMenu(state)},onError:()=>toast.error("输入菜单操作未完成，请重试")})
+  const contextIdentity=()=>{const state=useChatStore.getState();return JSON.stringify([state.accountId,state.conversationId,state.draftId,state.draftNovelId,state.recoveryStatus,state.creatingNovel,state.requestedConversationId,state.newConversationRequested,useTabsStore.getState().activeTabId])}
+  const disposeInputMenu=installTextContextMenu({document,show:request=>{if(!window.desktop)throw Error('本地菜单尚未就绪');return window.desktop.showTextContextMenu(request)},cancel:id=>window.desktop?.cancelTextContextMenu(id),
+   readText:()=>{if(!window.desktop)throw Error('本地剪贴板尚未就绪');return window.desktop.readClipboardText()},writeText:text=>{if(!window.desktop)throw Error('本地剪贴板尚未就绪');return window.desktop.writeClipboardText(text)},nativeEdit:textEdits.run,
+   contextIdentity,subscribeContext:listener=>{const chat=useChatStore.subscribe(listener),tabs=useTabsStore.subscribe(listener);return()=>{chat();tabs()}},onError:()=>toast.error('文本菜单操作未完成，请重新选择后重试')})
   const disposeComposer=installComposerTextCommands(document,textEdits.run)
   const dispatcher=new ShortcutDispatcher()
   const nativeFirst=new WeakSet<KeyboardEvent>()

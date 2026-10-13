@@ -292,33 +292,39 @@ test("SURF-04 original Shell hide/restore, content fullscreen, two-column and em
 }))
 async function panelColorsTwo(page: Page) { return Promise.all(panelSelectors.slice(0, 2).map(selector => page.locator(selector).evaluate(el => getComputedStyle(el).backgroundColor))) }
 
-test("SURF-01/04 original narrow workspace switching and ink palette survive theme changes", async () => {
-  // Original globals.css uses two breakpoints: below 900 the directory can
-  // replace the workspace; below 680 chat/content become individual panes.
+test("SURF-01/04 approved narrow drawer and retained workspace switching preserve surfaces and ink palette", async () => {
+  // Approved v8 uses one full-width drawer/underlay branch below 900px. Wait
+  // for its terminal phase; two rAFs only observe an intentionally partial V.
   for (const width of [760, 640]) await scenario({ width }, async page => {
     const nav = page.getByRole("navigation", { name: "创作工作区" })
     for (const [label, pane, selector, color] of [["作品目录", "sidebar", panelSelectors[0], paper.sidebar], ["返回对话", "chat", panelSelectors[1], paper.chat], ["查看内容", "content", panelSelectors[2], paper.content]]) {
-      await nav.getByRole("button", { name: label, exact: true }).click(); await frames(page)
+      await nav.getByRole("button", { name: label, exact: true }).click()
+      await page.waitForFunction(expected => {
+        const shell = document.querySelector<HTMLElement>(".dashboard-shell")!
+        return shell.dataset.drawerMode === "narrow" && shell.dataset.sidebarPhase === expected
+      }, pane === "sidebar" ? "open" : "closed")
+      await frames(page)
       assert.equal(await page.locator('.dashboard-shell').getAttribute("data-narrow-pane"), pane)
       assert.equal(await page.locator(selector).evaluate(el => getComputedStyle(el).backgroundColor), color)
       const geometry = await page.evaluate(() => {
         const [sidebar, chat, content] = ['.workspace-sidebar', '.workspace-chat', '.workspace-content'].map(selector => { const r = document.querySelector(selector)!.getBoundingClientRect(); return { left: r.left, right: r.right, width: r.width } })
         const dividers = Array.from(document.querySelectorAll('.workspace-group [data-separator]')).map(el => { const r = el.getBoundingClientRect(); return { left: r.left, right: r.right, width: r.width } }).filter(r => r.width > 0)
-        return { sidebar, chat, content, dividers }
+        const shell = document.querySelector<HTMLElement>('.dashboard-shell')!
+        return { sidebar, chat, content, dividers, underlay: shell.dataset.sidebarUnderlay, sidebarPosition: getComputedStyle(document.querySelector('.workspace-sidebar')!.parentElement!).position, chatInert: !!document.querySelector('.workspace-chat')!.closest('[inert]'), contentInert: !!document.querySelector('.workspace-content')!.closest('[inert]') }
       })
-      if (pane === "sidebar" || width < 680) {
-        assert(Math.abs(geometry[pane as "sidebar" | "chat" | "content"].width - width) < .1, "Original single-pane layout fills the workspace")
-        for (const inactive of ["sidebar", "chat", "content"] as const) if (inactive !== pane) assert.equal(geometry[inactive].width, 0, "Other panes leave no occupied gap")
-        assert.equal(geometry.dividers.length, 0, "A single pane has no visible split line")
+      assert(Math.abs(geometry[pane as "sidebar" | "chat" | "content"].width - width) < .1, "The selected narrow surface fills the workspace")
+      assert.equal(geometry.dividers.length, 0, "The full-width drawer branch has no occupied split line")
+      if (pane === "sidebar") {
+        assert.equal(geometry.sidebarPosition, "absolute", "Navigation overlays its retained workspace")
+        assert.equal(geometry.chatInert, true); assert.equal(geometry.contentInert, true)
+        const underlay = geometry.underlay as "chat" | "content"
+        assert(Math.abs(geometry[underlay].width - width) < .1, "The inert real underlay retains its full geometry")
+        assert(Math.abs(geometry.sidebar.left - geometry[underlay].left) < .03, "The overlay creates no bright gutter or layout gap")
       } else {
-        assert.equal(geometry.sidebar.width, 0, "The directory is hidden at the original 900px breakpoint")
-        assert(geometry.chat.width > 150 && geometry.content.width > 150, "Original 680–899px layout keeps both chat and content visible")
-        assert.equal(geometry.dividers.length, 1)
-        const divider = geometry.dividers[0]
-        assert(Math.abs(geometry.chat.left) < .03 && Math.abs(geometry.content.right - width) < .03, "Two panes occupy the full original narrow workspace")
-        assert(Math.abs(divider.left - geometry.chat.right) < .03 && Math.abs(geometry.content.left - divider.right) < .03, "The approved thin line leaves no bright gutter between narrow panes")
-        const reference = await line(page, "[data-business-border]", "bottom")
-        assert(Math.abs(divider.width - reference.stroke) < .03, "Narrow two-pane divider remains equally thin")
+        assert.equal(geometry.sidebar.width, 0, "The closed drawer leaves no occupied directory gap")
+        assert.equal(geometry[pane === "chat" ? "content" : "chat"].width, 0, "The inactive workspace leaves no gap")
+        assert.equal(pane === "chat" ? geometry.chatInert : geometry.contentInert, false)
+        assert(Math.abs(geometry[pane as "chat" | "content"].left) < .03 && Math.abs(geometry[pane as "chat" | "content"].right - width) < .03, "The visible real workspace spans the original outer edges")
       }
     }
   })

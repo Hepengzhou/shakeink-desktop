@@ -20,6 +20,7 @@ function rig(options:{request?:string;progress?:any;commit?:(payload:any,state:a
   if(name==='@/components/ui/button')return primitives(['Button'])
   if(name==='./ProfileSettings')return primitives(['ProfileEditorDialog'])
   if(name==='./ModelConfigurationDialog')return primitives(['ModelConfigurationDialog'])
+  if(name==='./ProjectStarPrompt')return primitives(['ProjectStarPrompt'])
   if(name==='@/lib/desktop/onboarding-flow')return{onboardingStartup,onboardingDialogGuard}
   if(name==='@/stores/desktop')return{useDesktopStore:(select:any)=>select({bootstrap}),createDesktopOnboardingCommit:(payload:any)=>{const captured=structuredClone(payload);return async()=>{calls.push(structuredClone(captured));return options.commit?options.commit(captured,bootstrap):{...bootstrap,onboarding:{version:1,completed:false,step:'profile',textModelId:null,imageModelId:null,receipt:null}}}}}
   throw Error(name)

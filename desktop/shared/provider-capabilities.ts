@@ -47,7 +47,8 @@ add("openai", { ...officialModel("openai", "gpt-5.6-cyber")!, accessProgram: "da
 function ids(provider: string, names: string[], kind: OfficialCapability["kind"], source: string, extra: Partial<OfficialCapability> = {}) {
   for (const id of names) add(provider, { id, kind, source, ...extra })
 }
-ids("deepseek", ["deepseek-flash", "deepseek-v4-pro"], "TEXT", "https://api-docs.deepseek.com/quick_start/pricing/", { thinkingLevels: ["low", "high", "max"], defaultThinking: "high", testEffort: "low" })
+// Rechecked 2026-10-13: both exact hosted API models have a 1M context window.
+ids("deepseek", ["deepseek-flash", "deepseek-v4-pro"], "TEXT", "https://api-docs.deepseek.com/quick_start/pricing/", { contextWindow: 1_000_000, thinkingLevels: ["low", "high", "max"], defaultThinking: "high", testEffort: "low" })
 ids("deepseek", ["deepseek-chat", "deepseek-reasoner"], "OTHER", "https://api-docs.deepseek.com/quick_start/pricing/", { deprecated: true })
 ids("moonshot", ["kimi-k3", "kimi-k2.6", "kimi-k2.7-code", "kimi-k2.7-code-highspeed"], "TEXT", "https://platform.kimi.com/docs/openapi.json")
 add("moonshot", { ...officialModel("moonshot", "kimi-k3")!, thinkingLevels: ["low", "high", "max"], defaultThinking: "max", testEffort: "low" })
@@ -69,6 +70,16 @@ ids("google", ["gemini-3.8-flash", "gemini-3.7-flash", "gemini-3.6-flash", "gemi
 ids("google", ["gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-2.5-pro"], "TEXT", google, { notes: ["官网限定过去已活跃使用此型号的账户访问，新 Key 可能没有权限"] })
 ids("google", ["gemini-nano-banana-2.1", "gemini-3.1-flash-lite-image", "gemini-3.1-flash-image", "gemini-3-pro-image", "gemini-2.5-flash-image"], "IMAGE", "https://ai.google.dev/gemini-api/docs/image-generation")
 export function officialModel(provider: string, id: string): OfficialCapability | undefined { return capabilities.get(provider)?.get(id) }
+/** Recover missing capacity in saved first-party configurations without treating
+ * an arbitrary proxy or a similarly named model as the official hosted model. */
+export function officialHostedContextWindow(model: { provider: string; modelId: string; endpoint: string; protocol: string; kind: string }): number | undefined {
+  if (model.provider !== "deepseek" || model.protocol !== "openai" || model.kind !== "TEXT") return undefined
+  let url: URL
+  try { url = new URL(model.endpoint) } catch { return undefined }
+  if (url.protocol !== "https:" || url.hostname !== "api.deepseek.com" || url.port || url.username || url.password || url.search || url.hash) return undefined
+  if (!["/", "/v1", "/v1/"].includes(url.pathname)) return undefined
+  return officialModel(model.provider, model.modelId)?.contextWindow
+}
 export function officialModels(provider: ConfigurationProviderId): OfficialCapability[] { return [...(capabilities.get(provider)?.values() ?? [])] }
 export function testOutputBudget(provider: string, id: string) { return Math.min((officialModel(provider, id) ?? (provider === "custom" ? officialModel("openai", id) : undefined))?.maxOutputTokens ?? Infinity, provider === "custom" && !officialModel("openai", id) ? 1024 : 2048) }
 export function openaiUsesCompletionLimit(id: string) {

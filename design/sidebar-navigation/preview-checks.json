@@ -1,0 +1,5214 @@
+{
+  "revision": "v8",
+  "scope": "Offline synthetic HTML design in headless Windows Chrome. Not real React product, Electron, installed package, macOS or physical keyboard acceptance.",
+  "status": "passed",
+  "checks": [
+    {
+      "name": "v8 new-conversation label and circle-plus icon; 32px rows, 4px gap, 14/20px centred typography and 72/52/32px account",
+      "sidebar": 260,
+      "createHeights": [
+        32,
+        32
+      ],
+      "createGap": 4,
+      "footerHeight": 72,
+      "accountHeight": 52,
+      "avatar": 32,
+      "createTypography": [
+        {
+          "fontSize": "14px",
+          "lineHeight": "20px",
+          "fontWeight": "500",
+          "paddingLeft": "12px",
+          "paddingRight": "12px",
+          "gap": "10px",
+          "iconCentreError": 0,
+          "textCentreError": 0
+        },
+        {
+          "fontSize": "14px",
+          "lineHeight": "20px",
+          "fontWeight": "500",
+          "paddingLeft": "12px",
+          "paddingRight": "12px",
+          "gap": "10px",
+          "iconCentreError": 0,
+          "textCentreError": 0
+        }
+      ],
+      "icons": [
+        {
+          "name": "NotebookPen",
+          "size": 18,
+          "stroke": "1.7px"
+        },
+        {
+          "name": "MessageCirclePlus",
+          "size": 18,
+          "stroke": "1.7px"
+        }
+      ]
+    },
+    {
+      "name": "Local app mark and 17/24px serif title appear above creation, with 30px Logo, 10px gap, 16px box-to-action space and independent 44px caption",
+      "title": "玄印写作",
+      "height": 44,
+      "width": 258,
+      "logoWidth": 30,
+      "logoHeight": 30,
+      "fontSize": "17px",
+      "lineHeight": "24px",
+      "weight": "600",
+      "fontFamily": "\"Noto Serif SC\", \"Source Han Serif SC\", \"Songti SC\", SimSun, serif",
+      "letterSpacing": "1.02px",
+      "marginTop": "4px",
+      "marginBottom": "8px",
+      "firstActionGap": 16,
+      "logoActionLeftDelta": 0,
+      "logoTitleGap": 10,
+      "visibleImages": 1,
+      "asset": "../../public/brand/seal-mark-ink.svg",
+      "loaded": true,
+      "titleOverflow": false,
+      "within": true,
+      "noFocusable": true,
+      "captionHeight": 44
+    },
+    {
+      "name": "No attribute entry; scene/scenario are single entries without expand arrows, children or inline empty states; scene opens original destination"
+    },
+    {
+      "name": "Short labels have no mask; titles remain complete",
+      "shortLabels": 42
+    },
+    {
+      "name": "New conversation is an ordinary action before and after activation: no selected background, text/icon branch or selected/pressed semantics",
+      "background": "rgba(0, 0, 0, 0)",
+      "color": "rgb(236, 231, 225)",
+      "iconColor": "rgb(154, 145, 138)",
+      "fontWeight": "500",
+      "active": false,
+      "selected": null,
+      "pressed": null
+    },
+    {
+      "name": "Creation buttons demonstrate their original destinations without creating actual data"
+    },
+    {
+      "name": "Both themes use existing sidebar palette and geometry"
+    },
+    {
+      "name": "Long names fade only their last 24px across works/worlds/characters/chapters/conversations/unavailable works/account and matching Tabs",
+      "overflowLabels": [
+        "尚未建档的很长一段脑洞讨论及关于人物成长的补充思考",
+        "目录暂不可用的很长作品名称与补充说明",
+        "雨灯纪事：一部跨越山海与旧城的长篇幻想小说",
+        "青石城及其外海群岛与旧王朝的世界设定",
+        "林舟与长夜行船者的另一重身份",
+        "第一章 · 雨灯长明与旅人尚未说出口的约定",
+        "我想从一场雨夜开始这个故事，并讨论长篇作品的角色关系与主线走向",
+        "风渡行记：穿过群山与古城的第二部长篇作品",
+        "这是一个用来审核渐隐效果的很长的示意用户名称",
+        "long.review.account.name@example.invalid",
+        "第一章 · 雨灯长明与旅人的约定"
+      ]
+    },
+    {
+      "name": "Main-role badge and scenario action retain fixed visible space"
+    },
+    {
+      "name": "Resize recalculates overflow; a previously clipped label becomes fully visible at 420px"
+    },
+    {
+      "name": "200px wide / 500px high retains fixed top and account while tree scrolls; no horizontal overflow"
+    },
+    {
+      "name": "Account menu includes conditional fading for name/email; arrow navigation and Escape restore trigger focus"
+    },
+    {
+      "name": "Single scenario entry opens managed list with unchanged navigation, and closes to the entry"
+    },
+    {
+      "name": "Direct plus creation cancellation returns to plus without opening a list"
+    },
+    {
+      "name": "Creation opened from library returns to library new button on cancellation"
+    },
+    {
+      "name": "Scenario empty/loading/error/retry remain distinct and create stays reachable"
+    },
+    {
+      "name": "Rename cancellation and successful synthetic rename return to the original record"
+    },
+    {
+      "name": "Delete cancellation preserves list; synthetic confirmed deletion restores new button focus"
+    },
+    {
+      "name": "Opening a synthetic existing record closes list and highlights the single scenario entry"
+    },
+    {
+      "name": "Synthetic create success demonstrates opening original detail without adding tree children"
+    },
+    {
+      "name": "Empty/loading/error work states preserve creation and account; retry returns populated view"
+    },
+    {
+      "name": "480px review viewport fits 420px sidebar and bounds management dialog",
+      "dialog": {
+        "x": 16,
+        "y": 246.015625,
+        "width": 448,
+        "height": 307.96875
+      }
+    },
+    {
+      "name": "Five single-row category Tabs replace works heading; one selected item, one tab stop and a labelled panel"
+    },
+    {
+      "name": "Default project folder switches open/closed with real prototype expansion, work activation still expands; golden finger uses the installed Pointer hand icon"
+    },
+    {
+      "name": "Every work in all four filtered views has keyboard-operable disclosure, matching folder, stable body identity, hidden/inert focus exclusion and no business activation",
+      "groups": [
+        {
+          "view": "设定",
+          "work": "novel"
+        },
+        {
+          "view": "设定",
+          "work": "novel-2"
+        },
+        {
+          "view": "角色",
+          "work": "novel"
+        },
+        {
+          "view": "角色",
+          "work": "novel-2"
+        },
+        {
+          "view": "正文",
+          "work": "novel"
+        },
+        {
+          "view": "正文",
+          "work": "novel-2"
+        },
+        {
+          "view": "对话",
+          "work": "novel"
+        },
+        {
+          "view": "对话",
+          "work": "novel-2"
+        }
+      ]
+    },
+    {
+      "name": "Filtered work folds persist per view and do not alter nested world expansion or the original full works tree"
+    },
+    {
+      "name": "Collapsed/empty manuscript retains its separate menu and Tab focus; expanded empty/error states stay distinct and recover after folding"
+    },
+    {
+      "name": "Unavailable indexed work also folds in every filtered view, retaining its full title, error and reload action rather than becoming an empty list"
+    },
+    {
+      "name": "Fold-induced scroll clamping does not erase remembered position; expansion restores it, while explicit wheel intent accepts the new position (DOM clicks isolate scrollIntoView)"
+    },
+    {
+      "name": "Each filtered view covers both works and exclusively its requested category; reference content node remains mounted",
+      "views": [
+        {
+          "name": "设定",
+          "kinds": [
+            "setting",
+            "setting",
+            "world",
+            "world",
+            "setting",
+            "setting",
+            "setting",
+            "items",
+            "scenario",
+            "scenes",
+            "worldline",
+            "narrative",
+            "outline",
+            "setting",
+            "setting",
+            "world",
+            "world",
+            "setting",
+            "setting",
+            "setting",
+            "items",
+            "scenario",
+            "scenes",
+            "worldline",
+            "narrative",
+            "outline"
+          ],
+          "works": 2
+        },
+        {
+          "name": "角色",
+          "kinds": [
+            "character",
+            "character",
+            "character",
+            "character",
+            "character",
+            "character",
+            "character",
+            "character",
+            "character",
+            "character"
+          ],
+          "works": 2
+        },
+        {
+          "name": "正文",
+          "kinds": [
+            "volume",
+            "chapter",
+            "chapter",
+            "volume",
+            "chapter",
+            "chapter"
+          ],
+          "works": 2
+        },
+        {
+          "name": "对话",
+          "kinds": [
+            "conversation",
+            "conversation",
+            "conversation"
+          ],
+          "works": 2
+        }
+      ]
+    },
+    {
+      "name": "All six extra settings entries exist in both works, preserve owner and original destinations; scene/scenario stay single-row and scenario cancellation returns to its actual settings trigger",
+      "actions": [
+        {
+          "work": "novel",
+          "id": "items",
+          "label": "物品",
+          "owner": "雨灯纪事"
+        },
+        {
+          "work": "novel",
+          "id": "scenes",
+          "label": "场景",
+          "owner": "雨灯纪事"
+        },
+        {
+          "work": "novel",
+          "id": "worldline",
+          "label": "世界线",
+          "owner": "雨灯纪事"
+        },
+        {
+          "work": "novel",
+          "id": "narrative",
+          "label": "叙事线",
+          "owner": "雨灯纪事"
+        },
+        {
+          "work": "novel",
+          "id": "outline",
+          "label": "大纲",
+          "owner": "雨灯纪事"
+        },
+        {
+          "work": "novel-2",
+          "id": "items",
+          "label": "物品",
+          "owner": "风渡行记"
+        },
+        {
+          "work": "novel-2",
+          "id": "scenes",
+          "label": "场景",
+          "owner": "风渡行记"
+        },
+        {
+          "work": "novel-2",
+          "id": "worldline",
+          "label": "世界线",
+          "owner": "风渡行记"
+        },
+        {
+          "work": "novel-2",
+          "id": "narrative",
+          "label": "叙事线",
+          "owner": "风渡行记"
+        },
+        {
+          "work": "novel-2",
+          "id": "outline",
+          "label": "大纲",
+          "owner": "风渡行记"
+        }
+      ]
+    },
+    {
+      "name": "Characters flatten names with identity badges and include foreshadow characters; original item destination remains selectable"
+    },
+    {
+      "name": "Synthetic foreshadow-query failure is an error, not empty; formal roles and other work stay visible, retry restores list"
+    },
+    {
+      "name": "Manuscript retains volumes/chapters and whole-work menu; empty body still allows add-volume and never points to outline"
+    },
+    {
+      "name": "Per-work empty labels stay distinct; unbound conversations remain accessible even alongside empty work conversation lists"
+    },
+    {
+      "name": "Arrow keys, Home/End, wrapping and Space operate category Tabs with focus on the selected item"
+    },
+    {
+      "name": "Each view restores its scroll and expansion; filtered contents do not depend on collapsed works or unbound guide"
+    },
+    {
+      "name": "Both themes, all three widths and five views fit five complete 28px Tab buttons without horizontal overflow",
+      "combinations": 30
+    },
+    {
+      "name": "Tab group stays transparent; selected bubble exactly matches the neutral reference Tab background/foreground/1px edge and 6px radius in all 30 combinations",
+      "combinations": 30,
+      "styles": [
+        {
+          "theme": "宣纸",
+          "width": 200,
+          "view": "作品",
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "radius": "0px",
+          "primary": "rgb(176, 53, 36)",
+          "reference": {
+            "background": "rgb(248, 243, 228)",
+            "color": "rgb(43, 37, 27)",
+            "borderColor": "rgb(216, 203, 166)"
+          },
+          "items": [
+            {
+              "selected": true,
+              "background": "rgb(248, 243, 228)",
+              "color": "rgb(43, 37, 27)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgb(216, 203, 166)",
+              "weight": "600"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            }
+          ]
+        },
+        {
+          "theme": "宣纸",
+          "width": 200,
+          "view": "设定",
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "radius": "0px",
+          "primary": "rgb(176, 53, 36)",
+          "reference": {
+            "background": "rgb(248, 243, 228)",
+            "color": "rgb(43, 37, 27)",
+            "borderColor": "rgb(216, 203, 166)"
+          },
+          "items": [
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": true,
+              "background": "rgb(248, 243, 228)",
+              "color": "rgb(43, 37, 27)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgb(216, 203, 166)",
+              "weight": "600"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            }
+          ]
+        },
+        {
+          "theme": "宣纸",
+          "width": 200,
+          "view": "角色",
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "radius": "0px",
+          "primary": "rgb(176, 53, 36)",
+          "reference": {
+            "background": "rgb(248, 243, 228)",
+            "color": "rgb(43, 37, 27)",
+            "borderColor": "rgb(216, 203, 166)"
+          },
+          "items": [
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": true,
+              "background": "rgb(248, 243, 228)",
+              "color": "rgb(43, 37, 27)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgb(216, 203, 166)",
+              "weight": "600"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            }
+          ]
+        },
+        {
+          "theme": "宣纸",
+          "width": 200,
+          "view": "正文",
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "radius": "0px",
+          "primary": "rgb(176, 53, 36)",
+          "reference": {
+            "background": "rgb(248, 243, 228)",
+            "color": "rgb(43, 37, 27)",
+            "borderColor": "rgb(216, 203, 166)"
+          },
+          "items": [
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": true,
+              "background": "rgb(248, 243, 228)",
+              "color": "rgb(43, 37, 27)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgb(216, 203, 166)",
+              "weight": "600"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            }
+          ]
+        },
+        {
+          "theme": "宣纸",
+          "width": 200,
+          "view": "对话",
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "radius": "0px",
+          "primary": "rgb(176, 53, 36)",
+          "reference": {
+            "background": "rgb(248, 243, 228)",
+            "color": "rgb(43, 37, 27)",
+            "borderColor": "rgb(216, 203, 166)"
+          },
+          "items": [
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": true,
+              "background": "rgb(248, 243, 228)",
+              "color": "rgb(43, 37, 27)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgb(216, 203, 166)",
+              "weight": "600"
+            }
+          ]
+        },
+        {
+          "theme": "宣纸",
+          "width": 260,
+          "view": "作品",
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "radius": "0px",
+          "primary": "rgb(176, 53, 36)",
+          "reference": {
+            "background": "rgb(248, 243, 228)",
+            "color": "rgb(43, 37, 27)",
+            "borderColor": "rgb(216, 203, 166)"
+          },
+          "items": [
+            {
+              "selected": true,
+              "background": "rgb(248, 243, 228)",
+              "color": "rgb(43, 37, 27)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgb(216, 203, 166)",
+              "weight": "600"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            }
+          ]
+        },
+        {
+          "theme": "宣纸",
+          "width": 260,
+          "view": "设定",
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "radius": "0px",
+          "primary": "rgb(176, 53, 36)",
+          "reference": {
+            "background": "rgb(248, 243, 228)",
+            "color": "rgb(43, 37, 27)",
+            "borderColor": "rgb(216, 203, 166)"
+          },
+          "items": [
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": true,
+              "background": "rgb(248, 243, 228)",
+              "color": "rgb(43, 37, 27)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgb(216, 203, 166)",
+              "weight": "600"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            }
+          ]
+        },
+        {
+          "theme": "宣纸",
+          "width": 260,
+          "view": "角色",
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "radius": "0px",
+          "primary": "rgb(176, 53, 36)",
+          "reference": {
+            "background": "rgb(248, 243, 228)",
+            "color": "rgb(43, 37, 27)",
+            "borderColor": "rgb(216, 203, 166)"
+          },
+          "items": [
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": true,
+              "background": "rgb(248, 243, 228)",
+              "color": "rgb(43, 37, 27)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgb(216, 203, 166)",
+              "weight": "600"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            }
+          ]
+        },
+        {
+          "theme": "宣纸",
+          "width": 260,
+          "view": "正文",
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "radius": "0px",
+          "primary": "rgb(176, 53, 36)",
+          "reference": {
+            "background": "rgb(248, 243, 228)",
+            "color": "rgb(43, 37, 27)",
+            "borderColor": "rgb(216, 203, 166)"
+          },
+          "items": [
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": true,
+              "background": "rgb(248, 243, 228)",
+              "color": "rgb(43, 37, 27)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgb(216, 203, 166)",
+              "weight": "600"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            }
+          ]
+        },
+        {
+          "theme": "宣纸",
+          "width": 260,
+          "view": "对话",
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "radius": "0px",
+          "primary": "rgb(176, 53, 36)",
+          "reference": {
+            "background": "rgb(248, 243, 228)",
+            "color": "rgb(43, 37, 27)",
+            "borderColor": "rgb(216, 203, 166)"
+          },
+          "items": [
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": true,
+              "background": "rgb(248, 243, 228)",
+              "color": "rgb(43, 37, 27)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgb(216, 203, 166)",
+              "weight": "600"
+            }
+          ]
+        },
+        {
+          "theme": "宣纸",
+          "width": 420,
+          "view": "作品",
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "radius": "0px",
+          "primary": "rgb(176, 53, 36)",
+          "reference": {
+            "background": "rgb(248, 243, 228)",
+            "color": "rgb(43, 37, 27)",
+            "borderColor": "rgb(216, 203, 166)"
+          },
+          "items": [
+            {
+              "selected": true,
+              "background": "rgb(248, 243, 228)",
+              "color": "rgb(43, 37, 27)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgb(216, 203, 166)",
+              "weight": "600"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            }
+          ]
+        },
+        {
+          "theme": "宣纸",
+          "width": 420,
+          "view": "设定",
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "radius": "0px",
+          "primary": "rgb(176, 53, 36)",
+          "reference": {
+            "background": "rgb(248, 243, 228)",
+            "color": "rgb(43, 37, 27)",
+            "borderColor": "rgb(216, 203, 166)"
+          },
+          "items": [
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": true,
+              "background": "rgb(248, 243, 228)",
+              "color": "rgb(43, 37, 27)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgb(216, 203, 166)",
+              "weight": "600"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            }
+          ]
+        },
+        {
+          "theme": "宣纸",
+          "width": 420,
+          "view": "角色",
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "radius": "0px",
+          "primary": "rgb(176, 53, 36)",
+          "reference": {
+            "background": "rgb(248, 243, 228)",
+            "color": "rgb(43, 37, 27)",
+            "borderColor": "rgb(216, 203, 166)"
+          },
+          "items": [
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": true,
+              "background": "rgb(248, 243, 228)",
+              "color": "rgb(43, 37, 27)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgb(216, 203, 166)",
+              "weight": "600"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            }
+          ]
+        },
+        {
+          "theme": "宣纸",
+          "width": 420,
+          "view": "正文",
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "radius": "0px",
+          "primary": "rgb(176, 53, 36)",
+          "reference": {
+            "background": "rgb(248, 243, 228)",
+            "color": "rgb(43, 37, 27)",
+            "borderColor": "rgb(216, 203, 166)"
+          },
+          "items": [
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": true,
+              "background": "rgb(248, 243, 228)",
+              "color": "rgb(43, 37, 27)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgb(216, 203, 166)",
+              "weight": "600"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            }
+          ]
+        },
+        {
+          "theme": "宣纸",
+          "width": 420,
+          "view": "对话",
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "radius": "0px",
+          "primary": "rgb(176, 53, 36)",
+          "reference": {
+            "background": "rgb(248, 243, 228)",
+            "color": "rgb(43, 37, 27)",
+            "borderColor": "rgb(216, 203, 166)"
+          },
+          "items": [
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(125, 113, 87)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": true,
+              "background": "rgb(248, 243, 228)",
+              "color": "rgb(43, 37, 27)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgb(216, 203, 166)",
+              "weight": "600"
+            }
+          ]
+        },
+        {
+          "theme": "玄墨",
+          "width": 200,
+          "view": "作品",
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "radius": "0px",
+          "primary": "rgb(224, 122, 95)",
+          "reference": {
+            "background": "rgb(42, 40, 38)",
+            "color": "rgb(236, 231, 225)",
+            "borderColor": "rgb(75, 70, 64)"
+          },
+          "items": [
+            {
+              "selected": true,
+              "background": "rgb(42, 40, 38)",
+              "color": "rgb(236, 231, 225)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgb(75, 70, 64)",
+              "weight": "600"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            }
+          ]
+        },
+        {
+          "theme": "玄墨",
+          "width": 200,
+          "view": "设定",
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "radius": "0px",
+          "primary": "rgb(224, 122, 95)",
+          "reference": {
+            "background": "rgb(42, 40, 38)",
+            "color": "rgb(236, 231, 225)",
+            "borderColor": "rgb(75, 70, 64)"
+          },
+          "items": [
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": true,
+              "background": "rgb(42, 40, 38)",
+              "color": "rgb(236, 231, 225)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgb(75, 70, 64)",
+              "weight": "600"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            }
+          ]
+        },
+        {
+          "theme": "玄墨",
+          "width": 200,
+          "view": "角色",
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "radius": "0px",
+          "primary": "rgb(224, 122, 95)",
+          "reference": {
+            "background": "rgb(42, 40, 38)",
+            "color": "rgb(236, 231, 225)",
+            "borderColor": "rgb(75, 70, 64)"
+          },
+          "items": [
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": true,
+              "background": "rgb(42, 40, 38)",
+              "color": "rgb(236, 231, 225)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgb(75, 70, 64)",
+              "weight": "600"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            }
+          ]
+        },
+        {
+          "theme": "玄墨",
+          "width": 200,
+          "view": "正文",
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "radius": "0px",
+          "primary": "rgb(224, 122, 95)",
+          "reference": {
+            "background": "rgb(42, 40, 38)",
+            "color": "rgb(236, 231, 225)",
+            "borderColor": "rgb(75, 70, 64)"
+          },
+          "items": [
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": true,
+              "background": "rgb(42, 40, 38)",
+              "color": "rgb(236, 231, 225)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgb(75, 70, 64)",
+              "weight": "600"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            }
+          ]
+        },
+        {
+          "theme": "玄墨",
+          "width": 200,
+          "view": "对话",
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "radius": "0px",
+          "primary": "rgb(224, 122, 95)",
+          "reference": {
+            "background": "rgb(42, 40, 38)",
+            "color": "rgb(236, 231, 225)",
+            "borderColor": "rgb(75, 70, 64)"
+          },
+          "items": [
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": true,
+              "background": "rgb(42, 40, 38)",
+              "color": "rgb(236, 231, 225)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgb(75, 70, 64)",
+              "weight": "600"
+            }
+          ]
+        },
+        {
+          "theme": "玄墨",
+          "width": 260,
+          "view": "作品",
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "radius": "0px",
+          "primary": "rgb(224, 122, 95)",
+          "reference": {
+            "background": "rgb(42, 40, 38)",
+            "color": "rgb(236, 231, 225)",
+            "borderColor": "rgb(75, 70, 64)"
+          },
+          "items": [
+            {
+              "selected": true,
+              "background": "rgb(42, 40, 38)",
+              "color": "rgb(236, 231, 225)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgb(75, 70, 64)",
+              "weight": "600"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            }
+          ]
+        },
+        {
+          "theme": "玄墨",
+          "width": 260,
+          "view": "设定",
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "radius": "0px",
+          "primary": "rgb(224, 122, 95)",
+          "reference": {
+            "background": "rgb(42, 40, 38)",
+            "color": "rgb(236, 231, 225)",
+            "borderColor": "rgb(75, 70, 64)"
+          },
+          "items": [
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": true,
+              "background": "rgb(42, 40, 38)",
+              "color": "rgb(236, 231, 225)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgb(75, 70, 64)",
+              "weight": "600"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            }
+          ]
+        },
+        {
+          "theme": "玄墨",
+          "width": 260,
+          "view": "角色",
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "radius": "0px",
+          "primary": "rgb(224, 122, 95)",
+          "reference": {
+            "background": "rgb(42, 40, 38)",
+            "color": "rgb(236, 231, 225)",
+            "borderColor": "rgb(75, 70, 64)"
+          },
+          "items": [
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": true,
+              "background": "rgb(42, 40, 38)",
+              "color": "rgb(236, 231, 225)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgb(75, 70, 64)",
+              "weight": "600"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            }
+          ]
+        },
+        {
+          "theme": "玄墨",
+          "width": 260,
+          "view": "正文",
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "radius": "0px",
+          "primary": "rgb(224, 122, 95)",
+          "reference": {
+            "background": "rgb(42, 40, 38)",
+            "color": "rgb(236, 231, 225)",
+            "borderColor": "rgb(75, 70, 64)"
+          },
+          "items": [
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": true,
+              "background": "rgb(42, 40, 38)",
+              "color": "rgb(236, 231, 225)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgb(75, 70, 64)",
+              "weight": "600"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            }
+          ]
+        },
+        {
+          "theme": "玄墨",
+          "width": 260,
+          "view": "对话",
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "radius": "0px",
+          "primary": "rgb(224, 122, 95)",
+          "reference": {
+            "background": "rgb(42, 40, 38)",
+            "color": "rgb(236, 231, 225)",
+            "borderColor": "rgb(75, 70, 64)"
+          },
+          "items": [
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": true,
+              "background": "rgb(42, 40, 38)",
+              "color": "rgb(236, 231, 225)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgb(75, 70, 64)",
+              "weight": "600"
+            }
+          ]
+        },
+        {
+          "theme": "玄墨",
+          "width": 420,
+          "view": "作品",
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "radius": "0px",
+          "primary": "rgb(224, 122, 95)",
+          "reference": {
+            "background": "rgb(42, 40, 38)",
+            "color": "rgb(236, 231, 225)",
+            "borderColor": "rgb(75, 70, 64)"
+          },
+          "items": [
+            {
+              "selected": true,
+              "background": "rgb(42, 40, 38)",
+              "color": "rgb(236, 231, 225)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgb(75, 70, 64)",
+              "weight": "600"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            }
+          ]
+        },
+        {
+          "theme": "玄墨",
+          "width": 420,
+          "view": "设定",
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "radius": "0px",
+          "primary": "rgb(224, 122, 95)",
+          "reference": {
+            "background": "rgb(42, 40, 38)",
+            "color": "rgb(236, 231, 225)",
+            "borderColor": "rgb(75, 70, 64)"
+          },
+          "items": [
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": true,
+              "background": "rgb(42, 40, 38)",
+              "color": "rgb(236, 231, 225)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgb(75, 70, 64)",
+              "weight": "600"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            }
+          ]
+        },
+        {
+          "theme": "玄墨",
+          "width": 420,
+          "view": "角色",
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "radius": "0px",
+          "primary": "rgb(224, 122, 95)",
+          "reference": {
+            "background": "rgb(42, 40, 38)",
+            "color": "rgb(236, 231, 225)",
+            "borderColor": "rgb(75, 70, 64)"
+          },
+          "items": [
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": true,
+              "background": "rgb(42, 40, 38)",
+              "color": "rgb(236, 231, 225)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgb(75, 70, 64)",
+              "weight": "600"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            }
+          ]
+        },
+        {
+          "theme": "玄墨",
+          "width": 420,
+          "view": "正文",
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "radius": "0px",
+          "primary": "rgb(224, 122, 95)",
+          "reference": {
+            "background": "rgb(42, 40, 38)",
+            "color": "rgb(236, 231, 225)",
+            "borderColor": "rgb(75, 70, 64)"
+          },
+          "items": [
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": true,
+              "background": "rgb(42, 40, 38)",
+              "color": "rgb(236, 231, 225)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgb(75, 70, 64)",
+              "weight": "600"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            }
+          ]
+        },
+        {
+          "theme": "玄墨",
+          "width": 420,
+          "view": "对话",
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "radius": "0px",
+          "primary": "rgb(224, 122, 95)",
+          "reference": {
+            "background": "rgb(42, 40, 38)",
+            "color": "rgb(236, 231, 225)",
+            "borderColor": "rgb(75, 70, 64)"
+          },
+          "items": [
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": false,
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(154, 145, 138)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "weight": "400"
+            },
+            {
+              "selected": true,
+              "background": "rgb(42, 40, 38)",
+              "color": "rgb(236, 231, 225)",
+              "radius": "6px",
+              "border": "1px",
+              "borderColor": "rgb(75, 70, 64)",
+              "weight": "600"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Unselected Tab hover stays transparent in both themes; keyboard focus remains visible and new-conversation action stays neutral after history and category changes",
+      "hoverStyles": [
+        {
+          "theme": "宣纸",
+          "name": "设定",
+          "background": "rgba(0, 0, 0, 0)",
+          "selected": "false"
+        },
+        {
+          "theme": "宣纸",
+          "name": "角色",
+          "background": "rgba(0, 0, 0, 0)",
+          "selected": "false"
+        },
+        {
+          "theme": "宣纸",
+          "name": "正文",
+          "background": "rgba(0, 0, 0, 0)",
+          "selected": "false"
+        },
+        {
+          "theme": "宣纸",
+          "name": "对话",
+          "background": "rgba(0, 0, 0, 0)",
+          "selected": "false"
+        },
+        {
+          "theme": "玄墨",
+          "name": "设定",
+          "background": "rgba(0, 0, 0, 0)",
+          "selected": "false"
+        },
+        {
+          "theme": "玄墨",
+          "name": "角色",
+          "background": "rgba(0, 0, 0, 0)",
+          "selected": "false"
+        },
+        {
+          "theme": "玄墨",
+          "name": "正文",
+          "background": "rgba(0, 0, 0, 0)",
+          "selected": "false"
+        },
+        {
+          "theme": "玄墨",
+          "name": "对话",
+          "background": "rgba(0, 0, 0, 0)",
+          "selected": "false"
+        }
+      ]
+    },
+    {
+      "name": "Filtered work headings and character names use the same conditional fade without masking role badges"
+    },
+    {
+      "name": "Multiple-work scene/scenario destinations retain ownership and independent synthetic records"
+    },
+    {
+      "name": "v8 neutral Tab group retains room above and below: 16px top / 12px bottom without increasing option height",
+      "marginTop": "16px",
+      "marginBottom": "12px",
+      "above": 16,
+      "below": 12,
+      "height": 36
+    },
+    {
+      "name": "Short role badges follow the name by 6px on the left, preserve full accessible identity and no longer align to the row end",
+      "roles": [
+        {
+          "name": "林舟",
+          "tag": "主",
+          "gap": 6,
+          "rightSpace": 86.5,
+          "within": true,
+          "accessibleName": "林舟，主角",
+          "identity": "主角"
+        },
+        {
+          "name": "顾雨",
+          "tag": "配",
+          "gap": 6,
+          "rightSpace": 86.5,
+          "within": true,
+          "accessibleName": "顾雨，配角",
+          "identity": "配角"
+        },
+        {
+          "name": "苏禾",
+          "tag": "配",
+          "gap": 6,
+          "rightSpace": 86.5,
+          "within": true,
+          "accessibleName": "苏禾，配角",
+          "identity": "配角"
+        },
+        {
+          "name": "江临",
+          "tag": "反",
+          "gap": 6,
+          "rightSpace": 86.5,
+          "within": true,
+          "accessibleName": "江临，反派",
+          "identity": "反派"
+        },
+        {
+          "name": "渡船客",
+          "tag": "伏笔",
+          "gap": 6,
+          "rightSpace": 58,
+          "within": true,
+          "accessibleName": "渡船客，伏笔角色",
+          "identity": "伏笔角色"
+        },
+        {
+          "name": "宋遥",
+          "tag": "主",
+          "gap": 6,
+          "rightSpace": 86.5,
+          "within": true,
+          "accessibleName": "宋遥，主角",
+          "identity": "主角"
+        },
+        {
+          "name": "温宁",
+          "tag": "配",
+          "gap": 6,
+          "rightSpace": 86.5,
+          "within": true,
+          "accessibleName": "温宁，配角",
+          "identity": "配角"
+        },
+        {
+          "name": "明溪",
+          "tag": "配",
+          "gap": 6,
+          "rightSpace": 86.5,
+          "within": true,
+          "accessibleName": "明溪，配角",
+          "identity": "配角"
+        },
+        {
+          "name": "秦川",
+          "tag": "反",
+          "gap": 6,
+          "rightSpace": 86.5,
+          "within": true,
+          "accessibleName": "秦川，反派",
+          "identity": "反派"
+        },
+        {
+          "name": "持伞人",
+          "tag": "伏笔",
+          "gap": 6,
+          "rightSpace": 58,
+          "within": true,
+          "accessibleName": "持伞人，伏笔角色",
+          "identity": "伏笔角色"
+        }
+      ]
+    },
+    {
+      "name": "Long role names fade before the inline fixed-width identity tag",
+      "gap": 6,
+      "tagWidth": 17.5,
+      "tagMask": "none"
+    },
+    {
+      "name": "Theme-specific navigation icon tokens stay distinct and readable; all main row icons match their type token, while all 10 role glyphs and badges share four identity colors",
+      "themes": [
+        {
+          "theme": "宣纸",
+          "types": [
+            {
+              "node": "unbound",
+              "kind": "business",
+              "role": null,
+              "tone": "theme",
+              "active": false,
+              "color": "rgb(135, 115, 43)",
+              "expected": [
+                0.5294117647058824,
+                0.45098039215686275,
+                0.16862745098039217
+              ],
+              "actual": [
+                0.5294117647058824,
+                0.45098039215686275,
+                0.16862745098039217
+              ],
+              "iconContrast": 3.738883386670002,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "小说创作指引（1）"
+            },
+            {
+              "node": "unbound-conversation",
+              "kind": "conversation",
+              "role": null,
+              "tone": "conversations",
+              "active": false,
+              "color": "rgb(85, 119, 156)",
+              "expected": [
+                0.3333333333333333,
+                0.4666666666666667,
+                0.611764705882353
+              ],
+              "actual": [
+                0.3333333333333333,
+                0.4666666666666667,
+                0.611764705882353
+              ],
+              "iconContrast": 3.7490974919102724,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "讨论一个尚未建档的脑洞"
+            },
+            {
+              "node": "novel",
+              "kind": "work",
+              "role": null,
+              "tone": "work",
+              "active": false,
+              "color": "rgb(101, 112, 119)",
+              "expected": [
+                0.396078431372549,
+                0.4392156862745098,
+                0.4666666666666667
+              ],
+              "actual": [
+                0.396078431372549,
+                0.4392156862745098,
+                0.4666666666666667
+              ],
+              "iconContrast": 4.082251724901224,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": "FolderOpen",
+              "fullIdentity": "雨灯纪事"
+            },
+            {
+              "node": "settings",
+              "kind": "group",
+              "role": null,
+              "tone": "settings",
+              "active": false,
+              "color": "rgb(120, 105, 74)",
+              "expected": [
+                0.47058823529411764,
+                0.4117647058823529,
+                0.2901960784313726
+              ],
+              "actual": [
+                0.47058823529411764,
+                0.4117647058823529,
+                0.2901960784313726
+              ],
+              "iconContrast": 4.310700264541839,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "设定"
+            },
+            {
+              "node": "theme",
+              "kind": "setting",
+              "role": null,
+              "tone": "theme",
+              "active": false,
+              "color": "rgb(135, 115, 43)",
+              "expected": [
+                0.5294117647058824,
+                0.45098039215686275,
+                0.16862745098039217
+              ],
+              "actual": [
+                0.5294117647058824,
+                0.45098039215686275,
+                0.16862745098039217
+              ],
+              "iconContrast": 3.738883386670002,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "主题"
+            },
+            {
+              "node": "style",
+              "kind": "setting",
+              "role": null,
+              "tone": "style",
+              "active": false,
+              "color": "rgb(61, 118, 102)",
+              "expected": [
+                0.23921568627450981,
+                0.4627450980392157,
+                0.4
+              ],
+              "actual": [
+                0.23921568627450981,
+                0.4627450980392157,
+                0.4
+              ],
+              "iconContrast": 4.241921604441869,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "文风"
+            },
+            {
+              "node": "worlds",
+              "kind": "world",
+              "role": null,
+              "tone": "world",
+              "active": false,
+              "color": "rgb(66, 111, 141)",
+              "expected": [
+                0.25882352941176473,
+                0.43529411764705883,
+                0.5529411764705883
+              ],
+              "actual": [
+                0.25882352941176473,
+                0.43529411764705883,
+                0.5529411764705883
+              ],
+              "iconContrast": 4.3418201856509695,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "世界观"
+            },
+            {
+              "node": "world",
+              "kind": "world",
+              "role": null,
+              "tone": "world",
+              "active": false,
+              "color": "rgb(66, 111, 141)",
+              "expected": [
+                0.25882352941176473,
+                0.43529411764705883,
+                0.5529411764705883
+              ],
+              "actual": [
+                0.25882352941176473,
+                0.43529411764705883,
+                0.5529411764705883
+              ],
+              "iconContrast": 4.3418201856509695,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "青石城"
+            },
+            {
+              "node": "gift",
+              "kind": "setting",
+              "role": null,
+              "tone": "gift",
+              "active": false,
+              "color": "rgb(147, 104, 38)",
+              "expected": [
+                0.5764705882352941,
+                0.40784313725490196,
+                0.14901960784313725
+              ],
+              "actual": [
+                0.5764705882352941,
+                0.40784313725490196,
+                0.14901960784313725
+              ],
+              "iconContrast": 3.975281512806088,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": "Pointer",
+              "fullIdentity": "金手指"
+            },
+            {
+              "node": "foreshadow",
+              "kind": "setting",
+              "role": null,
+              "tone": "foreshadow",
+              "active": false,
+              "color": "rgb(121, 88, 134)",
+              "expected": [
+                0.4745098039215686,
+                0.34509803921568627,
+                0.5254901960784314
+              ],
+              "actual": [
+                0.4745098039215686,
+                0.34509803921568627,
+                0.5254901960784314
+              ],
+              "iconContrast": 4.753525053628349,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "伏笔"
+            },
+            {
+              "node": "trope",
+              "kind": "setting",
+              "role": null,
+              "tone": "emotion",
+              "active": false,
+              "color": "rgb(143, 89, 109)",
+              "expected": [
+                0.5607843137254902,
+                0.34901960784313724,
+                0.42745098039215684
+              ],
+              "actual": [
+                0.5607843137254902,
+                0.34901960784313724,
+                0.42745098039215684
+              ],
+              "iconContrast": 4.424089951614816,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "爽点/泪点"
+            },
+            {
+              "node": "characters",
+              "kind": "group",
+              "role": null,
+              "tone": "characters",
+              "active": false,
+              "color": "rgb(118, 102, 86)",
+              "expected": [
+                0.4627450980392157,
+                0.4,
+                0.33725490196078434
+              ],
+              "actual": [
+                0.4627450980392157,
+                0.4,
+                0.33725490196078434
+              ],
+              "iconContrast": 4.438586490475113,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "角色"
+            },
+            {
+              "node": "protagonists",
+              "kind": "group",
+              "role": "protagonist",
+              "tone": "protagonist",
+              "active": false,
+              "color": "rgb(110, 81, 26)",
+              "expected": [
+                0.43137254901960786,
+                0.3176470588235294,
+                0.10196078431372549
+              ],
+              "actual": [
+                0.43137254901960786,
+                0.3176470588235294,
+                0.10196078431372549
+              ],
+              "iconContrast": 5.916124339175505,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "主角（1）"
+            },
+            {
+              "node": "character",
+              "kind": "character",
+              "role": "protagonist",
+              "tone": "protagonist",
+              "active": false,
+              "color": "rgb(110, 81, 26)",
+              "expected": [
+                0.43137254901960786,
+                0.3176470588235294,
+                0.10196078431372549
+              ],
+              "actual": [
+                0.43137254901960786,
+                0.3176470588235294,
+                0.10196078431372549
+              ],
+              "iconContrast": 5.916124339175505,
+              "tagColor": "rgb(110, 81, 26)",
+              "badgeContrast": 5.297483600878097,
+              "shape": "UserRound",
+              "fullIdentity": "林舟，主角"
+            },
+            {
+              "node": "supporting",
+              "kind": "group",
+              "role": "supporting",
+              "tone": "supporting",
+              "active": false,
+              "color": "rgb(43, 92, 100)",
+              "expected": [
+                0.16862745098039217,
+                0.3607843137254902,
+                0.39215686274509803
+              ],
+              "actual": [
+                0.16862745098039217,
+                0.3607843137254902,
+                0.39215686274509803
+              ],
+              "iconContrast": 5.9944238448093765,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "配角（2）"
+            },
+            {
+              "node": "antagonists",
+              "kind": "group",
+              "role": "antagonist",
+              "tone": "antagonist",
+              "active": false,
+              "color": "rgb(124, 67, 87)",
+              "expected": [
+                0.48627450980392156,
+                0.2627450980392157,
+                0.3411764705882353
+              ],
+              "actual": [
+                0.48627450980392156,
+                0.2627450980392157,
+                0.3411764705882353
+              ],
+              "iconContrast": 6.037480011441306,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "反派（1）"
+            },
+            {
+              "node": "foreshadow-characters",
+              "kind": "group",
+              "role": "foreshadow-role",
+              "tone": "foreshadow-role",
+              "active": false,
+              "color": "rgb(103, 75, 125)",
+              "expected": [
+                0.403921568627451,
+                0.29411764705882354,
+                0.49019607843137253
+              ],
+              "actual": [
+                0.403921568627451,
+                0.29411764705882354,
+                0.49019607843137253
+              ],
+              "iconContrast": 5.8660096062026215,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "伏笔角色（1）"
+            },
+            {
+              "node": "items",
+              "kind": "items",
+              "role": null,
+              "tone": "items",
+              "active": false,
+              "color": "rgb(133, 100, 67)",
+              "expected": [
+                0.5215686274509804,
+                0.39215686274509803,
+                0.2627450980392157
+              ],
+              "actual": [
+                0.5215686274509804,
+                0.39215686274509803,
+                0.2627450980392157
+              ],
+              "iconContrast": 4.329373340090705,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "物品"
+            },
+            {
+              "node": "scenario",
+              "kind": "scenario",
+              "role": null,
+              "tone": "scenario",
+              "active": false,
+              "color": "rgb(111, 92, 145)",
+              "expected": [
+                0.43529411764705883,
+                0.3607843137254902,
+                0.5686274509803921
+              ],
+              "actual": [
+                0.43529411764705883,
+                0.3607843137254902,
+                0.5686274509803921
+              ],
+              "iconContrast": 4.6713530843602635,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "情景试验场"
+            },
+            {
+              "node": "scenes",
+              "kind": "scenes",
+              "role": null,
+              "tone": "scenes",
+              "active": false,
+              "color": "rgb(71, 118, 81)",
+              "expected": [
+                0.2784313725490196,
+                0.4627450980392157,
+                0.3176470588235294
+              ],
+              "actual": [
+                0.2784313725490196,
+                0.4627450980392157,
+                0.3176470588235294
+              ],
+              "iconContrast": 4.2457038062685,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "场景"
+            },
+            {
+              "node": "worldline",
+              "kind": "worldline",
+              "role": null,
+              "tone": "worldline",
+              "active": false,
+              "color": "rgb(54, 118, 123)",
+              "expected": [
+                0.21176470588235294,
+                0.4627450980392157,
+                0.4823529411764706
+              ],
+              "actual": [
+                0.21176470588235294,
+                0.4627450980392157,
+                0.4823529411764706
+              ],
+              "iconContrast": 4.1866303363934545,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "世界线"
+            },
+            {
+              "node": "narrative",
+              "kind": "narrative",
+              "role": null,
+              "tone": "narrative",
+              "active": false,
+              "color": "rgb(94, 108, 151)",
+              "expected": [
+                0.3686274509803922,
+                0.4235294117647059,
+                0.592156862745098
+              ],
+              "actual": [
+                0.3686274509803922,
+                0.4235294117647059,
+                0.592156862745098
+              ],
+              "iconContrast": 4.152053980955115,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "叙事线"
+            },
+            {
+              "node": "outline",
+              "kind": "outline",
+              "role": null,
+              "tone": "outline",
+              "active": false,
+              "color": "rgb(123, 108, 81)",
+              "expected": [
+                0.4823529411764706,
+                0.4235294117647059,
+                0.3176470588235294
+              ],
+              "actual": [
+                0.4823529411764706,
+                0.4235294117647059,
+                0.3176470588235294
+              ],
+              "iconContrast": 4.113428682502112,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "大纲"
+            },
+            {
+              "node": "body",
+              "kind": "group",
+              "role": null,
+              "tone": "manuscript",
+              "active": false,
+              "color": "rgb(117, 107, 98)",
+              "expected": [
+                0.4588235294117647,
+                0.4196078431372549,
+                0.3843137254901961
+              ],
+              "actual": [
+                0.4588235294117647,
+                0.4196078431372549,
+                0.3843137254901961
+              ],
+              "iconContrast": 4.184982416802093,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "正文"
+            },
+            {
+              "node": "volume",
+              "kind": "volume",
+              "role": null,
+              "tone": "manuscript",
+              "active": false,
+              "color": "rgb(117, 107, 98)",
+              "expected": [
+                0.4588235294117647,
+                0.4196078431372549,
+                0.3843137254901961
+              ],
+              "actual": [
+                0.4588235294117647,
+                0.4196078431372549,
+                0.3843137254901961
+              ],
+              "iconContrast": 4.184982416802093,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "第一卷 · 雨灯"
+            },
+            {
+              "node": "chapter",
+              "kind": "chapter",
+              "role": null,
+              "tone": "manuscript",
+              "active": false,
+              "color": "rgb(117, 107, 98)",
+              "expected": [
+                0.4588235294117647,
+                0.4196078431372549,
+                0.3843137254901961
+              ],
+              "actual": [
+                0.4588235294117647,
+                0.4196078431372549,
+                0.3843137254901961
+              ],
+              "iconContrast": 4.184982416802093,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "第一章 · 雨灯"
+            },
+            {
+              "node": "chapter-next",
+              "kind": "chapter",
+              "role": null,
+              "tone": "manuscript",
+              "active": false,
+              "color": "rgb(117, 107, 98)",
+              "expected": [
+                0.4588235294117647,
+                0.4196078431372549,
+                0.3843137254901961
+              ],
+              "actual": [
+                0.4588235294117647,
+                0.4196078431372549,
+                0.3843137254901961
+              ],
+              "iconContrast": 4.184982416802093,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "第二章 · 长街"
+            },
+            {
+              "node": "workflow",
+              "kind": "business",
+              "role": null,
+              "tone": "workflow",
+              "active": false,
+              "color": "rgb(99, 119, 70)",
+              "expected": [
+                0.38823529411764707,
+                0.4666666666666667,
+                0.27450980392156865
+              ],
+              "actual": [
+                0.38823529411764707,
+                0.4666666666666667,
+                0.27450980392156865
+              ],
+              "iconContrast": 3.9669003048407436,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "创作进度"
+            },
+            {
+              "node": "review",
+              "kind": "business",
+              "role": null,
+              "tone": "review",
+              "active": false,
+              "color": "rgb(68, 115, 126)",
+              "expected": [
+                0.26666666666666666,
+                0.45098039215686275,
+                0.49411764705882355
+              ],
+              "actual": [
+                0.26666666666666666,
+                0.45098039215686275,
+                0.49411764705882355
+              ],
+              "iconContrast": 4.223149467250728,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "创作评审"
+            },
+            {
+              "node": "cascade",
+              "kind": "business",
+              "role": null,
+              "tone": "cascade",
+              "active": false,
+              "color": "rgb(130, 97, 131)",
+              "expected": [
+                0.5098039215686274,
+                0.3803921568627451,
+                0.5137254901960784
+              ],
+              "actual": [
+                0.5098039215686274,
+                0.3803921568627451,
+                0.5137254901960784
+              ],
+              "iconContrast": 4.236467008871828,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "级联修订"
+            },
+            {
+              "node": "conversations",
+              "kind": "group",
+              "role": null,
+              "tone": "conversations",
+              "active": false,
+              "color": "rgb(85, 119, 156)",
+              "expected": [
+                0.3333333333333333,
+                0.4666666666666667,
+                0.611764705882353
+              ],
+              "actual": [
+                0.3333333333333333,
+                0.4666666666666667,
+                0.611764705882353
+              ],
+              "iconContrast": 3.7490974919102724,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "对话"
+            },
+            {
+              "node": "conversation",
+              "kind": "conversation",
+              "role": null,
+              "tone": "conversations",
+              "active": false,
+              "color": "rgb(85, 119, 156)",
+              "expected": [
+                0.3333333333333333,
+                0.4666666666666667,
+                0.611764705882353
+              ],
+              "actual": [
+                0.3333333333333333,
+                0.4666666666666667,
+                0.611764705882353
+              ],
+              "iconContrast": 3.7490974919102724,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "我想从一场雨夜开始这个故事"
+            },
+            {
+              "node": "novel-2",
+              "kind": "work",
+              "role": null,
+              "tone": "work",
+              "active": false,
+              "color": "rgb(101, 112, 119)",
+              "expected": [
+                0.396078431372549,
+                0.4392156862745098,
+                0.4666666666666667
+              ],
+              "actual": [
+                0.396078431372549,
+                0.4392156862745098,
+                0.4666666666666667
+              ],
+              "iconContrast": 4.082251724901224,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": "FolderOpen",
+              "fullIdentity": "风渡行记"
+            },
+            {
+              "node": "settings-2",
+              "kind": "group",
+              "role": null,
+              "tone": "settings",
+              "active": false,
+              "color": "rgb(120, 105, 74)",
+              "expected": [
+                0.47058823529411764,
+                0.4117647058823529,
+                0.2901960784313726
+              ],
+              "actual": [
+                0.47058823529411764,
+                0.4117647058823529,
+                0.2901960784313726
+              ],
+              "iconContrast": 4.310700264541839,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "设定"
+            },
+            {
+              "node": "characters-2",
+              "kind": "group",
+              "role": null,
+              "tone": "characters",
+              "active": false,
+              "color": "rgb(118, 102, 86)",
+              "expected": [
+                0.4627450980392157,
+                0.4,
+                0.33725490196078434
+              ],
+              "actual": [
+                0.4627450980392157,
+                0.4,
+                0.33725490196078434
+              ],
+              "iconContrast": 4.438586490475113,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "角色"
+            },
+            {
+              "node": "items-2",
+              "kind": "items",
+              "role": null,
+              "tone": "items",
+              "active": false,
+              "color": "rgb(133, 100, 67)",
+              "expected": [
+                0.5215686274509804,
+                0.39215686274509803,
+                0.2627450980392157
+              ],
+              "actual": [
+                0.5215686274509804,
+                0.39215686274509803,
+                0.2627450980392157
+              ],
+              "iconContrast": 4.329373340090705,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "物品"
+            },
+            {
+              "node": "scenario-2",
+              "kind": "scenario",
+              "role": null,
+              "tone": "scenario",
+              "active": false,
+              "color": "rgb(111, 92, 145)",
+              "expected": [
+                0.43529411764705883,
+                0.3607843137254902,
+                0.5686274509803921
+              ],
+              "actual": [
+                0.43529411764705883,
+                0.3607843137254902,
+                0.5686274509803921
+              ],
+              "iconContrast": 4.6713530843602635,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "情景试验场"
+            },
+            {
+              "node": "scenes-2",
+              "kind": "scenes",
+              "role": null,
+              "tone": "scenes",
+              "active": true,
+              "color": "rgb(71, 118, 81)",
+              "expected": [
+                0.2784313725490196,
+                0.4627450980392157,
+                0.3176470588235294
+              ],
+              "actual": [
+                0.2784313725490196,
+                0.4627450980392157,
+                0.3176470588235294
+              ],
+              "iconContrast": 3.735258489431605,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "场景"
+            },
+            {
+              "node": "worldline-2",
+              "kind": "worldline",
+              "role": null,
+              "tone": "worldline",
+              "active": false,
+              "color": "rgb(54, 118, 123)",
+              "expected": [
+                0.21176470588235294,
+                0.4627450980392157,
+                0.4823529411764706
+              ],
+              "actual": [
+                0.21176470588235294,
+                0.4627450980392157,
+                0.4823529411764706
+              ],
+              "iconContrast": 4.1866303363934545,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "世界线"
+            },
+            {
+              "node": "narrative-2",
+              "kind": "narrative",
+              "role": null,
+              "tone": "narrative",
+              "active": false,
+              "color": "rgb(94, 108, 151)",
+              "expected": [
+                0.3686274509803922,
+                0.4235294117647059,
+                0.592156862745098
+              ],
+              "actual": [
+                0.3686274509803922,
+                0.4235294117647059,
+                0.592156862745098
+              ],
+              "iconContrast": 4.152053980955115,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "叙事线"
+            },
+            {
+              "node": "outline-2",
+              "kind": "outline",
+              "role": null,
+              "tone": "outline",
+              "active": false,
+              "color": "rgb(123, 108, 81)",
+              "expected": [
+                0.4823529411764706,
+                0.4235294117647059,
+                0.3176470588235294
+              ],
+              "actual": [
+                0.4823529411764706,
+                0.4235294117647059,
+                0.3176470588235294
+              ],
+              "iconContrast": 4.113428682502112,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "大纲"
+            },
+            {
+              "node": "body-2",
+              "kind": "group",
+              "role": null,
+              "tone": "manuscript",
+              "active": false,
+              "color": "rgb(117, 107, 98)",
+              "expected": [
+                0.4588235294117647,
+                0.4196078431372549,
+                0.3843137254901961
+              ],
+              "actual": [
+                0.4588235294117647,
+                0.4196078431372549,
+                0.3843137254901961
+              ],
+              "iconContrast": 4.184982416802093,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "正文"
+            },
+            {
+              "node": "workflow-2",
+              "kind": "business",
+              "role": null,
+              "tone": "workflow",
+              "active": false,
+              "color": "rgb(99, 119, 70)",
+              "expected": [
+                0.38823529411764707,
+                0.4666666666666667,
+                0.27450980392156865
+              ],
+              "actual": [
+                0.38823529411764707,
+                0.4666666666666667,
+                0.27450980392156865
+              ],
+              "iconContrast": 3.9669003048407436,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "创作进度"
+            },
+            {
+              "node": "review-2",
+              "kind": "business",
+              "role": null,
+              "tone": "review",
+              "active": false,
+              "color": "rgb(68, 115, 126)",
+              "expected": [
+                0.26666666666666666,
+                0.45098039215686275,
+                0.49411764705882355
+              ],
+              "actual": [
+                0.26666666666666666,
+                0.45098039215686275,
+                0.49411764705882355
+              ],
+              "iconContrast": 4.223149467250728,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "创作评审"
+            },
+            {
+              "node": "cascade-2",
+              "kind": "business",
+              "role": null,
+              "tone": "cascade",
+              "active": false,
+              "color": "rgb(130, 97, 131)",
+              "expected": [
+                0.5098039215686274,
+                0.3803921568627451,
+                0.5137254901960784
+              ],
+              "actual": [
+                0.5098039215686274,
+                0.3803921568627451,
+                0.5137254901960784
+              ],
+              "iconContrast": 4.236467008871828,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "级联修订"
+            },
+            {
+              "node": "conversations-2",
+              "kind": "group",
+              "role": null,
+              "tone": "conversations",
+              "active": false,
+              "color": "rgb(85, 119, 156)",
+              "expected": [
+                0.3333333333333333,
+                0.4666666666666667,
+                0.611764705882353
+              ],
+              "actual": [
+                0.3333333333333333,
+                0.4666666666666667,
+                0.611764705882353
+              ],
+              "iconContrast": 3.7490974919102724,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "对话"
+            }
+          ],
+          "roles": [
+            {
+              "node": "character",
+              "kind": "character",
+              "role": "protagonist",
+              "tone": "protagonist",
+              "active": false,
+              "color": "rgb(110, 81, 26)",
+              "expected": [
+                0.43137254901960786,
+                0.3176470588235294,
+                0.10196078431372549
+              ],
+              "actual": [
+                0.43137254901960786,
+                0.3176470588235294,
+                0.10196078431372549
+              ],
+              "iconContrast": 5.916124339175505,
+              "tagColor": "rgb(110, 81, 26)",
+              "badgeContrast": 5.297483600878097,
+              "shape": "UserRound",
+              "fullIdentity": "林舟，主角"
+            },
+            {
+              "node": "support1",
+              "kind": "character",
+              "role": "supporting",
+              "tone": "supporting",
+              "active": false,
+              "color": "rgb(43, 92, 100)",
+              "expected": [
+                0.16862745098039217,
+                0.3607843137254902,
+                0.39215686274509803
+              ],
+              "actual": [
+                0.16862745098039217,
+                0.3607843137254902,
+                0.39215686274509803
+              ],
+              "iconContrast": 5.9944238448093765,
+              "tagColor": "rgb(43, 92, 100)",
+              "badgeContrast": 5.357656001014736,
+              "shape": "UserRound",
+              "fullIdentity": "顾雨，配角"
+            },
+            {
+              "node": "support2",
+              "kind": "character",
+              "role": "supporting",
+              "tone": "supporting",
+              "active": false,
+              "color": "rgb(43, 92, 100)",
+              "expected": [
+                0.16862745098039217,
+                0.3607843137254902,
+                0.39215686274509803
+              ],
+              "actual": [
+                0.16862745098039217,
+                0.3607843137254902,
+                0.39215686274509803
+              ],
+              "iconContrast": 5.9944238448093765,
+              "tagColor": "rgb(43, 92, 100)",
+              "badgeContrast": 5.357656001014736,
+              "shape": "UserRound",
+              "fullIdentity": "苏禾，配角"
+            },
+            {
+              "node": "antagonist",
+              "kind": "character",
+              "role": "antagonist",
+              "tone": "antagonist",
+              "active": false,
+              "color": "rgb(124, 67, 87)",
+              "expected": [
+                0.48627450980392156,
+                0.2627450980392157,
+                0.3411764705882353
+              ],
+              "actual": [
+                0.48627450980392156,
+                0.2627450980392157,
+                0.3411764705882353
+              ],
+              "iconContrast": 6.037480011441306,
+              "tagColor": "rgb(124, 67, 87)",
+              "badgeContrast": 5.393709084077038,
+              "shape": "UserRound",
+              "fullIdentity": "江临，反派"
+            },
+            {
+              "node": "mystery",
+              "kind": "character",
+              "role": "foreshadow-role",
+              "tone": "foreshadow-role",
+              "active": false,
+              "color": "rgb(103, 75, 125)",
+              "expected": [
+                0.403921568627451,
+                0.29411764705882354,
+                0.49019607843137253
+              ],
+              "actual": [
+                0.403921568627451,
+                0.29411764705882354,
+                0.49019607843137253
+              ],
+              "iconContrast": 5.8660096062026215,
+              "tagColor": "rgb(103, 75, 125)",
+              "badgeContrast": 5.254092376830101,
+              "shape": "character-letter",
+              "fullIdentity": "渡船客，伏笔角色"
+            },
+            {
+              "node": "character-2",
+              "kind": "character",
+              "role": "protagonist",
+              "tone": "protagonist",
+              "active": false,
+              "color": "rgb(110, 81, 26)",
+              "expected": [
+                0.43137254901960786,
+                0.3176470588235294,
+                0.10196078431372549
+              ],
+              "actual": [
+                0.43137254901960786,
+                0.3176470588235294,
+                0.10196078431372549
+              ],
+              "iconContrast": 5.916124339175505,
+              "tagColor": "rgb(110, 81, 26)",
+              "badgeContrast": 5.297483600878097,
+              "shape": "UserRound",
+              "fullIdentity": "宋遥，主角"
+            },
+            {
+              "node": "support1-2",
+              "kind": "character",
+              "role": "supporting",
+              "tone": "supporting",
+              "active": false,
+              "color": "rgb(43, 92, 100)",
+              "expected": [
+                0.16862745098039217,
+                0.3607843137254902,
+                0.39215686274509803
+              ],
+              "actual": [
+                0.16862745098039217,
+                0.3607843137254902,
+                0.39215686274509803
+              ],
+              "iconContrast": 5.9944238448093765,
+              "tagColor": "rgb(43, 92, 100)",
+              "badgeContrast": 5.357656001014736,
+              "shape": "UserRound",
+              "fullIdentity": "温宁，配角"
+            },
+            {
+              "node": "support2-2",
+              "kind": "character",
+              "role": "supporting",
+              "tone": "supporting",
+              "active": false,
+              "color": "rgb(43, 92, 100)",
+              "expected": [
+                0.16862745098039217,
+                0.3607843137254902,
+                0.39215686274509803
+              ],
+              "actual": [
+                0.16862745098039217,
+                0.3607843137254902,
+                0.39215686274509803
+              ],
+              "iconContrast": 5.9944238448093765,
+              "tagColor": "rgb(43, 92, 100)",
+              "badgeContrast": 5.357656001014736,
+              "shape": "UserRound",
+              "fullIdentity": "明溪，配角"
+            },
+            {
+              "node": "antagonist-2",
+              "kind": "character",
+              "role": "antagonist",
+              "tone": "antagonist",
+              "active": false,
+              "color": "rgb(124, 67, 87)",
+              "expected": [
+                0.48627450980392156,
+                0.2627450980392157,
+                0.3411764705882353
+              ],
+              "actual": [
+                0.48627450980392156,
+                0.2627450980392157,
+                0.3411764705882353
+              ],
+              "iconContrast": 6.037480011441306,
+              "tagColor": "rgb(124, 67, 87)",
+              "badgeContrast": 5.393709084077038,
+              "shape": "UserRound",
+              "fullIdentity": "秦川，反派"
+            },
+            {
+              "node": "mystery-2",
+              "kind": "character",
+              "role": "foreshadow-role",
+              "tone": "foreshadow-role",
+              "active": false,
+              "color": "rgb(103, 75, 125)",
+              "expected": [
+                0.403921568627451,
+                0.29411764705882354,
+                0.49019607843137253
+              ],
+              "actual": [
+                0.403921568627451,
+                0.29411764705882354,
+                0.49019607843137253
+              ],
+              "iconContrast": 5.8660096062026215,
+              "tagColor": "rgb(103, 75, 125)",
+              "badgeContrast": 5.254092376830101,
+              "shape": "character-letter",
+              "fullIdentity": "持伞人，伏笔角色"
+            }
+          ],
+          "activeRoles": [
+            {
+              "node": "character",
+              "kind": "character",
+              "role": "protagonist",
+              "tone": "protagonist",
+              "active": true,
+              "color": "rgb(110, 81, 26)",
+              "expected": [
+                0.43137254901960786,
+                0.3176470588235294,
+                0.10196078431372549
+              ],
+              "actual": [
+                0.43137254901960786,
+                0.3176470588235294,
+                0.10196078431372549
+              ],
+              "iconContrast": 5.204850519673946,
+              "tagColor": "rgb(110, 81, 26)",
+              "badgeContrast": 4.686924379846902,
+              "shape": "UserRound",
+              "fullIdentity": "林舟，主角"
+            },
+            {
+              "node": "support1",
+              "kind": "character",
+              "role": "supporting",
+              "tone": "supporting",
+              "active": true,
+              "color": "rgb(43, 92, 100)",
+              "expected": [
+                0.16862745098039217,
+                0.3607843137254902,
+                0.39215686274509803
+              ],
+              "actual": [
+                0.16862745098039217,
+                0.3607843137254902,
+                0.39215686274509803
+              ],
+              "iconContrast": 5.273736364396653,
+              "tagColor": "rgb(43, 92, 100)",
+              "badgeContrast": 4.736268783951752,
+              "shape": "UserRound",
+              "fullIdentity": "顾雨，配角"
+            },
+            {
+              "node": "antagonist",
+              "kind": "character",
+              "role": "antagonist",
+              "tone": "antagonist",
+              "active": true,
+              "color": "rgb(124, 67, 87)",
+              "expected": [
+                0.48627450980392156,
+                0.2627450980392157,
+                0.3411764705882353
+              ],
+              "actual": [
+                0.48627450980392156,
+                0.2627450980392157,
+                0.3411764705882353
+              ],
+              "iconContrast": 5.311616046841021,
+              "tagColor": "rgb(124, 67, 87)",
+              "badgeContrast": 4.772377663959902,
+              "shape": "UserRound",
+              "fullIdentity": "江临，反派"
+            },
+            {
+              "node": "mystery",
+              "kind": "character",
+              "role": "foreshadow-role",
+              "tone": "foreshadow-role",
+              "active": true,
+              "color": "rgb(103, 75, 125)",
+              "expected": [
+                0.403921568627451,
+                0.29411764705882354,
+                0.49019607843137253
+              ],
+              "actual": [
+                0.403921568627451,
+                0.29411764705882354,
+                0.49019607843137253
+              ],
+              "iconContrast": 5.1607608962983855,
+              "tagColor": "rgb(103, 75, 125)",
+              "badgeContrast": 4.648071024421758,
+              "shape": "character-letter",
+              "fullIdentity": "渡船客，伏笔角色"
+            }
+          ]
+        },
+        {
+          "theme": "玄墨",
+          "types": [
+            {
+              "node": "unbound",
+              "kind": "business",
+              "role": null,
+              "tone": "theme",
+              "active": false,
+              "color": "rgb(198, 180, 115)",
+              "expected": [
+                0.7764705882352941,
+                0.7058823529411765,
+                0.45098039215686275
+              ],
+              "actual": [
+                0.7764705882352941,
+                0.7058823529411765,
+                0.45098039215686275
+              ],
+              "iconContrast": 9.380700073098986,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "小说创作指引（1）"
+            },
+            {
+              "node": "unbound-conversation",
+              "kind": "conversation",
+              "role": null,
+              "tone": "conversations",
+              "active": false,
+              "color": "rgb(149, 179, 211)",
+              "expected": [
+                0.5843137254901961,
+                0.7019607843137254,
+                0.8274509803921568
+              ],
+              "actual": [
+                0.5843137254901961,
+                0.7019607843137254,
+                0.8274509803921568
+              ],
+              "iconContrast": 8.910029101919978,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "讨论一个尚未建档的脑洞"
+            },
+            {
+              "node": "novel",
+              "kind": "work",
+              "role": null,
+              "tone": "work",
+              "active": false,
+              "color": "rgb(166, 176, 184)",
+              "expected": [
+                0.6509803921568628,
+                0.6901960784313725,
+                0.7215686274509804
+              ],
+              "actual": [
+                0.6509803921568628,
+                0.6901960784313725,
+                0.7215686274509804
+              ],
+              "iconContrast": 8.778302411385654,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": "FolderOpen",
+              "fullIdentity": "雨灯纪事"
+            },
+            {
+              "node": "settings",
+              "kind": "group",
+              "role": null,
+              "tone": "settings",
+              "active": false,
+              "color": "rgb(187, 170, 135)",
+              "expected": [
+                0.7333333333333333,
+                0.6666666666666666,
+                0.5294117647058824
+              ],
+              "actual": [
+                0.7333333333333333,
+                0.6666666666666666,
+                0.5294117647058824
+              ],
+              "iconContrast": 8.491673207004284,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "设定"
+            },
+            {
+              "node": "theme",
+              "kind": "setting",
+              "role": null,
+              "tone": "theme",
+              "active": false,
+              "color": "rgb(198, 180, 115)",
+              "expected": [
+                0.7764705882352941,
+                0.7058823529411765,
+                0.45098039215686275
+              ],
+              "actual": [
+                0.7764705882352941,
+                0.7058823529411765,
+                0.45098039215686275
+              ],
+              "iconContrast": 9.380700073098986,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "主题"
+            },
+            {
+              "node": "style",
+              "kind": "setting",
+              "role": null,
+              "tone": "style",
+              "active": false,
+              "color": "rgb(136, 184, 162)",
+              "expected": [
+                0.5333333333333333,
+                0.7215686274509804,
+                0.6352941176470588
+              ],
+              "actual": [
+                0.5333333333333333,
+                0.7215686274509804,
+                0.6352941176470588
+              ],
+              "iconContrast": 8.687143508869356,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "文风"
+            },
+            {
+              "node": "worlds",
+              "kind": "world",
+              "role": null,
+              "tone": "world",
+              "active": false,
+              "color": "rgb(133, 172, 197)",
+              "expected": [
+                0.5215686274509804,
+                0.6745098039215687,
+                0.7725490196078432
+              ],
+              "actual": [
+                0.5215686274509804,
+                0.6745098039215687,
+                0.7725490196078432
+              ],
+              "iconContrast": 8.023301686865972,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "世界观"
+            },
+            {
+              "node": "world",
+              "kind": "world",
+              "role": null,
+              "tone": "world",
+              "active": false,
+              "color": "rgb(133, 172, 197)",
+              "expected": [
+                0.5215686274509804,
+                0.6745098039215687,
+                0.7725490196078432
+              ],
+              "actual": [
+                0.5215686274509804,
+                0.6745098039215687,
+                0.7725490196078432
+              ],
+              "iconContrast": 8.023301686865972,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "青石城"
+            },
+            {
+              "node": "gift",
+              "kind": "setting",
+              "role": null,
+              "tone": "gift",
+              "active": false,
+              "color": "rgb(211, 173, 104)",
+              "expected": [
+                0.8274509803921568,
+                0.6784313725490196,
+                0.40784313725490196
+              ],
+              "actual": [
+                0.8274509803921568,
+                0.6784313725490196,
+                0.40784313725490196
+              ],
+              "iconContrast": 9.168592689983775,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": "Pointer",
+              "fullIdentity": "金手指"
+            },
+            {
+              "node": "foreshadow",
+              "kind": "setting",
+              "role": null,
+              "tone": "foreshadow",
+              "active": false,
+              "color": "rgb(183, 158, 197)",
+              "expected": [
+                0.7176470588235294,
+                0.6196078431372549,
+                0.7725490196078432
+              ],
+              "actual": [
+                0.7176470588235294,
+                0.6196078431372549,
+                0.7725490196078432
+              ],
+              "iconContrast": 8.028722630172995,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "伏笔"
+            },
+            {
+              "node": "trope",
+              "kind": "setting",
+              "role": null,
+              "tone": "emotion",
+              "active": false,
+              "color": "rgb(199, 154, 170)",
+              "expected": [
+                0.7803921568627451,
+                0.6039215686274509,
+                0.6666666666666666
+              ],
+              "actual": [
+                0.7803921568627451,
+                0.6039215686274509,
+                0.6666666666666666
+              ],
+              "iconContrast": 7.955606695538975,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "爽点/泪点"
+            },
+            {
+              "node": "characters",
+              "kind": "group",
+              "role": null,
+              "tone": "characters",
+              "active": false,
+              "color": "rgb(198, 176, 152)",
+              "expected": [
+                0.7764705882352941,
+                0.6901960784313725,
+                0.596078431372549
+              ],
+              "actual": [
+                0.7764705882352941,
+                0.6901960784313725,
+                0.596078431372549
+              ],
+              "iconContrast": 9.276976366612478,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "角色"
+            },
+            {
+              "node": "protagonists",
+              "kind": "group",
+              "role": "protagonist",
+              "tone": "protagonist",
+              "active": false,
+              "color": "rgb(211, 181, 111)",
+              "expected": [
+                0.8274509803921568,
+                0.7098039215686275,
+                0.43529411764705883
+              ],
+              "actual": [
+                0.8274509803921568,
+                0.7098039215686275,
+                0.43529411764705883
+              ],
+              "iconContrast": 9.778565312872374,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "主角（1）"
+            },
+            {
+              "node": "character",
+              "kind": "character",
+              "role": "protagonist",
+              "tone": "protagonist",
+              "active": false,
+              "color": "rgb(211, 181, 111)",
+              "expected": [
+                0.8274509803921568,
+                0.7098039215686275,
+                0.43529411764705883
+              ],
+              "actual": [
+                0.8274509803921568,
+                0.7098039215686275,
+                0.43529411764705883
+              ],
+              "iconContrast": 9.778565312872374,
+              "tagColor": "rgb(211, 181, 111)",
+              "badgeContrast": 8.68246409642275,
+              "shape": "UserRound",
+              "fullIdentity": "林舟，主角"
+            },
+            {
+              "node": "supporting",
+              "kind": "group",
+              "role": "supporting",
+              "tone": "supporting",
+              "active": false,
+              "color": "rgb(132, 182, 186)",
+              "expected": [
+                0.5176470588235295,
+                0.7137254901960784,
+                0.7294117647058823
+              ],
+              "actual": [
+                0.5176470588235295,
+                0.7137254901960784,
+                0.7294117647058823
+              ],
+              "iconContrast": 8.647093451607256,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "配角（2）"
+            },
+            {
+              "node": "antagonists",
+              "kind": "group",
+              "role": "antagonist",
+              "tone": "antagonist",
+              "active": false,
+              "color": "rgb(201, 144, 160)",
+              "expected": [
+                0.788235294117647,
+                0.5647058823529412,
+                0.6274509803921569
+              ],
+              "actual": [
+                0.788235294117647,
+                0.5647058823529412,
+                0.6274509803921569
+              ],
+              "iconContrast": 7.355832559299626,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "反派（1）"
+            },
+            {
+              "node": "foreshadow-characters",
+              "kind": "group",
+              "role": "foreshadow-role",
+              "tone": "foreshadow-role",
+              "active": false,
+              "color": "rgb(176, 152, 199)",
+              "expected": [
+                0.6901960784313725,
+                0.596078431372549,
+                0.7803921568627451
+              ],
+              "actual": [
+                0.6901960784313725,
+                0.596078431372549,
+                0.7803921568627451
+              ],
+              "iconContrast": 7.523221540648144,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "伏笔角色（1）"
+            },
+            {
+              "node": "items",
+              "kind": "items",
+              "role": null,
+              "tone": "items",
+              "active": false,
+              "color": "rgb(188, 162, 130)",
+              "expected": [
+                0.7372549019607844,
+                0.6352941176470588,
+                0.5098039215686274
+              ],
+              "actual": [
+                0.7372549019607844,
+                0.6352941176470588,
+                0.5098039215686274
+              ],
+              "iconContrast": 7.953419801095562,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "物品"
+            },
+            {
+              "node": "scenario",
+              "kind": "scenario",
+              "role": null,
+              "tone": "scenario",
+              "active": false,
+              "color": "rgb(172, 155, 198)",
+              "expected": [
+                0.6745098039215687,
+                0.6078431372549019,
+                0.7764705882352941
+              ],
+              "actual": [
+                0.6745098039215687,
+                0.6078431372549019,
+                0.7764705882352941
+              ],
+              "iconContrast": 7.611793338694924,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "情景试验场"
+            },
+            {
+              "node": "scenes",
+              "kind": "scenes",
+              "role": null,
+              "tone": "scenes",
+              "active": false,
+              "color": "rgb(141, 184, 148)",
+              "expected": [
+                0.5529411764705883,
+                0.7215686274509804,
+                0.5803921568627451
+              ],
+              "actual": [
+                0.5529411764705883,
+                0.7215686274509804,
+                0.5803921568627451
+              ],
+              "iconContrast": 8.679394170517275,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "场景"
+            },
+            {
+              "node": "worldline",
+              "kind": "worldline",
+              "role": null,
+              "tone": "worldline",
+              "active": false,
+              "color": "rgb(133, 183, 187)",
+              "expected": [
+                0.5215686274509804,
+                0.7176470588235294,
+                0.7333333333333333
+              ],
+              "actual": [
+                0.5215686274509804,
+                0.7176470588235294,
+                0.7333333333333333
+              ],
+              "iconContrast": 8.745677301491217,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "世界线"
+            },
+            {
+              "node": "narrative",
+              "kind": "narrative",
+              "role": null,
+              "tone": "narrative",
+              "active": false,
+              "color": "rgb(159, 174, 210)",
+              "expected": [
+                0.6235294117647059,
+                0.6823529411764706,
+                0.8235294117647058
+              ],
+              "actual": [
+                0.6235294117647059,
+                0.6823529411764706,
+                0.8235294117647058
+              ],
+              "iconContrast": 8.718910311709728,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "叙事线"
+            },
+            {
+              "node": "outline",
+              "kind": "outline",
+              "role": null,
+              "tone": "outline",
+              "active": false,
+              "color": "rgb(190, 176, 146)",
+              "expected": [
+                0.7450980392156863,
+                0.6901960784313725,
+                0.5725490196078431
+              ],
+              "actual": [
+                0.7450980392156863,
+                0.6901960784313725,
+                0.5725490196078431
+              ],
+              "iconContrast": 9.046488596477555,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "大纲"
+            },
+            {
+              "node": "body",
+              "kind": "group",
+              "role": null,
+              "tone": "manuscript",
+              "active": false,
+              "color": "rgb(189, 178, 167)",
+              "expected": [
+                0.7411764705882353,
+                0.6980392156862745,
+                0.6549019607843137
+              ],
+              "actual": [
+                0.7411764705882353,
+                0.6980392156862745,
+                0.6549019607843137
+              ],
+              "iconContrast": 9.300239792404136,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "正文"
+            },
+            {
+              "node": "volume",
+              "kind": "volume",
+              "role": null,
+              "tone": "manuscript",
+              "active": false,
+              "color": "rgb(189, 178, 167)",
+              "expected": [
+                0.7411764705882353,
+                0.6980392156862745,
+                0.6549019607843137
+              ],
+              "actual": [
+                0.7411764705882353,
+                0.6980392156862745,
+                0.6549019607843137
+              ],
+              "iconContrast": 9.300239792404136,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "第一卷 · 雨灯"
+            },
+            {
+              "node": "chapter",
+              "kind": "chapter",
+              "role": null,
+              "tone": "manuscript",
+              "active": false,
+              "color": "rgb(189, 178, 167)",
+              "expected": [
+                0.7411764705882353,
+                0.6980392156862745,
+                0.6549019607843137
+              ],
+              "actual": [
+                0.7411764705882353,
+                0.6980392156862745,
+                0.6549019607843137
+              ],
+              "iconContrast": 9.300239792404136,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "第一章 · 雨灯"
+            },
+            {
+              "node": "chapter-next",
+              "kind": "chapter",
+              "role": null,
+              "tone": "manuscript",
+              "active": false,
+              "color": "rgb(189, 178, 167)",
+              "expected": [
+                0.7411764705882353,
+                0.6980392156862745,
+                0.6549019607843137
+              ],
+              "actual": [
+                0.7411764705882353,
+                0.6980392156862745,
+                0.6549019607843137
+              ],
+              "iconContrast": 9.300239792404136,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "第二章 · 长街"
+            },
+            {
+              "node": "workflow",
+              "kind": "business",
+              "role": null,
+              "tone": "workflow",
+              "active": false,
+              "color": "rgb(169, 186, 132)",
+              "expected": [
+                0.6627450980392157,
+                0.7294117647058823,
+                0.5176470588235295
+              ],
+              "actual": [
+                0.6627450980392157,
+                0.7294117647058823,
+                0.5176470588235295
+              ],
+              "iconContrast": 9.257682117053669,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "创作进度"
+            },
+            {
+              "node": "review",
+              "kind": "business",
+              "role": null,
+              "tone": "review",
+              "active": false,
+              "color": "rgb(142, 182, 192)",
+              "expected": [
+                0.5568627450980392,
+                0.7137254901960784,
+                0.7529411764705882
+              ],
+              "actual": [
+                0.5568627450980392,
+                0.7137254901960784,
+                0.7529411764705882
+              ],
+              "iconContrast": 8.850953686020718,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "创作评审"
+            },
+            {
+              "node": "cascade",
+              "kind": "business",
+              "role": null,
+              "tone": "cascade",
+              "active": false,
+              "color": "rgb(189, 159, 189)",
+              "expected": [
+                0.7411764705882353,
+                0.6235294117647059,
+                0.7411764705882353
+              ],
+              "actual": [
+                0.7411764705882353,
+                0.6235294117647059,
+                0.7411764705882353
+              ],
+              "iconContrast": 8.164585895543773,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "级联修订"
+            },
+            {
+              "node": "conversations",
+              "kind": "group",
+              "role": null,
+              "tone": "conversations",
+              "active": false,
+              "color": "rgb(149, 179, 211)",
+              "expected": [
+                0.5843137254901961,
+                0.7019607843137254,
+                0.8274509803921568
+              ],
+              "actual": [
+                0.5843137254901961,
+                0.7019607843137254,
+                0.8274509803921568
+              ],
+              "iconContrast": 8.910029101919978,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "对话"
+            },
+            {
+              "node": "conversation",
+              "kind": "conversation",
+              "role": null,
+              "tone": "conversations",
+              "active": false,
+              "color": "rgb(149, 179, 211)",
+              "expected": [
+                0.5843137254901961,
+                0.7019607843137254,
+                0.8274509803921568
+              ],
+              "actual": [
+                0.5843137254901961,
+                0.7019607843137254,
+                0.8274509803921568
+              ],
+              "iconContrast": 8.910029101919978,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "我想从一场雨夜开始这个故事"
+            },
+            {
+              "node": "novel-2",
+              "kind": "work",
+              "role": null,
+              "tone": "work",
+              "active": false,
+              "color": "rgb(166, 176, 184)",
+              "expected": [
+                0.6509803921568628,
+                0.6901960784313725,
+                0.7215686274509804
+              ],
+              "actual": [
+                0.6509803921568628,
+                0.6901960784313725,
+                0.7215686274509804
+              ],
+              "iconContrast": 8.778302411385654,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": "FolderOpen",
+              "fullIdentity": "风渡行记"
+            },
+            {
+              "node": "settings-2",
+              "kind": "group",
+              "role": null,
+              "tone": "settings",
+              "active": false,
+              "color": "rgb(187, 170, 135)",
+              "expected": [
+                0.7333333333333333,
+                0.6666666666666666,
+                0.5294117647058824
+              ],
+              "actual": [
+                0.7333333333333333,
+                0.6666666666666666,
+                0.5294117647058824
+              ],
+              "iconContrast": 8.491673207004284,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "设定"
+            },
+            {
+              "node": "characters-2",
+              "kind": "group",
+              "role": null,
+              "tone": "characters",
+              "active": false,
+              "color": "rgb(198, 176, 152)",
+              "expected": [
+                0.7764705882352941,
+                0.6901960784313725,
+                0.596078431372549
+              ],
+              "actual": [
+                0.7764705882352941,
+                0.6901960784313725,
+                0.596078431372549
+              ],
+              "iconContrast": 9.276976366612478,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "角色"
+            },
+            {
+              "node": "items-2",
+              "kind": "items",
+              "role": null,
+              "tone": "items",
+              "active": false,
+              "color": "rgb(188, 162, 130)",
+              "expected": [
+                0.7372549019607844,
+                0.6352941176470588,
+                0.5098039215686274
+              ],
+              "actual": [
+                0.7372549019607844,
+                0.6352941176470588,
+                0.5098039215686274
+              ],
+              "iconContrast": 7.953419801095562,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "物品"
+            },
+            {
+              "node": "scenario-2",
+              "kind": "scenario",
+              "role": null,
+              "tone": "scenario",
+              "active": false,
+              "color": "rgb(172, 155, 198)",
+              "expected": [
+                0.6745098039215687,
+                0.6078431372549019,
+                0.7764705882352941
+              ],
+              "actual": [
+                0.6745098039215687,
+                0.6078431372549019,
+                0.7764705882352941
+              ],
+              "iconContrast": 7.611793338694924,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "情景试验场"
+            },
+            {
+              "node": "scenes-2",
+              "kind": "scenes",
+              "role": null,
+              "tone": "scenes",
+              "active": false,
+              "color": "rgb(141, 184, 148)",
+              "expected": [
+                0.5529411764705883,
+                0.7215686274509804,
+                0.5803921568627451
+              ],
+              "actual": [
+                0.5529411764705883,
+                0.7215686274509804,
+                0.5803921568627451
+              ],
+              "iconContrast": 8.679394170517275,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "场景"
+            },
+            {
+              "node": "worldline-2",
+              "kind": "worldline",
+              "role": null,
+              "tone": "worldline",
+              "active": false,
+              "color": "rgb(133, 183, 187)",
+              "expected": [
+                0.5215686274509804,
+                0.7176470588235294,
+                0.7333333333333333
+              ],
+              "actual": [
+                0.5215686274509804,
+                0.7176470588235294,
+                0.7333333333333333
+              ],
+              "iconContrast": 8.745677301491217,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "世界线"
+            },
+            {
+              "node": "narrative-2",
+              "kind": "narrative",
+              "role": null,
+              "tone": "narrative",
+              "active": false,
+              "color": "rgb(159, 174, 210)",
+              "expected": [
+                0.6235294117647059,
+                0.6823529411764706,
+                0.8235294117647058
+              ],
+              "actual": [
+                0.6235294117647059,
+                0.6823529411764706,
+                0.8235294117647058
+              ],
+              "iconContrast": 8.718910311709728,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "叙事线"
+            },
+            {
+              "node": "outline-2",
+              "kind": "outline",
+              "role": null,
+              "tone": "outline",
+              "active": false,
+              "color": "rgb(190, 176, 146)",
+              "expected": [
+                0.7450980392156863,
+                0.6901960784313725,
+                0.5725490196078431
+              ],
+              "actual": [
+                0.7450980392156863,
+                0.6901960784313725,
+                0.5725490196078431
+              ],
+              "iconContrast": 9.046488596477555,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "大纲"
+            },
+            {
+              "node": "body-2",
+              "kind": "group",
+              "role": null,
+              "tone": "manuscript",
+              "active": false,
+              "color": "rgb(189, 178, 167)",
+              "expected": [
+                0.7411764705882353,
+                0.6980392156862745,
+                0.6549019607843137
+              ],
+              "actual": [
+                0.7411764705882353,
+                0.6980392156862745,
+                0.6549019607843137
+              ],
+              "iconContrast": 9.300239792404136,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "正文"
+            },
+            {
+              "node": "workflow-2",
+              "kind": "business",
+              "role": null,
+              "tone": "workflow",
+              "active": false,
+              "color": "rgb(169, 186, 132)",
+              "expected": [
+                0.6627450980392157,
+                0.7294117647058823,
+                0.5176470588235295
+              ],
+              "actual": [
+                0.6627450980392157,
+                0.7294117647058823,
+                0.5176470588235295
+              ],
+              "iconContrast": 9.257682117053669,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "创作进度"
+            },
+            {
+              "node": "review-2",
+              "kind": "business",
+              "role": null,
+              "tone": "review",
+              "active": false,
+              "color": "rgb(142, 182, 192)",
+              "expected": [
+                0.5568627450980392,
+                0.7137254901960784,
+                0.7529411764705882
+              ],
+              "actual": [
+                0.5568627450980392,
+                0.7137254901960784,
+                0.7529411764705882
+              ],
+              "iconContrast": 8.850953686020718,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "创作评审"
+            },
+            {
+              "node": "cascade-2",
+              "kind": "business",
+              "role": null,
+              "tone": "cascade",
+              "active": false,
+              "color": "rgb(189, 159, 189)",
+              "expected": [
+                0.7411764705882353,
+                0.6235294117647059,
+                0.7411764705882353
+              ],
+              "actual": [
+                0.7411764705882353,
+                0.6235294117647059,
+                0.7411764705882353
+              ],
+              "iconContrast": 8.164585895543773,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "级联修订"
+            },
+            {
+              "node": "conversations-2",
+              "kind": "group",
+              "role": null,
+              "tone": "conversations",
+              "active": false,
+              "color": "rgb(149, 179, 211)",
+              "expected": [
+                0.5843137254901961,
+                0.7019607843137254,
+                0.8274509803921568
+              ],
+              "actual": [
+                0.5843137254901961,
+                0.7019607843137254,
+                0.8274509803921568
+              ],
+              "iconContrast": 8.910029101919978,
+              "tagColor": null,
+              "badgeContrast": null,
+              "shape": {},
+              "fullIdentity": "对话"
+            }
+          ],
+          "roles": [
+            {
+              "node": "character",
+              "kind": "character",
+              "role": "protagonist",
+              "tone": "protagonist",
+              "active": false,
+              "color": "rgb(211, 181, 111)",
+              "expected": [
+                0.8274509803921568,
+                0.7098039215686275,
+                0.43529411764705883
+              ],
+              "actual": [
+                0.8274509803921568,
+                0.7098039215686275,
+                0.43529411764705883
+              ],
+              "iconContrast": 9.778565312872374,
+              "tagColor": "rgb(211, 181, 111)",
+              "badgeContrast": 8.68246409642275,
+              "shape": "UserRound",
+              "fullIdentity": "林舟，主角"
+            },
+            {
+              "node": "support1",
+              "kind": "character",
+              "role": "supporting",
+              "tone": "supporting",
+              "active": false,
+              "color": "rgb(132, 182, 186)",
+              "expected": [
+                0.5176470588235295,
+                0.7137254901960784,
+                0.7294117647058823
+              ],
+              "actual": [
+                0.5176470588235295,
+                0.7137254901960784,
+                0.7294117647058823
+              ],
+              "iconContrast": 8.647093451607256,
+              "tagColor": "rgb(132, 182, 186)",
+              "badgeContrast": 7.757633579609912,
+              "shape": "UserRound",
+              "fullIdentity": "顾雨，配角"
+            },
+            {
+              "node": "support2",
+              "kind": "character",
+              "role": "supporting",
+              "tone": "supporting",
+              "active": false,
+              "color": "rgb(132, 182, 186)",
+              "expected": [
+                0.5176470588235295,
+                0.7137254901960784,
+                0.7294117647058823
+              ],
+              "actual": [
+                0.5176470588235295,
+                0.7137254901960784,
+                0.7294117647058823
+              ],
+              "iconContrast": 8.647093451607256,
+              "tagColor": "rgb(132, 182, 186)",
+              "badgeContrast": 7.757633579609912,
+              "shape": "UserRound",
+              "fullIdentity": "苏禾，配角"
+            },
+            {
+              "node": "antagonist",
+              "kind": "character",
+              "role": "antagonist",
+              "tone": "antagonist",
+              "active": false,
+              "color": "rgb(201, 144, 160)",
+              "expected": [
+                0.788235294117647,
+                0.5647058823529412,
+                0.6274509803921569
+              ],
+              "actual": [
+                0.788235294117647,
+                0.5647058823529412,
+                0.6274509803921569
+              ],
+              "iconContrast": 7.355832559299626,
+              "tagColor": "rgb(201, 144, 160)",
+              "badgeContrast": 6.6664295352399785,
+              "shape": "UserRound",
+              "fullIdentity": "江临，反派"
+            },
+            {
+              "node": "mystery",
+              "kind": "character",
+              "role": "foreshadow-role",
+              "tone": "foreshadow-role",
+              "active": true,
+              "color": "rgb(176, 152, 199)",
+              "expected": [
+                0.6901960784313725,
+                0.596078431372549,
+                0.7803921568627451
+              ],
+              "actual": [
+                0.6901960784313725,
+                0.596078431372549,
+                0.7803921568627451
+              ],
+              "iconContrast": 6.309652043899852,
+              "tagColor": "rgb(176, 152, 199)",
+              "badgeContrast": 5.542500250813693,
+              "shape": "character-letter",
+              "fullIdentity": "渡船客，伏笔角色"
+            },
+            {
+              "node": "character-2",
+              "kind": "character",
+              "role": "protagonist",
+              "tone": "protagonist",
+              "active": false,
+              "color": "rgb(211, 181, 111)",
+              "expected": [
+                0.8274509803921568,
+                0.7098039215686275,
+                0.43529411764705883
+              ],
+              "actual": [
+                0.8274509803921568,
+                0.7098039215686275,
+                0.43529411764705883
+              ],
+              "iconContrast": 9.778565312872374,
+              "tagColor": "rgb(211, 181, 111)",
+              "badgeContrast": 8.68246409642275,
+              "shape": "UserRound",
+              "fullIdentity": "宋遥，主角"
+            },
+            {
+              "node": "support1-2",
+              "kind": "character",
+              "role": "supporting",
+              "tone": "supporting",
+              "active": false,
+              "color": "rgb(132, 182, 186)",
+              "expected": [
+                0.5176470588235295,
+                0.7137254901960784,
+                0.7294117647058823
+              ],
+              "actual": [
+                0.5176470588235295,
+                0.7137254901960784,
+                0.7294117647058823
+              ],
+              "iconContrast": 8.647093451607256,
+              "tagColor": "rgb(132, 182, 186)",
+              "badgeContrast": 7.757633579609912,
+              "shape": "UserRound",
+              "fullIdentity": "温宁，配角"
+            },
+            {
+              "node": "support2-2",
+              "kind": "character",
+              "role": "supporting",
+              "tone": "supporting",
+              "active": false,
+              "color": "rgb(132, 182, 186)",
+              "expected": [
+                0.5176470588235295,
+                0.7137254901960784,
+                0.7294117647058823
+              ],
+              "actual": [
+                0.5176470588235295,
+                0.7137254901960784,
+                0.7294117647058823
+              ],
+              "iconContrast": 8.647093451607256,
+              "tagColor": "rgb(132, 182, 186)",
+              "badgeContrast": 7.757633579609912,
+              "shape": "UserRound",
+              "fullIdentity": "明溪，配角"
+            },
+            {
+              "node": "antagonist-2",
+              "kind": "character",
+              "role": "antagonist",
+              "tone": "antagonist",
+              "active": false,
+              "color": "rgb(201, 144, 160)",
+              "expected": [
+                0.788235294117647,
+                0.5647058823529412,
+                0.6274509803921569
+              ],
+              "actual": [
+                0.788235294117647,
+                0.5647058823529412,
+                0.6274509803921569
+              ],
+              "iconContrast": 7.355832559299626,
+              "tagColor": "rgb(201, 144, 160)",
+              "badgeContrast": 6.6664295352399785,
+              "shape": "UserRound",
+              "fullIdentity": "秦川，反派"
+            },
+            {
+              "node": "mystery-2",
+              "kind": "character",
+              "role": "foreshadow-role",
+              "tone": "foreshadow-role",
+              "active": false,
+              "color": "rgb(176, 152, 199)",
+              "expected": [
+                0.6901960784313725,
+                0.596078431372549,
+                0.7803921568627451
+              ],
+              "actual": [
+                0.6901960784313725,
+                0.596078431372549,
+                0.7803921568627451
+              ],
+              "iconContrast": 7.523221540648144,
+              "tagColor": "rgb(176, 152, 199)",
+              "badgeContrast": 6.806812161518689,
+              "shape": "character-letter",
+              "fullIdentity": "持伞人，伏笔角色"
+            }
+          ],
+          "activeRoles": [
+            {
+              "node": "character",
+              "kind": "character",
+              "role": "protagonist",
+              "tone": "protagonist",
+              "active": true,
+              "color": "rgb(211, 181, 111)",
+              "expected": [
+                0.8274509803921568,
+                0.7098039215686275,
+                0.43529411764705883
+              ],
+              "actual": [
+                0.8274509803921568,
+                0.7098039215686275,
+                0.43529411764705883
+              ],
+              "iconContrast": 8.201186722923199,
+              "tagColor": "rgb(211, 181, 111)",
+              "badgeContrast": 7.018056385939162,
+              "shape": "UserRound",
+              "fullIdentity": "林舟，主角"
+            },
+            {
+              "node": "support1",
+              "kind": "character",
+              "role": "supporting",
+              "tone": "supporting",
+              "active": true,
+              "color": "rgb(132, 182, 186)",
+              "expected": [
+                0.5176470588235295,
+                0.7137254901960784,
+                0.7294117647058823
+              ],
+              "actual": [
+                0.5176470588235295,
+                0.7137254901960784,
+                0.7294117647058823
+              ],
+              "iconContrast": 7.252232381558481,
+              "tagColor": "rgb(132, 182, 186)",
+              "badgeContrast": 6.322813212602371,
+              "shape": "UserRound",
+              "fullIdentity": "顾雨，配角"
+            },
+            {
+              "node": "antagonist",
+              "kind": "character",
+              "role": "antagonist",
+              "tone": "antagonist",
+              "active": true,
+              "color": "rgb(201, 144, 160)",
+              "expected": [
+                0.788235294117647,
+                0.5647058823529412,
+                0.6274509803921569
+              ],
+              "actual": [
+                0.788235294117647,
+                0.5647058823529412,
+                0.6274509803921569
+              ],
+              "iconContrast": 6.169264548651241,
+              "tagColor": "rgb(201, 144, 160)",
+              "badgeContrast": 5.420324424867036,
+              "shape": "UserRound",
+              "fullIdentity": "江临，反派"
+            },
+            {
+              "node": "mystery",
+              "kind": "character",
+              "role": "foreshadow-role",
+              "tone": "foreshadow-role",
+              "active": true,
+              "color": "rgb(176, 152, 199)",
+              "expected": [
+                0.6901960784313725,
+                0.596078431372549,
+                0.7803921568627451
+              ],
+              "actual": [
+                0.6901960784313725,
+                0.596078431372549,
+                0.7803921568627451
+              ],
+              "iconContrast": 6.309652043899852,
+              "tagColor": "rgb(176, 152, 199)",
+              "badgeContrast": 5.542500250813693,
+              "shape": "character-letter",
+              "fullIdentity": "渡船客，伏笔角色"
+            }
+          ]
+        }
+      ],
+      "minIconContrast": 3.735258489431605,
+      "minBadgeContrast": 4.648071024421758
+    },
+    {
+      "name": "Role colors survive selection; foreshadow letter avatar is preserved and toned with its badge, rather than recoloring a hidden fallback icon"
+    },
+    {
+      "name": "Actual close/open clicks translate and clip a fixed-width sidebar; every sampled row/name/tag/Tab/footer keeps geometry, fonts, lines and fade; hidden focus leaves navigation",
+      "closeFrames": 106,
+      "openFrames": 140,
+      "width": 260
+    },
+    {
+      "name": "Drawer fixed-shape animation verified in both themes and 200/260/420px, including all inline role badges and long-name masks",
+      "cases": 12
+    },
+    {
+      "name": "Mid-animation reversal starts at the same position and returns to the exact open endpoint without squeezing or remounting",
+      "before": -142.022,
+      "after": -142.022,
+      "width": 420
+    },
+    {
+      "name": "Reduced-motion preference switches directly between complete closed/open endpoints"
+    },
+    {
+      "name": "Existing multiline unavailable-work help and nested works retain identical line-box geometry while the drawer moves"
+    },
+    {
+      "name": "No browser errors or HTTP requests; all inspected production source hashes unchanged"
+    }
+  ],
+  "pageErrors": [],
+  "httpRequests": [],
+  "sourceHashes": {
+    "src/components/layout/SidebarTree.tsx": "0217efce432a30aafa32eb456f71a03b41901a0919be0a219ad5a8c466d63cef",
+    "src/components/layout/ContentTabs.tsx": "7fbb7ae0915410d9fa62b501c06f27f9c98f85b35f6fb23b5dec979be39a40d3",
+    "src/components/layout/DashboardShell.tsx": "096856e0820166db756ab20f7b925a73de917fddfb28d77c0deddb721ee44b72",
+    "src/components/content/scene/SceneTree.tsx": "8911a145ef8091dd7e17ccba9746e7f72426a8dc8ba45acd87323a65a50814c7",
+    "src/components/desktop/UnavailableWorks.tsx": "a23a00d96430dfd259bea3a064615783196806d55b8b1338e912fd194d3f7ea8",
+    "src/app/desktop.css": "617348a46dba74442fc80d59958fa79d23f437815aad0b509a0bcb532099424b",
+    "src/components/marketing/seal.tsx": "21d8d6ae6faec89b0d2551a42a0d71bc77735b8cb41014f294d447bc362551a6",
+    "public/brand/seal-mark-paper.svg": "539388e660960efb034573498bfc641d67f6c1c369a3258c1ed6080b7a5e1b23",
+    "public/brand/seal-mark-ink.svg": "70f455112c0ae48f40207dbef4d50cca9ba79dd23a616642c3f86331d8e1276a"
+  },
+  "productTests": "not-run",
+  "nativeAcceptance": "not-run",
+  "browser": "154.0.8037.98"
+}

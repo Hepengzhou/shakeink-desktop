@@ -55,8 +55,12 @@ import {selectBrandStartupPaths,BrandStartupPathError,legacyEncryptionName,type 
 import {CURRENT_NAMES} from "../shared/brand-names"
 import { InputContextMenus } from "./input-context-menu"
 import { inputContextStateSchema } from "../shared/input-context-menu"
+import {TextContextMenus} from './text-context-menu'
+import {textContextRequestSchema} from '../shared/text-context-menu'
 import { OnboardingService } from "./onboarding-service"
 import { OnboardingError, onboardingActionSchema } from "../shared/onboarding"
+import {PROJECT_REPOSITORY_URL,displayAppVersion} from '../shared/project-info'
+import {projectAboutHtml,installProjectAboutLinks} from './project-about'
 
 app.enableSandbox()
 protocol.registerSchemesAsPrivileged([{ scheme: "xaanink", privileges: { standard: true, secure: true, supportFetchAPI: true, stream: true, codeCache: true } }])
@@ -93,6 +97,7 @@ let worker: Worker
 let dataRoot = ""
 const businessGate=new BusinessGate()
 const inputContextMenus=new InputContextMenus(template=>Menu.buildFromTemplate(template))
+const textContextMenus=new TextContextMenus(template=>Menu.buildFromTemplate(template))
 const applicationMetadata=new ApplicationMetadataGate()
 const metadataWrites={withWrite:<T>(run:()=>Promise<T>)=>applicationMetadata.write(run)}
 let businessClosed=false
@@ -462,6 +467,18 @@ function registerIpc() {
     trusted(event)
     return window===current&&current.isFocused()&&!closingFlow&&!businessGate.closed ? command : null
   })
+  ipcMain.handle('desktop:text-context-menu',async(event,input)=>{
+    trusted(event)
+    const request=textContextRequestSchema.parse(input),owner=BrowserWindow.fromWebContents(event.sender),frame=event.senderFrame
+    if(!owner||owner!==window||!owner.isFocused()||closingFlow||businessGate.closed)return {requestId:request.requestId,command:null}
+    const result=await textContextMenus.open(owner,request,{platform:process.platform==='darwin'?'darwin':'win32',shortcuts:menuShortcuts})
+    try{trusted(event)}catch{return {requestId:request.requestId,command:null}}
+    return owner===window&&!owner.isDestroyed()&&owner.isFocused()&&frame===owner.webContents.mainFrame&&!closingFlow&&!businessGate.closed?result:{requestId:request.requestId,command:null}
+  })
+  ipcMain.handle('desktop:text-context-menu-cancel',async(event,input)=>{
+    trusted(event);const id=z.uuid().parse(input),owner=BrowserWindow.fromWebContents(event.sender)
+    if(owner)textContextMenus.cancel(owner,id)
+  })
   ipcMain.handle("desktop:clipboard-read", async event => {
     trusted(event)
     if(!window?.isFocused())throw new Error("应用窗口未聚焦")
@@ -477,7 +494,7 @@ function registerIpc() {
     if(!current||current.owner!==event.sender.id)throw new Error("草稿所属窗口已变化")
     const state=await repository.read();trusted(event)
     if(draftSession!==current)throw new Error("草稿所属窗口已变化")
-    return {...state,platform:process.platform,version:app.getVersion(),dataRoot,draftSessionId:current.id,systemDark:nativeTheme.shouldUseDarkColors}
+    return {...state,platform:process.platform,version:displayAppVersion(app.getVersion()),dataRoot,draftSessionId:current.id,systemDark:nativeTheme.shouldUseDarkColors}
   })
   businessHandle("desktop:directory", async (event, purpose) => { trusted(event); return chooseDirectory(directoryPurpose.parse(purpose), String(event.sender.id)) })
   businessHandle("desktop:model-discover", async (event, id, draft) => { trusted(event); return modelConfiguration.discover(String(event.sender.id), z.uuid().parse(id), draft) })
@@ -550,6 +567,7 @@ function registerIpc() {
     send({type:"state",state});return state
   })
   ipcMain.handle("desktop:command", async (event, id) => { trusted(event); await executeCommand(z.string().max(100).parse(id),true) })
+  ipcMain.handle("desktop:open-project-repository", async event => { trusted(event); await shell.openExternal(PROJECT_REPOSITORY_URL) })
   ipcMain.handle("desktop:cancel", async (event, id) => { trusted(event); z.uuid().parse(id); const active = responseOwners.get(id); if (active?.owner === event.sender.id) await active.cancel() })
   businessHandle("desktop:request", async (event, value) => {
     trusted(event); const input = requestSchema.parse(value)
@@ -673,10 +691,12 @@ async function executeCommand(id: string, fromRenderer=false) {
   if (id === "help.docs") return
   if (id === "help.feedback") { await shell.openExternal("https://github.com/mySingleLive/xaanink-desktop/issues/new/choose"); return }
   if (id === "app.about") {
-    if (process.platform === "darwin") { app.setAboutPanelOptions({ applicationName: "玄印写作", applicationVersion: app.getVersion(), copyright: "GPL-3.0 · XaanInk" }); app.showAboutPanel() }
+    if (process.platform === "darwin") { app.setAboutPanelOptions({ applicationName: "玄印写作", applicationVersion: displayAppVersion(app.getVersion()), version: "", copyright: "GPL-3.0 · XaanInk" }); app.showAboutPanel() }
     else {
-      const about = new BrowserWindow({ width: 400, height: 260, resizable: false, minimizable: false, maximizable: false, parent: window ?? undefined, modal: true, title: "关于玄印写作", webPreferences: { sandbox: true, contextIsolation: true, nodeIntegration: false } })
-      about.setMenu(null); await about.loadURL("data:text/html;charset=utf-8," + encodeURIComponent(`<html lang="zh-CN"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'"><title>关于玄印写作</title><body style="font:15px system-ui;text-align:center;margin:0;padding:20px;-webkit-user-select:none;user-select:none"><h1 style="font-size:26px;margin:0 0 12px">玄印写作</h1><p>版本 ${app.getVersion()}</p><p>本地创作，由你的模型驱动</p><p>GPL-3.0 · XaanInk</p></body></html>`))
+      const theme=(await repository.read()).settings.appearance.theme
+      const about = new BrowserWindow({ width: 440, height: 380, resizable: false, minimizable: false, maximizable: false, parent: window ?? undefined, modal: true, title: "关于玄印写作", webPreferences: { sandbox: true, contextIsolation: true, nodeIntegration: false } })
+      installProjectAboutLinks(about.webContents,url=>shell.openExternal(url),()=>{if(!about.isDestroyed())void dialog.showMessageBox(about,{type:'error',message:'无法打开浏览器，请稍后重试。'})})
+      about.setMenu(null); await about.loadURL("data:text/html;charset=utf-8," + encodeURIComponent(projectAboutHtml(displayAppVersion(app.getVersion()),theme==='ink'||theme==='system'&&nativeTheme.shouldUseDarkColors?'ink':'paper')))
     }
     return
   }

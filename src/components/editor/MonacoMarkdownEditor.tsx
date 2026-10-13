@@ -17,6 +17,7 @@ import { MONACO_FONT_OPTS, monaco } from "./monaco-setup"
 import { useDesktopStore } from "@/stores/desktop"
 import { desktopFontFamily } from "@/lib/desktop/appearance"
 import { bindMonacoCommandTarget } from "@/lib/desktop/monaco-commands"
+import {bindMonacoTextContext} from '@/lib/desktop/monaco-text-context'
 
 /** comments 缺省时传给 useMonacoComments 的静默占位（模块级常量,保住引用稳定） */
 const NO_THREADS: ResolvedThread[] = []
@@ -54,6 +55,7 @@ export default function MonacoMarkdownEditor({
   const [editorInstance, setEditorInstance] = useState<Parameters<OnMount>[0] | null>(null)
   const appearance = useDesktopStore(state => state.bootstrap?.settings.appearance)
   const platform = useDesktopStore(state => state.bootstrap?.platform)
+  useEffect(()=>{if(editorInstance&&platform)return bindMonacoTextContext(editorInstance)},[editorInstance,platform])
 
   useEffect(() => {
     if (!editorInstance || !platform) return

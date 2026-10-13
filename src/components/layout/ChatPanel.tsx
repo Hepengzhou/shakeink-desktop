@@ -71,6 +71,8 @@ import { useTabsStore } from "@/stores/tabs"
 import { AskUserPanel, MARKERS } from "@/components/chat/AskUserPanel"
 import { CandidateActionPanel } from "@/components/chat/CandidateActionPanel"
 import { useCardSelection } from "@/components/chat/use-card-selection"
+import {registerTextQuoteTarget,refreshTextQuoteTarget} from '@/lib/desktop/text-quote-target'
+import {activeTextDialogs} from '@/lib/desktop/text-context-modal'
 import { ChangesCard } from "@/components/chat/ChangesCard"
 import { FileCards } from "@/components/chat/FileCard"
 import {
@@ -124,6 +126,7 @@ import {
   getCaretTextOffset,
   getDropTextOffset,
   insertMentionChip,
+  insertPlainDraftAtCaret,
   insertDraftAtCaret,
   deleteDraftSelection,
   insertTextAtCaret,
@@ -1489,12 +1492,12 @@ export function ChatPanel({
     if (window.desktop) el.dataset.desktopEmpty = draft === "" ? "true" : "false"
   }, [draft, chipHydrate])
 
-  // 草稿变化时自适应输入框高度（上限 140px；须在上面的 DOM 重建之后执行）
+  // 草稿变化时自适应输入框高度（上限 420px；须在上面的 DOM 重建之后执行）
   useEffect(() => {
     const el = textareaRef.current
     if (!el) return
     el.style.height = "auto"
-    el.style.height = `${Math.min(el.scrollHeight, 140)}px`
+    el.style.height = `${Math.min(el.scrollHeight, 420)}px`
   }, [draft])
 
   /** 编辑器 DOM → 纯文本草稿同步到 store（chip 还原为 @[类型/名称] 序列） */
@@ -1655,6 +1658,34 @@ export function ChatPanel({
     syncFromEditor()
   }
 
+  const quoteTargetLatest=useRef({composing,isLoadingConversation,conversationLoadError,composerNovelId})
+  quoteTargetLatest.current={composing,isLoadingConversation,conversationLoadError,composerNovelId}
+  useEffect(()=>{
+    if(!window.desktop)return
+    const identity=()=>{const state=useChatStore.getState();return JSON.stringify([state.accountId,state.conversationId,state.draftId,state.draftNovelId,state.recoveryStatus,state.creatingNovel,state.requestedConversationId,state.newConversationRequested,quoteTargetLatest.current.composerNovelId])}
+    const available=()=>{const state=useChatStore.getState(),latest=quoteTargetLatest.current,editor=textareaRef.current;return !!editor?.isConnected&&editor.isContentEditable&&state.recoveryStatus==='ready'&&!state.creatingNovel&&!state.requestedConversationId&&!state.newConversationRequested&&!latest.composing&&!latest.isLoadingConversation&&!latest.conversationLoadError&&activeTextDialogs(document).length===0}
+    return registerTextQuoteTarget({identity,available,subscribe:listener=>useChatStore.subscribe(listener),append:async(text,assertCurrent,focus)=>{
+      assertCurrent();focus(()=>useChatStore.getState().requestChatFocus())
+      const editor=textareaRef.current;if(!editor)throw new Error('对话输入框尚未就绪')
+      // Opening an already mounted hidden chat pane can require layout frames.
+      for(let frame=0;frame<45;frame++){
+        assertCurrent();focus(()=>editor.focus({preventScroll:true}))
+        if(document.activeElement===editor&&editor.getBoundingClientRect().width>0)break
+        await new Promise<void>(resolve=>requestAnimationFrame(()=>resolve()))
+      }
+      assertCurrent();if(document.activeElement!==editor)throw new Error('对话输入框无法聚焦')
+      const before=editorToText(editor),suffix=(before?'\n\n':'')+text
+      const range=document.createRange();range.selectNodeContents(editor);range.collapse(false)
+      focus(()=>{const selection=document.getSelection();selection?.removeAllRanges();selection?.addRange(range)})
+      assertCurrent()
+      // Plain Chromium text insertion preserves existing chip DOM and undo,
+      // without hydrating token-like words in this newly quoted source.
+      insertPlainDraftAtCaret(editor,suffix)
+      syncFromEditor()
+    }})
+  },[]) // The receiver reads current ownership and flags, never a prior render's conversation.
+  useEffect(()=>{refreshTextQuoteTarget()},[composing,isLoadingConversation,conversationLoadError,composerNovelId])
+
   return (
     <div className={cn("chatpane flex h-full flex-col bg-chat-bg", showWelcome && "chat-empty-panel")} aria-busy={!canSend}>
       {/* header：标题 + 会话选择 + 关联小说指示胶囊 */}
@@ -1668,6 +1699,7 @@ export function ChatPanel({
           <button
             type="button"
             aria-label="显示左侧导航栏"
+            data-sidebar-restore
             title="显示左侧导航栏"
             onClick={onShowSidebar}
             style={desktopBootstrap?.platform === "darwin" ? { marginLeft: `calc(${88 / desktopBootstrap.settings.appearance.zoom}px - .75rem)` } : undefined}
@@ -2084,7 +2116,7 @@ export function ChatPanel({
               }
             }}
             className={cn(
-              "chat-composer-editable max-h-[140px] w-full overflow-y-auto bg-transparent px-3.5 pt-3 pb-1 text-[13.5px] leading-[1.6] wrap-break-word whitespace-pre-wrap text-foreground outline-none",
+              "chat-composer-editable max-h-[420px] w-full overflow-y-auto bg-transparent px-3.5 pt-3 pb-1 text-[13.5px] leading-[1.6] wrap-break-word whitespace-pre-wrap text-foreground outline-none",
               "data-[desktop-empty=true]:before:content-[attr(data-placeholder)] data-[desktop-empty=true]:before:text-muted-foreground/70 data-[desktop-empty=true]:before:pointer-events-none",
               showWelcome ? "min-h-[48px]" : "min-h-[52px]"
             )}

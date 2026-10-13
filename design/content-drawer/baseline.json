@@ -1,0 +1,281 @@
+{
+  "scope": "Current real DashboardShell/ContentTabs in isolated browser fixture; synthetic paragraph injected into substituted business body. Not Electron, Monaco, database or business acceptance.",
+  "node": "v24.19.0",
+  "browser": "154.0.8037.98",
+  "status": "reproduced-in-isolated-real-shell",
+  "frames": [
+    {
+      "ms": 0.20000000298023224,
+      "panel": 436.40625,
+      "inner": 436.40625,
+      "paragraphHeight": 98,
+      "lines": 3
+    },
+    {
+      "ms": 13.799999997019768,
+      "panel": 436.40625,
+      "inner": 436.40625,
+      "paragraphHeight": 98,
+      "lines": 3
+    },
+    {
+      "ms": 30.399999991059303,
+      "panel": 436.40625,
+      "inner": 436.40625,
+      "paragraphHeight": 98,
+      "lines": 3
+    },
+    {
+      "ms": 50,
+      "panel": 436.40625,
+      "inner": 436.40625,
+      "paragraphHeight": 98,
+      "lines": 3
+    },
+    {
+      "ms": 63.8999999910593,
+      "panel": 436.40625,
+      "inner": 436.40625,
+      "paragraphHeight": 98,
+      "lines": 3
+    },
+    {
+      "ms": 80.70000000298023,
+      "panel": 423.625,
+      "inner": 423.625,
+      "paragraphHeight": 98,
+      "lines": 3
+    },
+    {
+      "ms": 97.29999999701977,
+      "panel": 393.5,
+      "inner": 393.5,
+      "paragraphHeight": 98,
+      "lines": 3
+    },
+    {
+      "ms": 114.59999999403954,
+      "panel": 354.953125,
+      "inner": 354.953125,
+      "paragraphHeight": 98,
+      "lines": 3
+    },
+    {
+      "ms": 130.5,
+      "panel": 313.109375,
+      "inner": 313.109375,
+      "paragraphHeight": 98,
+      "lines": 3
+    },
+    {
+      "ms": 147.3999999910593,
+      "panel": 271.90625,
+      "inner": 271.90625,
+      "paragraphHeight": 120,
+      "lines": 4
+    },
+    {
+      "ms": 164.79999999701977,
+      "panel": 232.90625,
+      "inner": 232.90625,
+      "paragraphHeight": 142,
+      "lines": 5
+    },
+    {
+      "ms": 180.59999999403954,
+      "panel": 197.40625,
+      "inner": 197.40625,
+      "paragraphHeight": 164,
+      "lines": 6
+    },
+    {
+      "ms": 197.8999999910593,
+      "panel": 166.078125,
+      "inner": 166.078125,
+      "paragraphHeight": 186,
+      "lines": 7
+    },
+    {
+      "ms": 213.8999999910593,
+      "panel": 138.734375,
+      "inner": 138.734375,
+      "paragraphHeight": 230,
+      "lines": 9
+    },
+    {
+      "ms": 230.3999999910593,
+      "panel": 114.921875,
+      "inner": 114.921875,
+      "paragraphHeight": 296,
+      "lines": 12
+    },
+    {
+      "ms": 247.09999999403954,
+      "panel": 94.90625,
+      "inner": 94.90625,
+      "paragraphHeight": 362,
+      "lines": 15
+    },
+    {
+      "ms": 263.70000000298023,
+      "panel": 77.9375,
+      "inner": 77.9375,
+      "paragraphHeight": 450,
+      "lines": 19
+    },
+    {
+      "ms": 280.70000000298023,
+      "panel": 63.828125,
+      "inner": 63.828125,
+      "paragraphHeight": 692,
+      "lines": 30
+    },
+    {
+      "ms": 297.20000000298023,
+      "panel": 52.015625,
+      "inner": 52.015625,
+      "paragraphHeight": 1198,
+      "lines": 53
+    },
+    {
+      "ms": 313.79999999701977,
+      "panel": 42.3125,
+      "inner": 42.3125,
+      "paragraphHeight": 1198,
+      "lines": 53
+    },
+    {
+      "ms": 330.5,
+      "panel": 34.28125,
+      "inner": 34.28125,
+      "paragraphHeight": 1198,
+      "lines": 53
+    },
+    {
+      "ms": 347.29999999701977,
+      "panel": 27.6875,
+      "inner": 27.6875,
+      "paragraphHeight": 1198,
+      "lines": 53
+    },
+    {
+      "ms": 363.8999999910593,
+      "panel": 22.328125,
+      "inner": 22.328125,
+      "paragraphHeight": 1198,
+      "lines": 53
+    },
+    {
+      "ms": 381,
+      "panel": 18,
+      "inner": 18,
+      "paragraphHeight": 1198,
+      "lines": 53
+    },
+    {
+      "ms": 397.20000000298023,
+      "panel": 14.4375,
+      "inner": 14.4375,
+      "paragraphHeight": 1198,
+      "lines": 53
+    },
+    {
+      "ms": 413.8999999910593,
+      "panel": 11.578125,
+      "inner": 11.578125,
+      "paragraphHeight": 1198,
+      "lines": 53
+    },
+    {
+      "ms": 432.20000000298023,
+      "panel": 9.28125,
+      "inner": 9.28125,
+      "paragraphHeight": 1198,
+      "lines": 53
+    },
+    {
+      "ms": 447.59999999403954,
+      "panel": 7.40625,
+      "inner": 7.40625,
+      "paragraphHeight": 1198,
+      "lines": 53
+    },
+    {
+      "ms": 464.20000000298023,
+      "panel": 5.921875,
+      "inner": 5.921875,
+      "paragraphHeight": 1198,
+      "lines": 53
+    },
+    {
+      "ms": 481,
+      "panel": 4.71875,
+      "inner": 4.71875,
+      "paragraphHeight": 1198,
+      "lines": 53
+    },
+    {
+      "ms": 497.70000000298023,
+      "unmounted": true
+    },
+    {
+      "ms": 513.8999999910593,
+      "unmounted": true
+    },
+    {
+      "ms": 530.3999999910593,
+      "unmounted": true
+    },
+    {
+      "ms": 547.3999999910593,
+      "unmounted": true
+    },
+    {
+      "ms": 563.7000000029802,
+      "unmounted": true
+    },
+    {
+      "ms": 580.5999999940395,
+      "unmounted": true
+    },
+    {
+      "ms": 597.5,
+      "unmounted": true
+    },
+    {
+      "ms": 613.7000000029802,
+      "unmounted": true
+    }
+  ],
+  "observed": {
+    "firstWidth": 436.40625,
+    "minWidth": 4.71875,
+    "lineCounts": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      9,
+      12,
+      15,
+      19,
+      30,
+      53
+    ],
+    "paragraphHeights": [
+      98,
+      120,
+      142,
+      164,
+      186,
+      230,
+      296,
+      362,
+      450,
+      692,
+      1198
+    ],
+    "unmountedAfterClose": true
+  }
+}

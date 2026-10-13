@@ -3,14 +3,14 @@ import { test } from "node:test"
 import { randomUUID } from "node:crypto"
 import { ModelConfigurationService } from "../../desktop/main/model-configuration"
 import { ModelGateway } from "../../desktop/core/model-authorization"
-import { presetsFor, type ConfigurationDraft } from "../../desktop/shared/model-catalog"
+import { PROVIDER_PRESETS, type ConfigurationDraft } from "../../desktop/shared/model-catalog"
 import { officialModel } from "../../desktop/shared/provider-capabilities"
 import { isValidThinkingEffort, thinkingEffortOptionsFor } from "../../src/lib/ai/thinking-effort"
 
 const key = "byok-public-fixture-key"
 const json = (value: unknown, status = 200) => Response.json(value, { status })
 function draft(provider: ConfigurationDraft["provider"], kind: ConfigurationDraft["kind"] = "TEXT", modelId = "fixture"): ConfigurationDraft {
-  const preset = presetsFor(kind).find(p => p.id === provider)!
+  const preset = PROVIDER_PRESETS.find(p => p.id === provider)!
   return { provider, kind, modelId, protocol: preset.protocol ?? "openai", endpoint: (kind === "TEXT" ? preset.textEndpoint : preset.imageEndpoint) ?? "https://fixture.invalid/v1", apiKey: key }
 }
 async function run(fetcher: typeof fetch, work: (s: ModelConfigurationService) => Promise<void>) {

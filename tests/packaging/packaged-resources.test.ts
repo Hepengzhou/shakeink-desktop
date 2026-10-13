@@ -13,7 +13,7 @@ const require = createRequire(import.meta.url)
 test('实际 macOS app 内容、版本、入口、资源、架构与输入一致', {timeout: 90000}, async () => {
   const {inspectPackagedApp} = await import('../../scripts/inspect-packaged-app.mjs')
   const result = await inspectPackagedApp(project, app)
-  assert.equal(result.version, '0.1.0')
+  assert.equal(result.version, JSON.parse(await readFile(join(project, 'package.json'), 'utf8')).version)
   assert.equal(result.arch, 'arm64')
   assert.equal(result.bundleId, 'ink.xaanink.desktop')
   assert.equal(result.productionModulesIncludeNextAndPrisma, true)

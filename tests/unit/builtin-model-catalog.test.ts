@@ -1,10 +1,10 @@
 import test from "node:test"
 import assert from "node:assert/strict"
 import { builtinModels, modelChoices, excludedBuiltinModel } from "../../desktop/shared/builtin-model-catalog"
-import { presetsFor, type CatalogResult, type CatalogEntry } from "../../desktop/shared/model-catalog"
+import { PROVIDER_PRESETS, type CatalogResult, type CatalogEntry } from "../../desktop/shared/model-catalog"
 const live=(provider:CatalogResult["provider"],kind:CatalogResult["kind"],models:CatalogEntry[]):CatalogResult=>({ok:true,provider,kind,models,complete:true,unknownCapabilityIds:[],permission:"listed-unverified",sources:[],checkedAt:"2026-10-09T00:00:00Z",warnings:[]})
 for(const kind of ["TEXT","IMAGE"] as const)test(`D01/D02: every ${kind} preset has sourced candidates and custom remains empty`,()=>{
-  for(const preset of presetsFor(kind)){
+  for(const preset of PROVIDER_PRESETS.filter(preset=>preset.id==="custom"||!!(kind==="TEXT"?preset.textEndpoint:preset.imageEndpoint))){
     const rows=builtinModels(preset.id,kind)
     if(preset.id==="custom"){assert.deepEqual(rows,[]);continue}
     assert.ok(rows.length>0,preset.id);assert.equal(new Set(rows.map(row=>row.id)).size,rows.length)

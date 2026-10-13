@@ -59,8 +59,11 @@ export interface DesktopBridge extends FileExportBridge {
   repairWorkLease(action:WorkLeaseRequest):Promise<WorkLeaseResult>
   chooseDirectory(purpose: DirectoryPurpose): Promise<{ id: string; path: string } | null>
   command(id: string): Promise<void>
+  openProjectRepository(): Promise<void>
   readClipboardText(): Promise<string>
   writeClipboardText(text: string): Promise<void>
   showInputContextMenu(state: import("./input-context-menu").InputContextState): Promise<import("./input-context-menu").InputContextCommand | null>
+  showTextContextMenu(request:import('./text-context-menu').TextContextRequest):Promise<import('./text-context-menu').TextContextResult>
+  cancelTextContextMenu(requestId:string):Promise<void>
   subscribe(listener: (event: DesktopEvent) => void): () => void
 }

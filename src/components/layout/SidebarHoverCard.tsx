@@ -12,6 +12,7 @@
  * query key 与各面板一致（["novels", id] / ["characters", id]），缓存共享不重复请求。
  */
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react"
+import { createPortal } from "react-dom"
 import { useQuery } from "@tanstack/react-query"
 import { BookOpen, Users, type LucideIcon } from "lucide-react"
 
@@ -31,6 +32,7 @@ import {
   type NovelSummary,
 } from "../content/types"
 import type { SettingType } from "@/generated/prisma/enums"
+import { useNavigationTransient } from "./sidebar-navigation-state"
 
 /* ------------------------------ 数据形状 ------------------------------ */
 
@@ -148,6 +150,9 @@ export const HOVER_SHOW_MS = 400
 export const HOVER_HIDE_MS = 200
 
 export function SidebarHoverProvider({ children }: { children: React.ReactNode }) {
+  const { paused, epoch } = useNavigationTransient()
+  const pausedRef = useRef(paused)
+  pausedRef.current = paused
   const [state, setState] = useState<HoverState | null>(null)
   const stateRef = useRef<HoverState | null>(null)
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -166,6 +171,7 @@ export function SidebarHoverProvider({ children }: { children: React.ReactNode }
   const value = useMemo<SidebarHoverCtxValue>(
     () => ({
       show: (owner, render, pos) => {
+        if (pausedRef.current) return
         cancelHide()
         setHover({ owner, render, x: pos.x, y: pos.y })
       },
@@ -187,6 +193,8 @@ export function SidebarHoverProvider({ children }: { children: React.ReactNode }
     []
   )
 
+  useEffect(() => { cancelHide(); setHover(null) }, [paused, epoch])
+
   // 卡片 fixed 定位不随行滚动：任何滚动（捕获阶段）即收
   useEffect(() => {
     if (!state) return
@@ -205,10 +213,12 @@ export function SidebarHoverProvider({ children }: { children: React.ReactNode }
   return (
     <SidebarHoverCtx.Provider value={value}>
       {children}
-      {state && (
+      {/* Escape the drawer's transform/clip; shared modal surfaces remain above. */}
+      {state && !paused && createPortal(
         <div
           role="tooltip"
-          className="fixed z-[3000]"
+          data-sidebar-hover-card=""
+          className="fixed z-40"
           style={{
             left: Math.min(state.x, window.innerWidth - HOVER_CARD_W - 8),
             top: Math.max(8, Math.min(state.y, window.innerHeight - HOVER_CARD_EST_H - 8)),
@@ -217,7 +227,8 @@ export function SidebarHoverProvider({ children }: { children: React.ReactNode }
           onMouseLeave={() => value.scheduleHide(state.owner)}
         >
           {state.render()}
-        </div>
+        </div>,
+        document.body
       )}
     </SidebarHoverCtx.Provider>
   )

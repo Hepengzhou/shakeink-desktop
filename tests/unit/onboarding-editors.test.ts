@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs"
 import { test } from "node:test"
 import { transformSync } from "esbuild"
 import { defaultState, settingsSchema, parseContextWindow, type PublicModel } from "../../desktop/core/settings"
-import { presetsFor } from "../../desktop/shared/model-catalog"
+import { PROVIDER_PRESETS, presetsFor } from "../../desktop/shared/model-catalog"
 import { modelChoices, excludedBuiltinModel } from "../../desktop/shared/builtin-model-catalog"
 import { onboardingDialogGuard } from "../../src/lib/desktop/onboarding-flow"
 
@@ -41,7 +41,7 @@ function editor(file: "ProfileSettings" | "ModelConfigurationDialog", exportName
     if (name === "@/components/ui/input") return primitives(["Input"])
     if (name === "./ModelChoiceSelect") return primitives(["ModelChoiceSelect"])
     if (name === "@desktop/core/settings") return { settingsSchema, parseContextWindow }
-    if (name === "@desktop/shared/model-catalog") return { presetsFor }
+    if (name === "@desktop/shared/model-catalog") return { PROVIDER_PRESETS, presetsFor }
     if (name === "@desktop/shared/builtin-model-catalog") return { modelChoices, excludedBuiltinModel }
     if (name === "@/lib/desktop/onboarding-flow") return { onboardingDialogGuard }
     if (name === "@/stores/desktop") return { useDesktopStore: (select: (value: unknown) => unknown) => select({ bootstrap: state }), saveDesktopModel: async (draft: any) => { saves.push(draft) }, saveDesktopProfile: async (...args: any[]) => { saves.push(args) } }
@@ -127,7 +127,44 @@ test("ONB editor: confirmed model is edited with the same id; suspension cancels
 })
 test("ONB editor: built-in providers put DeepSeek and domestic options first without unsupported image providers", () => {
   assert.deepEqual(presetsFor("TEXT").map(preset => preset.id), ["deepseek", "alibaba", "moonshot", "zai", "xiaomi", "minimax", "tencent", "bytedance", "openai", "anthropic", "google", "xai", "custom"])
-  assert.deepEqual(presetsFor("IMAGE").map(preset => preset.id), ["alibaba", "zai", "minimax", "tencent", "bytedance", "openai", "google", "xai", "custom"])
+  assert.deepEqual(presetsFor("IMAGE").map(preset => preset.id), ["bytedance", "openai"])
+})
+
+test("IP-01/IP-05: shared settings and onboarding image editors have two providers and preserve legacy drafts", async () => {
+  for (const onboarding of [undefined, { onSubmit: async () => {}, onSelectExisting: async () => {} }]) {
+    const ui = editor("ModelConfigurationDialog", "ModelConfigurationDialog", { kind: "IMAGE", onClose() {}, onboarding })
+    try {
+      assert.deepEqual(ui.find("供应商").element.props.options.map((item: any) => [item.id, item.label]), [["bytedance", "火山引擎"], ["openai", "OpenAI"]])
+      assert.equal(ui.find("供应商").element.props.value, "bytedance")
+      ui.fill("API Key", "public-fixture")
+      ui.select("供应商", "openai")
+      assert.equal(ui.find("API Key").element.props.value, "")
+      assert.equal(ui.find("可用模型").element.props.value, "")
+      assert.equal(ui.saves.length, 0)
+    } finally { ui.finish() }
+  }
+  for (const provider of ["google", "custom"]) {
+    const retained = { ...imageModel, provider, providerName: provider === "custom" ? "旧自定义供应商" : undefined }
+    let closed = 0
+    const canceled = editor("ModelConfigurationDialog", "ModelConfigurationDialog", { kind: "IMAGE", model: retained, onClose() { closed++ } }, { models: [retained] })
+    try {
+      canceled.fill("API Key", "public-fixture")
+      canceled.select("供应商", "openai")
+      canceled.click("取消"); await canceled.settle()
+      assert.equal(closed, 1); assert.equal(canceled.saves.length, 0)
+      assert.deepEqual(canceled.state.models, [retained])
+    } finally { canceled.finish() }
+    const ui = editor("ModelConfigurationDialog", "ModelConfigurationDialog", { kind: "IMAGE", model: retained, onClose() {} }, { models: [retained] })
+    try {
+      assert.deepEqual(ui.find("供应商").element.props.options.map((item: any) => item.id), ["bytedance", "openai"])
+      assert.equal(ui.find("供应商").element.props.selectedOption.id, provider)
+      assert.equal(ui.find("供应商").element.props.selectedOption.label, provider === "custom" ? "旧自定义供应商" : "Google")
+      ui.click("保存模型"); await ui.settle()
+      assert.equal(ui.saves.length, 1)
+      for (const field of ["id", "provider", "endpoint", "modelId"]) assert.equal(ui.saves[0][field], retained[field as keyof typeof retained])
+      assert.equal(ui.saves[0].apiKey, "")
+    } finally { ui.finish() }
+  }
 })
 test("ONB editor: uncertain durable confirmation freezes profile fields and avatar while allowing the exact retry", async () => {
   const submissions: any[] = []
@@ -168,7 +205,9 @@ for (const kind of ["TEXT", "IMAGE"] as const) test(`ONB editor: ${kind} new mod
   const callbacks = { confirmationPending: false, onSubmit: async (draft: any) => { attempts++; const { apiKey: _privateKey, ...publicDraft } = draft; ui.state.models.push({ ...publicDraft, id: kind === "TEXT" ? textModel.id : imageModel.id, authRevision: 1, keyMask: "••••" }); throw Error("写入待确认") }, onSelectExisting: async () => {}, onRetry: () => { retries++; return retry.promise } }
   const ui = editor("ModelConfigurationDialog", "ModelConfigurationDialog", { kind, onClose() {}, onboarding: callbacks })
   try {
-    custom(ui); ui.click("继续"); await ui.settle(); assert.equal(attempts, 1); assert.equal(ui.state.models.length, 1); ui.setProps({ onboarding: { ...callbacks, confirmationPending: true } }); ui.click("继续"); ui.click("继续"); assert.equal(retries, 1); assert.equal(attempts, 1); retry.resolve(); await ui.settle(); assert.equal(ui.all().some(surface => surface.element.props.role === "alert"), false)
+    if (kind === "TEXT") custom(ui)
+    else { ui.select("供应商", "openai"); ui.select("可用模型", modelChoices("openai", "IMAGE", null).find(item => item.available !== false)!.id); ui.fill("API Key", "public-onboarding-fixture-key") }
+    ui.click("继续"); await ui.settle(); assert.equal(attempts, 1); assert.equal(ui.state.models.length, 1); ui.setProps({ onboarding: { ...callbacks, confirmationPending: true } }); ui.click("继续"); ui.click("继续"); assert.equal(retries, 1); assert.equal(attempts, 1); retry.resolve(); await ui.settle(); assert.equal(ui.all().some(surface => surface.element.props.role === "alert"), false)
   } finally { ui.finish() }
 })
 for (const reason of ["back", "skip"] as const) test(`ONB editor: ${reason} remains available during a connection test and cancels late output`, async () => {

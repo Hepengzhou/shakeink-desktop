@@ -8,13 +8,13 @@ import { setImmediate as tick } from "node:timers/promises"
 import { ModelGateway } from "../../desktop/core/model-authorization"
 import { ModelRepository } from "../../desktop/main/model-repository"
 import { ModelConfigurationService, type ModelConfigurationOptions } from "../../desktop/main/model-configuration"
-import { presetsFor, type ConfigurationDraft } from "../../desktop/shared/model-catalog"
+import { PROVIDER_PRESETS, presetsFor, type ConfigurationDraft } from "../../desktop/shared/model-catalog"
 
 const secret = "fixture-key-main-only"
 const protection = { isEncryptionAvailable: () => true, encryptString: (s: string) => Buffer.from(s), decryptString: (s: Buffer) => s.toString() }
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } })
 function draft(provider: ConfigurationDraft["provider"] = "deepseek", kind: ConfigurationDraft["kind"] = "TEXT"): ConfigurationDraft {
-  const preset = presetsFor(kind).find(p => p.id === provider)!
+  const preset = PROVIDER_PRESETS.find(p => p.id === provider)!
   return { provider, kind, protocol: preset.protocol ?? "openai", endpoint: (kind === "TEXT" ? preset.textEndpoint : preset.imageEndpoint) ?? "https://fixture.invalid/v1", apiKey: secret, modelId: "fixture-model" }
 }
 async function fixture(fetcher: typeof fetch, overrides: Partial<ModelConfigurationOptions> = {}) {
@@ -30,8 +30,8 @@ async function save(f: Awaited<ReturnType<typeof fixture>>, input: Configuration
   return f.repository.saveModel(state.revision, { ...input, name: "测试模型", modelId: input.modelId!, contextWindow: 0, enabled: true, thinkingLevels: [], defaultThinking: "default" })
 }
 
-test("configuration presets expose 12 text/8 image providers plus custom, isolated Tencent endpoints", () => {
-  assert.equal(presetsFor("TEXT").length, 13); assert.equal(presetsFor("IMAGE").length, 9)
+test("configuration presets expose 12 text providers plus custom and two image providers, retained Tencent endpoints", () => {
+  assert.equal(presetsFor("TEXT").length, 13); assert.equal(presetsFor("IMAGE").length, 2)
   assert.equal(presetsFor("IMAGE").some(p => p.id === "anthropic"), false)
   assert.equal(draft("tencent").endpoint, "https://tokenhub.tencentmaas.com/v1")
   assert.notEqual(draft("tencent").endpoint, draft("tencent", "IMAGE").endpoint)

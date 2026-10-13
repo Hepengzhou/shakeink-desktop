@@ -236,7 +236,7 @@ async function start() {
   child = application.process()
   trackOwnedChild()
   const actual = await bounded(application.evaluate(({app, BrowserWindow}) => ({packaged: app.isPackaged, version: app.getVersion(), appPath: app.getAppPath(), userData: app.getPath('userData'), windows: BrowserWindow.getAllWindows().map(window => ({id: window.id, url: window.webContents.getURL(), sandbox: window.webContents.getLastWebPreferences().sandbox}))})), 'Main-process diagnostics')
-  assert.equal(actual.packaged, true); assert.equal(actual.version, '0.1.0')
+  assert.equal(actual.packaged, true); assert.equal(actual.version, JSON.parse(await readFile(join(project, 'package.json'), 'utf8')).version)
   assert.equal(actual.appPath, join(project, 'release/mac-arm64/玄印写作.app/Contents/Resources/app'))
   assert.equal(actual.userData, join(homedir(), 'Library/Application Support/Xuanxiangxiezuo-Desktop'))
   launch.actual = actual

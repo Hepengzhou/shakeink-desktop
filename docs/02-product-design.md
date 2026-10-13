@@ -1,5 +1,7 @@
 # 玄印写作桌面版 · 产品设计
 
+> **2026-10-13 最新供应商范围：** 字节跳动展示名称及供应商 Logo 改为火山引擎；文生图供应商下拉仅提供火山引擎、OpenAI，覆盖下文旧八家及自定义约束。已有其它文生图配置保留并可编辑，文本供应商范围保持。实施记录：`reviews/2026-10-13-image-provider-plan.md`。
+
 <!-- USER-2026-10-08-CANCEL-BACKUPS CURRENT-SCOPE BEGIN -->
 > **当前范围（2026-10-08）：用户取消全部备份功能。** 产品不再提供手动/自动备份、备份列表/保留策略、应用/作品从备份恢复、schema升级和迁移前额外数据备份快照。作品打开/重关联/导出、迁移journal/故障续行、启动恢复/配置导入导出、正常保存和崩溃草稿恢复保持。下方旧段落和表格全文保留；其中备份特有要求仅作历史，确切原文在退役manifest。
 > 活动清单：[acceptance-active-scope.json](acceptance-active-scope.json)；原文和退役明细：[backup-scope-retirement.json](backup-scope-retirement.json)。此处不声明实现完成或验收通过。

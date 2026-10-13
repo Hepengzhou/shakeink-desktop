@@ -7,4 +7,4 @@
 .chat-empty-context button { font-size: 11.5px; }
 @container (max-width:599px) { .chat-empty-dock { --chat-empty-gutter: 20px; } }
 @container (max-width:379px) { .chat-empty-dock { --chat-empty-gutter: 12px; } }
-@media (max-height:650px) { .chat-empty-composer .chat-composer-editable { max-height: 96px; } }
+@media (max-height:650px) { .chat-empty-composer .chat-composer-editable { max-height: 288px; } }

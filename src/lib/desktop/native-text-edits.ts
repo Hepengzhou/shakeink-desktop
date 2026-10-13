@@ -67,13 +67,15 @@ export function nativeTextEdits(document: Document, readText: () => Promise<stri
     return { matches: () => { if (observer?.takeRecords().length) dirty = true; return !dirty && matches() }, stop }
   }
   return {
-    async run(id: NativeInputEdit, control: TextEditControl) {
+    async run(id: NativeInputEdit, control: TextEditControl, assertTransaction?: () => void) {
+      assertTransaction?.()
       if (!available(control, id)) throw new Error("输入目标已变化，请重新执行")
       const ticket = ++operation
       for (const stop of monitors) stop()
       if (id === "text.paste" || id === "text.pastePlain" || (isComposer(control) || isAPIKeyControl(control)) && (id === "text.copy" || id === "text.cut")) {
         const before = monitor(control), revision = epoch
         const assertCurrent = () => {
+          assertTransaction?.()
           if (!available(control, id) || ticket !== operation || epoch !== revision || !before.matches()) throw new Error("输入目标已变化，未应用迟到剪贴板内容")
         }
         try {
@@ -100,6 +102,7 @@ export function nativeTextEdits(document: Document, readText: () => Promise<stri
           }
         } finally { before.stop() }
       } else {
+        assertTransaction?.()
         const command = { "text.copy": "copy", "text.cut": "cut", "text.undo": "undo", "text.redo": "redo" }[id]
         if (!document.execCommand(command, false)) throw new Error("当前输入框无法执行此操作")
       }
