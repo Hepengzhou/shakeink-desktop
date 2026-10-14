@@ -108,3 +108,9 @@ test("PLX06 related structures require distinct observable deliverables", () => 
   assert.match(prompt("plot-history-reconstruction"), /史料|史实/)
   assert.match(prompt("plot-mystery-locked-room"), /线索.*可见|可见.*线索/)
 })
+test("PLX03 legacy ascent and revenge variants require different decision mechanisms", () => {
+  const social = WIZARD_TEMPLATES.find(t => t.id === "plot-underdog-climb")!.prompt
+  assert.match(social, /资格/); assert.match(social, /信用|担保/)
+  const restitution = WIZARD_TEMPLATES.find(t => t.id === "plot-revenge-she-returns")!.prompt
+  assert.match(restitution, /名誉|姓名/); assert.match(restitution, /联合追偿|联合.*追偿/)
+})
