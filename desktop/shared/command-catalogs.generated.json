@@ -4,7 +4,7 @@
   "sourceHashes": {
     "src/lib/desktop/monaco-commands.ts": "225213d4a390451d682798a8789f32baf12d6e4816261a46564ac98ba5195da7",
     "src/lib/desktop/markdown-actions.ts": "d893e02377c423f2825b8516a228d0a4d1f36309a29de9647bb60ceedd0791c3",
-    "src/lib/desktop/command-runtime.ts": "657253fd9fba6a50d62e69dda3c999751791ec5450219f66acf5d8b25e769e7c",
+    "src/lib/desktop/command-runtime.ts": "59a4fd8be5f990fec4d28138b5e3a30fa2797d94f587f68ea11e38e7915005ff",
     "src/lib/desktop/command-scope.ts": "1daf07e3b0cebae7567e2aeb13a7956d0683fb4fc82ecb2b8f6ab4a271d40ccd",
     "desktop/shared/command-registry.ts": "b017552b4a377d0d28e185426d4dfe48e318d5d90b8ee8ed551649f49dbc801f",
     "desktop/shared/commands.json": "b6735f65a88739eaecf3c407685d542530c4884a3719c473e1f24c182bf70ec7",

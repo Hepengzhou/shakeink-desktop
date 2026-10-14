@@ -1,7 +1,7 @@
 import assert from "node:assert/strict"
 import { test } from "node:test"
 import { chromium, type Browser } from "playwright-core"
-import { sampleDrawer, withDrawer } from "../helpers/sidebar-drawer-fixture"
+import { recordDrawerDriverAction, sampleDrawer, withDrawer } from "../helpers/sidebar-drawer-fixture"
 let browser: Browser
 test.before(async () => { browser = await chromium.launch({ headless: true, ...(process.env.XAANINK_TEST_CHROMIUM ? { executablePath: process.env.XAANINK_TEST_CHROMIUM } : {}) }) })
 test.after(async () => { await browser?.close() })
@@ -44,7 +44,7 @@ test("DRAWER-02 newest axis intent, fullscreen restore and persisted target surv
 for (const width of [600, 899]) test(`DRAWER-03 narrow ${width}px overlay retains width and desktop preference`, () => withDrawer(browser, { width }, async page => {
   const stored = await page.evaluate(() => (window as any).drawerFixture.read())
   assert.equal(await page.locator('nav[aria-label="创作工作区"]').evaluate(el => getComputedStyle(el).display), "flex")
-  await page.getByRole("button", { name: "作品目录", exact: true }).click(); await page.waitForTimeout(100)
+  await recordDrawerDriverAction(page, "narrow-open", () => page.getByRole("button", { name: "作品目录", exact: true }).click()); await page.waitForTimeout(100)
   const mid = await sampleDrawer(page); assert.equal(mid.mode, "narrow"); assert.equal(mid.phase, "opening"); assert(Math.abs(mid.width - width) < .1); assert(mid.visible > 0 && mid.visible < width); assert(Math.abs(mid.translate - (mid.visible - mid.width)) < .1)
   await page.waitForFunction(() => document.querySelector<HTMLElement>(".dashboard-shell")!.dataset.sidebarPhase === "open")
   assert.equal(await page.locator(".workspace-chat").evaluate(el => !!el.closest("[inert]")), true)

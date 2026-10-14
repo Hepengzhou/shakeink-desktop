@@ -6,9 +6,10 @@ import { Dialog as DialogPrimitive } from "@base-ui/react/dialog"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { XIcon } from "lucide-react"
+import { ContentDrawerInteractionContext } from "@/lib/desktop/content-drawer-context"
 
 function Dialog({ ...props }: DialogPrimitive.Root.Props) {
-  return <DialogPrimitive.Root data-slot="dialog" {...props} />
+  return <ContentDrawerInteractionContext.Provider value={null}><DialogPrimitive.Root data-slot="dialog" {...props} /></ContentDrawerInteractionContext.Provider>
 }
 
 function DialogTrigger({ ...props }: DialogPrimitive.Trigger.Props) {

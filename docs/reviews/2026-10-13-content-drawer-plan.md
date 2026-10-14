@@ -26,6 +26,10 @@
 
 contentPhase只在所有影响本次几何的相关运动完成且最终目标已写入时解冻；左右并发时允许阶段保持opening/closing直到共同合法终态，不能在一次secondary结束时无条件清空冻结。
 
+2026-10-14 TDD 补充：跨断点后隐藏保活的 ContentTabs 可能仍持有旧 viewport capacity/compact/overflow metrics。新展开先让完整 W/H 落到真实 DOM，通过局部 context 注册的 strip.prepare 同步测量；若真实已提交的 tools compact/overflow 与新计算不一致，正常请求 React 状态提交，owner 保持实际 V=0、未启动运动时钟，并在后续 rAF 再测到 ready 才启动。不是硬等固定帧数，不使用 flushSync，不排除首个可见帧断言。既有冻结的 closing/反向/fullscreen 替换无须重新准备；prepare 只测量 caption，不排序、回焦或替换业务实例。
+
+首次挂载之前同 task 开/关/开时，隐藏命令停止旧 ready 等待，但保留“完整注册 W 尚未准备”的事实和原投影比例；新的展开须完成注册/metrics 准备，已可见且准备完成的反向沿用原 W。Restore 在首写后保留局部合法 target pin，真实 Group.onLayoutChanged 的非用户注册完成回调在新 separator 拓扑中经唯一 writer 确认/重写精确 target 后移交；自身 API 写不能充当注册 ack。库仅在 pointer-up 才报告用户 meta，因此在任何 restore/repin 写入前还检查本 Group 的真实 direct separator active 状态，真实手势开始即移交，避免中途 observer 覆盖拖动；结束/键盘用户 meta、新显隐/全屏命令、窗口真实宽高变更、新 restore 或 unmount 亦清旧保护。常规窗口 resize/preserve-pixel 偏好与手动分栏行为保持，不通过任意计时帧释放，也不永久钳制库回调。
+
 ## 实例及交互
 
 contentMounted只负责首次创建，收放不置false。隐藏Panel目标为0、minSize为0，无separator占位；ContentTabs和业务实例保留，实际关闭Tab/账户/目录的原生命周期继续。原内容Tab保活逻辑和业务registry不改。
@@ -38,11 +42,13 @@ contentMounted只负责首次创建，收放不置false。隐藏Panel目标为0�
 
 开始隐藏若焦点在内容（或其非模态浮层），先记录目标并在可见恢复入口出现后移焦；完成打开只在焦点仍由恢复流程持有时回原目标，用户已主动转移或有Dialog时不抢焦点。自动Tab激活只展开，不将原外部焦点挪入内容。失效目标回内容caption按钮。
 
+2026-10-14 实际手势补充：对话 caption 的右恢复按钮随 chat 边缘移动，真实主鼠标键按住 80ms 时可在原点松开而失去 pointer-up/click。只在始于该按钮的实际主鼠标键 pointer-down 保留 pointer capture，浏览器按正常 up/cancel 释放；仍由既有 onClick 发出最新 toggle 意图，键盘与 no-drag/外观不变，不固定位置或调用测试回调。
+
 原生标题栏：右内层动作/隐藏时所有内部app-region重置为initial，防止越界no-drag矩形覆盖邻栏caption；原窗控固定在原生区域。动作结束恢复真实caption拖拽/控件排除，真实Windows HWND命中另验，macOS未执行不得计通过。
 
 ## 文件范围与职责
 
-生产范围：`src/components/layout/useSidebarDrawer.ts`、`DashboardShell.tsx`、`ContentTabs.tsx`的交互暂停、`ChatPanel.tsx`的caption、`src/app/desktop.css`；新局部context/helper、`useContentTabStrip.ts`取消边界；共享`ui/dropdown-menu.tsx`、`tooltip.tsx`、`select.tsx`、`dialog.tsx`局部暂停/Modal边界，`content/ItemLevelPicker.tsx`直接Popover暂停；必要时`src/lib/desktop/use-command-target.ts`、`command-runtime.ts`不可见目标门控。不改变29类业务数据或渲染结构、AI/composer，不移植HTML示意。保留全部已有未提交修改。
+生产范围：`src/components/layout/useSidebarDrawer.ts`、`DashboardShell.tsx`、`ContentTabs.tsx`的交互暂停、`ChatPanel.tsx`的caption、`src/app/desktop.css`；新局部context/helper、`useContentTabStrip.ts`取消边界与首可见之前的 caption 测量/ready API（2026-10-14 基于真实逐帧失败扩准，不改排序逻辑）；共享`ui/dropdown-menu.tsx`、`tooltip.tsx`、`select.tsx`、`dialog.tsx`局部暂停/Modal边界，`content/ItemLevelPicker.tsx`直接Popover暂停；必要时`src/lib/desktop/use-command-target.ts`、`command-runtime.ts`不可见目标门控。不改变29类业务数据或渲染结构、AI/composer，不移植HTML示意。保留全部已有未提交修改。
 
 主代理负责测试、组合、真实验证和台账；实现子代理限定上述生产文件；独立审核子代理只写对应方案、用例及代码审核报告。native验证脚本必须用新建隔离根、真实PGlite/IPC/原组件，0模型，无HTTP监听，不记录真实用户数据/Key。原型与隔离业务body结果独立于真实产品证据。
 

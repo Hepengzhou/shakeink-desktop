@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useId, useState } from "react"
+import { useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties } from "react"
 import { useNovelList } from "@/lib/novel-list"
 import { ChevronDown, Maximize2, Minimize2, PanelLeft, PanelRight, X } from "lucide-react"
 
@@ -14,6 +14,7 @@ import { getTabIcon, useTabsStore } from "@/stores/tabs"
 import { useDesktopStore } from "@/stores/desktop"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useContentTabStrip } from "./useContentTabStrip"
+import { useContentDrawerInteraction } from "@/lib/desktop/content-drawer-context"
 
 /** 右栏：可排序的内容标签 + 保留实例的真实业务面板 */
 export function ContentTabs({
@@ -39,10 +40,21 @@ export function ContentTabs({
   const closeTab = useTabsStore((s) => s.closeTab)
   const moveTab = useTabsStore((s) => s.moveTab)
   const desktopBootstrap = useDesktopStore((s) => s.bootstrap)
+  const drawer = useContentDrawerInteraction()
+  const captionZoom = drawer?.captionZoom ?? desktopBootstrap?.settings.appearance.zoom ?? 1
+  const captionState = useRef({ sidebarHidden })
+  if (!drawer?.paused) captionState.current = { sidebarHidden }
+  const captionSidebarHidden = drawer?.paused ? captionState.current.sidebarHidden : sidebarHidden
   const strip = useContentTabStrip(tabs, activeTabId, moveTab)
+  useLayoutEffect(() => drawer?.registerCaptionPreparation(tabs.length ? strip.prepare : () => true), [drawer?.registerCaptionPreparation, strip.prepare, tabs.length])
   const [menuOpen, setMenuOpen] = useState(false)
   const prefix = useId()
   useEffect(() => { if (!strip.hasOverflow) setMenuOpen(false) }, [strip.hasOverflow])
+  useLayoutEffect(() => {
+    if (drawer?.paused) { setMenuOpen(false); strip.pause() }
+    // A pause cancels the current drag and pending focus only once per edge.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [drawer?.paused])
 
   // 封面与侧栏、对话区共享完整列表状态，失效后自动刷新。
   const { data: novelList } = useNovelList()
@@ -54,10 +66,10 @@ export function ContentTabs({
     const suffix = tab.type === "chapter-content" ? "正文" : tab.type === "chapter-outline" ? "大纲" : tab.type === "chapter-candidate" ? "候选稿" : null
     return suffix ? `${tab.title} · ${suffix}` : tab.title
   }
-  const sidebarRestore = sidebarHidden && onShowSidebar ? <button type="button" data-sidebar-restore aria-label="显示左侧导航栏" title="显示左侧导航栏" onClick={onShowSidebar} className="sidebar-caption-restore content-tabs-tool" style={desktopBootstrap?.platform === "darwin" ? { marginLeft: `calc(${88 / desktopBootstrap.settings.appearance.zoom}px - 8px)` } : undefined}><PanelLeft /></button> : null
+  const sidebarRestore = captionSidebarHidden && onShowSidebar ? <button type="button" data-sidebar-restore aria-label="显示左侧导航栏" title="显示左侧导航栏" onClick={onShowSidebar} className="sidebar-caption-restore content-tabs-tool" style={desktopBootstrap?.platform === "darwin" ? { marginLeft: `calc(${88 / captionZoom}px - 8px)` } : undefined}><PanelLeft /></button> : null
 
   return (
-    <div className="content-tabs flex h-full flex-col bg-editor">
+    <div className="content-tabs flex h-full flex-col bg-editor" style={drawer?.captionZoom != null ? { "--content-tab-scale": String(captionZoom), "--desktop-caption-zoom": String(captionZoom) } as CSSProperties : undefined}>
       <StagedInterceptionBootstrap />
       {tabs.length === 0 && (
         <div
@@ -66,7 +78,7 @@ export function ContentTabs({
           // Keep the Windows caption and fixed app menu clear, including at
           // reduced Electron zoom when titlebar env values are unavailable.
           style={desktopBootstrap?.platform === "win32" ? {
-            paddingRight: `calc(max(100vw - env(titlebar-area-width, calc(100vw - 138px)), ${138 / desktopBootstrap.settings.appearance.zoom}px) + ${28 / desktopBootstrap.settings.appearance.zoom}px + 12px)`,
+            paddingRight: `calc(max(100vw - env(titlebar-area-width, calc(100vw - 138px)), ${138 / captionZoom}px) + ${28 / captionZoom}px + 12px)`,
           } : undefined}
         >
           {sidebarRestore}
@@ -86,7 +98,7 @@ export function ContentTabs({
           data-desktop-caption={desktopBootstrap?.platform === "win32" ? "win32" : undefined}
           className="desktop-drag content-tabs-caption"
           style={desktopBootstrap?.platform === "win32" ? {
-            paddingRight: `calc(max(100vw - env(titlebar-area-width, calc(100vw - 138px)), ${138 / desktopBootstrap.settings.appearance.zoom}px) + ${28 / desktopBootstrap.settings.appearance.zoom}px + 12px)`,
+            paddingRight: `calc(max(100vw - env(titlebar-area-width, calc(100vw - 138px)), ${138 / captionZoom}px) + ${28 / captionZoom}px + 12px)`,
             justifyContent: "flex-end",
           } : undefined}
         >

@@ -66,3 +66,25 @@
 首个可见帧的 W/H 和注册 repin，真实 V 而非名义百分比；完整段逐帧比较文字行框和布局几何；收放↔全屏替换/同时左右/窄屏命令与恢复 generation；关闭后真实编辑器实例、草稿、选区、撤销和滚动；owned Portal 暂停及 finalFocus、业务 Dialog 保持和主动移焦；900/899 双向和宽高 resize；隐藏仍挂载 Panel 的 minSize/separator/保存冷启；真实 Windows HWND 和固定 zoom 档位的caption安全区。
 
 上述修改为正式实现和测试可以据以执行的最小边界补齐，不要求改变用户已批准的抽屉视觉。
+
+## 2026-10-14 实证驱动的 caption 准备范围补审
+
+已读正式方案第 29、47 行的追加边界。`docs/evidence/content-drawer/geometry-01/geometry.tap` 在稳定被测源下为 15 tests / 13 pass / 2 fail，其中 CD03 的 899→900 重新展开首个可见帧真实 Tab 宽 27px、终态 55px，W/H 本身已正确。`useContentTabStrip.ts` 原测量由 ResizeObserver → rAF 请求，compact / overflow React 控件提交又会改变 tools 宽；只冻结外层 W/H 和取消拖拽不足以保证全部真实控件在可见前准备完毕。
+
+准入最小技术补充：局部 context 注册稳定 strip.prepare，ContentTabs 在 layout effect 注册/清理，空 Tab 直接 ready。完整 W/H 已落到真实 DOM 后同步测量 caption；如果当前已提交的 compact / overflow 控件与实际计算不一致，正常请求 React 提交，保持 V=0 及未启动轨道时钟，再实际复测 ready 后开始相关运动。不得使用固定等待 N 帧、跳过首个可见帧、放宽几何断言或在生命周期中 flushSync。prepare 不排序、不回焦、不替换业务实例；已有完整冻结形态的关闭、换向、全屏替换继续沿用旧 W/H，尚未完成首次形态准备的快速换向不能被误当成已准备。隐藏新意图、restore 和卸载须清理待准备流程。
+
+这属于履行用户“所有布局不能被挤压变形”的必要 caption 测量扩展，未改变已批准的 UI 交互，无需重新请求 UI 批准。此处准入方案 / TDD 收敛，具体 ready 收敛、长标题、首次挂载竞态和真实逐帧结果仍须代码审核及原用例 green；不代表产品验收通过。
+
+## 2026-10-14 restore 注册迟写范围补审
+
+`geometry-01` 的 CD04 原断言失败为 24.941 对期望 25，保留 .05 容差。主代理 `restore-diagnostic-02/report.json` 在前后相同源 hash、无中途 adapter read / 强制 DOM layout 的 900ms 观察中，第六次真实捕获：owner 已写 flex25/75/0，随后库的 preserve-pixel 投影写 24.941/75.059/0，最终 target / lastSidebar 也被污染。不能将其归为普通舍入或靠放宽测试处理。
+
+准入最小 restore 专属注册握手：输入的合法完整 target 在新 divider / minSize 拓扑注册阶段保持权威，晚期非用户回调和 DOM observer 仍经唯一 Group writer repin。使用真实 `onLayoutChanged` metadata 区分自身写 / 库完成回调 / 用户交互，在当前期望拓扑中确认最终目标落位后明确释放；真实 separator 用户操作应立即移交，之后正常人工 resize / 布局偏好必须仍可更新。新显隐、全屏、resize、restore 和卸载取消旧 pin，不能永久锁布局。实际实现及不改断言的 CD04 / 旧分隔线用例结果由后续代码审核确认。
+
+手势补审：库 dist `3238–3239` 仅在 pointer-up 后给 `onLayoutChanged` 用户完成 metadata。`restore-pointer-red-01/restore.tap` 在真实 hover / active / down / move40px / up 已执行时，Group sidebar 仍 319.5px / flex25；仅等末尾 meta 会在中途 observer 钳回旧值。准入在**任何 restore / repin 写入之前**读取当前 Group 的 direct `[data-separator="active"]`，真实手势开始就释放 pin，callback / MO / RO 与 queued restore frame 均覆盖；保留结束和键盘 user metadata 移交。没有 active 且非 user 的注册迟写继续保护，不能用全局任意 active 或伪造 metadata 解除。对应 `restore-green-04` 已实际 1/1 通过，最终稳定组合仍待代码审核。
+
+## 2026-10-14 移动恢复按钮的实际鼠标手势补审
+
+已核方案第 45 行。原 green-04 的一次快速换向终态偏差未在六次真实诊断中复现，不据此宣称已经确定其根因。新增独立 held pointer 用例保留原换向 / 键盘 / 全帧形态断言，要求真实 primary mouse 在 moving restore 按钮上开始、固定 client 点按住 80ms、按钮确实移动超过半宽，实际 up / click 仍由开始手势的按钮接收。red-06 未命中起始 down 只记 setup；red-07 则真实 down / hit / non-inert / closing、固定点及真实位移前置均通过，失败在真实 up 失去按钮。
+
+准入仅在 ChatPanel 右恢复按钮的真实 primary mouse / button0 pointerdown 使用浏览器 pointer capture，正常 up / cancel 自动释放；继续既有 onClick 最新 toggle、键盘与 no-drag / 外观，不固定按钮位置、不发模拟回调。实际 `pointer-green-01` 原 instant 与新 held 2/2 通过，随后 green-05 稳定生产源完整 62/62 通过。此技术补充履行真实抽屉换向手势，不改变已批准 UI；最终代码审核已准入全量 / 匹配构建 / 目标系统验证，仍不代表产品验收。

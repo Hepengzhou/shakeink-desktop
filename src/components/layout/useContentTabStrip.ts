@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent, type MouseEvent } from "react"
+import { useCallback, useEffect, useRef, useState, type KeyboardEvent, type PointerEvent, type MouseEvent } from "react"
 import type { Tab } from "@/stores/tabs"
 
 type Drag = {
@@ -112,10 +112,10 @@ export function useContentTabStrip(tabs: Tab[], activeId: string | null, moveTab
     }
     updateDrag()
   }
-  function measure() {
+  function measure(): boolean {
     measureFrame.current = 0
     const viewport = viewportRef.current, track = trackRef.current, tools = toolsRef.current
-    if (!viewport || !track || !tools) return
+    if (!viewport || !track || !tools) return false
     const caption = viewport.parentElement!, style = getComputedStyle(caption), toolStyle = getComputedStyle(tools)
     const available = caption.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight)
     const button = tools.querySelector<HTMLElement>("button")
@@ -126,6 +126,9 @@ export function useContentTabStrip(tabs: Tab[], activeId: string | null, moveTab
     // always retains the menu, which also exposes the two panel actions.
     const baseWidth = Math.max(0, available - size * 2 - gap - captionGap)
     const overflow = tabs.length > 0 && (tight || track.scrollWidth > baseWidth + 1)
+    // The owner may prepare a newly complete caption while V is still zero.
+    // React must commit these tool flags before that caption can become visible.
+    const ready = tools.dataset.compact === String(tight) && !!tools.querySelector(".content-tabs-menu-trigger") === overflow
     setCompact(tight); setHasOverflow(overflow)
     // Capacity comes from the caption, not this intrinsic-width viewport: using
     // its previous narrow width here would prevent a single tab expanding again.
@@ -134,7 +137,13 @@ export function useContentTabStrip(tabs: Tab[], activeId: string | null, moveTab
     track.querySelectorAll<HTMLElement>(".content-tab-title").forEach(el => { el.dataset.overflow = String(el.scrollWidth > el.clientWidth + 1) })
     if (drag.current?.started) updateDrag()
     else reveal(document.activeElement?.closest<HTMLElement>(".content-tab")?.closest(".content-tabs-track") === track ? document.activeElement.closest<HTMLElement>(".content-tab")! : track.querySelector<HTMLElement>('[aria-selected="true"]') ?? undefined)
+    return ready
   }
+  const latestMeasure = useRef(measure); latestMeasure.current = measure
+  const prepare = useCallback(() => {
+    cancelAnimationFrame(measureFrame.current); measureFrame.current = 0
+    return latestMeasure.current()
+  }, [])
   function scheduleMeasure() { if (!measureFrame.current) measureFrame.current = requestAnimationFrame(measure) }
   useEffect(() => {
     finish(false, false)
@@ -194,5 +203,7 @@ export function useContentTabStrip(tabs: Tab[], activeId: string | null, moveTab
     else if (event.key === "Enter" || event.key === " ") { event.preventDefault(); activate(id) }
   }
   return { viewportRef, trackRef, markerRef, toolsRef, hasOverflow, compact, focusedId, announcement, onPointerDown, onKeyDown, onFocus: (id: string) => { setFocusedId(id); reveal(tabElement(id)) }, cancel: () => finish(),
+    prepare,
+    pause: () => { cancelAnimationFrame(focusFrame.current); focusFrame.current = 0; finish(false, false) },
     onClickCapture: (event: MouseEvent) => { if (suppressClick.current && event.detail > 0) { suppressClick.current = false; event.preventDefault(); event.stopPropagation() } } }
 }

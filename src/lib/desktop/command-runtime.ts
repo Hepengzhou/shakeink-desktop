@@ -42,8 +42,11 @@ export function rememberDesktopCommandTarget(target:HTMLElement|null){
  if(target?.closest('.desktop-markdown-editor'))lastEditorTarget=target
 }
 export function desktopCommandTarget(){return lastTarget?.isConnected?lastTarget:null}
+export function visibleDesktopCommandTarget(element:HTMLElement|null|undefined){
+ return !!(element?.isConnected&&element.getClientRects().length&&!element.closest('[inert],[hidden],[aria-hidden="true"]'))
+}
 export function desktopEditorTarget(){
- if(lastEditorTarget?.isConnected&&lastEditorTarget.closest<HTMLElement>('.desktop-markdown-editor')?.getClientRects().length)return lastEditorTarget
- const visible=[...document.querySelectorAll<HTMLElement>('.content-tabs .desktop-markdown-editor')].filter(element=>element.getClientRects().length>0)
+ if(visibleDesktopCommandTarget(lastEditorTarget)&&visibleDesktopCommandTarget(lastEditorTarget?.closest<HTMLElement>('.desktop-markdown-editor')))return lastEditorTarget
+ const visible=[...document.querySelectorAll<HTMLElement>('.content-tabs .desktop-markdown-editor')].filter(visibleDesktopCommandTarget)
  return visible.length===1?visible[0]:null
 }

@@ -21,7 +21,7 @@ async function fixture(run: (library: LocalTemplateLibrary, works: Workspaces) =
 const custom = { key: "user.test", name: "作者提示词", content: "写 {{subject}} 与 {{foo-bar}}", enabled: true }
 const document = (prompts: TemplateDocument["prompts"] = [], wizardTemplates: TemplateDocument["wizardTemplates"] = []): TemplateDocument => ({ format: "xuanxiang-local-templates", schemaVersion: 1, prompts, wizardTemplates })
 
-test("TPL15-01 original bundled prompt and all 401 wizard templates are initialized once in the global local library", async () => fixture(async library => {
+test("TPL15-01 bundled prompts and the complete current wizard catalog are initialized once in the global local library", async () => fixture(async library => {
   await library.initialize(); const first = await library.list(); await library.initialize(); const second = await library.list()
   assert.equal(first.prompts.length, PROMPT_TEMPLATES.length); assert.equal(first.wizardTemplates.length, WIZARD_TEMPLATES.length)
   assert.deepEqual(second, first); assert.equal(first.prompts[0].source, "builtin")
@@ -75,7 +75,7 @@ test("TPL15-08 portable exports contain only templates, versions and source; no 
   const exported=await library.export(), json=JSON.stringify(exported)
   assert.deepEqual(Object.keys(exported).sort(),["format","prompts","schemaVersion","wizardTemplates"])
   assert.doesNotMatch(json,/never-export-fixture|private\.invalid|apiKeyEncrypted|unrelated.private/)
-  assert.equal(exported.wizardTemplates.length,401);assert.ok(exported.prompts.some(p=>p.key===custom.key&&p.version===1))
+  assert.equal(exported.wizardTemplates.length,WIZARD_TEMPLATES.length);assert.ok(exported.prompts.some(p=>p.key===custom.key&&p.version===1))
 }))
 test("TPL15-09 invalid JSON shape, credentials, duplicate IDs and missing variables reject import before changing the original library", async () => fixture(async library => {
   const before=await library.list(), row={...custom,version:1,source:"user" as const}

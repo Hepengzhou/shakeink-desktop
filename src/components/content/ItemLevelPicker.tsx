@@ -8,7 +8,7 @@
  * 变更即 onChange(normalizeItemLevels(next))，保存由调用方（saveNow）触发。
  * 浮层用 @base-ui/react/popover（项目浮层基元，与 dropdown-menu 同源；仓库无 ui/popover 封装）。
  */
-import { useState } from "react"
+import { useLayoutEffect, useState } from "react"
 import { Popover } from "@base-ui/react/popover"
 import { useQueries, useQuery } from "@tanstack/react-query"
 import { Check, Plus, X } from "lucide-react"
@@ -16,6 +16,7 @@ import { Check, Plus, X } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import type { SettingType } from "@/generated/prisma/enums"
 import { cn } from "@/lib/utils"
+import { useContentDrawerPopup } from "@/lib/desktop/content-drawer-context"
 
 import { apiGet } from "./api"
 import {
@@ -74,6 +75,8 @@ export function ItemLevelPicker({
   const [open, setOpen] = useState(false)
   /** 多途径体系的二级导航：当前查看的途径（null=体系分组视图），关闭弹层时复位 */
   const [nav, setNav] = useState<{ settingId: string; pathway: string } | null>(null)
+  const popup = useContentDrawerPopup<Popover.Root.ChangeEventDetails>({ open, onOpenChange: nextOpen => { setOpen(nextOpen); if (!nextOpen) setNav(null) } })
+  useLayoutEffect(() => { if (popup.paused) { setOpen(false); setNav(null) } }, [popup.paused])
 
   // 小说级等级体系（type 服务端过滤）
   const { data, isLoading, isError } = useQuery({
@@ -252,11 +255,8 @@ export function ItemLevelPicker({
         )
       })}
       <Popover.Root
-        open={open}
-        onOpenChange={(nextOpen) => {
-          setOpen(nextOpen)
-          if (!nextOpen) setNav(null)
-        }}
+        open={popup.open}
+        onOpenChange={popup.onOpenChange}
       >
         <Popover.Trigger className="inline-flex items-center gap-1 rounded-full border border-dashed border-input px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:border-gold hover:text-gold">
           <Plus className="size-3" />
@@ -268,8 +268,12 @@ export function ItemLevelPicker({
             align="start"
             sideOffset={6}
             className="isolate z-50 outline-none"
+            data-content-drawer-owned={popup.owned ? "true" : undefined}
+            data-content-drawer-paused={popup.paused || undefined}
+            inert={popup.paused}
+            aria-hidden={popup.paused || undefined}
           >
-            <Popover.Popup className="w-80 rounded-xl border border-border bg-popover p-3 text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-none data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95">
+            <Popover.Popup finalFocus={popup.paused ? false : undefined} className="w-80 rounded-xl border border-border bg-popover p-3 text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-none data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95">
               <div className="max-h-80 overflow-y-auto">
                 {isLoading || worldSettings.some((r) => r.isLoading) ? (
                   <p className="text-xs text-muted-foreground">等级体系加载中…</p>

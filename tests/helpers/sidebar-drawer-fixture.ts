@@ -1,12 +1,23 @@
 import assert from "node:assert/strict"
 import { readFileSync } from "node:fs"
-import { resolve } from "node:path"
+import { mkdir, writeFile } from "node:fs/promises"
+import { basename, resolve } from "node:path"
 import { build } from "esbuild"
 import ts from "typescript"
 import postcss from "postcss"
 import tailwindcss from "@tailwindcss/postcss"
 import type { Browser, Page } from "playwright-core"
 import type { WorkspaceLayout } from "../../src/lib/desktop/workspace-draft-source"
+
+const driverTimings = new WeakMap<Page, { label: string; start: number; end: number }[]>()
+let diagnosticSerial = 0
+export async function recordDrawerDriverAction(page: Page, label: string, action: () => Promise<unknown>) {
+  const start = Date.now()
+  try { return await action() } finally {
+    const timings = driverTimings.get(page) ?? []
+    timings.push({ label, start, end: Date.now() }); driverTimings.set(page, timings)
+  }
+}
 
 const chatSource = ts.createSourceFile("ChatPanel.tsx", readFileSync("src/components/layout/ChatPanel.tsx", "utf8"), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX)
 let header = ""
@@ -67,16 +78,38 @@ export function Panel(props){if(window.drawerLayoutObservation)window.drawerLayo
 } }] }).then(r => r.outputFiles![0].text)
 
 export async function withDrawer(browser: Browser, options: { width?: number; height?: number; deviceScaleFactor?: number; theme?: "ink" | "paper"; reduced?: boolean; emptyCaption?: boolean; initialLayout?: WorkspaceLayout; observeLayout?: boolean }, run: (page: Page) => Promise<void>) {
+  const diagnosticId = ++diagnosticSerial
   const page = await browser.newPage({ viewport: { width: options.width ?? 1280, height: options.height ?? 700 }, deviceScaleFactor: options.deviceScaleFactor ?? 1, reducedMotion: options.reduced ? "reduce" : "no-preference" }), errors: string[] = []
   page.setDefaultTimeout(5000)
   page.on("pageerror", e => errors.push(e.message))
   page.on("console", message => { if (message.type() === "error" && !message.text().includes("Failed to load resource")) errors.push(message.text()) })
   try {
     await page.route("**/*", route => route.abort()); await page.setContent('<div id="app"></div>'); await page.addStyleTag({ content: await css }); await page.addScriptTag({ content: await bundle })
-    if(options.observeLayout)await page.evaluate('globalThis.__name=target=>target')
+    if(options.observeLayout || process.env.XAANINK_REGRESSION_DIAGNOSTIC)await page.evaluate('globalThis.__name=target=>target')
     await page.evaluate(args => (window as any).mountDrawer(args.theme, args.emptyCaption, args.initialLayout, args.observeLayout), { theme: options.theme ?? "ink", emptyCaption: options.emptyCaption ?? false, initialLayout: options.initialLayout ?? null, observeLayout: options.observeLayout ?? false })
-    await page.waitForTimeout(80); assert(await page.locator(options.emptyCaption ? ".content-tabs" : ".dashboard-shell").count(), `Real component not mounted: ${await page.locator("#app").innerHTML()}`); await run(page); assert.deepEqual(errors, [], "Real drawer shell has no page errors")
-  } catch (error) { throw new Error(`${error instanceof Error ? error.stack : String(error)}\nFixture page errors: ${errors.join("; ")}\n${await page.locator("#app").innerText()}`) } finally { await page.close() }
+    await page.waitForTimeout(80); assert(await page.locator(options.emptyCaption ? ".content-tabs" : ".dashboard-shell").count(), `Real component not mounted: ${await page.locator("#app").innerHTML()}`)
+    if (process.env.XAANINK_REGRESSION_DIAGNOSTIC && !options.emptyCaption) await page.evaluate(() => {
+      const diagnostic = { frames: [] as any[], events: [] as any[] }; (window as any).sideDriverDiagnostic = diagnostic
+      const snapshot = () => {
+        const shell = document.querySelector<HTMLElement>('.dashboard-shell')!, inner = document.querySelector('.sidebar-drawer-inner')!, panel = document.querySelector('#sidebar')!, caption = inner.querySelector('.desktop-sidebar-controls')!
+        const i = inner.getBoundingClientRect(), v = panel.getBoundingClientRect(), c = caption.getBoundingClientRect(), right = document.querySelector('.content-drawer-inner')?.getBoundingClientRect(), rv = document.querySelector('.content-drawer-viewport')?.getBoundingClientRect()
+        return { time: performance.now(), wall: Date.now(), phase: shell.dataset.sidebarPhase, contentPhase: shell.dataset.contentPhase, mode: shell.dataset.drawerMode, pane: shell.dataset.narrowPane, width: i.width, height: i.height, visible: v.width, offset: new DOMMatrix(getComputedStyle(inner).transform).m41, caption: { x: c.x - i.x, y: c.y - i.y, width: c.width, height: c.height }, contentW: right?.width, contentV: rv?.width, viewport: { width: innerWidth, height: innerHeight, dpr: devicePixelRatio } }
+      }
+      for (const type of ['pointerdown', 'pointerup', 'click']) document.addEventListener(type, event => {
+        const pointer = event as PointerEvent, target = event.target as HTMLElement, button = target.closest('button')
+        diagnostic.events.push({ type, trusted: event.isTrusted, clientX: pointer.clientX, clientY: pointer.clientY, target: { tag: target.tagName, id: target.id, aria: button?.getAttribute('aria-label'), text: button?.textContent, inert: !!target.closest('[inert]') }, ...snapshot() })
+      }, true)
+      const tick = () => { diagnostic.frames.push(snapshot()); requestAnimationFrame(tick) }
+      tick()
+    })
+    await run(page); assert.deepEqual(errors, [], "Real drawer shell has no page errors")
+  } catch (error) { throw new Error(`${error instanceof Error ? error.stack : String(error)}\nFixture page errors: ${errors.join("; ")}\n${await page.locator("#app").innerText()}`) } finally {
+    if (process.env.XAANINK_REGRESSION_DIAGNOSTIC && !options.emptyCaption) {
+      await mkdir(process.env.XAANINK_REGRESSION_DIAGNOSTIC, { recursive: true })
+      await writeFile(`${process.env.XAANINK_REGRESSION_DIAGNOSTIC}/${basename(process.argv[1] ?? 'sidebar')}-${diagnosticId}-${options.width ?? 1280}-${options.initialLayout ? 'saved' : 'new'}.json`, JSON.stringify({ options, errors, driverTimings: driverTimings.get(page), trace: await page.evaluate(() => (window as any).sideDriverDiagnostic), resizeFrames: await page.evaluate(async () => await (window as any).drawerResizeFrames ?? null) }, null, 2) + "\n")
+    }
+    await page.close()
+  }
 }
 
 export async function sampleDrawer(page: Page) {

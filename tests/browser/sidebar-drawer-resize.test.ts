@@ -2,7 +2,7 @@ import assert from "node:assert/strict"
 import { mkdir, writeFile } from "node:fs/promises"
 import { test } from "node:test"
 import { chromium, type Browser, type Page } from "playwright-core"
-import { withDrawer } from "../helpers/sidebar-drawer-fixture"
+import { recordDrawerDriverAction, withDrawer } from "../helpers/sidebar-drawer-fixture"
 import type { WorkspaceLayout } from "../../src/lib/desktop/workspace-draft-source"
 
 let browser: Browser
@@ -134,8 +134,8 @@ for (const direction of [[1800, 899], [899, 1800]] as const) test(`DRAWER-RESIZE
   await page.getByRole("button", { name: "展开或收起左侧导航栏", exact: true }).click()
   await page.waitForFunction(() => document.querySelector<HTMLElement>(".dashboard-shell")!.dataset.sidebarPhase === "closed")
   await armResizeFrames(page)
-  if (direction[0] < 900) await page.getByRole("button", { name: "作品目录", exact: true }).click()
-  else await page.locator(".workspace-chat [data-sidebar-restore]").click()
+  if (direction[0] < 900) await recordDrawerDriverAction(page, "resize-opening", () => page.getByRole("button", { name: "作品目录", exact: true }).click())
+  else await recordDrawerDriverAction(page, "resize-opening", () => page.locator(".workspace-chat [data-sidebar-restore]").click())
   const result = await resizeWhileMoving(page, direction[1], "opening")
   await saveFrames(result, `ink-DPR1.5-opening-${direction.join("-")}`)
   assertMoving(result, "opening", direction[1])

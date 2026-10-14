@@ -1,5 +1,6 @@
 import assert from "node:assert/strict"
 import { readFileSync } from "node:fs"
+import { mkdir, writeFile } from "node:fs/promises"
 import { resolve } from "node:path"
 import { test } from "node:test"
 import { build } from "esbuild"
@@ -34,7 +35,7 @@ window.mountPanes=(count=0)=>{
  const calls=[]; const messages=[{id:'fixture'}],currentConversation={title:'合成验收会话'};
  const desktopBootstrap={platform:'darwin',settings:{appearance:{zoom:1}}};
  const sidebarHidden=true,contentHidden=true,onShowSidebar=()=>calls.push('sidebar'),onShowContent=()=>calls.push('content');
- useDesktopStore.setState({bootstrap:{platform:'darwin'}});
+ useDesktopStore.setState({bootstrap:desktopBootstrap});
  const tabs=Array.from({length:count},(_,i)=>({id:'tab-'+i,title:'验收面板 '+i,type:'theme',novelId:'isolated'}));
  useTabsStore.setState({tabs,activeTabId:tabs[0]?.id??null});
  const query=new QueryClient({defaultOptions:{queries:{retry:false}}});query.setQueryData(['novels'],{novels:[],unavailableWorks:[]});
@@ -61,7 +62,14 @@ async function scenario(count: number, run: (page: Page) => Promise<void>) {
     await page.setContent('<div id="app"></div>')
     await page.addStyleTag({ content: await stylesheet }); await page.addScriptTag({ content: await bundle })
     await page.evaluate(count => { (window as any).fixture = (window as any).mountPanes(count) }, count)
+    assert.deepEqual(errors, [], "Actual captions render without fixture page errors")
     await run(page); assert.deepEqual(errors, [])
+  } catch (error) {
+    if (process.env.XAANINK_REGRESSION_DIAGNOSTIC) {
+      await mkdir(process.env.XAANINK_REGRESSION_DIAGNOSTIC, { recursive: true })
+      await writeFile(`${process.env.XAANINK_REGRESSION_DIAGNOSTIC}/drag-${count}.json`, JSON.stringify({ count, errors, mounted: await page.locator("#app").innerHTML(), failure: error instanceof Error ? error.stack : String(error) }, null, 2) + "\n")
+    }
+    throw new Error(`${error instanceof Error ? error.stack : String(error)}\nFixture page errors: ${errors.join("; ")}`)
   } finally { await page.close() }
 }
 async function region(page: Page, selector: string) { return page.locator(selector).evaluate(el => getComputedStyle(el).getPropertyValue("-webkit-app-region")) }

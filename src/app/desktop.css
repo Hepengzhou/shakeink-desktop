@@ -499,3 +499,27 @@ body[data-platform="win32"] .dashboard-shell > nav[aria-label="创作工作区"]
 .content-tabs > .desktop-drag > .sidebar-caption-restore:hover { background:var(--hover-wash); color:var(--foreground); }
 .content-tabs > .desktop-drag:not(.content-tabs-caption) > .sidebar-caption-restore { margin-right:auto; }
 @media(prefers-reduced-motion:reduce) { .sidebar-navigation .nav-group-chevron { transition:none; } }
+
+/* The right drawer keeps a complete, right-anchored business layout. Its Panel
+   releases space; the viewport clips a translation, never a width-scaled body. */
+.workspace-content { overflow:hidden; }
+.content-drawer-viewport { position:relative; width:100%; height:100%; overflow:hidden; }
+.content-drawer-inner { position:absolute; top:0; right:0; width:100%; height:100%; transform-origin:100% 0; }
+.content-drawer-viewport[inert] .content-drawer-inner,
+.content-drawer-viewport[inert] .content-drawer-inner * {
+  -webkit-app-region:initial!important; app-region:initial!important;
+}
+[data-content-drawer-paused] { visibility:hidden!important; pointer-events:none!important; }
+[data-content-drawer-paused], [data-content-drawer-paused] * {
+  -webkit-app-region:initial!important; app-region:initial!important;
+}
+/* Chat remains the underlay of the narrow content overlay; the navigation
+   drawer has the higher layer and can still cover either workspace pane. */
+.dashboard-shell[data-drawer-mode="narrow"] .workspace-group > div:has(> .workspace-chat) { display:flex!important; flex:1 1 0%!important; }
+.dashboard-shell[data-drawer-mode="narrow"] .workspace-chat { display:block!important; min-width:0!important; max-width:none!important; }
+.dashboard-shell[data-drawer-mode="narrow"] .workspace-group > div:has(> .workspace-content) {
+  display:flex!important; position:absolute!important; z-index:10; top:0; bottom:0; right:0;
+  flex:none!important; width:var(--content-drawer-visible-width,0px)!important;
+  min-width:0!important; max-width:none!important; overflow:hidden;
+}
+.dashboard-shell[data-drawer-mode="narrow"] .workspace-content { display:block!important; min-width:0!important; max-width:none!important; width:100%; }

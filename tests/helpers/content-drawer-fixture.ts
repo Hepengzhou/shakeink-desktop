@@ -31,15 +31,17 @@ const css = postcss([tailwindcss()]).process(readFileSync(cssPath, "utf8"), { fr
 
 const bodySource = `
 import React,{useRef,useState} from 'react';
-import {DropdownMenu,DropdownMenuTrigger,DropdownMenuContent,DropdownMenuItem} from './src/components/ui/dropdown-menu';
+import {DropdownMenu,DropdownMenuTrigger,DropdownMenuContent,DropdownMenuItem,DropdownMenuSub,DropdownMenuSubTrigger,DropdownMenuSubContent} from './src/components/ui/dropdown-menu';
 import {Select,SelectTrigger,SelectValue,SelectContent,SelectItem} from './src/components/ui/select';
 import {TooltipProvider,Tooltip,TooltipTrigger,TooltipContent} from './src/components/ui/tooltip';
 import {Dialog,DialogTrigger,DialogContent,DialogTitle,DialogDescription,DialogClose} from './src/components/ui/dialog';
+import {ItemLevelPicker} from './src/components/content/ItemLevelPicker';
 import {useDesktopCommands} from './src/lib/desktop/use-command-target';
 let serial=0;
-function Choice({name='内容选项'}){const [value,setValue]=useState('one');return <Select value={value} onValueChange={setValue}><SelectTrigger aria-label={name}><SelectValue/></SelectTrigger><SelectContent aria-label={name+'列表'}><SelectItem value='one'>第一项</SelectItem><SelectItem value='two'>第二项</SelectItem></SelectContent></Select>}
+function Choice({name='内容选项'}){const [value,setValue]=useState('one');return <Select items={[{value:'one',label:'第一项'},{value:'two',label:'第二项'}]} value={value} onValueChange={setValue}><SelectTrigger aria-label={name}><SelectValue/></SelectTrigger><SelectContent aria-label={name+'列表'}><SelectItem value='one'>第一项</SelectItem><SelectItem value='two'>第二项</SelectItem></SelectContent></Select>}
+function NestedMenu({controlled}){const [open,setOpen]=useState(false),name=controlled?'受控子菜单':'默认子菜单';return <DropdownMenu modal={false}><DropdownMenuTrigger render={<button aria-label={name+'宿主'}/>}>{name}宿主</DropdownMenuTrigger><DropdownMenuContent aria-label={name+'宿主浮层'}><DropdownMenuSub {...(controlled?{open,onOpenChange:next=>{if(next)setOpen(true)}}:{defaultOpen:true})}><DropdownMenuSubTrigger aria-label={name+'入口'}>{name}入口</DropdownMenuSubTrigger><DropdownMenuSubContent aria-label={name+'浮层'}><DropdownMenuItem>{name}实际选项</DropdownMenuItem></DropdownMenuSubContent></DropdownMenuSub></DropdownMenuContent></DropdownMenu>}
 function Body({tab}){
- const instance=useRef(++serial),editor=useRef(null),[draft,setDraft]=useState(''),[controlled,setControlled]=useState(false),[dialogText,setDialogText]=useState('');
+ const instance=useRef(++serial),editor=useRef(null),[draft,setDraft]=useState(''),[controlled,setControlled]=useState(false),[dialogText,setDialogText]=useState(''),[levels,setLevels]=useState([]);
  useDesktopCommands({'fixture.editor':()=>{window.contentFixture.editorCalls++}},editor);
  return <section data-content-instance={instance.current} className='drawer-test-body' data-geometry='body'>
  <p data-lines='first'>这是隔离测试段落，用真实内容外壳检验抽屉运动时文字行框是否保持完整。段落自然换行，测试不会给它添加禁止换行规则，也不会通过固定业务宽度掩盖外壳挤压。它包含足够长的正文来揭示中间动画帧的变化。</p>
@@ -51,6 +53,9 @@ function Body({tab}){
  <Choice/>
  <TooltipProvider><Tooltip><TooltipTrigger render={<button aria-label='内容提示'/>}>内容提示</TooltipTrigger><TooltipContent>隔离内容提示</TooltipContent></Tooltip></TooltipProvider>
  <Dialog><DialogTrigger render={<button aria-label='业务弹窗'/>}>业务弹窗</DialogTrigger><DialogContent aria-label='隔离业务弹窗'><DialogTitle>隔离业务弹窗</DialogTitle><DialogDescription>实际共享 Dialog，验证输入和内部 Select 的模态边界。</DialogDescription><input aria-label='弹窗文字' value={dialogText} onChange={e=>setDialogText(e.target.value)}/><Choice name='弹窗选项'/><DialogClose render={<button aria-label='保存弹窗'/>}>保存</DialogClose></DialogContent></Dialog>
+ <ItemLevelPicker novelId={tab.novelId} value={levels} onChange={setLevels}/>
+ <DropdownMenu modal={false} onOpenChange={(next,details)=>{if(next){window.contentFixture.cancelEvents++;details.cancel()}}}><DropdownMenuTrigger render={<button aria-label='取消打开菜单'/>}>取消打开菜单</DropdownMenuTrigger><DropdownMenuContent aria-label='取消打开菜单浮层'><DropdownMenuItem>禁止打开的实际选项</DropdownMenuItem></DropdownMenuContent></DropdownMenu>
+ <NestedMenu controlled/><NestedMenu controlled={false}/>
  </div><div style={{height:1100}}><p data-lines='third'>滚动内容用于确认保留业务实例、草稿、选区及滚动位置。此区域仅是隔离数据，不能替代真实 Monaco 或数据库验收。</p></div>
  </section>
 }
@@ -68,14 +73,14 @@ import {DashboardShell} from './src/components/layout/DashboardShell';import {us
 import {desktopWorkspaceDraftSource} from './src/lib/desktop/workspace-draft-source';
 import {desktopCommandTargets,rememberDesktopCommandTarget,desktopEditorTarget} from './src/lib/desktop/command-runtime';
 import {DropdownMenu,DropdownMenuTrigger,DropdownMenuContent,DropdownMenuItem} from './src/components/ui/dropdown-menu';
-function External(){return <aside style={{position:'fixed',bottom:0,left:0,zIndex:40}}><button aria-label='外部焦点'>外部焦点</button><DropdownMenu modal={false}><DropdownMenuTrigger render={<button aria-label='内容外菜单'/>}>内容外菜单</DropdownMenuTrigger><DropdownMenuContent aria-label='内容外菜单浮层'><DropdownMenuItem>内容外菜单选项</DropdownMenuItem></DropdownMenuContent></DropdownMenu></aside>}
+function External(){return <aside style={{position:'fixed',bottom:48,left:0,zIndex:40}}><button aria-label='外部焦点'>外部焦点</button><DropdownMenu modal={false}><DropdownMenuTrigger render={<button aria-label='内容外菜单'/>}>内容外菜单</DropdownMenuTrigger><DropdownMenuContent aria-label='内容外菜单浮层'><DropdownMenuItem>内容外菜单选项</DropdownMenuItem></DropdownMenuContent></DropdownMenu></aside>}
 window.mountContentDrawer=(theme='ink')=>{
  window.desktop={};document.documentElement.className=theme;document.body.dataset.platform='win32';
  useDesktopStore.setState({bootstrap:{platform:'win32',dataRoot:'isolated-only',settings:{appearance:{zoom:1},shortcuts:{win32:{},darwin:{}}}}});useTabsStore.setState({tabs:[],activeTabId:null,activationNonce:0,subTabs:{}});
  const query=new QueryClient({defaultOptions:{queries:{retry:false,staleTime:Infinity}}});query.setQueryData(['novels'],{novels:[],unavailableWorks:[]});query.setQueryData(['chat-conversations'],[]);
  const requests=[];window.fetch=async(path)=>{requests.push(String(path));return new Response(JSON.stringify(String(path).includes('conversations')?{conversations:[]}:{novels:[],unavailableWorks:[]}))};
  const root=createRoot(document.getElementById('app'));let nonce=0;
- window.contentFixture={requests,editorCalls:0,open:(count=1)=>{const tabs=Array.from({length:count},(_,i)=>({id:buildTabId('theme','isolated-'+i),type:'theme',novelId:'isolated-'+i,title:'隔离内容长标题 '+i}));flushSync(()=>useTabsStore.setState({tabs,activeTabId:tabs[0].id,activationNonce:++nonce}))},activate:()=>flushSync(()=>useTabsStore.setState(s=>({activationNonce:s.activationNonce+1}))),hide:()=>window.contentFixture.props.onToggleContent(),fullscreen:()=>window.contentFixture.props.onToggleFullscreen(),toggle:()=>desktopCommandTargets.execute('view.content',null),sidebar:()=>desktopCommandTargets.execute('view.sidebar',null),read:()=>desktopWorkspaceDraftSource.read().layout,restore:layout=>desktopWorkspaceDraftSource.restore({...desktopWorkspaceDraftSource.read(),layout}),editorTarget:()=>desktopEditorTarget()?.getAttribute('aria-label')??null,remember:()=>rememberDesktopCommandTarget(document.querySelector('[aria-label="隔离正文草稿"]')),editorEnabled:()=>desktopCommandTargets.enabled('fixture.editor',document.querySelector('[aria-label="隔离正文草稿"]')),edit:()=>desktopCommandTargets.execute('fixture.editor',document.querySelector('[aria-label="隔离正文草稿"]')),unmount:()=>flushSync(()=>root.unmount())};
+ window.contentFixture={requests,editorCalls:0,cancelEvents:0,open:(count=1,title='隔离内容长标题')=>{const tabs=Array.from({length:count},(_,i)=>({id:buildTabId('theme','isolated-'+i),type:'theme',novelId:'isolated-'+i,title:title+' '+i}));for(const tab of tabs){query.setQueryData(['settings',tab.novelId,'LEVEL_SYSTEM'],{settings:[]});query.setQueryData(['worlds',tab.novelId],{worlds:[]})}flushSync(()=>useTabsStore.setState({tabs,activeTabId:tabs[0].id,activationNonce:++nonce}))},empty:()=>flushSync(()=>useTabsStore.setState({tabs:[],activeTabId:null,subTabs:{}})),activate:()=>flushSync(()=>useTabsStore.setState(s=>({activationNonce:s.activationNonce+1}))),hide:()=>window.contentFixture.props.onToggleContent(),fullscreen:()=>window.contentFixture.props.onToggleFullscreen(),toggle:()=>desktopCommandTargets.execute('view.content',null),sidebar:()=>desktopCommandTargets.execute('view.sidebar',null),read:()=>desktopWorkspaceDraftSource.read().layout,restore:layout=>desktopWorkspaceDraftSource.restore({...desktopWorkspaceDraftSource.read(),layout}),editorTarget:()=>desktopEditorTarget()?.getAttribute('aria-label')??null,remember:()=>rememberDesktopCommandTarget(document.querySelector('[aria-label="隔离正文草稿"]')),editorEnabled:()=>desktopCommandTargets.enabled('fixture.editor',document.querySelector('[aria-label="隔离正文草稿"]')),edit:()=>desktopCommandTargets.execute('fixture.editor',document.querySelector('[aria-label="隔离正文草稿"]')),unmount:()=>flushSync(()=>root.unmount())};
  flushSync(()=>root.render(<QueryClientProvider client={query}><ThemeProvider attribute='class' forcedTheme={theme}><DashboardShell user={{id:'content-drawer-fixture',name:'隔离用户',email:'content-drawer@example.invalid'}}/><External/></ThemeProvider></QueryClientProvider>));
 };` }, bundle: true, loader: { ".css": "empty" }, platform: "browser", format: "iife", write: false, tsconfig: "tsconfig.json", plugins: [{ name: "isolated-content-body-real-shell", setup(api) {
   api.onResolve({ filter: /^\.\/ChatPanel$/ }, () => ({ path: "chat-caption", namespace: "content-drawer-chat" }))
@@ -106,22 +111,48 @@ export async function withContentDrawer(browser: Browser, options: { width?: num
 
 export type ContentSample = {
   time: number; phase?: string; sidebarPhase?: string; mode?: string; pane?: string; exists: boolean;
-  width: number; height: number; visible: number; x: number; viewportRight: number; innerRight: number; translate: number; inert: boolean;
-  geometry: Record<string, number[]>; lines: Record<string, number[][]>; caption: number[]; captionPadding: string; captionScale: string; region: string;
+  width: number; height: number; visible: number; x: number; viewportRight: number; innerRight: number; translate: number; scaleX: number; scaleY: number; skewX: number; skewY: number; translateY: number; inert: boolean;
+  geometry: Record<string, number[]>; controls: Record<string, number[]>; controlRegions: Record<string, string>; lines: Record<string, number[][]>; caption: number[]; captionPadding: string; captionScale: string; region: string;
 }
 
 // Runs in the page. The old implementation has no fixed inner: measure its real
 // ContentTabs instead, so RED is a measured width/line failure, not a missing hook.
 function captureSample(): ContentSample {
   const root = document.querySelector<HTMLElement>(".dashboard-shell")!, viewport = document.querySelector<HTMLElement>(".content-drawer-viewport") ?? document.querySelector<HTMLElement>("#content"), inner = document.querySelector<HTMLElement>(".content-drawer-inner") ?? document.querySelector<HTMLElement>(".content-tabs")
-  const empty = { time: performance.now(), phase: root.dataset.contentPhase, sidebarPhase: root.dataset.sidebarPhase, mode: root.dataset.drawerMode, pane: root.dataset.narrowPane, exists: false, width: 0, height: 0, visible: 0, x: 0, viewportRight: 0, innerRight: 0, translate: 0, inert: false, geometry: {}, lines: {}, caption: [], captionPadding: "", captionScale: "", region: "" }
+  const empty = { time: performance.now(), phase: root.dataset.contentPhase, sidebarPhase: root.dataset.sidebarPhase, mode: root.dataset.drawerMode, pane: root.dataset.narrowPane, exists: false, width: 0, height: 0, visible: 0, x: 0, viewportRight: 0, innerRight: 0, translate: 0, scaleX: 1, scaleY: 1, skewX: 0, skewY: 0, translateY: 0, inert: false, geometry: {}, controls: {}, controlRegions: {}, lines: {}, caption: [], captionPadding: "", captionScale: "", region: "" }
   if (!inner || !viewport) return empty
-  const i = inner.getBoundingClientRect(), v = viewport.getBoundingClientRect(), geometry: Record<string, number[]> = {}, lines: Record<string, number[][]> = {}
+  const i = inner.getBoundingClientRect(), v = viewport.getBoundingClientRect(), geometry: Record<string, number[]> = {}, controls: Record<string, number[]> = {}, controlRegions: Record<string, string> = {}, lines: Record<string, number[][]> = {}
   const rect = (b: DOMRect) => [b.x - i.x, b.y - i.y, b.width, b.height]
   for (const el of inner.querySelectorAll<HTMLElement>("[data-geometry]")) if (!el.closest("[hidden]")) geometry[el.dataset.geometry!] = rect(el.getBoundingClientRect())
   for (const el of inner.querySelectorAll<HTMLElement>("[data-lines]")) if (!el.closest("[hidden]")) { const range = document.createRange(); range.selectNodeContents(el); lines[el.dataset.lines!] = Array.from(range.getClientRects(), rect) }
-  const caption = inner.querySelector<HTMLElement>(".desktop-drag")!, style = caption ? getComputedStyle(caption) : null, transform = getComputedStyle(inner).transform
-  return { ...empty, exists: true, width: i.width, height: i.height, visible: v.width, x: i.x, viewportRight: v.right, innerRight: i.right, translate: transform === "none" ? 0 : new DOMMatrix(transform).m41, inert: !!inner.closest("[inert]"), geometry, lines, caption: caption ? rect(caption.getBoundingClientRect()) : [], captionPadding: style?.paddingRight ?? "", captionScale: getComputedStyle(inner).getPropertyValue("--content-tab-scale").trim(), region: style?.getPropertyValue("-webkit-app-region") ?? "" }
+  const tabs = inner.matches(".content-tabs") ? inner : inner.querySelector<HTMLElement>(".content-tabs"), caption = tabs?.querySelector<HTMLElement>(":scope > .desktop-drag") ?? null, style = caption ? getComputedStyle(caption) : null, transform = getComputedStyle(inner).transform, matrix = transform === "none" ? new DOMMatrix() : new DOMMatrix(transform)
+  const addControl = (el: HTMLElement, key: string) => {
+    // Base UI Select creates an aria-hidden, fixed 1px form proxy. Its global
+    // coordinates are not visible business layout. Do not exclude the drawer's
+    // aria-hidden ancestor: the real controls must still be measured in motion.
+    if (el.closest("[hidden]") || el.matches('input[type="hidden"],[aria-hidden="true"]') || getComputedStyle(el).display === "none") return
+    controls[key] = rect(el.getBoundingClientRect())
+    controlRegions[key] = getComputedStyle(el).getPropertyValue("-webkit-app-region")
+  }
+  if (caption) {
+    for (const tab of caption.querySelectorAll<HTMLElement>('[role="tab"]')) {
+      const id = tab.dataset.tabId ?? tab.id
+      addControl(tab, `caption.tab:${id}`)
+      for (const [index, button] of Array.from(tab.querySelectorAll<HTMLElement>("button")).entries()) addControl(button, `caption.tab-button:${id}:${index}`)
+      const title = tab.querySelector(".content-tab-title")
+      if (title) { const range = document.createRange(); range.selectNodeContents(title); lines[`caption.title:${id}`] = Array.from(range.getClientRects(), rect) }
+    }
+    for (const button of caption.querySelectorAll<HTMLElement>(":scope > button, .content-tabs-tools button")) {
+      // Enter/exit fullscreen is the same real tool; its label changes as the
+      // latest command replaces the secondary axis, not its geometric identity.
+      const name = (button.getAttribute("aria-label") ?? button.textContent ?? "").replace(/^(进入|退出)全屏$/, "全屏")
+      addControl(button, `caption.tool:${name}`)
+    }
+  }
+  for (const panel of tabs?.querySelectorAll<HTMLElement>('[role="tabpanel"]:not([hidden])') ?? []) {
+    for (const [index, control] of Array.from(panel.querySelectorAll<HTMLElement>("input,button")).entries()) addControl(control, `body.${control.tagName.toLowerCase()}:${control.getAttribute("aria-label") ?? control.getAttribute("name") ?? index}`)
+  }
+  return { ...empty, exists: true, width: i.width, height: i.height, visible: v.width, x: i.x, viewportRight: v.right, innerRight: i.right, translate: matrix.m41, scaleX: matrix.m11, scaleY: matrix.m22, skewX: matrix.m21, skewY: matrix.m12, translateY: matrix.m42, inert: !!inner.closest("[inert]"), geometry, controls, controlRegions, lines, caption: caption ? rect(caption.getBoundingClientRect()) : [], captionPadding: style?.paddingRight ?? "", captionScale: (style ?? (tabs ? getComputedStyle(tabs) : null))?.getPropertyValue("--content-tab-scale").trim() ?? "", region: style?.getPropertyValue("-webkit-app-region") ?? "" }
 }
 
 export async function sampleContent(page: Page): Promise<ContentSample> { return page.evaluate(captureSample) }
@@ -157,7 +188,13 @@ export function assertFixedFrames(samples: ContentSample[], reference: ContentSa
   // particular a prematurely-set open/closed flag cannot hide later reflow.
   const visibleStart = firstExisting > 0 ? firstExisting : samples.findIndex((sample, index) => index > firstExisting && sample.exists && Math.abs(sample.visible - initial.visible) > .35)
   const starts = [phaseStart, visibleStart].filter(index => index >= 0)
-  const start = starts.length ? Math.min(...starts) : firstExisting
+  const candidateStart = starts.length ? Math.min(...starts) : firstExisting
+  // Registration can mount the Panel with V=0 before repinning its target.
+  // Keep that raw sample, but the approved shape guarantee begins with the
+  // first actual visible frame. Once comparison starts, later zero-V closing
+  // frames remain included while the related motion still owns the freeze.
+  const start = samples.findIndex((sample, index) => index >= candidateStart && sample.exists && sample.visible > .35)
+  assert(start >= 0, `${label}: captures an actual visible content frame before comparing its shape`)
   let lastNonterminal = -1, lastMovingPhase = -1
   samples.forEach((sample, index) => {
     if (index >= start && sample.exists && Math.abs(sample.visible - terminal.visible) > .35) lastNonterminal = index
@@ -167,16 +204,23 @@ export function assertFixedFrames(samples: ContentSample[], reference: ContentSa
   const moving = samples.slice(start, end + 1).filter(sample => sample.exists)
   if (options.requireMoving !== false) assert(moving.length >= 8, `${label}: continuous rAF capture requires at least 8 moving frames; got ${moving.length}`)
   for (const [index, sample] of moving.entries()) {
-    near(sample.width, reference.width, `${label} frame ${index} fixed inner width`)
+    near(sample.width, reference.width, `${label} frame ${index} visible V=${sample.visible} fixed inner width`)
     near(sample.height, reference.height, `${label} frame ${index} fixed inner height`)
     for (const [key, expected] of Object.entries(reference.geometry)) arraysNear(sample.geometry[key] ?? [], expected, `${label} frame ${index} ${key}`)
+    for (const [key, expected] of Object.entries(reference.controls)) arraysNear(sample.controls[key] ?? [], expected, `${label} frame ${index} real control ${key}`)
     for (const [key, expected] of Object.entries(reference.lines)) {
       assert.equal(sample.lines[key]?.length, expected.length, `${label} frame ${index} ${key} line count`)
       expected.forEach((line, n) => arraysNear(sample.lines[key][n], line, `${label} frame ${index} ${key} line ${n}`))
     }
     arraysNear(sample.caption, reference.caption, `${label} frame ${index} caption`)
     assert.equal(sample.captionPadding, reference.captionPadding, `${label} caption safe padding`)
+    assert(reference.captionScale && Number.isFinite(Number(reference.captionScale)), `${label}: caption supplies a nonempty real scale`)
     assert.equal(sample.captionScale, reference.captionScale, `${label} caption scale`)
+    near(sample.scaleX, 1, `${label} frame ${index} scaleX`, .00001)
+    near(sample.scaleY, 1, `${label} frame ${index} scaleY`, .00001)
+    near(sample.skewX, 0, `${label} frame ${index} skewX`, .00001)
+    near(sample.skewY, 0, `${label} frame ${index} skewY`, .00001)
+    near(sample.translateY, 0, `${label} frame ${index} translateY`, .00001)
     if (options.translation !== false) {
       near(sample.translate, Math.max(sample.width - sample.visible, 0), `${label} frame ${index} mirrored drawer translation`)
       near(sample.innerRight - sample.viewportRight, sample.translate, `${label} frame ${index} right anchor`)

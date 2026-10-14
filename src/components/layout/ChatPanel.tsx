@@ -1716,12 +1716,18 @@ export function ChatPanel({
           {messages.length > 0 ? (currentConversation?.title ?? "新会话") : ""}
         </span>
 
-        {/* 右侧内容面板隐藏时的恢复入口（隐藏按钮在内容区 tab 条上、随面板一起卸载） */}
+        {/* The visible caption control also reverses an in-flight content drawer. */}
         {contentHidden && onShowContent && (
           <button
             type="button"
             aria-label="显示内容面板"
+            data-content-restore
             title="显示内容面板"
+            onPointerDown={(event) => {
+              // The chat edge moves during drawer reversal. Keep an actual
+              // primary mouse press on this button until its normal up/cancel.
+              if (event.pointerType === "mouse" && event.button === 0 && event.isPrimary) event.currentTarget.setPointerCapture(event.pointerId)
+            }}
             onClick={onShowContent}
             className="flex size-7 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-hover-wash hover:text-foreground"
           >

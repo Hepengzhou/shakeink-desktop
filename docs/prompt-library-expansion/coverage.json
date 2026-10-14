@@ -1,0 +1,99 @@
+{
+  "date": "2026-10-14",
+  "baseline": {"all": 401, "plot": 90, "servicePrompts": 29, "combined": 430},
+  "expected": {"all": 471, "plot": 160, "focused": 74, "added": 70, "servicePrompts": 29, "combined": 500},
+  "groups": [
+    {"name": "通用结构", "minimum": 19, "count": 23, "genres": [], "templates": [
+      {"id": "plot-structure-qi-cheng-zhuan-he", "requirement": "起承转合"},
+      {"id": "plot-structure-four-parts", "requirement": "四段式"},
+      {"id": "plot-structure-five-acts", "requirement": "五幕式"},
+      {"id": "plot-structure-heros-journey", "requirement": "英雄之旅"},
+      {"id": "plot-structure-writers-journey", "requirement": "作家之旅"},
+      {"id": "plot-structure-seven-points", "requirement": "七点式"},
+      {"id": "plot-structure-save-the-cat", "requirement": "救猫咪"},
+      {"id": "plot-structure-character-arc", "requirement": "人物弧光"},
+      {"id": "plot-structure-fichtean", "requirement": "菲希特曲线"},
+      {"id": "plot-structure-kishotenketsu", "requirement": "基肖滕弧"},
+      {"id": "plot-structure-suspense-cycle", "requirement": "悬念循环"},
+      {"id": "plot-structure-tidal", "requirement": "潮汐结构"},
+      {"id": "plot-structure-ring", "requirement": "环形"},
+      {"id": "plot-structure-nonlinear", "requirement": "非线性"},
+      {"id": "plot-structure-parallel", "requirement": "多线并行"},
+      {"id": "plot-structure-frame", "requirement": "框架叙事"},
+      {"id": "plot-structure-epistolary", "requirement": "书信体"},
+      {"id": "plot-structure-reverse", "requirement": "逆时序"},
+      {"id": "plot-structure-cyclical", "requirement": "循环叙事"},
+      {"id": "plot-three-act-skeleton", "requirement": "三幕式"},
+      {"id": "plot-structure-eight-sequences", "requirement": "八序列"},
+      {"id": "plot-generic-mainline", "requirement": "场景与余波"},
+      {"id": "plot-structure-freytag", "requirement": "Freytag金字塔"}
+    ]},
+    {"name": "浪漫爱情", "minimum": 7, "count": 9, "genres": ["现代言情", "古风言情", "浪漫青春", "纯爱", "玄幻言情", "仙侠奇缘", "爱情悬疑"], "templates": [
+      {"id": "plot-romance-rivals", "requirement": "欢喜冤家"},
+      {"id": "plot-romance-fake-relationship", "requirement": "假戏真做"},
+      {"id": "plot-romance-triangle", "requirement": "三角恋"},
+      {"id": "plot-romance-ceo", "requirement": "霸道总裁"},
+      {"id": "plot-romance-family-opposition", "requirement": "父母反对"},
+      {"id": "plot-romance-misunderstanding", "requirement": "误会循环"},
+      {"id": "plot-romance-reunion", "requirement": "破镜重圆"},
+      {"id": "plot-romance-childhood-friends", "requirement": "青梅竹马"},
+      {"id": "plot-romance-cross-faction", "requirement": "跨阵营恋情"}
+    ]},
+    {"name": "悬疑推理", "minimum": 7, "count": 9, "genres": ["悬疑", "爱情悬疑"], "templates": [
+      {"id": "plot-mystery-locked-room", "requirement": "密室杀人"},
+      {"id": "plot-mystery-inverted", "requirement": "倒叙推理"},
+      {"id": "plot-mystery-blame-chain", "requirement": "找锅型"},
+      {"id": "plot-mystery-frame-up", "requirement": "嫁祸型"},
+      {"id": "plot-mystery-substitute-victim", "requirement": "替死鬼"},
+      {"id": "plot-mystery-naive-assistant", "requirement": "蠢助手"},
+      {"id": "plot-mystery-silenced-witness", "requirement": "知情者必死"},
+      {"id": "plot-mystery-unreliable-narrator", "requirement": "不可靠叙述者"},
+      {"id": "plot-mystery-isolated-suspects", "requirement": "暴风雪山庄"}
+    ]},
+    {"name": "奇幻冒险", "minimum": 3, "count": 5, "genres": ["奇幻", "玄幻", "玄幻言情"], "templates": [
+      {"id": "plot-fantasy-treasure", "requirement": "寻宝"},
+      {"id": "plot-fantasy-quest", "requirement": "任务"},
+      {"id": "plot-fantasy-prophecy", "requirement": "预言"},
+      {"id": "plot-fantasy-escort", "requirement": "护送"},
+      {"id": "plot-fantasy-lost-kingdom", "requirement": "失落王国复兴"}
+    ]},
+    {"name": "科幻", "minimum": 5, "count": 7, "genres": ["科幻"], "templates": [
+      {"id": "plot-scifi-time-loop", "requirement": "时间循环"},
+      {"id": "plot-scifi-apocalypse", "requirement": "末日求生"},
+      {"id": "plot-scifi-cyberpunk", "requirement": "赛博朋克"},
+      {"id": "plot-scifi-dystopia", "requirement": "反乌托邦"},
+      {"id": "plot-scifi-first-contact", "requirement": "外星文明接触"},
+      {"id": "plot-scifi-generation-ship", "requirement": "星际迁徙"},
+      {"id": "plot-scifi-ai-awakening", "requirement": "人工智能觉醒"}
+    ]},
+    {"name": "仙侠", "minimum": 4, "count": 6, "genres": ["仙侠", "仙侠奇缘"], "templates": [
+      {"id": "plot-jilted-groom-rise", "requirement": "退婚流"},
+      {"id": "plot-trash-awakening-rise", "requirement": "废柴逆袭"},
+      {"id": "plot-xianxia-chosen-one", "requirement": "被选中者"},
+      {"id": "plot-xianxia-old-mentor", "requirement": "睿智老爷爷"},
+      {"id": "plot-xianxia-tribulation", "requirement": "渡劫问道"},
+      {"id": "plot-xianxia-sect-politics", "requirement": "宗门博弈"}
+    ]},
+    {"name": "都市", "minimum": 4, "count": 6, "genres": ["都市", "现实", "现代言情"], "templates": [
+      {"id": "plot-urban-rebirth-business", "requirement": "都市重生创业"},
+      {"id": "plot-urban-superpower", "requirement": "都市异能"},
+      {"id": "plot-urban-workplace", "requirement": "都市职场"},
+      {"id": "plot-urban-romantic-crossfire", "requirement": "恋爱修罗场"},
+      {"id": "plot-urban-professional-rescue", "requirement": "行业救援"},
+      {"id": "plot-urban-neighborhood-renewal", "requirement": "社区更新"}
+    ]},
+    {"name": "恐怖惊悚", "minimum": 3, "count": 5, "genres": ["灵异", "悬疑"], "templates": [
+      {"id": "plot-horror-forbidden-zone", "requirement": "禁忌区域"},
+      {"id": "plot-horror-cursed-group", "requirement": "被诅咒的群体"},
+      {"id": "plot-horror-sealed-space-transfer", "requirement": "封闭空间穿越"},
+      {"id": "plot-horror-possession", "requirement": "附身"},
+      {"id": "plot-horror-psychological", "requirement": "心理惊悚"}
+    ]},
+    {"name": "历史", "minimum": 2, "count": 4, "genres": ["历史", "古风言情", "军事"], "templates": [
+      {"id": "plot-history-transmigration-reform", "requirement": "穿越救亡/逆袭"},
+      {"id": "plot-history-reconstruction", "requirement": "复现历史"},
+      {"id": "plot-history-ordinary-witness", "requirement": "小人物见证"},
+      {"id": "plot-history-alternate-institutions", "requirement": "架空制度变革"}
+    ]}
+  ]
+}

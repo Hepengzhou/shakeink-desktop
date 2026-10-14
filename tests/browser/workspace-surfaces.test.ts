@@ -1,5 +1,6 @@
 import assert from "node:assert/strict"
 import { readFileSync } from "node:fs"
+import { mkdir, writeFile } from "node:fs/promises"
 import { resolve } from "node:path"
 import { test } from "node:test"
 import { build } from "esbuild"
@@ -126,7 +127,14 @@ async function scenario(options: Options, run: (page: Page) => Promise<void>) {
     await page.evaluate(args => (window as any).mountSurfaces(args), { zoom, font, theme, count })
     await page.waitForFunction(() => !(window as any).surfaceFixture.pending())
     await frames(page)
+    await page.evaluate(() => { (window as any).surfaceDiagnostics = [] })
     await run(page); assert.deepEqual(errors, [], "No fixture rendering errors")
+  } catch (error) {
+    if (process.env.XAANINK_REGRESSION_DIAGNOSTIC) {
+      await mkdir(process.env.XAANINK_REGRESSION_DIAGNOSTIC, { recursive: true })
+      await writeFile(`${process.env.XAANINK_REGRESSION_DIAGNOSTIC}/surface-${width}-${count}.json`, JSON.stringify({ options, errors, samples: await page.evaluate(() => (window as any).surfaceDiagnostics), failure: error instanceof Error ? error.stack : String(error) }, null, 2) + "\n")
+    }
+    throw error
   } finally { await context.close() }
 }
 async function frames(page: Page) { await page.evaluate(() => new Promise<void>(r => requestAnimationFrame(() => requestAnimationFrame(() => r())))) }
@@ -267,42 +275,56 @@ test("SURF-04 actual Group edge hit range, pointer/keyboard resize and hover/act
 }))
 
 test("SURF-04 original Shell hide/restore, content fullscreen, two-column and empty ContentTabs handlers retain approved surfaces", () => scenario({}, async page => {
+  await page.evaluate(() => { (window as any).retainedSurface = { panel: document.querySelector('#content'), tabs: document.querySelector('.content-tabs'), body: document.querySelector('[data-business-fixture]') } })
   await page.getByRole("button", { name: "展开或收起左侧导航栏", exact: true }).click()
-  await page.waitForFunction(() => document.querySelector('.workspace-sidebar')!.getBoundingClientRect().width < .1)
+  await page.waitForFunction(() => document.querySelector<HTMLElement>('.dashboard-shell')!.dataset.sidebarPhase === 'closed' && document.querySelector<HTMLElement>('.dashboard-shell')!.dataset.contentPhase === 'open' && document.querySelector('.workspace-sidebar')!.getBoundingClientRect().width < .1)
   await page.getByRole("button", { name: "显示左侧导航栏", exact: true }).click()
-  await page.waitForFunction(() => document.querySelector('.workspace-sidebar')!.getBoundingClientRect().width > 200)
+  await page.waitForFunction(() => document.querySelector<HTMLElement>('.dashboard-shell')!.dataset.sidebarPhase === 'open' && document.querySelector<HTMLElement>('.dashboard-shell')!.dataset.contentPhase === 'open' && document.querySelector('.workspace-sidebar')!.getBoundingClientRect().width > 200)
   await page.getByRole("button", { name: "进入全屏", exact: true }).click()
-  await page.waitForFunction(() => document.querySelector('.workspace-chat')!.getBoundingClientRect().width < .1)
+  await page.waitForFunction(() => document.querySelector<HTMLElement>('.dashboard-shell')!.dataset.contentPhase === 'open' && document.querySelector('.workspace-chat')!.getBoundingClientRect().width < .1)
   assert.equal(await page.locator('.workspace-content .content-tabs').evaluate(el => getComputedStyle(el).backgroundColor), paper.content)
   await page.getByRole("button", { name: "退出全屏", exact: true }).click()
-  await page.waitForFunction(() => document.querySelector('.workspace-chat')!.getBoundingClientRect().width >= 420)
+  await page.waitForFunction(() => document.querySelector<HTMLElement>('.dashboard-shell')!.dataset.contentPhase === 'open' && document.querySelector('.workspace-chat')!.getBoundingClientRect().width >= 420)
   await page.getByRole("button", { name: "显示 / 隐藏内容面板", exact: true }).click()
-  await page.locator('.workspace-content').waitFor({ state: "detached" })
+  await assertHiddenRetainedContent(page, true)
   assert.equal(await page.locator('.workspace-group [data-separator]').count(), 1)
   assert.deepEqual((await panelColorsTwo(page)), [paper.sidebar, paper.chat])
   await page.getByRole("button", { name: "显示内容面板", exact: true }).click()
-  await page.waitForFunction(() => (document.querySelector('.workspace-content')?.getBoundingClientRect().width ?? 0) > 300)
+  await page.waitForFunction(() => document.querySelector<HTMLElement>('.dashboard-shell')!.dataset.contentPhase === 'open' && document.querySelector('.workspace-content')!.getBoundingClientRect().width > 300)
+  assert.equal(await page.evaluate(() => { const retained = (window as any).retainedSurface; return retained.panel === document.querySelector('#content') && retained.tabs === document.querySelector('.content-tabs') && retained.body === document.querySelector('[data-business-fixture]') }), true, "Hide and restore keep the same real Panel, ContentTabs and body DOM")
   assert.deepEqual(await panelColors(page), [paper.sidebar, paper.chat, paper.content])
   await page.getByRole("button", { name: "关闭 隔离面板 0", exact: true }).click()
-  await page.locator('.workspace-content').waitFor({ state: "detached" })
+  await assertHiddenRetainedContent(page, false)
+  assert.equal(await page.locator('[data-business-fixture]').count(), 0, "Closing the final real Tab removes its business body")
+  assert.equal(await page.evaluate(() => (window as any).retainedSurface.body.isConnected), false)
   await page.getByRole("button", { name: "显示内容面板", exact: true }).click()
+  await page.waitForFunction(() => document.querySelector<HTMLElement>('.dashboard-shell')!.dataset.contentPhase === 'open')
   await page.getByRole("button", { name: "隐藏内容面板", exact: true }).waitFor({ state: "visible" })
   assert.equal(await page.getByRole("tab").count(), 0)
   assert.equal(await page.locator('.workspace-content .content-tabs').evaluate(el => getComputedStyle(el).backgroundColor), paper.content)
 }))
+async function assertHiddenRetainedContent(page: Page, bodyRetained: boolean) {
+  await page.waitForFunction(() => document.querySelector<HTMLElement>('.dashboard-shell')!.dataset.contentPhase === 'closed' && document.querySelector('.content-drawer-viewport')!.getBoundingClientRect().width <= .1)
+  assert.equal(await page.locator('#content').getAttribute('inert'), '')
+  assert.equal(await page.locator('#content').getAttribute('aria-hidden'), 'true')
+  assert.equal(await page.evaluate(() => { const retained = (window as any).retainedSurface; return retained.panel === document.querySelector('#content') && retained.tabs === document.querySelector('.content-tabs') }), true, "Hidden content keeps the same actual shell components")
+  if (bodyRetained) assert.equal(await page.evaluate(() => (window as any).retainedSurface.body === document.querySelector('[data-business-fixture]') && (window as any).retainedSurface.body.isConnected), true)
+  assert.equal(await page.locator('.workspace-content .content-tabs').evaluate(el => getComputedStyle(el).backgroundColor), paper.content)
+  assert.equal(await page.locator('.workspace-group [data-separator]').count(), 1)
+}
 async function panelColorsTwo(page: Page) { return Promise.all(panelSelectors.slice(0, 2).map(selector => page.locator(selector).evaluate(el => getComputedStyle(el).backgroundColor))) }
 
 test("SURF-01/04 approved narrow drawer and retained workspace switching preserve surfaces and ink palette", async () => {
-  // Approved v8 uses one full-width drawer/underlay branch below 900px. Wait
-  // for its terminal phase; two rAFs only observe an intentionally partial V.
+  // Both actual drawers settle before measuring occupied space. The right
+  // content overlay keeps chat's complete geometry underneath it.
   for (const width of [760, 640]) await scenario({ width }, async page => {
     const nav = page.getByRole("navigation", { name: "创作工作区" })
     for (const [label, pane, selector, color] of [["作品目录", "sidebar", panelSelectors[0], paper.sidebar], ["返回对话", "chat", panelSelectors[1], paper.chat], ["查看内容", "content", panelSelectors[2], paper.content]]) {
       await nav.getByRole("button", { name: label, exact: true }).click()
-      await page.waitForFunction(expected => {
+      await page.waitForFunction(selected => {
         const shell = document.querySelector<HTMLElement>(".dashboard-shell")!
-        return shell.dataset.drawerMode === "narrow" && shell.dataset.sidebarPhase === expected
-      }, pane === "sidebar" ? "open" : "closed")
+        return shell.dataset.drawerMode === "narrow" && shell.dataset.sidebarPhase === (selected === 'sidebar' ? 'open' : 'closed') && shell.dataset.contentPhase === (selected === 'chat' ? 'closed' : 'open')
+      }, pane)
       await frames(page)
       assert.equal(await page.locator('.dashboard-shell').getAttribute("data-narrow-pane"), pane)
       assert.equal(await page.locator(selector).evaluate(el => getComputedStyle(el).backgroundColor), color)
@@ -310,8 +332,10 @@ test("SURF-01/04 approved narrow drawer and retained workspace switching preserv
         const [sidebar, chat, content] = ['.workspace-sidebar', '.workspace-chat', '.workspace-content'].map(selector => { const r = document.querySelector(selector)!.getBoundingClientRect(); return { left: r.left, right: r.right, width: r.width } })
         const dividers = Array.from(document.querySelectorAll('.workspace-group [data-separator]')).map(el => { const r = el.getBoundingClientRect(); return { left: r.left, right: r.right, width: r.width } }).filter(r => r.width > 0)
         const shell = document.querySelector<HTMLElement>('.dashboard-shell')!
-        return { sidebar, chat, content, dividers, underlay: shell.dataset.sidebarUnderlay, sidebarPosition: getComputedStyle(document.querySelector('.workspace-sidebar')!.parentElement!).position, chatInert: !!document.querySelector('.workspace-chat')!.closest('[inert]'), contentInert: !!document.querySelector('.workspace-content')!.closest('[inert]') }
+        const inner = document.querySelector('.content-drawer-inner')!.getBoundingClientRect(), viewport = document.querySelector('.content-drawer-viewport')!.getBoundingClientRect()
+        return { sidebar, chat, content, dividers, time: performance.now(), sidebarPhase: shell.dataset.sidebarPhase, contentPhase: shell.dataset.contentPhase, contentW: inner.width, contentV: viewport.width, underlay: shell.dataset.sidebarUnderlay, sidebarPosition: getComputedStyle(document.querySelector('.workspace-sidebar')!.parentElement!).position, chatInert: !!document.querySelector('.workspace-chat')!.closest('[inert]'), contentInert: !!document.querySelector('.workspace-content')!.closest('[inert]') }
       })
+      await page.evaluate(sample => { (window as any).surfaceDiagnostics.push(sample) }, { width, pane, label, geometry })
       assert(Math.abs(geometry[pane as "sidebar" | "chat" | "content"].width - width) < .1, "The selected narrow surface fills the workspace")
       assert.equal(geometry.dividers.length, 0, "The full-width drawer branch has no occupied split line")
       if (pane === "sidebar") {
@@ -322,7 +346,14 @@ test("SURF-01/04 approved narrow drawer and retained workspace switching preserv
         assert(Math.abs(geometry.sidebar.left - geometry[underlay].left) < .03, "The overlay creates no bright gutter or layout gap")
       } else {
         assert.equal(geometry.sidebar.width, 0, "The closed drawer leaves no occupied directory gap")
-        assert.equal(geometry[pane === "chat" ? "content" : "chat"].width, 0, "The inactive workspace leaves no gap")
+        if (pane === 'chat') {
+          assert.equal(geometry.content.width, 0, "The closed right viewport leaves no occupied gap")
+          assert.equal(geometry.contentV, 0); assert.equal(geometry.contentInert, true)
+        } else {
+          assert(Math.abs(geometry.chat.width - width) < .1, "Chat retains complete geometry below the right overlay")
+          assert.equal(geometry.chatInert, true)
+          assert(Math.abs(geometry.contentV - width) < .1); assert(Math.abs(geometry.contentW - width) < .1)
+        }
         assert.equal(pane === "chat" ? geometry.chatInert : geometry.contentInert, false)
         assert(Math.abs(geometry[pane as "chat" | "content"].left) < .03 && Math.abs(geometry[pane as "chat" | "content"].right - width) < .03, "The visible real workspace spans the original outer edges")
       }
