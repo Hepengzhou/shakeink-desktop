@@ -1,8 +1,8 @@
 import assert from "node:assert/strict"
 import { test } from "node:test"
-import { mkdtemp, rm, readFile } from "node:fs/promises"
+import { mkdtemp, rm, readFile, realpath } from "node:fs/promises"
 import { tmpdir } from "node:os"
-import { join, resolve } from "node:path"
+import { join, resolve, dirname, basename } from "node:path"
 import { build } from "esbuild"
 import postcss from "postcss"
 import tailwindcss from "@tailwindcss/postcss"
@@ -28,7 +28,14 @@ test.before(async () => {
   await works.runWithGlobal("inbox", () => new LocalTemplateLibrary().initialize())
   browser = await chromium.launch({ headless: true, ...(process.env.XAANINK_TEST_CHROMIUM ? { executablePath: process.env.XAANINK_TEST_CHROMIUM } : {}) })
 })
-test.after(async () => { await browser?.close(); await works?.close(); if (base) await rm(base, { recursive: true, force: true }) })
+test.after(async () => {
+  await browser?.close(); await works?.close()
+  if (base) {
+    const target = await realpath(base)
+    assert.equal(dirname(target).toLowerCase(), (await realpath(tmpdir())).toLowerCase()); assert.ok(basename(target).startsWith("xaanink-plot-browser-"))
+    await rm(target, { recursive: true, force: true })
+  }
+})
 async function scenario(run: (page: Page, calls: string[]) => Promise<void>) {
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } }), errors: string[] = [], calls: string[] = []
   page.setDefaultTimeout(5000); page.on("pageerror", e => errors.push(e.message))

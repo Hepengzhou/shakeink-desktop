@@ -7,21 +7,26 @@ import {resolve,join,dirname,basename} from 'node:path'
 import {createHash} from 'node:crypto'
 import {Workspaces} from '../desktop/service/workspaces.ts'
 import {defaultState} from '../desktop/core/settings.ts'
+import {displayAppVersion} from '../desktop/shared/project-info.ts'
+const releaseVersion=JSON.parse(await readFile(resolve('package.json'),'utf8')).version
+const displayVersion=displayAppVersion(releaseVersion)
 const temporary=await mkdtemp(join(tmpdir(),'xaanink-version-star-'))
 const packaged=process.argv.includes('--packaged')
 const evidence=resolve('docs/evidence/version-star',packaged?'windows-package':'windows-electron')
 await mkdir(evidence,{recursive:true})
-const report={startedAt:new Date().toISOString(),status:'running',packaged,scope:'Actual Windows Electron with production UI, isolated resumed onboarding state, no models or credentials. Real IPC/standalone native window; shell.openExternal intercepted to verify exact routing, not OS browser launch. Renderer network observation begins after firstWindow, includes offline reload. Not macOS, physical keyboard, system DPI or NSIS install.',checks:[],errors:[],httpRequests:0,externalTargets:[],runtime:[],sourceHashes:{}}
+const report={startedAt:new Date().toISOString(),status:'running',packaged,scope:'Actual Windows Electron with production UI, isolated resumed onboarding state, no models or credentials. Real IPC/standalone native window; shell.openExternal intercepted to verify exact routing, not OS browser launch. Renderer network observation begins after firstWindow, includes offline reload. Auto-guide focus validates only the narrow-window visible navigation fallback; wide-window/account-button focus restoration is not claimed. Not macOS, physical keyboard, system DPI or NSIS install.',checks:[],errors:[],httpRequests:0,externalTargets:[],runtime:[],sourceHashes:{}}
 const url='https://github.com/mySingleLive/xaanink-desktop'
 let app,page,theme
 const redact=value=>String(value).replaceAll(temporary,'<isolated-temp>').replaceAll(process.cwd(),'<repo>')
-const sources=['package.json','package-lock.json','desktop/main/index.ts','desktop/main/project-about.ts','desktop/shared/project-info.ts','desktop/preload/index.ts','src/components/desktop/ProjectStarPrompt.tsx','src/components/desktop/SettingsDialog.tsx','src/components/desktop/OnboardingController.tsx','src/app/desktop.css','electron-builder.config.cjs','build/Credits.html']
+const sources=['package.json','package-lock.json','scripts/verify-version-star.mjs','desktop/main/index.ts','desktop/main/project-about.ts','desktop/shared/project-info.ts','desktop/preload/index.ts','src/components/layout/SidebarTree.tsx','src/components/desktop/DesktopApp.tsx','src/components/desktop/ProjectStarPrompt.tsx','src/components/desktop/SettingsDialog.tsx','src/components/desktop/OnboardingController.tsx','src/app/desktop.css','electron-builder.config.cjs','build/Credits.html']
 for(const file of sources)report.sourceHashes[file]=createHash('sha256').update(await readFile(file)).digest('hex')
 const stateFile=root=>join(root,'state.json')
 async function saved(root){return JSON.parse(await readFile(stateFile(root),'utf8'))}
-async function openSettings(){await page.getByRole('button',{name:'账号菜单',exact:true}).click();await page.getByRole('menuitem',{name:'设置',exact:true}).click();await page.getByRole('button',{name:'关于我们',exact:true}).click()}
+async function openSettings(){await page.getByRole('button',{name:/^账号菜单：/}).click();await page.getByRole('menuitem',{name:'设置',exact:true}).click();await page.getByRole('button',{name:'关于我们',exact:true}).click()}
 async function launch(root){
- app=await _electron.launch({args:packaged?[]:[resolve('.')],...(packaged?{executablePath:resolve('release/win-unpacked/玄印写作.exe')}:{}),env:{...process.env,XAANINK_TEST_ROOT:root},timeout:60000})
+ const environment={...process.env,XAANINK_TEST_ROOT:root}
+ delete environment.ELECTRON_RUN_AS_NODE
+ app=await _electron.launch({args:packaged?[]:[resolve('.')],...(packaged?{executablePath:resolve('release/win-unpacked/玄印写作.exe')}:{}),env:environment,timeout:60000})
  page=await app.firstWindow({timeout:60000});page.setDefaultTimeout(20000)
  page.on('pageerror',error=>report.errors.push(redact(error.message)));page.on('request',request=>{if(/^https?:/i.test(request.url()))report.httpRequests++})
  await page.context().setOffline(true)
@@ -64,11 +69,18 @@ try{
    await expect(welcome).toBeVisible();await expect(welcome.getByRole('button',{name:'开始创作',exact:true})).toBeVisible()
    await captureMain(`${theme}-welcome.png`)
   }))
-  await check('VS-03-focus',async()=>{await welcome.getByRole('button',{name:'开始创作',exact:true}).click();await expect(welcome).not.toBeVisible();await expect(page.getByRole('button',{name:'账号菜单',exact:true})).toBeFocused()})
+  await check('VS-03-focus-narrow-navigation-fallback',async()=>{
+   await app.evaluate(({BrowserWindow})=>BrowserWindow.getAllWindows()[0].setBounds({width:800,height:900}))
+   const fallback=page.locator('nav[aria-label="创作工作区"] button').first()
+   await expect(fallback).toBeVisible();await welcome.getByRole('button',{name:'开始创作',exact:true}).click()
+   await expect(welcome).not.toBeVisible();await expect(fallback).toBeFocused()
+   await app.evaluate(({BrowserWindow})=>BrowserWindow.getAllWindows()[0].setBounds({width:1440,height:900}))
+   await expect(fallback).not.toBeVisible()
+  })
   await openSettings()
   const settings=page.getByRole('dialog',{name:'设置',exact:true})
   await check('VS-01/02-settings',()=>snapshotCheck(root,async()=>{
-   await expect(settings).toContainText('0.10-alpha');await expect(settings.locator('.desktop-settings-group > div > :last-child')).toHaveClass(/desktop-project-star-settings/)
+   await expect(settings).toContainText(displayVersion);await expect(settings.locator('.desktop-settings-group > div > :last-child')).toHaveClass(/desktop-project-star-settings/)
    await settings.getByRole('button',{name:'去 GitHub 点亮 Star',exact:true}).click();await expect.poll(externalCount).toBe(2)
    await captureMain(`${theme}-settings.png`)
   }))
@@ -100,7 +112,7 @@ try{
   const popup=app.waitForEvent('window');await page.evaluate(()=>window.desktop.command('app.about'));const about=await popup
   about.setDefaultTimeout(20000)
   await check('VS-05-about',async()=>{
-   await expect(about.getByRole('heading',{name:'玄印写作',exact:true})).toBeVisible();await expect(about.locator('body')).toContainText('版本 0.10-alpha')
+   await expect(about.getByRole('heading',{name:'玄印写作',exact:true})).toBeVisible();await expect(about.locator('body')).toContainText(`版本 ${displayVersion}`)
    assert.equal(await about.evaluate(()=>getComputedStyle(document.documentElement).colorScheme),theme==='ink'?'dark':'light')
    const preferences=await app.evaluate(({BrowserWindow})=>BrowserWindow.getAllWindows().find(win=>win.getTitle()==='关于玄印写作').webContents.getLastWebPreferences())
    assert.equal(preferences.nodeIntegration,false);assert.equal(preferences.sandbox,true);assert.equal(preferences.contextIsolation,true);assert.ok(!preferences.preload)
@@ -125,13 +137,13 @@ try{
    });assert.deepEqual(denied,[true,true,true,true]);assert.equal(await externalCount(),4)
   })
   await app.evaluate(({BrowserWindow})=>BrowserWindow.getAllWindows().find(win=>win.getTitle()==='关于玄印写作').close())
-  const bootstrap=await page.evaluate(()=>window.desktop.bootstrap());assert.equal(bootstrap.models.length,0);assert.equal(bootstrap.version,'0.10-alpha')
+  const bootstrap=await page.evaluate(()=>window.desktop.bootstrap());assert.equal(bootstrap.models.length,0);assert.equal(bootstrap.version,displayVersion)
   const runtime=await app.evaluate(({app,nativeTheme})=>({platform:process.platform,electron:process.versions.electron,version:app.getVersion(),packaged:app.isPackaged,themeSource:nativeTheme.themeSource,listeningServers:process._getActiveHandles().filter(handle=>handle.constructor.name==='Server'&&handle.listening).length}))
-  assert.equal(runtime.version,'0.10.0-alpha');assert.equal(runtime.packaged,packaged);assert.equal(runtime.listeningServers,0);assert.equal(runtime.themeSource,theme==='ink'?'dark':'light');report.runtime.push({theme,...runtime})
+  assert.equal(runtime.version,releaseVersion);assert.equal(runtime.packaged,packaged);assert.equal(runtime.listeningServers,0);assert.equal(runtime.themeSource,theme==='ink'?'dark':'light');report.runtime.push({theme,...runtime})
   report.externalTargets.push(...await app.evaluate(()=>globalThis.projectOpens));assert.ok(report.externalTargets.every(target=>target===url))
   await app.close();app=undefined
   await launch(root);await expect(page.getByRole('dialog',{name:'尚未配置文本模型',exact:true})).toBeVisible({timeout:60000})
-  await page.getByRole('button',{name:'暂不配置',exact:true}).click();assert.equal((await page.evaluate(()=>window.desktop.bootstrap())).version,'0.10-alpha')
+  await page.getByRole('button',{name:'暂不配置',exact:true}).click();assert.equal((await page.evaluate(()=>window.desktop.bootstrap())).version,displayVersion)
   report.checks.push({theme,id:'VS-10-restart-offline',status:'passed'});await app.close();app=undefined
  }
  assert.deepEqual(report.errors,[]);assert.equal(report.httpRequests,0);report.status='passed'

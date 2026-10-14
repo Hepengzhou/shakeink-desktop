@@ -1,15 +1,35 @@
 {
   "sourceRepository": "mySingleLive/xuanxiang.ink",
+  "alphaReleaseRevision": {
+    "date": "2026-10-14",
+    "version": "0.1.0-alpha",
+    "target": "win32-x64-nsis",
+    "status": "built-and-scoped-package-verified; full-regression-not-green",
+    "artifact": "release/XaanInk-0.1.0-alpha-win-x64.exe",
+    "verification": "docs/reviews/2026-10-14-alpha-release-verification.md",
+    "review": "docs/reviews/2026-10-14-alpha-release-review.md",
+    "productionScope": "Project metadata only; current Web-derived business components preserved and included in build.",
+    "allRepositoryAcceptancePassed": false,
+    "installerExecuted": true,
+    "localInstallation": {"date": "2026-10-14", "path": "C:/Program Files/xaanink", "version": "0.1.0-alpha", "installerExitCode": 0, "evidence": "docs/evidence/alpha-release/local-installation.json", "resourceEvidence": "docs/evidence/alpha-release/local-installation-resources.json", "scope": "Existing per-machine reinstall verified; no full business acceptance."},
+    "macOSExecuted": false
+  },
   "promptLibraryExpansionRevision": {
     "date": "2026-10-14",
     "scope": "剧情语料扩充及稳定ID内容修订，复用原向导和本地库",
-    "status": "implemented-scoped-validation-in-progress",
+    "status": "implemented-and-scoped-verified",
     "production": ["src/lib/creation-wizard/templates/index.ts", "src/lib/creation-wizard/templates/plot-prompt.ts", "src/lib/creation-wizard/templates/plot-structures.ts", "src/lib/creation-wizard/templates/plot-genres.ts", "src/lib/creation-wizard/templates/plot-library.ts", "src/lib/creation-wizard/templates/curation.ts"],
     "componentReuse": ["CreateNovelDialog", "WizardTemplatesClient", "TemplateManagementDialog", "composeWizardDraft", "LocalTemplateLibrary"],
     "productDesign": "docs/prompt-library-expansion/02-product-design.md",
     "coverage": "docs/prompt-library-expansion/coverage.json",
     "expected": {"focused": 74, "added": 70, "plot": 160, "wizard": 471, "combined": 500},
-    "scopeGoalAcceptancePassed": false,
+    "codeReview": "docs/prompt-library-expansion/06-code-review.md",
+    "contentReview": "docs/prompt-library-expansion/06-content-review.md",
+    "verification": "docs/prompt-library-expansion/07-verification.md",
+    "summary": "docs/prompt-library-expansion/08-summary.md",
+    "results": {"related": {"tests": 141, "passed": 141, "failed": 0, "skipped": 0}, "build": "passed", "windowsElectron": {"checks": 8, "passed": 8}},
+    "boundaries": "Data and stable-ID curation only; original React and local schema/service retained. No whole-application or supplier test; no macOS or installer claim.",
+    "scopeGoalAcceptancePassed": true,
     "allRepositoryAcceptancePassed": false
   },
   "contentDrawerRevision": {

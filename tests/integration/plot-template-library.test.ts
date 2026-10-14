@@ -1,8 +1,8 @@
 import assert from "node:assert/strict"
 import { test } from "node:test"
-import { mkdtemp, rm } from "node:fs/promises"
+import { mkdtemp, rm, realpath } from "node:fs/promises"
 import { tmpdir } from "node:os"
-import { join, resolve } from "node:path"
+import { join, resolve, dirname, basename } from "node:path"
 import { Workspaces } from "../../desktop/service/workspaces"
 import { LocalTemplateLibrary } from "../../desktop/service/template-library"
 import { globalPrisma } from "../../src/lib/db"
@@ -22,7 +22,12 @@ const original = [...THEME_A_TEMPLATES, ...THEME_B_TEMPLATES, ...WORLD_A_TEMPLAT
 async function fixture(run: (works: Workspaces, root: string) => Promise<void>) {
   const base = await mkdtemp(join(tmpdir(), "xaanink-plot-library-")), root = join(base, "data"), works = new Workspaces(root, resolve("prisma/migrations"))
   try { await works.initialize(); await run(works, root) }
-  finally { invalidatePromptCache(); await works.close(); await rm(base, { recursive: true, force: true }) }
+  finally {
+    invalidatePromptCache(); await works.close()
+    const target = await realpath(base)
+    assert.equal(dirname(target).toLowerCase(), (await realpath(tmpdir())).toLowerCase()); assert.ok(basename(target).startsWith("xaanink-plot-library-"))
+    await rm(target, { recursive: true, force: true })
+  }
 }
 test("PLX07 original 401 catalog upgrades exactly once while customized, disabled and copied old templates survive", async () => fixture(async works => works.runWithGlobal("inbox", async () => {
   assert.equal(original.length, 401)

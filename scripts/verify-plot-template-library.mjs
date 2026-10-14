@@ -5,12 +5,14 @@ import { createRequire } from 'node:module'
 import { execFileSync } from 'node:child_process'
 import { mkdtemp, mkdir, writeFile, readFile, rm, realpath } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
-import { join, resolve } from 'node:path'
+import { join, resolve, dirname, basename } from 'node:path'
 import { createHash } from 'node:crypto'
 
 const require = createRequire(import.meta.url)
 require('tsx/cjs')
 const { WIZARD_TEMPLATES } = require('../src/lib/creation-wizard/templates')
+const { Workspaces } = require('../desktop/service/workspaces')
+const { defaultState, stateSchema } = require('../desktop/core/settings')
 const coverage = JSON.parse(await readFile('docs/prompt-library-expansion/coverage.json', 'utf8'))
 const evidence = resolve('docs/evidence/plot-template-library/windows')
 const temporary = await realpath(await mkdtemp(join(tmpdir(), 'xaanink-plot-native-')))
@@ -27,7 +29,9 @@ async function launch() {
   await app.context().route(/^https?:\/\//, route => { report.httpRequests.push(route.request().url()); return route.abort() })
   page = await app.firstWindow({ timeout: 60000 }); page.setDefaultTimeout(15000)
   page.on('pageerror', error => report.errors.push(error.message))
-  await page.getByRole('button', { name: '账号菜单', exact: true }).waitFor({ timeout: 60000 })
+  // Dismiss only the existing no-model notice; do not run the setup workflow.
+  await page.getByRole('button', { name: '暂不配置', exact: true }).click({ timeout: 60000 })
+  await page.getByRole('button', { name: /^账号菜单：/ }).waitFor({ timeout: 60000 })
   await app.evaluate(({ app, BrowserWindow }) => { app.focus({ steal: true }); BrowserWindow.getAllWindows()[0].focus() })
 }
 async function manager() {
@@ -81,7 +85,11 @@ ConvertTo-Json -Depth 4 -Compress -InputObject $listeners`
 async function close() { if (app) { await app.close(); app = null } }
 try {
   assert.equal(process.platform, 'win32')
-  execFileSync(process.execPath, ['--import', 'tsx', 'scripts/seed-electron-fixture.ts', temporary], { encoding: 'utf8', windowsHide: true })
+  const works = new Workspaces(root, resolve('prisma/migrations'))
+  try { await works.initialize() } finally { await works.close() }
+  const initial = structuredClone(defaultState)
+  initial.onboarding = { version: 1, completed: true, step: 'welcome', textModelId: null, imageModelId: null, receipt: null }
+  await writeFile(join(root, 'state.json'), JSON.stringify({ schemaVersion: 1, revision: 0, value: stateSchema.parse(initial) }))
   const state = JSON.parse(await readFile(join(root, 'state.json'), 'utf8'))
   assert.deepEqual(state.value.models, []); check('Isolated startup retains no configured models')
   await launch(); assert.match(page.url(), /^xaanink:/)
@@ -99,7 +107,7 @@ try {
   await expect(page.getByRole('textbox', { name: '创作模板拼贴内容', exact: true })).toHaveValue(selected.template.prompt)
   await page.screenshot({ path: join(evidence, 'manager.png') }); check('Actual manager shows complete new prompt')
   await page.keyboard.press('Escape')
-  await page.getByRole('button', { name: '创建作品', exact: true }).click()
+  await page.getByTestId('sidebar').getByRole('button', { name: '创建作品', exact: true }).click()
   const wizard = page.getByRole('dialog', { name: '创作向导', exact: true })
   await expect(wizard).toBeVisible(); await wizard.getByRole('button', { name: /^剧情\s*160$/ }).click()
   const saveCat = rows.find(row => row.template.id === 'plot-structure-save-the-cat')
@@ -109,7 +117,7 @@ try {
   await wizard.getByRole('button', { name: '使用此模板', exact: true }).click(); await wizard.getByRole('button', { name: '确定', exact: true }).click()
   await expect(wizard).not.toBeVisible()
   const composer = page.getByRole('textbox', { name: '消息输入框', exact: true })
-  await expect(composer).toContainText(saveCat.template.prompt)
+  await expect(composer).toContainText(saveCat.template.prompt, { useInnerText: true })
   await expect(page.getByRole('button', { name: '发送', exact: true })).toBeDisabled()
   await page.screenshot({ path: join(evidence, 'composer.png') }); check('Actual wizard prepares complete fifteen-beat composer draft; sending disabled without a model')
   await manager(); await page.getByRole('button', { name: new RegExp(selected.template.title) }).click()
@@ -137,6 +145,10 @@ try {
   report.completedAt = new Date().toISOString(); await writeFile(join(evidence, 'report.json'), JSON.stringify(report, null, 2) + '\n')
   await close().catch(() => {})
   // Only delete the exact directory allocated by mkdtemp for this test.
-  if (passed) await rm(temporary, { recursive: true, force: true })
+  if (passed) {
+    assert.equal(dirname(temporary).toLowerCase(), (await realpath(tmpdir())).toLowerCase())
+    assert.ok(basename(temporary).startsWith('xaanink-plot-native-'))
+    await rm(temporary, { recursive: true, force: true })
+  }
 }
 console.log(JSON.stringify({ status: report.status, checks: report.checks.length, platform: report.platform }))
