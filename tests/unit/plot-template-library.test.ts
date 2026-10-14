@@ -114,3 +114,11 @@ test("PLX03 legacy ascent and revenge variants require different decision mechan
   const restitution = WIZARD_TEMPLATES.find(t => t.id === "plot-revenge-she-returns")!.prompt
   assert.match(restitution, /名誉|姓名/); assert.match(restitution, /联合追偿|联合.*追偿/)
 })
+test("PLX03 legacy secrecy, brokerage and villain variants have their own obligations and consequences", () => {
+  const cover = WIZARD_TEMPLATES.find(t => t.id === "plot-mocked-waste-hidden-edge")!.prompt
+  assert.match(cover, /掩护/); assert.match(cover, /撤离/)
+  const broker = WIZARD_TEMPLATES.find(t => t.id === "plot-power-broker-behind")!.prompt
+  assert.match(broker, /代理人/); assert.match(broker, /自主|反噬/)
+  const repair = WIZARD_TEMPLATES.find(t => t.id === "plot-book-villain-self-rescue")!.prompt
+  assert.match(repair, /旧.*伤害|既有伤害/); assert.match(repair, /返还|补偿/)
+})
