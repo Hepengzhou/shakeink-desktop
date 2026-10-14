@@ -1,14 +1,17 @@
 import { randomUUID } from "node:crypto"
 import { setTimeout as delay } from "node:timers/promises"
 import type { ModelRepository } from "./model-repository"
+import { CatalogRepositoryError, type ModelCatalogRepository } from "./model-catalog-repository"
 import { ModelGateway, ModelAuthorizationError, validateModelEndpoint, type ModelLease } from "../core/model-authorization"
 import { PROVIDER_PRESETS, type CatalogEntry, type CatalogResult, type ConfigurationDraft, type ConfigurationFailure, type ConfigurationErrorCode, type ConnectionTestResult } from "../shared/model-catalog"
 import { discoverAlibaba, discoverTencent, discoverByteDance, testGoogleImage, testAlibabaImage, testTencentImage, testByteDanceImage, parseUsage, ProviderAdapterError, type ProviderAdapterContext } from "./model-provider-adapters"
-import { officialModel, officialModels, LEGACY_OFFICIAL_ENDPOINTS, OPENAI_LIFECYCLE_SOURCE, testOutputBudget, openaiUsesCompletionLimit } from "../shared/provider-capabilities"
+import { officialModel, LEGACY_OFFICIAL_ENDPOINTS, OPENAI_LIFECYCLE_SOURCE, testOutputBudget, openaiUsesCompletionLimit } from "../shared/provider-capabilities"
+import { excludedBuiltinModel } from "../shared/builtin-model-catalog"
 export interface ModelConfigurationOptions {
   repository: Pick<ModelRepository, "read" | "keyFor">
   gateway: ModelGateway
   fetch: typeof fetch
+  catalogs?: ModelCatalogRepository
   timeoutMs?: number
   maxPages?: number
   maxModels?: number
@@ -29,6 +32,8 @@ const messages: Record<ConfigurationErrorCode, string> = {
   UNSUPPORTED_TEST: "此模型的单次最小调用适配尚未完成，未发送付费请求", CATALOG_INCOMPLETE: "目录分页或数量超过边界，未返回截断目录",
   INVALID_RESPONSE: "供应商未返回有效的目录或模型输出", RESPONSE_TOO_LARGE: "供应商响应超过大小上限",
   CHARGE_AUTHORIZATION_REQUIRED: "测试会调用当前模型并产生费用，需用户主动发起",
+  CATALOG_READ_FAILED: "本地模型目录读取失败，请刷新目录后重试",
+  CATALOG_SAVE_FAILED: "模型目录持久化未完成，请重试后确认最新目录",
 }
 function fail(code: ConfigurationErrorCode, status?: number): ConfigurationFailure { return { ok: false, code, message: messages[code], ...(status === undefined ? {} : { status }) } }
 type Json = Record<string, unknown>
@@ -75,7 +80,8 @@ interface Operation {
   subscription?: boolean; key: string; secrets: Set<string>; gateway?: ModelGateway; lease?: ModelLease; savedLease?: ModelLease
   base: string; protocol: "openai" | "anthropic" | "google"; removeListeners: (() => void)[]; timer?: ReturnType<typeof setTimeout>
 }
-/** Main-process-only operations. No method writes the repository. */
+/** Main-process-only operations. Discovery can update the public directory;
+ * model drafts and credentials remain exclusively under manual save. */
 export class ModelConfigurationService {
   private readonly active = new Map<string, Operation>()
   get activeCount() { return this.active.size }
@@ -92,7 +98,17 @@ export class ModelConfigurationService {
     this.maxOperations = bounded(options.maxOperations, 16, 1, 64)
     this.pollIntervalMs = bounded(options.pollIntervalMs, 3000, 1, 30_000); this.maxPolls = bounded(options.maxPolls, 100, 1, 200)
   }
-  discover(owner: string, operationId: string, draft: ConfigurationDraft, signal?: AbortSignal): Promise<CatalogResult | ConfigurationFailure> { return this.execute(owner, operationId, draft, signal, op => this.discoverCatalog(op)) }
+  discover(owner: string, operationId: string, draft: ConfigurationDraft, signal?: AbortSignal): Promise<CatalogResult | ConfigurationFailure> {
+    let validated: ConfigurationDraft
+    try { validated = this.validateDraft(draft) } catch { return Promise.resolve(fail("INVALID_DRAFT")) }
+    const ticket = validated.provider === "custom" ? undefined : this.options.catalogs?.begin(validated)
+    return this.execute(owner, operationId, validated, signal, op => this.discoverCatalog(op), async (op, result) => {
+      if (ticket !== undefined && (result.authoritative === true || result.complete)) await this.options.catalogs!.replace(op.draft, result, () => this.assertCurrent(op), ticket)
+    })
+  }
+  async readCatalog(scope: import("../shared/model-catalog").CatalogScope): Promise<CatalogResult | ConfigurationFailure | null> {
+    try { return await this.options.catalogs?.read(scope) ?? null } catch { return fail("CATALOG_READ_FAILED") }
+  }
   test(owner: string, operationId: string, draft: ConfigurationDraft, options: { authorizeCharge: boolean }, signal?: AbortSignal): Promise<ConnectionTestResult | ConfigurationFailure> {
     if (options?.authorizeCharge !== true) return Promise.resolve(fail("CHARGE_AUTHORIZATION_REQUIRED"))
     if (typeof draft?.modelId !== "string" || !draft.modelId.trim()) return Promise.resolve(fail("INVALID_DRAFT"))
@@ -131,7 +147,7 @@ export class ModelConfigurationService {
     try { const url = validateModelEndpoint(endpoint); if (url.search) throw Error("query") } catch { throw new ConfigurationError("INVALID_DRAFT") }
     return { id, provider, kind, protocol, endpoint, apiKey: apiKey.trim(), modelId: modelId?.trim() }
   }
-  private async execute<T extends CatalogResult | ConnectionTestResult>(owner: string, id: string, input: ConfigurationDraft, signal: AbortSignal | undefined, action: (op: Operation) => Promise<T>): Promise<T | ConfigurationFailure> {
+  private async execute<T extends CatalogResult | ConnectionTestResult>(owner: string, id: string, input: ConfigurationDraft, signal: AbortSignal | undefined, action: (op: Operation) => Promise<T>, commit?: (op: Operation, result: T) => Promise<void>): Promise<T | ConfigurationFailure> {
     if (this.closed) return fail("CANCELLED")
     if (typeof owner !== "string" || !owner || owner.length > 128 || owner.includes("\0") || typeof id !== "string" || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) return fail("INVALID_DRAFT")
     const key = this.operationKey(owner, id)
@@ -155,11 +171,13 @@ export class ModelConfigurationService {
         this.assertCurrent(op); await this.prepareAuthorization(op); this.assertCurrent(op)
         const result = await action(op); this.assertCurrent(op)
         if ([...op.secrets].some(secret => JSON.stringify(result).includes(JSON.stringify(secret).slice(1, -1)))) throw new ConfigurationError("INVALID_RESPONSE")
+        await commit?.(op, result); this.assertCurrent(op)
         return result
       } catch (error) {
         if (op.controller.signal.aborted) return fail(op.reason ?? "CANCELLED")
         if (error instanceof ConfigurationError) return fail(error.code, error.status)
         if (error instanceof ProviderAdapterError) return fail(error.code)
+        if (error instanceof CatalogRepositoryError) return fail(error.code)
         if (error instanceof ModelAuthorizationError && error.code === "AUTHORIZATION_REVOKED") return fail("AUTHORIZATION_REVOKED")
         return fail("NETWORK_ERROR")
       } finally {
@@ -251,6 +269,7 @@ export class ModelConfigurationService {
     const thinkingLevels = stringList(effort?.supported_levels ?? capabilities?.reasoning_effort) ?? (anthropicEffort?.supported === true ? ["low", "medium", "high", "xhigh", "max"].filter(level => (anthropicEffort[level] as Json | undefined)?.supported === true) : metadata?.thinkingLevels)
     const suppliedDefault = effort?.default_level ?? capabilities?.default_reasoning_effort ?? metadata?.defaultThinking; const defaultThinking = typeof suppliedDefault === "string" && (thinkingLevels?.includes(suppliedDefault) || suppliedDefault === "default") ? suppliedDefault : undefined
     const entry: CatalogEntry = { id, name, kind: op.draft.kind, permission, source, ...(metadata?.notes ? { notes: [...metadata.notes] } : {}), ...(contextWindow ? { contextWindow } : {}), ...(maxOutputTokens ? { maxOutputTokens } : {}), ...(thinkingLevels?.length ? { thinkingLevels } : {}), ...(defaultThinking ? { defaultThinking } : {}) }
+    if (metadata?.subscriptionOnly) entry.available = permission === "listed-unverified" && op.subscription === true
     if (op.draft.provider === "moonshot" && id === "kimi-k3") { entry.thinkingLevels = ["low", "high", "max"]; entry.defaultThinking = "max" }
     if (op.draft.provider === "zai" && id === "glm-5.3") { entry.thinkingLevels = ["low", "high", "max"]; entry.defaultThinking = "max" }
     return entry
@@ -279,7 +298,7 @@ export class ModelConfigurationService {
     if (!["anthropic", "openai", "google", "xai", "deepseek", "moonshot", "xiaomi", "zai", "minimax", "custom"].includes(provider) || (protocol === "anthropic" && kind === "IMAGE")) throw new ConfigurationError("UNSUPPORTED_DISCOVERY")
     const anthropic = provider === "anthropic" || (provider === "custom" && protocol === "anthropic"); const google = provider === "google"
     const path = google ? "/models" : anthropic ? (new URL(op.base).pathname.replace(/\/+$/, "").endsWith("/v1") ? "/models" : "/v1/models") : provider === "xai" ? (kind === "IMAGE" ? "/image-generation-models" : "/language-models") : "/models"
-    const retired = new Set<string>(); const warnings: string[] = []; const models = new Map<string, CatalogEntry>(); const unknown = new Set<string>(); const evidence = new Set<string>(); const cursors = new Set<string>(); let cursor = ""; let count = 0
+    const warnings: string[] = []; const models = new Map<string, CatalogEntry>(); const unknown = new Set<string>(); const evidence = new Set<string>(); const cursors = new Set<string>(); let cursor = ""; let count = 0
     for (let page = 0; ; page++) {
       if (page >= this.maxPages) throw new ConfigurationError("CATALOG_INCOMPLETE")
       const query = new URLSearchParams(); if (google) { query.set("pageSize", "1000"); if (cursor) query.set("pageToken", cursor) }; if (anthropic) { query.set("limit", "1000"); if (cursor) query.set("after_id", cursor) }
@@ -290,14 +309,15 @@ export class ModelConfigurationService {
         const row = object(raw); const id = this.checkText(op, google ? this.checkText(op, row.name).replace(/^models\//, "") : row.id)
         if (provider === "openai") {
           const publishedDate = officialModel("openai", id)?.shutdownDate
-          if (publishedDate && Date.parse(publishedDate) <= Date.now()) { retired.add(id); continue }
+          if (publishedDate && Date.parse(publishedDate) <= Date.now()) continue
         }
         if (row.shutdown_date != null) {
           const date = typeof row.shutdown_date === "number" ? row.shutdown_date * 1000 : Date.parse(this.checkText(op, row.shutdown_date, 100))
           if (!Number.isFinite(date)) throw new ConfigurationError("INVALID_RESPONSE")
-          if (date <= Date.now()) { retired.add(id); continue }
+          if (date <= Date.now()) continue
           warnings.push(`型号 ${id} 已公布下线时间，请留意供应商公告`)
         }
+        if (row.available === false || excludedBuiltinModel(provider, kind, id)) continue
         const capability = this.classify(op, row, id); evidence.add(capability.source); if (!capability.kinds) { unknown.add(id); continue }; if (!capability.kinds.includes(kind.toLowerCase())) continue
         const entry = this.entry(op, google ? { ...row, name: undefined } : row, id, capability.source, "listed-unverified"); const prior = models.get(id)
         if (prior && JSON.stringify(prior) !== JSON.stringify(entry)) throw new ConfigurationError("INVALID_RESPONSE")
@@ -320,21 +340,10 @@ export class ModelConfigurationService {
       if (cursors.has(next)) throw new ConfigurationError("CATALOG_INCOMPLETE")
       cursors.add(next); cursor = next
     }
-    if (["openai", "zai", "minimax"].includes(provider)) {
-      for (const candidate of officialModels(provider)) {
-        if (candidate.kind !== kind || retired.has(candidate.id) || models.has(candidate.id) || candidate.deprecated) continue
-        if (models.size >= this.maxModels) throw new ConfigurationError("CATALOG_INCOMPLETE")
-        const entry = this.entry(op, {}, candidate.id, candidate.source, "unknown")
-        if (candidate.subscriptionOnly && !op.subscription) entry.available = false
-        models.set(entry.id, entry); evidence.add(candidate.source)
-      }
-    }
     for (const model of models.values()) if (model.notes) warnings.push(...model.notes)
     if (provider === "openai") evidence.add(OPENAI_LIFECYCLE_SOURCE)
-    const hasCandidates = [...models.values()].some(m => m.permission === "unknown")
-    if (hasCandidates) warnings.push("包含官网候选，但此 Key 未列出；请逐型号测试调用权限")
     evidence.add(provider === "custom" ? "用户授权的自定义目录接口" : provider === "zai" ? kind === "TEXT" ? sources.zaiText : sources.zaiImage : provider === "minimax" ? kind === "TEXT" ? sources.minimaxText : sources.minimaxImage : sources[provider as "openai" | "anthropic" | "google" | "xai" | "deepseek" | "moonshot" | "xiaomi"])
-    return { ok: true, provider, kind, models: [...models.values()], complete: unknown.size === 0 && !hasCandidates, unknownCapabilityIds: [...unknown], permission: "listed-unverified", sources: [...evidence], checkedAt: new Date().toISOString(), warnings: [...new Set([...warnings, ...(unknown.size ? ["目录含尚未确认输出能力的型号，未按名称猜测分类；当前分类目录不完整"] : [])])] }
+    return { ok: true, provider, kind, models: [...models.values()], authoritative: provider !== "custom", complete: unknown.size === 0, unknownCapabilityIds: [...unknown], permission: "listed-unverified", sources: [...evidence], checkedAt: new Date().toISOString(), warnings: [...new Set([...warnings, ...(unknown.size ? ["目录含尚未确认输出能力的型号，未按名称猜测分类；当前分类目录不完整"] : [])])] }
   }
   private async testConnection(op: Operation): Promise<ConnectionTestResult> {
     const started = performance.now(); const { provider, kind, modelId, protocol, endpoint } = op.draft; let path: string; let body: Json

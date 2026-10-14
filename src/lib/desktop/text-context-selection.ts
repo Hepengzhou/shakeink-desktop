@@ -1,6 +1,5 @@
 import {emptyTextContextCapabilities,type TextContextCommand} from '@desktop/shared/text-context-menu'
 import type {TextContextCapture} from './text-context-adapters'
-import {isAPIKeyControl} from './input-commands'
 import {selectedEditorText,selectedEditorVisibleText,deleteDraftSelection} from '@/components/chat/composer-editor'
 const textTypes=new Set(['text','search','tel','url','email','password','number','date','datetime-local','month','week','time'])
 export function textContextSourceAt(target:HTMLElement):HTMLElement|null {
@@ -33,7 +32,7 @@ export function readTextContextRange(root:HTMLElement,editable=false){
 export function captureDOMTextContext(root:HTMLElement,options:{writeText(text:string):Promise<void>;readText():Promise<string>;nativeEdit(id:'text.paste'|'text.pastePlain'|'text.undo'|'text.redo',root:HTMLElement,assertCurrent:()=>void):Promise<void>;nativeSelectionOwned?(root:HTMLElement):boolean}):TextContextCapture {
  const document=root.ownerDocument,control=root instanceof HTMLInputElement||root instanceof HTMLTextAreaElement?root:null
  const editable=control?!control.disabled&&!control.matches(':disabled')&&!control.readOnly:root.isContentEditable
- const sensitive=control?.type==='password',apiKey=isAPIKeyControl(root)
+ const sensitive=control?.type==='password',apiKey=control?.getAttribute('data-desktop-clipboard')==='api-key'
  // Shadow/native control selections are readable only while that exact field owns focus.
  const nativeSelection=!!control&&typeof control.selectionStart!=='number'
  const dom=control?null:readTextContextRange(root,editable)
@@ -43,9 +42,9 @@ export function captureDOMTextContext(root:HTMLElement,options:{writeText(text:s
  const before=control?JSON.stringify([control.value,control.selectionStart,control.selectionEnd,control.selectionDirection,nativeSelection?document.getSelection()?.toString():null]):root.innerHTML
  const originalValue=control?.value
  const selection=selectionIdentity(document),query=(id:string)=>{try{return document.queryCommandEnabled(id)}catch{return false}}
- const state=emptyTextContextCapabilities(),canCopy=!!copyText&&(!sensitive||apiKey)
- state['text.quote']=!!text.trim()&&!sensitive
- state['text.copy']=canCopy;state['text.cut']=canCopy&&editable&&(apiKey||query('cut'))
+ const state=emptyTextContextCapabilities(),canCopy=!!copyText&&!sensitive
+ state['text.quote']=!!text.trim()&&!sensitive&&!apiKey
+ state['text.copy']=canCopy;state['text.cut']=canCopy&&editable&&query('cut')
  state['text.paste']=state['text.pastePlain']=editable&&(root.matches('.chat-composer-editable')||document.queryCommandSupported?.('insertText')===true)
  // Structured date/time fields do not accept Chromium insertText, regardless of global support.
  if(control&&['date','datetime-local','month','week','time'].includes(control.type))state['text.paste']=state['text.pastePlain']=false
@@ -60,7 +59,7 @@ export function captureDOMTextContext(root:HTMLElement,options:{writeText(text:s
   else if(!control&&selection.anchor&&selection.focus)document.getSelection()?.setBaseAndExtent(selection.anchor,selection.start!,selection.focus,selection.end!)
  }
  const remove=()=>{if(root.matches('.chat-composer-editable'))deleteDraftSelection(root);else if(!document.execCommand('delete',false))throw new Error('当前选区无法删除')}
- return {root,kind:control||root.matches('.chat-composer-editable,[data-text-input],[contenteditable="true"],[contenteditable="plaintext-only"]')?'input':'preview',text:sensitive?'':text,commands:state,normalizedSelection:dom?.normalized,
+ return {root,kind:control||root.matches('.chat-composer-editable,[data-text-input],[contenteditable="true"],[contenteditable="plaintext-only"]')?'input':'preview',text:sensitive||apiKey?'':text,commands:state,normalizedSelection:dom?.normalized,
   isCurrent:current,restore,
   isContentCurrent:()=>root.isConnected&&root.ownerDocument===document&&(control?control.value===originalValue&&editable===(!control.disabled&&!control.matches(':disabled')&&!control.readOnly):root.innerHTML===before&&editable===root.isContentEditable),
   async execute(id:TextContextCommand,assertCurrent){

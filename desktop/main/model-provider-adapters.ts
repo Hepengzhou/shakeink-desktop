@@ -23,7 +23,7 @@ const aliEditOnly = new Set(["qwen-image-edit-max", "qwen-image-edit-max-2026-01
 // future IDs stay unclassified; strings are never matched by family/prefix.
 const tencentOther = new Set(["hy-video-v1.5", "pixverse-video-v6.0", "kling-video-v3", "minimax-video-h3", "hy-3d-3.0", "hy-3d-3.1", "hy-3d-express", "kinfra-text-embedding-0.6b", "kinfra-text-embedding-4b", "kinfra-vl-embedding-2b", "kinfra-vl-embedding-8b"])
 function finish(ctx: ProviderAdapterContext, models: Map<string, CatalogEntry>, unknown: Set<string>, sources: string[]): CatalogResult {
-  return { ok: true, provider: ctx.draft.provider, kind: ctx.draft.kind, models: [...models.values()], complete: unknown.size === 0, unknownCapabilityIds: [...unknown], permission: "listed-unverified", sources, checkedAt: new Date().toISOString(), warnings: unknown.size ? ["授权目录含输出能力待确认型号；未按名称猜测，分类目录尚不完整"] : [] }
+  return { ok: true, provider: ctx.draft.provider, kind: ctx.draft.kind, models: [...models.values()], authoritative: true, complete: unknown.size === 0, unknownCapabilityIds: [...unknown], permission: "listed-unverified", sources, checkedAt: new Date().toISOString(), warnings: unknown.size ? ["授权目录含输出能力待确认型号；未按名称猜测，分类目录尚不完整"] : [] }
 }
 function insert(models: Map<string, CatalogEntry>, entry: CatalogEntry) {
   const prior = models.get(entry.id)
@@ -137,14 +137,9 @@ export async function discoverByteDance(ctx: ProviderAdapterContext): Promise<Ca
     if (ctx.draft.kind === "IMAGE" && Array.isArray(row.task_type) && !row.task_type.includes("TextToImage")) { excluded.add(id); continue }
     insert(models, ctx.entry({ context_window: limits.context_window, max_output_tokens: limits.max_output_token_length }, id, byteSource, "listed-unverified"))
   }
-  for (const id of ids) {
-    if (models.has(id) || excluded.has(id)) continue
-    if (models.size >= ctx.maxModels) throw new ProviderAdapterError("CATALOG_INCOMPLETE")
-    models.set(id, ctx.entry({}, id, byteSource, "unknown"))
-  }
   const result = finish(ctx, models, unknown, [byteSource, "https://docs.volcengine.com/docs/ark/model-deprecation-notice?lang=zh"])
   result.complete = result.complete && !result.models.some(m => m.permission === "unknown")
-  result.warnings.push("当前官方型号表（2026-09-28）与推理 Key 目录合并；历史/未确认型号不作为新配置推荐，列出不等于有调用权限")
+  result.warnings.push("仅显示官方目录当前列出的型号；列出不等于有调用权限")
   return result
 }
 function checkBusiness(response: Json) { if (response.error || response.code || response.success === false) throw new ProviderAdapterError("HTTP_ERROR") }

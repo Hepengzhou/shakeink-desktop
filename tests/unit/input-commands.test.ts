@@ -122,13 +122,16 @@ test("password never exports copy/cut but keeps protected navigation and paste",
   } finally { f.dispose() }
 })
 
-test("K01/K04: explicitly marked API Key permits selected copy/cut while remaining masked",async()=>{
+test("K01/K04: API Key copy/cut follow the reveal toggle — blocked while masked, ordinary behavior in plaintext",async()=>{
   const native:NativeInputEdit[]=[],f=fixture("public-clipboard-fixture",{nativeEdit:id=>{native.push(id)}})
   f.control.type="password";f.control.clipboard="api-key";f.control.setSelectionRange(0,6)
   try{
+    assert.equal(f.enabled("text.copy"),false);assert.equal(f.enabled("text.cut"),false)
+    assert.equal(await f.execute("text.copy"),false);assert.equal(await f.execute("text.cut"),false);assert.deepEqual(native,[])
+    assert.equal(f.enabled("text.paste"),true);assert.equal(f.enabled("text.selectAll"),true)
+    f.control.type="text"
     assert.equal(f.enabled("text.copy"),true);assert.equal(f.enabled("text.cut"),true)
     await f.execute("text.copy");await f.execute("text.cut");assert.deepEqual(native,["text.copy","text.cut"])
-    assert.equal(f.control.type,"password")
     f.control.readOnly=true;assert.equal(f.enabled("text.copy"),true);assert.equal(f.enabled("text.selectAll"),true)
     for(const id of ["text.cut","text.paste","text.undo","text.redo"])assert.equal(f.enabled(id),false)
     f.control.readOnly=false;f.control.setSelectionRange(2,2);assert.equal(f.enabled("text.copy"),false)

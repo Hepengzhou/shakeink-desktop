@@ -64,6 +64,21 @@ test("DESK-M12: model keys require OS protection and public state never exposes 
   await assert.rejects(unavailable.saveModel(result.revision, { ...draft, id: result.models[0].id, apiKey: "new-fixture" }), /保护|加密/)
 }))
 
+test("K09: revealKey returns the saved credential for editing, including disabled models, and rejects unknown IDs or missing OS protection", () => fixture(async path => {
+  const repo = new ModelRepository(path, protection, { replace() {}, remove() {} })
+  const saved = await repo.saveModel(0, draft)
+  const id = saved.models[0].id
+  assert.equal(await repo.revealKey(id), draft.apiKey)
+  const disabled = await repo.saveModel(saved.revision, { ...draft, id, enabled: false, apiKey: "" })
+  assert.equal(disabled.models[0].enabled, false)
+  assert.equal(await repo.revealKey(id), draft.apiKey, "Editing a disabled model still shows its own Key")
+  await assert.rejects(repo.revealKey("00000000-0000-4000-8000-000000000099"), /不存在/)
+  const unavailable = new ModelRepository(path, { ...protection, isEncryptionAvailable: () => false }, { replace() {}, remove() {} })
+  await assert.rejects(unavailable.revealKey(id), /保护|加密/)
+  const broken = new ModelRepository(path, { ...protection, decryptString: () => { throw new Error("os fixture") } }, { replace() {}, remove() {} })
+  await assert.rejects(broken.revealKey(id), /解密失败/)
+}))
+
 test("DESK-M13: persist before publishing authorization; rejected/failed drafts preserve existing credential and version", () => fixture(async path => {
   let fail = false; const events: Array<{ revision: number; diskRevision: number }> = []
   const gateway = { replace(model: { authRevision: number }) { events.push({ revision: model.authRevision, diskRevision: JSON.parse(readFileSync(path, "utf8")).value.models[0].authRevision }) }, remove() {} }

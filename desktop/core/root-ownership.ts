@@ -32,7 +32,7 @@ export function allowedManagedFile(path: string):boolean {
         const inner=packagePath[2];
         return inner==='xuanxiang-app-backup.json'||inner.startsWith('data/')&&!inner.slice(5).startsWith('backups/')&&allowedManagedFile(inner.slice(5));
     }
-    if ([...BRAND_NAMES.map(names=>names.appMarker), 'catalog.json', 'state.json', 'drafts.json', 'backup-plan.json', 'restore-draft-barrier.json', 'application-restore-drafts.json'].includes(path))
+    if ([...BRAND_NAMES.map(names=>names.appMarker), 'catalog.json', 'state.json', 'model-catalogs.json', 'drafts.json', 'backup-plan.json', 'restore-draft-barrier.json', 'application-restore-drafts.json'].includes(path))
         return true;
     const recoveryNames=BRAND_NAMES.find(names=>path.startsWith(names.rootRecoveryPrefix)&&path.endsWith('.json'));
     if (recoveryNames)

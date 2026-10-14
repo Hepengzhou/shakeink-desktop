@@ -319,7 +319,7 @@ export class DataRootManager {
         }
         if (lease.ownedFiles.length > limits.files || new Set(lease.ownedFiles).size !== lease.ownedFiles.length || ![applicationNames(source.root).appMarker, 'catalog.json'].every(p => lease.ownedFiles.includes(p)) || !lease.ownedFiles.every(allowedManagedFile))
             failure('OWNERSHIP_INVALID');
-        for (const name of ['state.json', 'drafts.json', 'backup-plan.json', 'restore-draft-barrier.json']) {
+        for (const name of ['state.json', 'model-catalogs.json', 'drafts.json', 'backup-plan.json', 'restore-draft-barrier.json']) {
             try {
                 await lstat(join(source.root.path, name));
                 if (!lease.ownedFiles.includes(name))

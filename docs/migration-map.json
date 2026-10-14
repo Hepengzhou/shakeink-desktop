@@ -1,5 +1,17 @@
 {
   "sourceRepository": "mySingleLive/xuanxiang.ink",
+  "modelCatalogFixRevision": {
+    "date": "2026-10-15",
+    "status": "implemented-and-scoped-verified",
+    "desktopModules": ["desktop/main/model-catalog-repository.ts", "desktop/main/model-configuration.ts", "desktop/main/model-provider-adapters.ts", "desktop/shared/builtin-model-catalog.ts", "desktop/shared/verified-model-seeds.json", "src/components/desktop/ModelConfigurationDialog.tsx"],
+    "managedMetadata": "model-catalogs.json",
+    "rootMigrationModules": ["desktop/core/root-ownership.ts", "desktop/core/root-inventory-paths.ts", "desktop/core/data-root.ts", "desktop/core/application-cold-source.ts"],
+    "verification": "docs/model-catalog-fix/07-verification.md",
+    "evidence": "docs/evidence/model-catalog-fix/windows-accepted/windows-electron.json",
+    "scope": "Reuse the real React model configuration dialog; official enumeration replaces candidates and stores an isolated public directory. Existing Web business components and parent repository unchanged.",
+    "results": {"scopedTests": "29/29", "actualWindowsElectronChecks": "5/5", "realFilesystemRootMigration": "MC-13 passed", "fullSuiteExecuted": false},
+    "allRepositoryAcceptancePassed": false
+  },
   "alphaReleaseRevision": {
     "date": "2026-10-14",
     "version": "0.1.0-alpha",

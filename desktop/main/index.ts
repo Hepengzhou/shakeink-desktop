@@ -60,6 +60,7 @@ import {textContextRequestSchema} from '../shared/text-context-menu'
 import { OnboardingService } from "./onboarding-service"
 import { OnboardingError, onboardingActionSchema } from "../shared/onboarding"
 import {PROJECT_REPOSITORY_URL,displayAppVersion} from '../shared/project-info'
+import { ModelCatalogRepository } from './model-catalog-repository'
 import {projectAboutHtml,installProjectAboutLinks} from './project-about'
 
 app.enableSandbox()
@@ -234,7 +235,7 @@ async function launch() {
   vault = repository = new ModelRepository(join(dataRoot, "state.json"), safeStorage, gateway,metadataWrites)
   await repository.initialize()
   modelService = new ModelService(repository, gateway)
-  modelConfiguration = new ModelConfigurationService({ repository, gateway, fetch: globalThis.fetch })
+  modelConfiguration = new ModelConfigurationService({ repository, gateway, fetch: globalThis.fetch, catalogs: new ModelCatalogRepository(join(dataRoot, "model-catalogs.json"), metadataWrites) })
   avatarAssets = new AvatarAssetService({ root: dataRoot,...metadataWrites })
   onboardingService = new OnboardingService({ repository, avatarAssets })
   configurationFiles=new ConfigurationFiles({repository,catalogs:trustedCommandCatalogs,protectedRoots:async()=>[dataRoot,bootstrapPath,...await service.call<string[]>("protected-directories")],assertOwner:owner=>{
@@ -498,7 +499,13 @@ function registerIpc() {
   })
   businessHandle("desktop:directory", async (event, purpose) => { trusted(event); return chooseDirectory(directoryPurpose.parse(purpose), String(event.sender.id)) })
   businessHandle("desktop:model-discover", async (event, id, draft) => { trusted(event); return modelConfiguration.discover(String(event.sender.id), z.uuid().parse(id), draft) })
+  businessHandle("desktop:model-catalog-read", async (event, input) => {
+    trusted(event)
+    const scope = z.object({ provider: z.enum(["openai", "anthropic", "google", "xai", "deepseek", "moonshot", "zai", "xiaomi", "alibaba", "minimax", "tencent", "bytedance", "custom"]), kind: z.enum(["TEXT", "IMAGE"]), protocol: z.enum(["openai", "anthropic"]), endpoint: z.string().url().max(2048) }).strict().parse(input)
+    return modelConfiguration.readCatalog(scope)
+  })
   businessHandle("desktop:model-test", async (event, id, draft) => { trusted(event); return modelConfiguration.test(String(event.sender.id), z.uuid().parse(id), draft, { authorizeCharge: true }) })
+  businessHandle("desktop:model-reveal-key", async (event, id) => { trusted(event); return repository.revealKey(z.uuid().parse(id)) })
   ipcMain.handle("desktop:model-cancel", async (event, id) => { trusted(event); modelConfiguration.cancel(String(event.sender.id), z.uuid().parse(id)) })
   ipcMain.handle("desktop:avatar-choose", async (event, id, acceptedDraftId) => {
     trusted(event)

@@ -87,7 +87,7 @@ test("B02/B03: exact OpenAI snapshots, lifecycle and unknown future IDs", async 
     assert.ok(result.warnings.some(w => /下线|弃用/.test(w)))
   })
 })
-test("B02: canonical pages win alias collisions and unsupported official models stay excluded", async () => {
+test("MC-02/B02: canonical metadata does not add unlisted API models to discovery", async () => {
   const sol = officialModel("openai", "gpt-5.6-sol")!
   assert.equal(sol.deprecated, false); assert.equal(sol.wire, "chat")
   assert.equal(sol.source, "https://developers.openai.com/api/docs/models/gpt-5.6-sol")
@@ -97,8 +97,7 @@ test("B02: canonical pages win alias collisions and unsupported official models 
     const result = await discover(s, draft("openai")); assert.equal(result.ok, true); if (!result.ok) return
     assert.deepEqual(result.unknownCapabilityIds, [])
     assert.equal(result.models.some(m => officialModel("openai", m.id)?.kind === "OTHER"), false)
-    assert.ok(result.models.some(m => m.id === "gpt-5.6-sol"))
-    assert.ok(result.models.some(m => m.id === "gpt-5.6-cyber"))
+    assert.deepEqual(result.models, [])
   })
 })
 test("B03: published shutdown dates override stale live search aliases and retain future lifecycle notes", async () => {
@@ -118,7 +117,7 @@ test("B04: DeepSeek official IDs work without optional modalities", async () => 
     assert.deepEqual(result.unknownCapabilityIds, ["deepseek-future"])
   })
 })
-test("B05/B06: authenticated CN catalogs merge complete public candidates and subscription limits", async () => {
+test("MC-02/B05/B06: authenticated CN catalogs contain only listed official IDs", async () => {
   assert.deepEqual(thinkingEffortOptionsFor("minimax", "MiniMax-M3.1-Flash-Preview").map(o => o.value), ["low", "medium", "high", "xhigh", "max"])
   assert.equal(isValidThinkingEffort("minimax", "MiniMax-M3.1-Flash-Preview", "low"), true)
   assert.equal(isValidThinkingEffort("minimax", "MiniMax-M3.1-Flash-Preview", "max"), true)
@@ -128,23 +127,19 @@ test("B05/B06: authenticated CN catalogs merge complete public candidates and su
   await run(async () => { calls++; return json({ data: [{ id: "glm-5.3" }] }) }, async s => {
     const result = await discover(s, draft("zai")); assert.equal(result.ok, true); if (!result.ok) return
     assert.ok(result.sources.every(source => typeof source === "string" && new URL(source).protocol === "https:"))
-    for (const id of ["glm-5.3-flash", "glm-5.3-flashx", "glm-5-turbo", "glm-4-long", "glm-4-flash-250414", "glm-5v-turbo"]) assert.ok(result.models.some(m => m.id === id), id)
+    assert.deepEqual(result.models.map(m => m.id), ["glm-5.3"])
     assert.equal(result.models.find(m => m.id === "glm-5.3")?.permission, "listed-unverified")
-    assert.equal(result.models.find(m => m.id === "glm-5v-turbo")?.permission, "unknown")
+    assert.equal(result.models.some(m => m.id === "glm-5v-turbo"), false)
     const images = await discover(s, draft("zai", "IMAGE")); assert.equal(images.ok, true)
-    if (images.ok) assert.ok(images.models.some(m => m.id === "cogview-3-flash"))
+    if (images.ok) assert.deepEqual(images.models, [])
     assert.equal(calls, 2)
   })
   await run(async () => json({ data: [{ id: "MiniMax-M3" }] }), async s => {
     const result = await discover(s, draft("minimax")); assert.equal(result.ok, true); if (!result.ok) return
     assert.ok(result.sources.every(source => typeof source === "string" && new URL(source).protocol === "https:"))
-    const preview = result.models.find(m => m.id === "MiniMax-M3.1-Flash-Preview")
-    assert.equal(preview?.available, false); assert.ok(preview?.notes?.some(n => n.includes("订阅")))
-    assert.deepEqual(preview?.thinkingLevels, ["low", "medium", "high", "xhigh", "max"])
-    assert.equal(preview?.defaultThinking, "max"); assert.equal(preview?.contextWindow, 1000000)
-    assert.equal(result.models.find(m => m.id === "MiniMax-M2.7")?.contextWindow, 204800)
+    assert.deepEqual(result.models.map(m => m.id), ["MiniMax-M3"])
     const subscribed = await discover(s, { ...draft("minimax"), apiKey: "sk-cp-public-fixture" }); assert.equal(subscribed.ok, true)
-    if (subscribed.ok) assert.notEqual(subscribed.models.find(m => m.id === preview?.id)?.available, false)
+    if (subscribed.ok) assert.deepEqual(subscribed.models.map(m => m.id), ["MiniMax-M3"])
   })
   await run(async () => { assert.fail("ordinary API Key must not generate subscription-only model") }, async s => {
     const result = await invoke(s, draft("minimax", "TEXT", "MiniMax-M3.1-Flash-Preview"))

@@ -35,6 +35,21 @@ async function fixture(options: RootOptions = {}) {
     return { base, source, target, bootstrap, work, pointer, owned, host, manager: new DataRootManager(bootstrap, source, options), setClosed(v: boolean) { closed = v; }, get releases() { return releases; }, get calls() { return calls; }, async close() { await rm(base, { recursive: true, force: true }); } };
 }
 const code = (name: string) => (e: unknown) => e instanceof RootMigrationError && e.code === name;
+test('MC-13: refreshed model catalog is inventoried and survives real data-root migration', async () => {
+    const f=await fixture();
+    try {
+        const { ModelCatalogRepository }=await import('../../desktop/main/model-catalog-repository');
+        const { collectClosedRootFiles }=await import('../../desktop/main/owned-root-files');
+        const scope={provider:'deepseek',kind:'TEXT',protocol:'openai',endpoint:'https://api.deepseek.com'} as const;
+        const repo=new ModelCatalogRepository(join(f.source,'model-catalogs.json'));
+        await repo.replace(scope,{ok:true,...scope,models:[],complete:true,authoritative:true,unknownCapabilityIds:[],permission:'unknown',sources:[],checkedAt:'2026-10-15T00:00:00Z',warnings:[]},()=>{},repo.begin(scope));
+        const before=await readFile(repo.path,'utf8'),inventory=await collectClosedRootFiles(await proof(f.source),()=>{});
+        assert.ok(inventory.files.includes('model-catalogs.json'));f.owned.push('model-catalogs.json');
+        const migrated=await f.manager.migrate(await proof(f.target),f.host);
+        assert.equal(migrated.status,'complete');assert.equal(await readFile(join(f.target,'model-catalogs.json'),'utf8'),before);
+        assert.deepEqual((await new ModelCatalogRepository(join(f.target,'model-catalogs.json')).read(scope))?.models,[]);
+    }finally{await f.close()}
+});
 test('ROOT09-01 absent bootstrap returns explicit initialization intent without creating a root', async () => {
     const base = await realpath(await mkdtemp(join(tmpdir(), 'xuanxiang-bootstrap-')));
     try {

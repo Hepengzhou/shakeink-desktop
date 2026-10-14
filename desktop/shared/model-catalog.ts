@@ -35,7 +35,7 @@ export interface CatalogEntry {
   available?: boolean
   notes?: string[]
 }
-export type ConfigurationErrorCode = "INVALID_DRAFT" | "KEY_REQUIRED" | "SAVED_SCOPE_MISMATCH" | "AUTHORIZATION_REVOKED" | "OPERATION_DUPLICATE" | "OPERATION_LIMIT" | "CANCELLED" | "TIMEOUT" | "NETWORK_ERROR" | "AUTHENTICATION_FAILED" | "PERMISSION_DENIED" | "QUOTA_EXCEEDED" | "RATE_LIMITED" | "MODEL_UNAVAILABLE" | "OUTPUT_TRUNCATED" | "HTTP_ERROR" | "UNSUPPORTED_DISCOVERY" | "UNSUPPORTED_TEST" | "CATALOG_INCOMPLETE" | "INVALID_RESPONSE" | "RESPONSE_TOO_LARGE" | "CHARGE_AUTHORIZATION_REQUIRED"
+export type ConfigurationErrorCode = "INVALID_DRAFT" | "KEY_REQUIRED" | "SAVED_SCOPE_MISMATCH" | "AUTHORIZATION_REVOKED" | "OPERATION_DUPLICATE" | "OPERATION_LIMIT" | "CANCELLED" | "TIMEOUT" | "NETWORK_ERROR" | "AUTHENTICATION_FAILED" | "PERMISSION_DENIED" | "QUOTA_EXCEEDED" | "RATE_LIMITED" | "MODEL_UNAVAILABLE" | "OUTPUT_TRUNCATED" | "HTTP_ERROR" | "UNSUPPORTED_DISCOVERY" | "UNSUPPORTED_TEST" | "CATALOG_INCOMPLETE" | "INVALID_RESPONSE" | "RESPONSE_TOO_LARGE" | "CHARGE_AUTHORIZATION_REQUIRED" | "CATALOG_READ_FAILED" | "CATALOG_SAVE_FAILED"
 export interface ConfigurationFailure {
   ok: false
   code: ConfigurationErrorCode
@@ -48,12 +48,16 @@ export interface CatalogResult {
   kind: ConfigurationKind
   models: CatalogEntry[]
   complete: boolean
+  /** All official pages were enumerated. Capability classification may still
+   * be incomplete; unknown IDs must not restore missing static candidates. */
+  authoritative?: boolean
   unknownCapabilityIds: string[]
   permission: "listed-unverified" | "unknown"
   sources: string[]
   checkedAt: string
   warnings: string[]
 }
+export type CatalogScope = Pick<ConfigurationDraft, "provider" | "kind" | "protocol" | "endpoint">
 export interface ConnectionTestResult {
   ok: true
   modelId: string

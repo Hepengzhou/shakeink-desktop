@@ -120,7 +120,7 @@ export function installInputCommands(options: InputCommandOptions): () => void {
     const control = accepted
     if (!control || !eligible(control) || compositionActive()) return false
     if (mutation.has(id) && control.readOnly) return false
-    if ((id === "text.copy" || id === "text.cut") && ((control.tagName === "INPUT" && control.type === "password" && !isAPIKeyControl(control)) || control.selectionStart === control.selectionEnd)) return false
+    if ((id === "text.copy" || id === "text.cut") && ((control.tagName === "INPUT" && control.type === "password") || control.selectionStart === control.selectionEnd)) return false
     if (id === "input.confirm" || id === "input.cancel") return !!options.actions?.(control)?.[id === "input.confirm" ? "confirm" : "cancel"]
     if (id in nativeEdits) return !!options.nativeEdit || !!nativeEdits[id as NativeInputEdit] && document.queryCommandSupported?.(nativeEdits[id as NativeInputEdit]!) === true
     if (navigation.has(id) || id.startsWith("input.delete")) {

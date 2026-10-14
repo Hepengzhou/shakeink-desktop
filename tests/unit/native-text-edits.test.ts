@@ -36,26 +36,22 @@ function keyFixture(options:{fail?:boolean;delayed?:boolean}={}){
  Object.assign(f.doc,{defaultView:Object.assign(new EventTarget(),{desktop:{async writeClipboardText(text:string){if(options.fail)throw Error("private error");writes.push(text);if(options.delayed)await pending}}})})
  return {...f,input,writes,releaseWrite:release}
 }
-test("K01/K04: API Key exports only its selected substring then deletes natively after successful write",async()=>{
+test("K01/K04: masked API Key rejects copy/cut before any clipboard write; plaintext uses the ordinary native path",async()=>{
  const f=keyFixture()
- try{await f.run("text.copy");assert.deepEqual(f.writes,["稿"]);assert.deepEqual(f.doc.calls,[]);await f.run("text.cut");assert.deepEqual(f.doc.calls,[["delete",undefined]]);assert.equal(f.input.type,"password")}finally{f.adapter.dispose()}
-})
-test("K06/K08: a failed API Key clipboard write never deletes or exposes the native error",async()=>{
- const f=keyFixture({fail:true})
- try{await assert.rejects(f.run("text.cut"),error=>error instanceof Error&&/无法写入/.test(error.message)&&!error.message.includes("private error"));assert.deepEqual(f.doc.calls,[])}finally{f.adapter.dispose()}
-})
-for(const change of ["focus-return","selection","text","composition","dispose","readonly","new-operation","marker"] as const)test(`K06: pending API Key cut cannot cross ${change}`,async()=>{
- const f=keyFixture({delayed:true})
  try{
-  const pending=f.run("text.cut"),rejected=assert.rejects(pending,/输入目标/)
-  if(change==="focus-return"){f.doc.activeElement={};f.doc.dispatchEvent(new Event("focusin"));f.doc.activeElement=f.input;f.doc.dispatchEvent(new Event("focusin"))}
-  if(change==="selection")f.input.selectionStart=0
-  if(change==="text")f.input.value="changed"
-  if(change==="composition")f.doc.dispatchEvent(new Event("compositionstart"))
-  if(change==="dispose")f.adapter.dispose()
-  if(change==="readonly")f.input.readOnly=true
-  if(change==="new-operation")await f.run("text.undo")
-  if(change==="marker")f.input.getAttribute=()=>null
-  f.releaseWrite();await rejected;assert.ok(!f.doc.calls.some(call=>(call as string[])[0]==="delete"))
+  await assert.rejects(f.run("text.copy"),/输入目标/);await assert.rejects(f.run("text.cut"),/输入目标/)
+  assert.deepEqual(f.writes,[]);assert.deepEqual(f.doc.calls,[]);assert.equal(f.input.type,"password")
+  f.input.type="text"
+  await f.run("text.copy");assert.deepEqual(f.doc.calls,[["copy",undefined]])
+  await f.run("text.cut");assert.deepEqual(f.doc.calls,[["copy",undefined],["cut",undefined]])
+  assert.deepEqual(f.writes,[])
  }finally{f.adapter.dispose()}
+})
+test("K06/K08: a masked API Key never reaches the clipboard bridge, even when the write would fail",async()=>{
+ const f=keyFixture({fail:true})
+ try{await assert.rejects(f.run("text.cut"),/输入目标/);assert.deepEqual(f.writes,[]);assert.deepEqual(f.doc.calls,[])}finally{f.adapter.dispose()}
+})
+test("K02: masked API Key paste still applies clipboard text natively and keeps the field masked",async()=>{
+ const f=keyFixture()
+ try{const pending=f.run("text.paste");assert.deepEqual(f.doc.calls,[]);f.release("粘贴夹具");await pending;assert.deepEqual(f.doc.calls,[["insertText","粘贴夹具"]]);assert.equal(f.input.type,"password")}finally{f.adapter.dispose()}
 })

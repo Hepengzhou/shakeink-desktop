@@ -1,0 +1,149 @@
+[
+  {
+    "provider": "openai",
+    "kind": "TEXT",
+    "id": "gpt-6.1-sol",
+    "source": "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "provider": "openai",
+    "kind": "TEXT",
+    "id": "gpt-5.6-sol",
+    "source": "https://developers.openai.com/api/docs/models/gpt-5.6-sol",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "provider": "openai",
+    "kind": "IMAGE",
+    "id": "gpt-image-2.5-sunburst",
+    "source": "https://developers.openai.com/api/docs/models/gpt-image-2.5-sunburst",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "provider": "anthropic",
+    "kind": "TEXT",
+    "id": "claude-opus-5-5",
+    "source": "https://platform.claude.com/docs/en/models/overview",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "provider": "anthropic",
+    "kind": "TEXT",
+    "id": "claude-sonnet-5-5",
+    "source": "https://platform.claude.com/docs/en/models/overview",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "provider": "deepseek",
+    "kind": "TEXT",
+    "id": "deepseek-flash",
+    "source": "https://api-docs.deepseek.com/quick_start/pricing/",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "provider": "deepseek",
+    "kind": "TEXT",
+    "id": "deepseek-v4-pro",
+    "source": "https://api-docs.deepseek.com/quick_start/pricing/",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "provider": "moonshot",
+    "kind": "TEXT",
+    "id": "kimi-k3",
+    "source": "https://platform.kimi.com/docs/openapi.json",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "provider": "minimax",
+    "kind": "TEXT",
+    "id": "MiniMax-M3",
+    "source": "https://platform.minimax.cn/docs/api-reference/text-openai-api",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "provider": "minimax",
+    "kind": "TEXT",
+    "id": "MiniMax-M2.7",
+    "source": "https://platform.minimax.cn/docs/api-reference/text-openai-api",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "provider": "xiaomi",
+    "kind": "TEXT",
+    "id": "mimo-v2.6-flash",
+    "source": "https://mimo.mi.com/docs/en-US/api/model/list-models",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "provider": "xiaomi",
+    "kind": "TEXT",
+    "id": "mimo-v2.6-pro",
+    "source": "https://mimo.mi.com/docs/en-US/api/model/list-models",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "provider": "google",
+    "kind": "TEXT",
+    "id": "gemini-3.8-flash",
+    "source": "https://ai.google.dev/gemini-api/docs/models",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "provider": "xai",
+    "kind": "TEXT",
+    "id": "grok-4.7",
+    "source": "https://docs.x.ai/developers/models/grok-4.7",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "provider": "alibaba",
+    "kind": "TEXT",
+    "id": "qwen3.8-max",
+    "source": "https://help.aliyun.com/zh/model-studio/text-generation-model",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "provider": "alibaba",
+    "kind": "TEXT",
+    "id": "qwen3.7-plus",
+    "source": "https://help.aliyun.com/zh/model-studio/text-generation-model",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "provider": "tencent",
+    "kind": "TEXT",
+    "id": "hy3",
+    "source": "https://cloud.tencent.com/document/product/1823/130051",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "provider": "tencent",
+    "kind": "TEXT",
+    "id": "hy4-preview",
+    "source": "https://cloud.tencent.com/document/product/1823/130051",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "provider": "bytedance",
+    "kind": "TEXT",
+    "id": "doubao-seed-2-1-pro-260915",
+    "source": "https://docs.volcengine.com/docs/ark/deep-thinking?lang=zh",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "provider": "bytedance",
+    "kind": "IMAGE",
+    "id": "doubao-seedream-5-0-pro-260628",
+    "source": "https://docs.volcengine.com/docs/82379/1824121",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "provider": "bytedance",
+    "kind": "IMAGE",
+    "id": "doubao-seedream-5-0-flash-260915",
+    "source": "https://docs.volcengine.com/docs/82379/1824121",
+    "checkedAt": "2026-10-15"
+  }
+]

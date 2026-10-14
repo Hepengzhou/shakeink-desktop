@@ -17,7 +17,7 @@ type Props = Record<string, unknown>
 interface Element { type: string | ((props: Props) => unknown); props: Props }
 interface Hook { value?: unknown; deps?: unknown[]; cleanup?: (() => void) | void }
 interface Surface { element: Element; disabled: boolean; name: string; children: Surface[]; focus(): void }
-const sample = (change: Partial<PublicModel> = {}): PublicModel => ({ id:"00000000-0000-4000-8000-000000000001", name:"已保存模型", provider:"openai", protocol:"openai", endpoint:"https://api.openai.com/v1", modelId:"gpt-owned", kind:"TEXT", contextWindow:16000, enabled:true, authRevision:1, keyMask:"••••••••", thinkingLevels:["low","high"], defaultThinking:"high", ...change })
+const sample = (change: Partial<PublicModel> = {}): PublicModel => ({ id:"00000000-0000-4000-8000-000000000001", name:"已保存模型", provider:"openai", protocol:"openai", endpoint:"https://api.openai.com/v1", modelId:"gpt-6.1-sol", kind:"TEXT", contextWindow:16000, enabled:true, authRevision:1, keyMask:"••••••••", thinkingLevels:["low","high"], defaultThinking:"high", ...change })
 function text(value: unknown): string {
   if (Array.isArray(value)) return value.map(text).join("")
   if (value && typeof value === "object" && "props" in value) return text((value as Element).props.children)
@@ -91,7 +91,7 @@ function component(file: string, exported: string, initial: Props, dependencies:
     finish(){mounted=false;for(const hook of hooks)hook.cleanup?.();surfaces=[]},
   }
 }
-function configuration(options:{model?:PublicModel;kind?:"TEXT"|"IMAGE";models?:PublicModel[];write?:(draft:unknown)=>Promise<unknown>;discover?:(draft:catalog.ConfigurationDraft)=>Promise<unknown>;test?:(draft:catalog.ConfigurationDraft)=>Promise<unknown>}={}){
+function configuration(options:{model?:PublicModel;kind?:"TEXT"|"IMAGE";models?:PublicModel[];write?:(draft:unknown)=>Promise<unknown>;discover?:(draft:catalog.ConfigurationDraft)=>Promise<unknown>;test?:(draft:catalog.ConfigurationDraft)=>Promise<unknown>;read?:(scope:catalog.CatalogScope)=>Promise<unknown>;reveal?:(id:string)=>Promise<string>}={}){
   const writes:unknown[]=[],tested:catalog.ConfigurationDraft[]=[],discovered:catalog.ConfigurationDraft[]=[],canceled:string[]=[]
   let closed=0
   const savedWindow=Object.getOwnPropertyDescriptor(globalThis,"window")
@@ -99,19 +99,21 @@ function configuration(options:{model?:PublicModel;kind?:"TEXT"|"IMAGE";models?:
     async discoverModels(_id:string,draft:catalog.ConfigurationDraft){discovered.push(structuredClone(draft));return await options.discover?.(draft)},
     async testModel(_id:string,draft:catalog.ConfigurationDraft){tested.push(structuredClone(draft));return await options.test?.(draft)},
     async cancelModelConfiguration(id:string){canceled.push(id)},
+    ...(options.read ? {readModelCatalog: options.read} : {}),
+    ...(options.reveal ? {revealModelKey: options.reveal} : {}),
   }}})
   const models=options.models??(options.model?[options.model]:[])
   const ui=component("ModelConfigurationDialog","ModelConfigurationDialog",{kind:options.kind??"TEXT",model:options.model,onClose:()=>{closed++;ui.finish()}},{"@/stores/desktop":{useDesktopStore:(select:(state:unknown)=>unknown)=>select({bootstrap:{models}}),saveDesktopModel:async(draft:unknown)=>{writes.push(structuredClone(draft));return await options.write?.(draft)}}})
   return {...ui,writes,tested,discovered,canceled,closed:()=>closed,finish(){ui.finish();if(savedWindow)Object.defineProperty(globalThis,"window",savedWindow);else Reflect.deleteProperty(globalThis,"window")}}
 }
 
-for(const kind of ["TEXT","IMAGE"] as const)for(const preset of catalog.presetsFor(kind).filter(p=>p.id!=="custom"))test(`D01/D02: ${preset.id} ${kind} shows selectable builtin models without a Key or network`,async()=>{
+for(const kind of ["TEXT","IMAGE"] as const)for(const preset of catalog.presetsFor(kind).filter(p=>p.id!=="custom"))test(`D01/D02: ${preset.id} ${kind} shows only verified builtin models without a Key or network`,async()=>{
   const ui=configuration({kind})
   try{
     ui.choose("供应商",preset.id)
     const select=ui.find("可用模型"),options=select.element.props.options as Array<{id:string;disabled?:boolean}>
     assert.equal(select.disabled,false)
-    assert.ok(options.length>0,`${preset.id} has a public ${kind} catalog`)
+    if (!options.length) { assert.equal(preset.id,"zai"); ui.open("可用模型"); await ui.settle(); assert.equal(ui.discovered.length,0); return }
     const choice=options.find(option=>!option.disabled)!;assert.ok(choice)
     ui.open("可用模型");await ui.settle();ui.choose("可用模型",choice.id)
     assert.equal(ui.find("可用模型").element.props.value,choice.id)
@@ -159,22 +161,89 @@ for(const code of ["AUTHENTICATION_FAILED","NETWORK_ERROR"] as const)test(`D06: 
     assert.deepEqual((ui.writes[0] as {thinkingLevels:string[]}).thinkingLevels,["high"])
   }finally{ui.finish()}
 })
-test("D07: authenticated subscription enablement is revoked on Key change and cannot be saved by a retained selection",async()=>{
+test("MC-07: authenticated subscription enablement is revoked on Key change and cannot be saved by a retained selection",async()=>{
   const ui=configuration({discover:async()=>({ok:true,provider:"minimax",kind:"TEXT",models:[{id:"MiniMax-M3.1-Flash-Preview",name:"Preview",kind:"TEXT",available:true,permission:"listed-unverified",source:"fixture"}],complete:true,unknownCapabilityIds:[],permission:"listed-unverified",sources:[],checkedAt:new Date().toISOString(),warnings:[]})})
   try{
     ui.choose("供应商","minimax");ui.fill("API Key","public-subscribed-fixture");ui.open("可用模型");await ui.settle()
     ui.choose("可用模型","MiniMax-M3.1-Flash-Preview")
     ui.fill("API Key","public-ordinary-fixture")
-    assert.equal((ui.find("可用模型").element.props.options as Array<{id:string;disabled:boolean}>).find(row=>row.id==="MiniMax-M3.1-Flash-Preview")?.disabled,true)
+    assert.equal((ui.find("可用模型").element.props.options as Array<{id:string}>).some(row=>row.id==="MiniMax-M3.1-Flash-Preview"),false)
     ui.click("保存模型");await ui.settle();assert.equal(ui.writes.length,0);assert.equal(ui.closed(),0)
   }finally{ui.finish()}
 })
-test("D07: saved retired selection stays visible and disabled while blank-Key metadata edits retain the existing configuration",async()=>{
+test("MC-09: saved retired selection is absent and cannot bypass blank-Key save validation",async()=>{
   const ui=configuration({model:sample({modelId:"chatgpt-4o-latest"})})
   try{
     assert.equal(ui.find("可用模型").element.props.value,"chatgpt-4o-latest")
-    assert.equal((ui.find("可用模型").element.props.options as Array<{id:string;disabled:boolean}>).find(row=>row.id==="chatgpt-4o-latest")?.disabled,true)
-    ui.click("保存模型");await ui.settle();assert.equal((ui.writes[0] as {apiKey:string}).apiKey,"")
+    assert.equal((ui.find("可用模型").element.props.options as Array<{id:string}>).some(row=>row.id==="chatgpt-4o-latest"),false)
+    ui.click("保存模型");await ui.settle();assert.equal(ui.writes.length,0);assert.equal(ui.closed(),0)
+  }finally{ui.finish()}
+})
+
+const mcCatalog=(models:catalog.CatalogEntry[],extra:Partial<catalog.CatalogResult>={}):catalog.CatalogResult=>({ok:true,provider:"deepseek",kind:"TEXT",models,authoritative:true,complete:true,unknownCapabilityIds:[],permission:"listed-unverified",sources:[],checkedAt:"2026-10-15T00:00:00Z",warnings:[],...extra})
+const mcEntry=(id:string):catalog.CatalogEntry=>({id,name:id,kind:"TEXT",permission:"listed-unverified",source:"https://fixture.invalid/models",contextWindow:16000})
+test("MC-09: live replacement clears missing draft selection and blocks save/test without writing model",async()=>{
+  const ui=configuration({discover:async()=>mcCatalog([mcEntry("deepseek-v4-pro")])})
+  try{
+    ui.choose("可用模型","deepseek-flash");ui.fill("API Key","public-catalog-ui-fixture");ui.click("刷新模型列表");await ui.settle()
+    assert.equal(ui.find("可用模型").element.props.value,"")
+    assert.deepEqual((ui.find("可用模型").element.props.options as Array<{id:string}>).map(row=>row.id),["deepseek-v4-pro"])
+    ui.click("保存模型");ui.click("测试连接");await ui.settle();assert.equal(ui.writes.length,0);assert.equal(ui.tested.length,0)
+    ui.choose("可用模型","deepseek-v4-pro");ui.click("保存模型");await ui.settle();assert.equal(ui.writes.length,1);assert.equal((ui.writes[0] as {modelId:string}).modelId,"deepseek-v4-pro")
+  }finally{ui.finish()}
+})
+test("MC-10: pending cache hides old seeds; persisted snapshot without a Key clears missing saved model",async()=>{
+  const gate=deferred<catalog.CatalogResult>(),ui=configuration({model:sample({provider:"deepseek",endpoint:"https://api.deepseek.com",modelId:"deepseek-flash"}),read:()=>gate.promise})
+  try{
+    assert.deepEqual(ui.find("可用模型").element.props.options,[])
+    ui.click("保存模型");await ui.settle();assert.equal(ui.writes.length,0)
+    gate.resolve(mcCatalog([mcEntry("deepseek-v4-pro")]));await ui.settle()
+    assert.equal(ui.find("API Key").element.props.value,"");assert.equal(ui.find("可用模型").element.props.value,"")
+    assert.deepEqual((ui.find("可用模型").element.props.options as Array<{id:string}>).map(m=>m.id),["deepseek-v4-pro"])
+  }finally{ui.finish()}
+})
+test("MC-10: failed cache blocks seed fallback; failed or incomplete refresh keeps confirmed directory",async()=>{
+  let attempts=0
+  const ui=configuration({read:async()=>({ok:false,code:"CATALOG_READ_FAILED",message:"本地目录损坏"}),discover:async()=>++attempts===1?mcCatalog([mcEntry("deepseek-v4-pro")]):attempts===2?{ok:false,code:"AUTHENTICATION_FAILED",message:"Key被拒绝"}:mcCatalog([],{authoritative:false,complete:false})})
+  try{
+    await ui.settle();assert.deepEqual(ui.find("可用模型").element.props.options,[])
+    ui.fill("API Key","public-catalog-ui-fixture");ui.click("刷新模型列表");await ui.settle();ui.choose("可用模型","deepseek-v4-pro")
+    for(let n=0;n<2;n++){ui.click("刷新模型列表");await ui.settle();assert.deepEqual((ui.find("可用模型").element.props.options as Array<{id:string}>).map(m=>m.id),["deepseek-v4-pro"]);assert.equal(ui.find("可用模型").element.props.value,"deepseek-v4-pro")}
+  }finally{ui.finish()}
+})
+test("MC-10: provider switch and reverse cache/refresh responses cannot restore outdated candidates",async()=>{
+  const gate=deferred<catalog.CatalogResult>(),ui=configuration({read:scope=>scope.provider==="deepseek"?gate.promise:Promise.resolve(null),discover:async()=>mcCatalog([mcEntry("deepseek-v4-pro")])})
+  try{
+    ui.fill("API Key","public-catalog-ui-fixture");ui.click("刷新模型列表");await ui.settle()
+    gate.resolve(mcCatalog([mcEntry("deepseek-flash")]));await ui.settle()
+    assert.deepEqual((ui.find("可用模型").element.props.options as Array<{id:string}>).map(m=>m.id),["deepseek-v4-pro"])
+    ui.choose("供应商","openai");await ui.settle();assert.ok(!(ui.find("可用模型").element.props.options as Array<{id:string}>).some(m=>m.id.startsWith("deepseek")))
+  }finally{ui.finish()}
+})
+test("MC-10/11: Key changes preserve refreshed existence; cancel never saves drafts or Keys",async()=>{
+  const ui=configuration({discover:async()=>mcCatalog([mcEntry("deepseek-v4-pro")])})
+  try{
+    ui.fill("API Key","public-catalog-ui-fixture");ui.click("刷新模型列表");await ui.settle();ui.fill("API Key","")
+    assert.deepEqual((ui.find("可用模型").element.props.options as Array<{id:string}>).map(m=>m.id),["deepseek-v4-pro"])
+    ui.click("取消");assert.equal(ui.writes.length,0)
+  }finally{ui.finish()}
+})
+test("MC-10: mounted dialog reopen discards older live catalog while a new disk snapshot loads",async()=>{
+  const reopened=deferred<catalog.CatalogResult>();let reads=0
+  const ui=configuration({read:async()=>++reads===1?null:reopened.promise,discover:async()=>mcCatalog([mcEntry("deepseek-flash")])})
+  try{
+    await ui.settle();ui.fill("API Key","public-catalog-ui-fixture");ui.click("刷新模型列表");await ui.settle()
+    ui.setProps({kind:"TEXT",open:false,onClose:()=>{}});ui.setProps({kind:"TEXT",open:true,onClose:()=>{}})
+    assert.deepEqual(ui.find("可用模型").element.props.options,[])
+    reopened.resolve(mcCatalog([mcEntry("deepseek-v4-pro")]));await ui.settle()
+    assert.deepEqual((ui.find("可用模型").element.props.options as Array<{id:string}>).map(m=>m.id),["deepseek-v4-pro"])
+  }finally{ui.finish()}
+})
+test("MC-11: custom provider remains manual single-model configuration",async()=>{
+  const ui=configuration({read:async()=>null})
+  try{
+    ui.choose("供应商","custom");ui.fill("供应商名称","公开夹具");ui.choose("协议","openai");ui.fill("Base URL","https://fixture.invalid/v1");ui.fill("模型 ID","fixture-model");ui.fill("展示名称","夹具型号");ui.fill("API Key","public-catalog-ui-fixture")
+    ui.click("保存模型");await ui.settle();assert.equal(ui.writes.length,1);assert.equal((ui.writes[0] as {modelId:string}).modelId,"fixture-model");assert.equal(ui.discovered.length,0)
   }finally{ui.finish()}
 })
 
@@ -189,10 +258,18 @@ test("model configuration: failed save cancels discovery and restores a usable r
   }finally{ui.finish();discovery.resolve({ok:true,provider:"openai",kind:"TEXT",models:[],complete:true,unknownCapabilityIds:[],permission:"unknown",sources:[],checkedAt:new Date().toISOString(),warnings:[]})}
 })
 
-test("model configuration: keys are never refilled and scope edits remain uncommitted drafts",async()=>{
-  const ui=configuration({model:sample()})
+test("model configuration: saved Key refills masked, the eye toggles plaintext, and scope edits clear it",async()=>{
+  const ui=configuration({model:sample(),reveal:async()=>"saved-key-fixture"})
   try{
-    assert.equal(ui.find("API Key").element.props.value,"");assert.equal(ui.find("API Key").element.props.type,"password")
+    await ui.settle()
+    assert.equal(ui.find("API Key").element.props.value,"saved-key-fixture");assert.equal(ui.find("API Key").element.props.type,"password")
+    const toggle=ui.find("显示 API Key");assert.equal(toggle.element.props["aria-pressed"],false)
+    assert.match(String(toggle.element.props.className),/transition-none/,"The eye icon swaps instantly without transition animation")
+    assert.match(String(toggle.element.props.className),/translate-y-0/,"The eye button skips the press-down shift")
+    ui.click("显示 API Key")
+    assert.equal(ui.find("API Key").element.props.type,"text");assert.equal(ui.find("API Key").element.props.value,"saved-key-fixture")
+    assert.equal(ui.find("隐藏 API Key").element.props["aria-pressed"],true)
+    ui.click("隐藏 API Key");assert.equal(ui.find("API Key").element.props.type,"password");assert.equal(ui.find("API Key").element.props.value,"saved-key-fixture")
     ui.fill("API Key","key-scope-fixture");ui.choose("供应商","custom")
     assert.equal(ui.find("API Key").element.props.value,"");ui.fill("供应商名称","本地服务");ui.choose("协议","openai")
     ui.fill("API Key","key-scope-fixture");ui.fill("Base URL","https://provider.invalid/v1")
@@ -203,6 +280,54 @@ test("model configuration: keys are never refilled and scope edits remain uncomm
   }finally{ui.finish()}
 })
 
+test("model configuration: an untouched refilled Key keeps the stored credential for save and test",async()=>{
+  const ui=configuration({model:sample(),reveal:async()=>"saved-key-fixture",test:async()=>({ok:true,modelId:"gpt-6.1-sol",kind:"TEXT",verifiedAt:new Date().toISOString(),durationMs:100,scope:"single-model"})})
+  try{
+    await ui.settle();assert.equal(ui.find("API Key").element.props.value,"saved-key-fixture")
+    ui.click("测试连接");await ui.settle()
+    assert.equal(ui.tested.length,1);assert.equal(ui.tested[0].apiKey,"","An unchanged refill falls back to the stored credential instead of resubmitting it")
+    ui.click("返回配置")
+    ui.fill("API Key","");ui.fill("API Key","saved-key-fixture")
+    ui.click("保存模型");await ui.settle()
+    assert.equal(ui.writes.length,1);assert.equal((ui.writes[0] as {apiKey:string}).apiKey,"","A value identical to the revealed Key counts as unmodified");assert.equal(ui.closed(),1)
+  }finally{ui.finish()}
+})
+
+test("model configuration: editing a refilled Key submits only the replacement",async()=>{
+  const ui=configuration({model:sample(),reveal:async()=>"saved-key-fixture"})
+  try{
+    await ui.settle();ui.fill("API Key","replacement-key-fixture")
+    ui.click("保存模型");await ui.settle()
+    assert.equal(ui.writes.length,1);assert.equal((ui.writes[0] as {apiKey:string}).apiKey,"replacement-key-fixture");assert.equal(ui.closed(),1)
+  }finally{ui.finish()}
+})
+
+test("model configuration: failed reveal keeps the field empty and masked with keep-on-blank semantics",async()=>{
+  const ui=configuration({model:sample(),reveal:async()=>{throw new Error("系统密钥解密失败，请重新配置此模型")}})
+  try{
+    await ui.settle()
+    assert.equal(ui.find("API Key").element.props.value,"");assert.equal(ui.find("API Key").element.props.type,"password")
+    assert.equal(ui.find("API Key").element.props.placeholder,"已配置，留空保留原密钥")
+    ui.click("保存模型");await ui.settle()
+    assert.equal(ui.writes.length,1);assert.equal((ui.writes[0] as {apiKey:string}).apiKey,"");assert.equal(ui.closed(),1)
+  }finally{ui.finish()}
+})
+
+test("model configuration: a late reveal never overwrites typed input or a changed scope",async()=>{
+  const gate=deferred<string>(),ui=configuration({model:sample(),reveal:()=>gate.promise})
+  try{
+    ui.fill("API Key","typed-first-fixture")
+    gate.resolve("saved-key-fixture");await ui.settle()
+    assert.equal(ui.find("API Key").element.props.value,"typed-first-fixture")
+  }finally{ui.finish()}
+  const scopeGate=deferred<string>(),scoped=configuration({model:sample(),reveal:()=>scopeGate.promise})
+  try{
+    scoped.choose("供应商","custom")
+    scopeGate.resolve("saved-key-fixture");await scoped.settle()
+    assert.equal(scoped.find("API Key").element.props.value,"","A Key revealed for the old scope must not land on a changed scope")
+  }finally{scoped.finish()}
+})
+
 test("model configuration: a direct test freezes fields, rejects repeats, cancels and ignores late replies",async()=>{
   const response=deferred<catalog.ConnectionTestResult>(),ui=configuration({model:sample(),test:()=>response.promise})
   try{
@@ -211,17 +336,17 @@ test("model configuration: a direct test freezes fields, rejects repeats, cancel
     for(const label of ["供应商","API Key","可用模型","保存模型"])assert.equal(ui.find(label).disabled,true,label)
     ui.click("测试中…");assert.equal(ui.tested.length,1);assert.equal(ui.find("取消").disabled,false)
     ui.click("取消");assert.equal(ui.closed(),1);assert.equal(ui.canceled.length,1)
-    response.resolve({ok:true,modelId:"gpt-owned",kind:"TEXT",verifiedAt:new Date().toISOString(),durationMs:100,scope:"single-model"});await ui.settle()
+    response.resolve({ok:true,modelId:"gpt-6.1-sol",kind:"TEXT",verifiedAt:new Date().toISOString(),durationMs:100,scope:"single-model"});await ui.settle()
     assert.equal(ui.dialog("连接测试结果"),undefined);assert.equal(ui.writes.length,0)
   }finally{ui.finish()}
 })
 
 test("model configuration: result identifies the tested model and endpoint and returns the unchanged Key draft",async()=>{
-  const ui=configuration({model:sample(),test:async()=>({ok:true,modelId:"gpt-owned",kind:"TEXT",verifiedAt:new Date().toISOString(),durationMs:100,scope:"single-model"})})
+  const ui=configuration({model:sample(),test:async()=>({ok:true,modelId:"gpt-6.1-sol",kind:"TEXT",verifiedAt:new Date().toISOString(),durationMs:100,scope:"single-model"})})
   try{
     ui.fill("API Key","key-result-fixture");ui.click("测试连接");await ui.settle()
     const result=ui.dialog("连接测试结果")!;assert.ok(result)
-    assert.match(result.name,/gpt-owned/);assert.match(result.name,/https:\/\/api\.openai\.com\/v1/);assert.doesNotMatch(result.name,/key-result-fixture/)
+    assert.match(result.name,/gpt-6.1-sol/);assert.match(result.name,/https:\/\/api\.openai\.com\/v1/);assert.doesNotMatch(result.name,/key-result-fixture/)
     ui.click("返回配置");assert.equal(ui.dialog("连接测试结果"),undefined);assert.equal(ui.find("API Key").element.props.value,"key-result-fixture");assert.equal(ui.writes.length,0)
   }finally{ui.finish()}
 })
@@ -302,16 +427,15 @@ test("model configuration: catalog choices replace one draft, disable duplicates
   }finally{image.finish()}
 })
 
-test("B01/B21: builtin defaults hide protocol/address and show permission warnings without enabling subscription-only choices",async()=>{
+test("MC-05/B01/B21: builtin defaults hide protocol/address and do not enable unavailable subscription choices",async()=>{
   const ui=configuration({discover:async()=>({ok:true,provider:"minimax",kind:"TEXT",models:[{id:"MiniMax-M3.1-Flash-Preview",name:"Preview",kind:"TEXT",permission:"unknown",source:"official",available:false,notes:["仅订阅可用"]}],complete:false,unknownCapabilityIds:[],permission:"listed-unverified",sources:["official"],checkedAt:new Date().toISOString(),warnings:["仅订阅可用"]})})
   try {
     ui.choose("供应商","minimax"); assert.equal(ui.query("协议"),undefined); assert.equal(ui.query("Base URL"),undefined)
     ui.fill("API Key","public-fixture");ui.open("可用模型");await ui.settle()
     const options=ui.find("可用模型").element.props.options as Array<{id:string;disabled:boolean;hint:string}>
-    const restricted=options.find(option=>option.id==="MiniMax-M3.1-Flash-Preview")!
-    assert.equal(restricted.disabled,true);assert.ok(restricted.hint.includes("仅订阅"))
-    ui.choose("可用模型",restricted.id);assert.equal(ui.find("可用模型").element.props.value,"")
-    assert.ok(ui.all().some(s=>s.element.props.role==="status"&&s.name==="仅订阅可用"))
+    assert.equal(options.some(option=>option.id==="MiniMax-M3.1-Flash-Preview"),false)
+    assert.equal(ui.find("可用模型").element.props.value,"")
+    assert.ok(ui.all().some(s=>s.element.props.role==="status"&&s.name.includes("已保留原目录")))
     assert.equal(ui.writes.length,0)
   } finally {ui.finish()}
 })

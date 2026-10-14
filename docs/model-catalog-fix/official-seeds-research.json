@@ -1,0 +1,26 @@
+{
+  "checkedAt": "2026-10-15",
+  "timezone": "Asia/Shanghai",
+  "purpose": "保守预设候选研究证据，不代表账户授权或实际付费调用成功",
+  "providers": [
+    {"provider": "openai", "kind": "TEXT", "ids": ["gpt-6.1-sol", "gpt-5.6-sol"], "sources": ["https://developers.openai.com/api/docs/models/gpt-6.1-sol", "https://developers.openai.com/api/docs/models/gpt-5.6-sol"], "evidence": "实际获取官方模型页及精确 API ID"},
+    {"provider": "openai", "kind": "IMAGE", "ids": ["gpt-image-2.5-sunburst"], "sources": ["https://developers.openai.com/api/docs/models/gpt-image-2.5-sunburst", "https://developers.openai.com/api/docs/guides/image-generation"], "evidence": "官方模型页与 Image API 文生图调用示例"},
+    {"provider": "anthropic", "kind": "TEXT", "ids": ["claude-opus-5-5", "claude-sonnet-5-5"], "sources": ["https://platform.claude.com/docs/en/models/overview", "https://platform.claude.com/docs/en/about-claude/model-deprecations"], "evidence": "Claude API ID 表和 Active 状态"},
+    {"provider": "deepseek", "kind": "TEXT", "ids": ["deepseek-flash", "deepseek-v4-pro"], "sources": ["https://api-docs.deepseek.com/quick_start/pricing/"], "evidence": "官方 Models & Pricing 当前精确 API ID"},
+    {"provider": "moonshot", "kind": "TEXT", "ids": ["kimi-k3"], "sources": ["https://platform.kimi.com/docs/openapi.json"], "evidence": "KimiK3ChatRequest model enum/default"},
+    {"provider": "zai", "kind": "TEXT", "ids": [], "sources": ["https://docs.bigmodel.cn/cn/guide/start/model-overview"], "evidence": "本轮直接来源多次超时，保守不设置未经端点核实的种子"},
+    {"provider": "minimax", "kind": "TEXT", "ids": ["MiniMax-M3", "MiniMax-M2.7"], "sources": ["https://platform.minimax.cn/docs/api-reference/text-openai-api"], "evidence": "OpenAI SDK 支持模型表"},
+    {"provider": "xiaomi", "kind": "TEXT", "ids": ["mimo-v2.6-flash", "mimo-v2.6-pro"], "sources": ["https://mimo.mi.com/docs/en-US/api/model/list-models"], "evidence": "官方 List models 返回示例"},
+    {"provider": "google", "kind": "TEXT", "ids": ["gemini-3.8-flash"], "sources": ["https://ai.google.dev/gemini-api/docs/models"], "evidence": "All Gemini 3 models Endpoint 表"},
+    {"provider": "xai", "kind": "TEXT", "ids": ["grok-4.7"], "sources": ["https://docs.x.ai/developers/models/grok-4.7"], "evidence": "官方精确模型名与 Text 输出类别"},
+    {"provider": "alibaba", "kind": "TEXT", "ids": ["qwen3.8-max", "qwen3.7-plus"], "sources": ["https://help.aliyun.com/zh/model-studio/text-generation-model"], "evidence": "当前推荐文本生成模型表"},
+    {"provider": "tencent", "kind": "TEXT", "ids": ["hy3", "hy4-preview"], "sources": ["https://cloud.tencent.com/document/product/1823/130051"], "evidence": "2026-10-13 官方语言模型总表"},
+    {"provider": "bytedance", "kind": "TEXT", "ids": ["doubao-seed-2-1-pro-260915"], "sources": ["https://docs.volcengine.com/docs/ark/deep-thinking?lang=zh"], "evidence": "实际读取官方深度思考 Chat API 示例"},
+    {"provider": "bytedance", "kind": "IMAGE", "ids": ["doubao-seedream-5-0-pro-260628", "doubao-seedream-5-0-flash-260915"], "sources": ["https://docs.volcengine.com/docs/82379/1824121", "https://docs.volcengine.com/docs/ark/seedream-4-0-5-0?lang=zh"], "evidence": "通过官方 numeric 别名实际读取完整图片生成教程，模型能力表文生图为支持"}
+  ],
+  "retirements": [
+    {"provider": "tencent", "id": "qwen3.5-flash", "shutdownDate": "2026-09-08", "source": "https://cloud.tencent.com/document/product/1823/130051"},
+    {"provider": "tencent", "id": "qwen3.5-plus", "shutdownDate": "2026-09-08", "source": "https://cloud.tencent.com/document/product/1823/130051"},
+    {"provider": "tencent", "id": "glm-5v-turbo", "shutdownDate": "2026-10-30", "source": "https://cloud.tencent.com/document/product/1823/130051", "note": "本日尚未下线，未来边界仅通过显式时钟参数测试"}
+  ]
+}

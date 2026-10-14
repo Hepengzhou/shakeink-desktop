@@ -49,7 +49,9 @@ export interface DesktopBridge extends FileExportBridge {
   settings(action: SettingsAction): Promise<StateSnapshot>
   onboarding(action: import("./onboarding").OnboardingAction): Promise<StateSnapshot>
   discoverModels(operationId: string, draft: ConfigurationDraft): Promise<CatalogResult | ConfigurationFailure>
+  readModelCatalog(scope: import("./model-catalog").CatalogScope): Promise<CatalogResult | ConfigurationFailure | null>
   testModel(operationId: string, draft: ConfigurationDraft): Promise<ConnectionTestResult | ConfigurationFailure>
+  revealModelKey(id: string): Promise<string>
   cancelModelConfiguration(operationId: string): Promise<void>
   chooseAvatar(sessionId: string, acceptedDraftId?: string | null): Promise<AvatarDraft | null>
   cancelAvatar(sessionId: string): Promise<void>

@@ -18,7 +18,7 @@ import { applicationDraftRetentionSchema, APPLICATION_DRAFT_RETENTION_LIMITS } f
 export const APPLICATION_COLD_SOURCE_LIMITS = { ...APPLICATION_BACKUP_LIMITS, entries: APPLICATION_BACKUP_LIMITS.files + APPLICATION_BACKUP_LIMITS.directories + 1024 } as const;
 export const APPLICATION_COLD_SOURCE_RECEIPT_NAME = 'xuanxiang-application-closed-source.json';
 const receiptName = APPLICATION_COLD_SOURCE_RECEIPT_NAME;
-const fixedPaths = [...BRAND_NAMES.map(names=>names.appMarker), 'catalog.json', 'state.json', 'drafts.json', 'backup-plan.json', 'restore-draft-barrier.json', 'application-restore-drafts.json', 'assets', 'assets/global', 'inbox', 'inbox/database', 'inbox/database/PG_VERSION', 'inbox/snapshots', 'session'] as const;
+const fixedPaths = [...BRAND_NAMES.map(names=>names.appMarker), 'catalog.json', 'state.json', 'model-catalogs.json', 'drafts.json', 'backup-plan.json', 'restore-draft-barrier.json', 'application-restore-drafts.json', 'assets', 'assets/global', 'inbox', 'inbox/database', 'inbox/database/PG_VERSION', 'inbox/snapshots', 'session'] as const;
 const decimal = z.string().regex(/^\d+$/);
 const versionSchema = z.object({ device: decimal, inode: decimal, size: decimal, mtimeNs: decimal, ctimeNs: decimal, mode: decimal, nlink: decimal }).strict();
 const directorySchema = z.object({ path: z.string().refine(safeRelative), identity: rootIdentitySchema }).strict();

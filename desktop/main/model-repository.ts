@@ -65,6 +65,15 @@ export class ModelRepository {
     try { return this.protection.decryptString(Buffer.from(model.encryptedKey, "base64")) }
     catch { throw new Error("系统密钥解密失败，请重新配置此模型") }
   }
+  /** Editor reveal: any saved model may show its own Key, enabled or not. */
+  async revealKey(id: string): Promise<string> {
+    const state = await this.store.read()
+    const model = state.value.models.find(item => item.id === id)
+    if (!model) throw new Error("模型不存在，请重新读取")
+    this.assertProtection()
+    try { return this.protection.decryptString(Buffer.from(model.encryptedKey, "base64")) }
+    catch { throw new Error("系统密钥解密失败，请重新配置此模型") }
+  }
   private prepareModel(current:AppState,draft:ModelDraft,creationId?:string):StoredModel {
     this.assertProtection()
     validateModelEndpoint(draft.endpoint)

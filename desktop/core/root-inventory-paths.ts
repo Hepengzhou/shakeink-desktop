@@ -5,7 +5,7 @@ import {z} from 'zod'
 import {BRAND_NAMES} from '../shared/brand-names'
 export const closedRootCatalogSchema=z.object({schemaVersion:z.literal(1),revision:z.number().int().nonnegative(),value:z.array(z.object({path:z.string().refine(isAbsolute)}).passthrough())}).strict()
 const uuid="[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
-const fixedRoot=new Set([...BRAND_NAMES.map(names=>names.appMarker),"catalog.json","state.json","drafts.json","backup-plan.json","restore-draft-barrier.json","application-restore-drafts.json"])
+const fixedRoot=new Set([...BRAND_NAMES.map(names=>names.appMarker),"catalog.json","state.json","model-catalogs.json","drafts.json","backup-plan.json","restore-draft-barrier.json","application-restore-drafts.json"])
 const recovery=new RegExp(`^\\.(?:xuanxiang|xaanink)-root-recovery-${uuid}\\.json$`,"i")
 const avatar=new RegExp(`^assets/global/${uuid}\\.png$`,"i")
 const upgradeSnapshot=new RegExp(`^inbox/snapshots/before-upgrade-\\d{13}-${uuid}\\.tar\\.gz(?:\\.json)?$`,"i")

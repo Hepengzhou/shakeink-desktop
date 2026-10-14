@@ -1,5 +1,39 @@
 {
   "version": "1.0",
+  "apiKeyRevealRevision": {
+    "date": "2026-10-15",
+    "scope": "配置模型对话框回填已保存 API Key（默认密文）、眼睛图标切换明文/密文、密文不可复制且右键菜单【复制】禁用、明文可复制",
+    "status": "implemented-and-scoped-verified",
+    "research": "docs/api-key-reveal/01-research.md",
+    "product": "docs/api-key-reveal/02-product.md",
+    "testIds": ["K01", "K02", "K03", "K04", "K05", "K06", "K07", "K09"],
+    "changes": {
+      "main": "ModelRepository.revealKey(id) 解密已存凭据（含停用模型）；desktop:model-reveal-key IPC（trusted+businessGate+z.uuid）",
+      "preload": "revealModelKey 桥接；DesktopBridge 类型",
+      "renderer": "ModelConfigurationDialog 异步回填（竞态/范围守卫）、Eye/EyeOff 切换 type=password/text、未修改的回填 Key 映射为空串保持留空保留原密钥与不提升 authRevision；input-commands/native-text-edits/text-context-selection 移除掩码态复制例外，按 data-desktop-clipboard 属性继续禁止引用外发",
+      "semantics": "密文态复制/剪切三层禁用（命令 enabled、剪贴板 available、菜单能力布尔）；明文态回到普通文本框原生行为"
+    },
+    "results": {"scopedUnitAndIntegration": "166/169（3 个失败为工作树内进行中 model-catalog 工作所致，已用改动前对话框复现确认与本功能无关）", "scopedBrowser": "4/4（系统 Chrome，XAANINK_TEST_CHROMIUM）", "typecheck": "passed", "realElectronAcceptance": "15/15（隔离数据根 + 真实保存 IPC 落 Key + 真实原生菜单/系统剪贴板 + 眼睛按钮无动画计算样式与按压几何断言，scripts/verify-api-key-reveal.mjs）", "fullSuiteExecuted": false},
+    "evidence": "docs/evidence/api-key-reveal/（密文回填、明文、回切密文三张截图与 report.json 菜单能力记录）",
+    "limits": "未跑全量；未做真实 macOS 验证；浏览器用例用系统 Chrome 代替 Electron Chromium。密钥仅经新 IPC 进入渲染进程输入框，不进日志/事件/对话引用；演示使用隔离数据根与公开假 Key，已清理测试剪贴板与临时目录。"
+  },
+  "modelCatalogFixRevision": {
+    "date": "2026-10-15",
+    "scope": "配置模型官方候选真实性、缺失/下线剔除、刷新快照及无Key离线重启",
+    "status": "implemented-and-scoped-verified",
+    "research": "docs/model-catalog-fix/01-research.md",
+    "product": "docs/model-catalog-fix/02-product.md",
+    "testCases": "docs/model-catalog-fix/03-test-cases.md",
+    "implementation": "docs/model-catalog-fix/04-implementation.md",
+    "planReview": "docs/reviews/2026-10-15-model-catalog-research-review.md",
+    "testReview": "docs/model-catalog-fix/05-test-review.md",
+    "codeReview": "docs/model-catalog-fix/06-code-review.md",
+    "verification": "docs/model-catalog-fix/07-verification.md",
+    "summary": "docs/model-catalog-fix/08-summary.md",
+    "testIds": ["MC-01", "MC-02", "MC-03", "MC-04", "MC-05", "MC-06", "MC-07", "MC-08", "MC-09", "MC-10", "MC-11", "MC-12", "MC-13"],
+    "results": {"scopedTests": "29/29", "independentDirectoryTests": "12/12", "actualWindowsElectronChecks": "5/5", "typecheck": "passed", "build": "passed", "fullSuiteExecuted": false},
+    "limits": "Windows development Electron with real IPC/disk/restart; official responses are public protocol fixtures. No real Key, paid call, macOS or installed-package claim. Does not change repository-wide acceptance."
+  },
   "alphaReleaseRevision": {
     "date": "2026-10-14",
     "version": "0.1.0-alpha",
