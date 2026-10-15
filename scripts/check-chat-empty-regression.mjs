@@ -9,10 +9,10 @@ const tag=process.argv[3]??'final'
 if(!/^[a-z0-9-]+$/.test(tag))throw Error('Invalid evidence tag')
 const dirs=kind==='core'?['tests/unit','tests/integration']:['tests/browser']
 const files=dirs.flatMap(dir=>readdirSync(dir).filter(name=>name.endsWith('.test.ts')).map(name=>`${dir}/${name}`)).sort()
-const concurrency=process.env.XAANINK_REGRESSION_CONCURRENCY??'2',testTimeout=process.env.XAANINK_REGRESSION_TIMEOUT??'120000'
+const concurrency=process.env.SHAKEINK_REGRESSION_CONCURRENCY??'2',testTimeout=process.env.SHAKEINK_REGRESSION_TIMEOUT??'120000'
 if(!/^[1-4]$/.test(concurrency)||!/^\d+$/.test(testTimeout))throw Error('Invalid test limits')
 const args=['--import','tsx','--test','--test-reporter=tap',`--test-concurrency=${concurrency}`,`--test-timeout=${testTimeout}`,...files]
-if(process.env.XAANINK_REGRESSION_FORCE_EXIT==='1')args.splice(4,0,'--test-force-exit')
+if(process.env.SHAKEINK_REGRESSION_FORCE_EXIT==='1')args.splice(4,0,'--test-force-exit')
 const startedAt=new Date().toISOString(),directory=resolve('docs/evidence/chat-empty-state')
 mkdirSync(directory,{recursive:true})
 const sanitize=value=>String(value).replaceAll(process.cwd(),'<repo>').replaceAll(tmpdir(),'<isolated-temp>').replaceAll(homedir(),'<home>')

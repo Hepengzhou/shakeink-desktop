@@ -64,15 +64,15 @@ import { ModelCatalogRepository } from './model-catalog-repository'
 import {projectAboutHtml,installProjectAboutLinks} from './project-about'
 
 app.enableSandbox()
-protocol.registerSchemesAsPrivileged([{ scheme: "xaanink", privileges: { standard: true, secure: true, supportFetchAPI: true, stream: true, codeCache: true } }])
+protocol.registerSchemesAsPrivileged([{ scheme: "shakeink", privileges: { standard: true, secure: true, supportFetchAPI: true, stream: true, codeCache: true } }])
 // Keep the instance-lock directory stable even when the data root changes.
-const isolatedRoot = process.env.XAANINK_TEST_ROOT ? resolve(process.env.XAANINK_TEST_ROOT) : null
+const isolatedRoot = process.env.SHAKEINK_TEST_ROOT ? resolve(process.env.SHAKEINK_TEST_ROOT) : null
 let startupPaths:BrandStartupPaths|null=null, startupSelectionError:unknown=null
 try{startupPaths=selectBrandStartupPaths({appData:app.getPath("appData"),home:homedir(),isolatedRoot})}
 catch(error){
   startupSelectionError=error
   if(error instanceof BrandStartupPathError)startupPaths=error.recoveryPaths
-  else startupPaths={bootstrap:join(app.getPath("appData"),CURRENT_NAMES.appIdentity),defaultRoot:join(homedir(),".xaanink"),encryptionFamily:"current"}
+  else startupPaths={bootstrap:join(app.getPath("appData"),CURRENT_NAMES.appIdentity),defaultRoot:join(homedir(),".shakeink"),encryptionFamily:"current"}
 }
 app.setName(startupPaths?.encryptionFamily==="legacy"?legacyEncryptionName:"玄印写作")
 void app.whenReady().then(()=>app.setName("玄印写作"))
@@ -125,7 +125,7 @@ const send = (event: DesktopEvent) => {
   if (window && !window.isDestroyed()) window.webContents.send("desktop:event", event)
 }
 function trusted(event: IpcMainInvokeEvent) {
-  if (!window || event.sender !== window.webContents || event.senderFrame !== window.webContents.mainFrame || (new URL(event.senderFrame.url).protocol !== "xaanink:" || new URL(event.senderFrame.url).host !== "app")) throw new Error("不受信的桌面请求")
+  if (!window || event.sender !== window.webContents || event.senderFrame !== window.webContents.mainFrame || (new URL(event.senderFrame.url).protocol !== "shakeink:" || new URL(event.senderFrame.url).host !== "app")) throw new Error("不受信的桌面请求")
 }
 const directoryPurpose = z.enum(["create-work", "open-work", "data-root", "default-parent"])
 function makeRecoveryExports(){
@@ -140,7 +140,7 @@ function makeRecoveryExports(){
 async function exportDraftSnapshot(input:unknown) {
   const snapshot=validateDraftSnapshot(input),current=window,sessionId=draftSession?.id
   if(!current||current.isDestroyed()||!sessionId)throw new Error("草稿窗口不可用")
-  const result=await recoveryExports.save(`${current.webContents.id}:${sessionId}`,{id:randomUUID(),format:"recovery",filename:"玄印写作-恢复草稿.json",bytes:new TextEncoder().encode(JSON.stringify({format:"xaanink-recovery",version:1,snapshot})+"\n")})
+  const result=await recoveryExports.save(`${current.webContents.id}:${sessionId}`,{id:randomUUID(),format:"recovery",filename:"玄印写作-恢复草稿.json",bytes:new TextEncoder().encode(JSON.stringify({format:"shakeink-recovery",version:1,snapshot})+"\n")})
   if(window!==current||current.isDestroyed()||draftSession?.id!==sessionId)throw new Error("草稿所属窗口已变化")
   if(result.status==="failed")throw Error(fileExportFailureMessages[result.code])
   return result.status==="saved"
@@ -250,7 +250,7 @@ async function launch() {
   },guardTarget:async target=>guardFileExportTarget(target,{dataRoots:[dataRoot,bootstrapPath],workRoots:await service.call<string[]>("protected-directories")})})
   recoveryExports=makeRecoveryExports()
   draftJournal = new DraftJournal(dataRoot,metadataWrites)
-  protocol.handle("xaanink", async request => {
+  protocol.handle("shakeink", async request => {
     const url = new URL(request.url)
     if (!["GET", "HEAD"].includes(request.method)) return new Response(null, { status: 403 })
     if (url.hostname === "asset") {
@@ -273,11 +273,11 @@ async function launch() {
     }
     return staticUiResponse(request,join(app.getAppPath(),"out"))
   })
-  const localFontsAllowed = (contents: Electron.WebContents | null, permission: string, details: { isMainFrame: boolean; requestingUrl?: string }) => permission === "local-fonts" && !!window && contents === window.webContents && details.isMainFrame && details.requestingUrl === "xaanink://app/"
+  const localFontsAllowed = (contents: Electron.WebContents | null, permission: string, details: { isMainFrame: boolean; requestingUrl?: string }) => permission === "local-fonts" && !!window && contents === window.webContents && details.isMainFrame && details.requestingUrl === "shakeink://app/"
   session.defaultSession.setPermissionRequestHandler((contents, permission, callback, details) => callback(localFontsAllowed(contents, permission, details)))
   session.defaultSession.setPermissionCheckHandler((contents, permission, _origin, details) => localFontsAllowed(contents, permission, details))
   session.defaultSession.on("will-download",event=>event.preventDefault())
-  session.defaultSession.webRequest.onBeforeRequest((details, callback) => callback({ cancel: !["xaanink:", "devtools:", "blob:", "data:"].includes(new URL(details.url).protocol) }))
+  session.defaultSession.webRequest.onBeforeRequest((details, callback) => callback({ cancel: !["shakeink:", "devtools:", "blob:", "data:"].includes(new URL(details.url).protocol) }))
   registerIpc()
   closeCoordinator=new CloseCoordinator({
     current:()=>window&&draftSession?{owner:window.webContents.id,sessionId:draftSession.id}:null,
@@ -696,9 +696,9 @@ async function executeCommand(id: string, fromRenderer=false) {
   if (id === "window.maximize") { if (window?.isMaximized()) window.unmaximize(); else window?.maximize(); return }
   if (id === "view.fullscreen") { window?.setFullScreen(!window.isFullScreen()); return }
   if (id === "help.docs") return
-  if (id === "help.feedback") { await shell.openExternal("https://github.com/mySingleLive/xaanink-desktop/issues/new/choose"); return }
+  if (id === "help.feedback") { await shell.openExternal("https://github.com/mySingleLive/shakeink-desktop/issues/new/choose"); return }
   if (id === "app.about") {
-    if (process.platform === "darwin") { app.setAboutPanelOptions({ applicationName: "玄印写作", applicationVersion: displayAppVersion(app.getVersion()), version: "", copyright: "GPL-3.0 · XaanInk" }); app.showAboutPanel() }
+    if (process.platform === "darwin") { app.setAboutPanelOptions({ applicationName: "玄印写作", applicationVersion: displayAppVersion(app.getVersion()), version: "", copyright: "GPL-3.0 · ShakeInk" }); app.showAboutPanel() }
     else {
       const theme=(await repository.read()).settings.appearance.theme
       const about = new BrowserWindow({ width: 440, height: 380, resizable: false, minimizable: false, maximizable: false, parent: window ?? undefined, modal: true, title: "关于玄印写作", webPreferences: { sandbox: true, contextIsolation: true, nodeIntegration: false } })
@@ -761,14 +761,14 @@ async function createWindow() {
     const mainFrame=details.isMainFrame??legacyMainFrame,sameDocument=details.isSameDocument??legacySameDocument
     // Hydration/history updates retain this document's task capabilities. Only
     // a new (or unknown) main document revokes them and creates a fresh session.
-    if(mainFrame!==false&&sameDocument!==true){releaseOwner();if((details.url??legacyUrl)==="xaanink://app/")draftSession={owner:ownerId,id:randomUUID(),ready:false,release:draftJournal.activate(String(ownerId))}}
+    if(mainFrame!==false&&sameDocument!==true){releaseOwner();if((details.url??legacyUrl)==="shakeink://app/")draftSession={owner:ownerId,id:randomUUID(),ready:false,release:draftJournal.activate(String(ownerId))}}
   })
   current.on("closed", () => { releaseOwner(); if (window === current) window = null })
   current.on("close",event=>{if(quitting||closePermits.delete(current))return;event.preventDefault();beginClose(process.platform==="win32"?"quit":"window")})
   refreshMenus(state)
   if (process.platform !== "darwin") current.setMenu(null)
   current.once("ready-to-show", () => current.show())
-  await current.loadURL("xaanink://app/")
+  await current.loadURL("shakeink://app/")
 }
 
 if(!startupPaths){
@@ -776,7 +776,7 @@ if(!startupPaths){
 }
 else if (!app.requestSingleInstanceLock()) app.quit()
 else {
-  const recoveryRootFor=(family:BrandStartupPaths["encryptionFamily"])=>isolatedRoot?resolve(isolatedRoot):join(homedir(),family==="legacy"?".xuanxiang":".xaanink")
+  const recoveryRootFor=(family:BrandStartupPaths["encryptionFamily"])=>isolatedRoot?resolve(isolatedRoot):join(homedir(),family==="legacy"?".xuanxiang":".shakeink")
   const openStartupRecovery=(sourcePath:string|null)=>{
     const family=startupPaths!.encryptionFamily
     return launchStartupRecovery(bootstrapPath,{recoveryRoot:recoveryRootFor(family),sourcePath,notice:"pointer-invalid",home:homedir(),isolatedRoot,family})

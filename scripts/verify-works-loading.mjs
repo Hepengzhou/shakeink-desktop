@@ -8,7 +8,7 @@ import { _electron } from 'playwright-core'
 
 const evidence = resolve(process.argv[2] || 'docs/evidence/works-loading/target-01')
 await mkdir(evidence, { recursive: true })
-const base = await mkdtemp(join(tmpdir(), 'xaanink-works-loading-'))
+const base = await mkdtemp(join(tmpdir(), 'shakeink-works-loading-'))
 const seeded = spawnSync(process.execPath, ['--import', 'tsx', resolve('scripts/seed-works-loading.ts'), base], { encoding: 'utf8' })
 assert.equal(seeded.status, 0, seeded.stderr); console.log(seeded.stdout.trim())
 const fixture = JSON.parse(await readFile(join(base, 'fixture.json'), 'utf8'))
@@ -18,9 +18,9 @@ const report = { status: 'running', checks: [], errors: [], sourceHashes: {}, bu
 for (const path of ['desktop/service/dispatcher.ts', 'desktop/service/workspaces.ts', 'desktop/shared/work-list.ts', 'src/lib/novel-list.ts', 'src/components/desktop/UnavailableWorks.tsx', 'src/components/layout/SidebarTree.tsx', 'src/components/layout/ChatPanel.tsx', 'src/components/layout/ContentTabs.tsx']) report.sourceHashes[path] = hash(await readFile(path))
 async function built(path) { for (const file of await readdir(path, { withFileTypes: true })) { const entry = join(path, file.name); if (file.isDirectory()) await built(entry); else report.bundleHashes[relative(resolve('.'), entry).replaceAll('\\', '/')] = hash(await readFile(entry)) } }
 await built(resolve('dist')); await built(resolve('.next/static'))
-const catalogBefore = await readFile(join(fixture.root, 'catalog.json')), manifestBefore = await readFile(join(stale.path, 'xaanink-work.json')), ownerBefore = await readFile(join(stale.path, '.xaanink-lock', 'owner.json'))
+const catalogBefore = await readFile(join(fixture.root, 'catalog.json')), manifestBefore = await readFile(join(stale.path, 'shakeink-work.json')), ownerBefore = await readFile(join(stale.path, '.shakeink-lock', 'owner.json'))
 let app, page
-const env = { ...process.env, XAANINK_TEST_ROOT: fixture.root }; delete env.ELECTRON_RUN_AS_NODE
+const env = { ...process.env, SHAKEINK_TEST_ROOT: fixture.root }; delete env.ELECTRON_RUN_AS_NODE
 const check = label => report.checks.push({ label })
 async function launch() {
   app = await _electron.launch({ args: [resolve('.')], env, timeout: 90000 })
@@ -29,7 +29,7 @@ async function launch() {
   await page.getByRole('button', { name: '账号菜单', exact: true }).waitFor({ timeout: 90000 })
   const bootstrap = await page.evaluate(() => window.desktop.bootstrap())
   assert.equal(bootstrap.dataRoot, fixture.root); assert.equal(bootstrap.models.length, 0)
-  assert.equal(page.url(), 'xaanink://app/'); assert.equal(await page.evaluate(() => navigator.onLine), false)
+  assert.equal(page.url(), 'shakeink://app/'); assert.equal(await page.evaluate(() => navigator.onLine), false)
   report.runtime = await app.evaluate(() => ({ platform: process.platform, electron: process.versions.electron, node: process.versions.node }))
   await page.getByText('作品阁', { exact: true }).waitFor()
 }
@@ -48,7 +48,7 @@ try {
   check('real local IPC lists healthy novel and explicit stale work')
   await page.getByText(healthy.title, { exact: true }).click(); await page.getByRole('tab', { name: healthy.title, exact: true }).waitFor()
   check('healthy real novel opens while another work is unavailable')
-  assert.equal(await readFile(join(stale.path, '.xaanink-lock', 'owner.json'), 'utf8'), ownerBefore.toString())
+  assert.equal(await readFile(join(stale.path, '.shakeink-lock', 'owner.json'), 'utf8'), ownerBefore.toString())
   assert.deepEqual(await readFile(join(fixture.root, 'catalog.json')), catalogBefore)
   check('ordinary list/open preserves stale lease and catalog')
   await screenshot('mixed-list'); await close()
@@ -82,11 +82,11 @@ try {
   await closed; app = undefined
   const probe = JSON.parse(await readFile(probePath, 'utf8')); assert.deepEqual(probe, { confirmation: 1, notice: 1, relaunch: 1 })
   check('real bridge start closes worker, confirms exact stale lease, recovers and requests one restart')
-  await assert.rejects(lstat(join(stale.path, '.xaanink-lock')), { code: 'ENOENT' })
-  const audit = JSON.parse(await readFile(join(stale.path, '.xaanink-lease-recovery.json'), 'utf8'))
+  await assert.rejects(lstat(join(stale.path, '.shakeink-lock')), { code: 'ENOENT' })
+  const audit = JSON.parse(await readFile(join(stale.path, '.shakeink-lease-recovery.json'), 'utf8'))
   assert.equal(audit.payload.phase, 'recovered'); check('stale lease physically removed only by confirmed recovery; recovered audit persisted')
   assert.deepEqual(await readFile(join(fixture.root, 'catalog.json')), catalogBefore)
-  assert.deepEqual(await readFile(join(stale.path, 'xaanink-work.json')), manifestBefore)
+  assert.deepEqual(await readFile(join(stale.path, 'shakeink-work.json')), manifestBefore)
   check('recovery preserves original catalog and manifest bytes')
   await launch(); await page.waitForFunction(title => document.body.textContent.includes(title), stale.title)
   const restored = await list(); assert.equal(restored.novels.length, 2); assert.deepEqual(restored.unavailableWorks, [])

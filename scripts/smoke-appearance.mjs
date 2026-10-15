@@ -4,7 +4,7 @@ import { execFileSync } from 'node:child_process'
 import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises'
 import { tmpdir, homedir } from 'node:os'
 import { join, resolve } from 'node:path'
-const temporary = await mkdtemp(join(tmpdir(), 'xaanink-appearance-smoke-'))
+const temporary = await mkdtemp(join(tmpdir(), 'shakeink-appearance-smoke-'))
 const evidence = 'docs/evidence/implementation-03'
 const checks = [], errors = []
 const startedAt = new Date().toISOString()
@@ -12,7 +12,7 @@ let app
 await mkdir(evidence, { recursive: true })
 try {
   execFileSync(process.execPath, ['--import','tsx','scripts/seed-electron-fixture.ts',temporary], { cwd: process.cwd(), encoding: 'utf8' })
-  app = await electron.launch({ args: [resolve('.')], env: { ...process.env, XAANINK_TEST_ROOT: join(temporary,'data') }, timeout: 45000 })
+  app = await electron.launch({ args: [resolve('.')], env: { ...process.env, SHAKEINK_TEST_ROOT: join(temporary,'data') }, timeout: 45000 })
   const page = await app.firstWindow({ timeout: 45000 })
   page.on('pageerror', error => errors.push(error.message))
   await page.getByText('桌面验收夹具', { exact: true }).waitFor({ timeout: 45000 })
@@ -34,7 +34,7 @@ try {
   await page.getByRole('button', { name: '外观', exact: true }).click()
   const fontPicker = page.getByRole('combobox', { name: '界面字体', exact: true })
   await expect.poll(() => fontPicker.locator('option').count()).toBeGreaterThan(5)
-  await expect(fontPicker).toHaveValue('XaanInk Missing Font Fixture')
+  await expect(fontPicker).toHaveValue('ShakeInk Missing Font Fixture')
   await expect(page.getByText('此字体当前不可用，已回退到系统默认字体（system-ui）。', { exact:true })).toBeVisible()
   await expect(page.getByText(/此字体当前不可用，已回退到.*缺字使用系统回退/)).toBeVisible()
   checks.push('unavailable saved font stays selected with explicit fallback notices after local enumeration')

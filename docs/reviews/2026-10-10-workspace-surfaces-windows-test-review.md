@@ -4,7 +4,7 @@
 
 **最终测试源码结论：当前用例范围充分，原初审的关键负例边界已补齐；最终专项 TAP 为 37/37 通过。** 不存在需要跳过或削弱原断言的测试方案阻断项。已逐项核读最新 TAP，确认 helper 的相对路径负例与 WDS-08-race 均在该 37 项集合内，fail/cancelled/skipped 均为 0。完整 core/browser 与实际目标系统验收仍须另存结果。本结论不是产品 code review 或“所有测试通过”。
 
-审核输入：[技术方案](D:/Projects/xaanink-desktop/docs/reviews/2026-10-10-workspace-surfaces-windows-plan.md)、[测试清单](D:/Projects/xaanink-desktop/docs/reviews/2026-10-10-workspace-surfaces-windows-test-cases.md)、[公共入口测试](D:/Projects/xaanink-desktop/tests/unit/file-export-directory-sync.test.ts)、[helper 直接测试](D:/Projects/xaanink-desktop/tests/unit/directory-sync.test.ts)、[最终 37/37 完整 TAP](D:/Projects/xaanink-desktop/docs/evidence/workspace-surfaces/windows-directory-sealed-37-final.log)。早期 36/36 日志保留历史地位，不替代最终集合。
+审核输入：[技术方案](D:/Projects/shakeink-desktop/docs/reviews/2026-10-10-workspace-surfaces-windows-plan.md)、[测试清单](D:/Projects/shakeink-desktop/docs/reviews/2026-10-10-workspace-surfaces-windows-test-cases.md)、[公共入口测试](D:/Projects/shakeink-desktop/tests/unit/file-export-directory-sync.test.ts)、[helper 直接测试](D:/Projects/shakeink-desktop/tests/unit/directory-sync.test.ts)、[最终 37/37 完整 TAP](D:/Projects/shakeink-desktop/docs/evidence/workspace-surfaces/windows-directory-sealed-37-final.log)。早期 36/36 日志保留历史地位，不替代最终集合。
 
 ## 已充分的部分
 
@@ -42,16 +42,16 @@
 
 原 Unix chmod(0500) 在 Windows 未构造创建文件拒绝。允许将该单例的 Windows 分支改为新 mkdtemp 目录的真实 ACL 拒写；Unix 分支和原 failed、EXPORT_WRITE_FAILED、原文保留、无临时残留断言均保留。只作用于已核验位于 tmpdir 且带固定测试前缀的隔离绝对 root，使用 execFile 参数数组运行 whoami /user 取得当前 SID，以及 icacls 对该目录添加 WD/AD deny，不带递归或继承参数。真实 wx 创建探针必须先得到 EPERM/EACCES，否则用例失败。
 
-[原生探针](D:/Projects/xaanink-desktop/scripts/probe-windows-directory-acl.mjs)及[执行结果](D:/Projects/xaanink-desktop/docs/evidence/workspace-surfaces/windows-acl-probe.log)已证明本机实际 EPERM、撤销 ACL 与目录删除；测试方案充分，可以按此范围修改夹具。实际用例需在添加 deny 前核路径，finally 撤销本次 deny 后清理，无论探针或业务断言如何结束均执行。探针不是 EX16-15 完整业务用例结果，后者仍需原断言执行。
+[原生探针](D:/Projects/shakeink-desktop/scripts/probe-windows-directory-acl.mjs)及[执行结果](D:/Projects/shakeink-desktop/docs/evidence/workspace-surfaces/windows-acl-probe.log)已证明本机实际 EPERM、撤销 ACL 与目录删除；测试方案充分，可以按此范围修改夹具。实际用例需在添加 deny 前核路径，finally 撤销本次 deny 后清理，无论探针或业务断言如何结束均执行。探针不是 EX16-15 完整业务用例结果，后者仍需原断言执行。
 
 Microsoft 文档规定 WD/AD 分别涉及目录添加文件/子目录；/deny 也会从同 SID 的显式 grant 移除相同权限，/remove:d 仅删除 deny。因此该流程仅适用于本次新建隔离 root，不可复用至用户目录，不等于恢复任意已有 ACL。[icacls 官方说明](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/icacls)、[whoami 官方说明](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/whoami)。此证据是 Windows 真权限边界，无 mock，不声明 macOS/Linux 原生验证。
 
 ## 完整浏览器回归执行结果
 
-按原 runner 执行 `node scripts/check-workspace-surfaces.mjs browser browser-windows-directory-final`，Node v24.19.0、Windows、Chrome、并发1，原30个 browser 文件未筛选用例、未修改断言或期限。2026-10-10 08:50:59Z 启动，08:58:49Z 正常退出0，TAP 219/219 pass、0 fail/cancelled/skipped/todo，duration 470543ms。[完整 TAP](D:/Projects/xaanink-desktop/docs/evidence/workspace-surfaces/browser-windows-directory-final.log)、[命令与统计](D:/Projects/xaanink-desktop/docs/evidence/workspace-surfaces/browser-windows-directory-final.json)。log SHA-256 `00758e4b44c4a87833169f519f50414e0e1bc17994beac415458d63fa8b0edb9` 与 JSON 一致。
+按原 runner 执行 `node scripts/check-workspace-surfaces.mjs browser browser-windows-directory-final`，Node v24.19.0、Windows、Chrome、并发1，原30个 browser 文件未筛选用例、未修改断言或期限。2026-10-10 08:50:59Z 启动，08:58:49Z 正常退出0，TAP 219/219 pass、0 fail/cancelled/skipped/todo，duration 470543ms。[完整 TAP](D:/Projects/shakeink-desktop/docs/evidence/workspace-surfaces/browser-windows-directory-final.log)、[命令与统计](D:/Projects/shakeink-desktop/docs/evidence/workspace-surfaces/browser-windows-directory-final.json)。log SHA-256 `00758e4b44c4a87833169f519f50414e0e1bc17994beac415458d63fa8b0edb9` 与 JSON 一致。
 
 此前四个导出正例 EXB16-01/02/05/07 和截图超时的 MUI73-10 在本次完整集合实际通过，旧 214/219 失败记录仍保留。导出测试使用真实 Web 转换器、菜单、FileExports 与隔离真实文件系统，受控的是源 API 及 Electron IPC/picker；通过不等于原生 SaveDialog 验收。所有其他 browser 用例仍遵循各自既有夹具边界，219 项结果不替代完整 core、真实29类业务或跨平台验收，也不能将人工终止及历史取消改为通过。
 
 ## 其他失败的范围
 
-目录同步方案有当前导出和租约恢复的真实修复价值，但不足以解决全部历史核心失败。冷源 POSIX mode 检查、头像叶子 symlink 读取、ESM/路径/权限夹具和原生 macOS 验包边界另见[Windows 失败来源调研](D:/Projects/xaanink-desktop/docs/reviews/2026-10-10-workspace-surfaces-windows-failures-research.md)。该调研不授权扩展产品、安全修复或复活已退役备份功能；平台外或退役用例不能改写成当前原生业务全部通过。
+目录同步方案有当前导出和租约恢复的真实修复价值，但不足以解决全部历史核心失败。冷源 POSIX mode 检查、头像叶子 symlink 读取、ESM/路径/权限夹具和原生 macOS 验包边界另见[Windows 失败来源调研](D:/Projects/shakeink-desktop/docs/reviews/2026-10-10-workspace-surfaces-windows-failures-research.md)。该调研不授权扩展产品、安全修复或复活已退役备份功能；平台外或退役用例不能改写成当前原生业务全部通过。

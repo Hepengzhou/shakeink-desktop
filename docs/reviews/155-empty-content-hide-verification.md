@@ -16,11 +16,11 @@ Windows空工具条右距取原生titlebar env占区与138/实时zoom的保守�
 | npm run build:ui、npm run build:desktop | 各exit 0，离线UI/main/service/preload重建 |
 | 完整真实macOS Electron harness | exit 0，22条检查，errors=[] |
 
-1817是两个完整自动测试套件相加，聚焦22及native检查不重复计入。Node 24.18.0；Chromium使用现存headless-shell-1228，不声明它等于当前Playwright下载版本。完整命令是 `node --import tsx --test --test-concurrency=2 --test-reporter=tap tests/unit/*.test.ts tests/integration/*.test.ts` 和同参数 `tests/browser/*.test.ts`；浏览器明确设置XAANINK_TEST_CHROMIUM。退役备份测试未运行。
+1817是两个完整自动测试套件相加，聚焦22及native检查不重复计入。Node 24.18.0；Chromium使用现存headless-shell-1228，不声明它等于当前Playwright下载版本。完整命令是 `node --import tsx --test --test-concurrency=2 --test-reporter=tap tests/unit/*.test.ts tests/integration/*.test.ts` 和同参数 `tests/browser/*.test.ts`；浏览器明确设置SHAKEINK_TEST_CHROMIUM。退役备份测试未运行。
 
 Windows浏览器矩阵检查真实组件按钮/菜单几何：fallback45组（280/320/440px面板×5个zoom×3个字号），env读取注入48组（320/440px×3个zoom×2个字号×4个占区）。全部按钮可见且位于面板顶行内部，右边界在窗控预期占区及菜单左侧，菜单间隔至少6px。fallback使用未经替换的生产表达式；env注入仅替换当前真实inline style及真实菜单CSS中的env读取，保留其它计算。**这是浏览器布局合同，不是Windows/DPI原生验收。**
 
-真实macOS使用当前源构建、本地xaanink://app/协议、CDP offline、新canonical /private/tmp隔离dataRoot。先断言小说/模型均零。CUA按本轮独立运行时bundle路径选择实际空数据窗口，截图可见顶右图标；实际系统鼠标点击后原生harness确认.workspace-content卸载、AI恢复按钮可见，窗口bounds/zoom/最大化/全屏不变。Enter/Space检查真实Shift+Tab/Tab、焦点outline和收起；keyboard由Electron/CDP注入，不声称硬件键盘/IME。真实zoom .75/1/1.25/1.5/2×字号11/24的十组实时设置与原生zoom读数全部通过，工具条drag/按钮no-drag保持。
+真实macOS使用当前源构建、本地shakeink://app/协议、CDP offline、新canonical /private/tmp隔离dataRoot。先断言小说/模型均零。CUA按本轮独立运行时bundle路径选择实际空数据窗口，截图可见顶右图标；实际系统鼠标点击后原生harness确认.workspace-content卸载、AI恢复按钮可见，窗口bounds/zoom/最大化/全屏不变。Enter/Space检查真实Shift+Tab/Tab、焦点outline和收起；keyboard由Electron/CDP注入，不声称硬件键盘/IME。真实zoom .75/1/1.25/1.5/2×字号11/24的十组实时设置与原生zoom读数全部通过，工具条drag/按钮no-drag保持。
 
 关闭重开沿用既有 `draft-recovery.ts:218–220` 的零Tab恢复规则：contentVisible布局进入待核对项，工作台先收起空区；随后实际AI恢复入口重新打开空面板并收起成功。没有修改该规则。用既有seed helper在同一隔离根建立真实合成小说，点击真实章节树打开Tab，关闭最后Tab仍自动收起；AI恢复后空工具条按钮再次可用。连续8帧实际面板width/x稳定才检查几何或截图，避免把展开动画中途算作完成。
 

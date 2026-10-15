@@ -21,7 +21,7 @@ core-run.json 的 runner/test runner 为 219656/211536；core-file-timeout-geome
 
 独立读取两套完整运行的 **977 个 TS/TSX/JSON/CSS 与 lockfile 来源 hash**。当前 10 个产品文件与 core/browser 均逐字节一致，包含 native-close-accent、三窗口入口、window-appearance、DesktopApp、WindowControls、ChatPanel、ContentTabs、desktop.css。977 个 core 来源中仅 10 个当前 raw hash 不同，完全等于恢复记录的 9 个 catalog 源与 generated routes；每个当前内容归一 LF 后精确等于 core 与 browser 来源，无其它来源变化。九个原始备份的 before hash、当前 raw hash 与归一 LF after hash亦逐项一致；routes 按原 compact 来源 hash 校验后恢复。没有把换行等价称为全部 raw 字节相同。
 
-审核独立计算实际文件：安装器 `release/XaanInk-0.1.0-win-x64.exe` **276571859 bytes**，SHA256 **5c17d54b6bbd84f5d9878314c1132f358fac407c95cd919eb02dbadc3c0d2270**；`dist/main/index.cjs` 与包内 `resources/app/dist/main/index.cjs` 的 SHA256 均 **8935653ae32a3760dc616cbe127b16cd913a443d5c5c485804086fc71d5bd400**。accent 源为 **4c2620e63e5c213c0b9431bdcaebdd073db2ba7bbe560f2c79682a8b8afc9b23**，与完整运行及最新原生样本一致。
+审核独立计算实际文件：安装器 `release/ShakeInk-0.1.0-win-x64.exe` **276571859 bytes**，SHA256 **5c17d54b6bbd84f5d9878314c1132f358fac407c95cd919eb02dbadc3c0d2270**；`dist/main/index.cjs` 与包内 `resources/app/dist/main/index.cjs` 的 SHA256 均 **8935653ae32a3760dc616cbe127b16cd913a443d5c5c485804086fc71d5bd400**。accent 源为 **4c2620e63e5c213c0b9431bdcaebdd073db2ba7bbe560f2c79682a8b8afc9b23**，与完整运行及最新原生样本一致。
 
 package-geometry.log 实际包含 after-pack 验证 314 项目资源、pgliteClosed=true、publish=never 及 packaged 结束。类型检查、UI/desktop 构建、package session exit 0 和 finalize exit 0 依据主代理实际命令/会话结果；审核读取相关日志、finalizer 检查与最终输出，未再构建。finalizer 中固定的 exitCode 字段不能独自证明命令执行，本审核没有将它当作唯一依据。安装器已生成，实际 unpacked exe 已运行；未执行 NSIS 安装或升级。
 

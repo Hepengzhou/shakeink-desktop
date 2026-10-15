@@ -68,7 +68,7 @@
 
 当前 HEAD 已有另一导航提交，SidebarHoverCard 和 sidebar-drawer-fixture 相比最初 core hash 有差异；不把这些源差异算成本次抽屉生产范围。正式生产审核使用 13 个精确原文件快照及新 context。
 
-真实 Windows harness 使用新建隔离根、真实 Workspaces/PGlite/IPC/DraftJournal、0 模型和 `xaanink://app/` 工作区，观察实际 Monaco editor/model/DOM identity、草稿、选区、滚动、撤销历史，验证正文/代表性表单/长标签、窄屏、缩放、工作区持久化冷启动及实际 HWND WM_NCHITTEST。开发构建和目录包分别执行，证据 label 不可覆盖，源/bundle/exe hash 前后核对。
+真实 Windows harness 使用新建隔离根、真实 Workspaces/PGlite/IPC/DraftJournal、0 模型和 `shakeink://app/` 工作区，观察实际 Monaco editor/model/DOM identity、草稿、选区、滚动、撤销历史，验证正文/代表性表单/长标签、窄屏、缩放、工作区持久化冷启动及实际 HWND WM_NCHITTEST。开发构建和目录包分别执行，证据 label 不可覆盖，源/bundle/exe hash 前后核对。
 
 Native harness 独立准备审核及终态 mode / 隐藏冷启动兼容补审通过。首次 `windows-development-01` 已真实启动合成工作区、0 模型、离线、无 main listening Server，但窗口预置要求 outer=1800，而 Windows 返回 outer=1801，未进入动画验收。失败报告/截图保留；窗口预置层修订将记录 outer/content/renderer，不用外框容差代替精确 CSS 断点。
 

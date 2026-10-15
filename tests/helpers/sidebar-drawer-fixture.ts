@@ -85,10 +85,10 @@ export async function withDrawer(browser: Browser, options: { width?: number; he
   page.on("console", message => { if (message.type() === "error" && !message.text().includes("Failed to load resource")) errors.push(message.text()) })
   try {
     await page.route("**/*", route => route.abort()); await page.setContent('<div id="app"></div>'); await page.addStyleTag({ content: await css }); await page.addScriptTag({ content: await bundle })
-    if(options.observeLayout || process.env.XAANINK_REGRESSION_DIAGNOSTIC)await page.evaluate('globalThis.__name=target=>target')
+    if(options.observeLayout || process.env.SHAKEINK_REGRESSION_DIAGNOSTIC)await page.evaluate('globalThis.__name=target=>target')
     await page.evaluate(args => (window as any).mountDrawer(args.theme, args.emptyCaption, args.initialLayout, args.observeLayout), { theme: options.theme ?? "ink", emptyCaption: options.emptyCaption ?? false, initialLayout: options.initialLayout ?? null, observeLayout: options.observeLayout ?? false })
     await page.waitForTimeout(80); assert(await page.locator(options.emptyCaption ? ".content-tabs" : ".dashboard-shell").count(), `Real component not mounted: ${await page.locator("#app").innerHTML()}`)
-    if (process.env.XAANINK_REGRESSION_DIAGNOSTIC && !options.emptyCaption) await page.evaluate(() => {
+    if (process.env.SHAKEINK_REGRESSION_DIAGNOSTIC && !options.emptyCaption) await page.evaluate(() => {
       const diagnostic = { frames: [] as any[], events: [] as any[] }; (window as any).sideDriverDiagnostic = diagnostic
       const snapshot = () => {
         const shell = document.querySelector<HTMLElement>('.dashboard-shell')!, inner = document.querySelector('.sidebar-drawer-inner')!, panel = document.querySelector('#sidebar')!, caption = inner.querySelector('.desktop-sidebar-controls')!
@@ -104,9 +104,9 @@ export async function withDrawer(browser: Browser, options: { width?: number; he
     })
     await run(page); assert.deepEqual(errors, [], "Real drawer shell has no page errors")
   } catch (error) { throw new Error(`${error instanceof Error ? error.stack : String(error)}\nFixture page errors: ${errors.join("; ")}\n${await page.locator("#app").innerText()}`) } finally {
-    if (process.env.XAANINK_REGRESSION_DIAGNOSTIC && !options.emptyCaption) {
-      await mkdir(process.env.XAANINK_REGRESSION_DIAGNOSTIC, { recursive: true })
-      await writeFile(`${process.env.XAANINK_REGRESSION_DIAGNOSTIC}/${basename(process.argv[1] ?? 'sidebar')}-${diagnosticId}-${options.width ?? 1280}-${options.initialLayout ? 'saved' : 'new'}.json`, JSON.stringify({ options, errors, driverTimings: driverTimings.get(page), trace: await page.evaluate(() => (window as any).sideDriverDiagnostic), resizeFrames: await page.evaluate(async () => await (window as any).drawerResizeFrames ?? null) }, null, 2) + "\n")
+    if (process.env.SHAKEINK_REGRESSION_DIAGNOSTIC && !options.emptyCaption) {
+      await mkdir(process.env.SHAKEINK_REGRESSION_DIAGNOSTIC, { recursive: true })
+      await writeFile(`${process.env.SHAKEINK_REGRESSION_DIAGNOSTIC}/${basename(process.argv[1] ?? 'sidebar')}-${diagnosticId}-${options.width ?? 1280}-${options.initialLayout ? 'saved' : 'new'}.json`, JSON.stringify({ options, errors, driverTimings: driverTimings.get(page), trace: await page.evaluate(() => (window as any).sideDriverDiagnostic), resizeFrames: await page.evaluate(async () => await (window as any).drawerResizeFrames ?? null) }, null, 2) + "\n")
     }
     await page.close()
   }

@@ -11,7 +11,7 @@ import { planningSchema } from "../src/lib/planning/domain"
 
 async function seed() {
   const directory = await realpath(resolve(process.argv[2]))
-  assert.ok(basename(directory).startsWith("xaanink-dialog-style-"), "Fresh isolated test directory required")
+  assert.ok(basename(directory).startsWith("shakeink-dialog-style-"), "Fresh isolated test directory required")
   const root = join(directory, "data"), path = join(directory, "work")
   await mkdir(path, { recursive: true })
   const info = await stat(path, { bigint: true })

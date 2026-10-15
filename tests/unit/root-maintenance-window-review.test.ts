@@ -31,15 +31,15 @@ async function fixture(persistentPartition=false){
  await new DataRootManager(bootstrap,source).adopt(await directoryIdentity(source));await writeFile(join(out,'index.html'),'<p>static maintenance</p>')
  const before=await readFile(join(source,'state.json')),trace:string[]=[],ready=Promise.withResolvers<void>(),cancelGate=Promise.withResolvers<void>(),handlers=new Map<string,(...args:any[])=>any>(),instances:any[]=[],paths=new Map<string,string>(),listeners=new Set<(state:RootMaintenanceState)=>void>()
  let options!:RootMaintenanceRunnerOptions,blockedCancel=false,lock=true,network:((details:{url:string},cb:(v:{cancel:boolean})=>void)=>void)|undefined,permissionRequest:any,permissionCheck:any,staticHandler:((request:Request)=>Promise<Response>)|undefined
- const isolated={storagePath:persistentPartition?join(base,'persistent-partition'):null,setPermissionRequestHandler:(value:any)=>{permissionRequest=value},setPermissionCheckHandler:(value:any)=>{permissionCheck=value},webRequest:{onBeforeRequest:(value:any)=>{network=value}},protocol:{handle:(name:string,handler:(request:Request)=>Promise<Response>)=>{assert.equal(name,'xaanink');staticHandler=handler}}}
+ const isolated={storagePath:persistentPartition?join(base,'persistent-partition'):null,setPermissionRequestHandler:(value:any)=>{permissionRequest=value},setPermissionCheckHandler:(value:any)=>{permissionCheck=value},webRequest:{onBeforeRequest:(value:any)=>{network=value}},protocol:{handle:(name:string,handler:(request:Request)=>Promise<Response>)=>{assert.equal(name,'shakeink');staticHandler=handler}}}
  const app=Object.assign(new EventEmitter(),{setPath:(key:string,value:string)=>{paths.set(key,value);trace.push(`path:${key}`)},getPath:(key:string)=>paths.get(key),hasSingleInstanceLock:()=>lock,whenReady:()=>{trace.push('whenReady');return ready.promise},getAppPath:()=>base,getVersion:()=> '0.1.0',setAboutPanelOptions(){},showAboutPanel(){},relaunch:()=>trace.push('relaunch'),quit:()=>trace.push('quit')})
  let nativeSource:'light'|'dark'|'system'='system'
  const nativeTheme={get themeSource(){return nativeSource},set themeSource(value:'light'|'dark'|'system'){nativeSource=value},get shouldUseDarkColors(){return nativeSource!=='light'}}
  class Window extends EventEmitter{
   static getAllWindows(){return instances}
   destroyed=false;preferences:any;webContents:any;nativeSourceAtConstruction=nativeTheme.themeSource
-  constructor(value:any){super();this.preferences=value;this.webContents=Object.assign(new EventEmitter(),{mainFrame:{url:'xaanink://app/'},session:value.webPreferences.session,send:(..._args:unknown[])=>trace.push('send'),setWindowOpenHandler:(cb:()=>unknown)=>{this.webContents.openHandler=cb}});instances.push(this);trace.push('window')}
-  isDestroyed(){return this.destroyed}setMenu(){}show(){trace.push('show')}focus(){trace.push('focus')}async loadURL(url:string){assert.equal(url,'xaanink://app/');trace.push('load')}
+  constructor(value:any){super();this.preferences=value;this.webContents=Object.assign(new EventEmitter(),{mainFrame:{url:'shakeink://app/'},session:value.webPreferences.session,send:(..._args:unknown[])=>trace.push('send'),setWindowOpenHandler:(cb:()=>unknown)=>{this.webContents.openHandler=cb}});instances.push(this);trace.push('window')}
+  isDestroyed(){return this.destroyed}setMenu(){}show(){trace.push('show')}focus(){trace.push('focus')}async loadURL(url:string){assert.equal(url,'shakeink://app/');trace.push('load')}
  }
  class Runner{
   constructor(value:RootMaintenanceRunnerOptions){options=value;trace.push('runner')}
@@ -50,7 +50,7 @@ async function fixture(persistentPartition=false){
   async continue(){await options.onContinue()}
   async quit(){trace.push('runner-quit');await options.onQuit()}
  }
- const electron={app,BrowserWindow:Window,ipcMain:{handle:(id:string,callback:(...args:any[])=>any)=>handlers.set(id,callback)},Menu:{buildFromTemplate:(value:unknown)=>value,setApplicationMenu(){}},nativeTheme,session:{fromPartition:(name:string,configuration:unknown)=>{assert.equal(name,'xaanink-maintenance');assert.deepEqual(configuration,{cache:false});trace.push('partition');return isolated},get defaultSession(){throw Error('maintenance must not touch source defaultSession')}}}
+ const electron={app,BrowserWindow:Window,ipcMain:{handle:(id:string,callback:(...args:any[])=>any)=>handlers.set(id,callback)},Menu:{buildFromTemplate:(value:unknown)=>value,setApplicationMenu(){}},nativeTheme,session:{fromPartition:(name:string,configuration:unknown)=>{assert.equal(name,'shakeink-maintenance');assert.deepEqual(configuration,{cache:false});trace.push('partition');return isolated},get defaultSession(){throw Error('maintenance must not touch source defaultSession')}}}
  const module={exports:{} as {launchRootMaintenance(bootstrap:string,root:string):Promise<void>}}
  new Function('module','exports','require','__dirname',await windowBundle)(module,module.exports,(id:string)=>id==='electron'?electron:id==='review:runner'?{RootMaintenanceRunner:Runner}:id==='review:close-accent'?closeAccentBoundary:require(id),join(base,'bundle/main'))
  const launched=module.exports.launchRootMaintenance(bootstrap,source);void launched.catch(()=>{})
@@ -81,13 +81,13 @@ test('W71-02: maintenance IPC accepts only current main frame and its narrow act
  try{
   const owned=r.instances[0],event={sender:owned.webContents,senderFrame:owned.webContents.mainFrame},state=r.handlers.get('desktop:maintenance-state')!,command=r.handlers.get('desktop:maintenance-command')!
   assert.deepEqual([...r.handlers.keys()],['desktop:maintenance-state','desktop:maintenance-command']);assert.equal(state(event).version,1)
-  for(const bad of [{...event,sender:{}},{...event,senderFrame:{url:'xaanink://app/'}},{...event,senderFrame:{url:'file:///source/state.json'}}])assert.throws(()=>state(bad),/UNTRUSTED_MAINTENANCE_REQUEST/)
+  for(const bad of [{...event,sender:{}},{...event,senderFrame:{url:'shakeink://app/'}},{...event,senderFrame:{url:'file:///source/state.json'}}])assert.throws(()=>state(bad),/UNTRUSTED_MAINTENANCE_REQUEST/)
   for(const action of ['start','settings',{type:'continue'}])await assert.rejects(command(event,action));assert.ok(!r.trace.includes('relaunch'))
-  const frame=owned.webContents.mainFrame;frame.url='xaanink://app/?other-document';assert.throws(()=>state(event),/UNTRUSTED/);frame.url='xaanink://app/'
+  const frame=owned.webContents.mainFrame;frame.url='shakeink://app/?other-document';assert.throws(()=>state(event),/UNTRUSTED/);frame.url='shakeink://app/'
   assert.deepEqual(owned.webContents.openHandler(),{action:'deny'});let prevented=0;for(const name of ['will-navigate','will-attach-webview'])owned.webContents.emit(name,{preventDefault(){prevented++}});assert.equal(prevented,2)
   let allowed=true;r.permissionRequest(owned.webContents,'local-fonts',(value:boolean)=>{allowed=value});assert.equal(allowed,false);assert.equal(r.permissionCheck(),false)
   for(const url of ['https://provider.invalid/v1','file:///source/state.json'])r.network({url},value=>assert.equal(value.cancel,true))
-  r.network({url:'xaanink://app/'},value=>assert.equal(value.cancel,false));assert.equal((await r.staticHandler(new Request('xaanink://app/'))).status,200);assert.equal((await r.staticHandler(new Request('xaanink://asset/global/'+randomUUID()))).status,403);assert.equal((await r.staticHandler(new Request('xaanink://app/api/models'))).status,404)
+  r.network({url:'shakeink://app/'},value=>assert.equal(value.cancel,false));assert.equal((await r.staticHandler(new Request('shakeink://app/'))).status,200);assert.equal((await r.staticHandler(new Request('shakeink://asset/global/'+randomUUID()))).status,403);assert.equal((await r.staticHandler(new Request('shakeink://app/api/models'))).status,404)
   owned.destroyed=true;assert.throws(()=>state(event),/UNTRUSTED/)
  }finally{await r.close()}
 })

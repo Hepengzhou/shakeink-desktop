@@ -27,7 +27,7 @@ window.mountReview=()=>{
  return{calls,rows,entered:()=>createEntered,finish:()=>acceptCreate(),unmount:()=>{root.unmount();client.clear()}};
 };`},bundle:true,platform:'browser',format:'iife',write:false,tsconfig:'tsconfig.json'}).then(result=>result.outputFiles![0].text)
 let browser:Browser
-test.before(async()=>{browser=await chromium.launch({headless:true,executablePath:process.env.XAANINK_TEST_CHROMIUM})})
+test.before(async()=>{browser=await chromium.launch({headless:true,executablePath:process.env.SHAKEINK_TEST_CHROMIUM})})
 test.after(async()=>{await browser?.close()})
 async function scenario(run:(page:Page)=>Promise<void>){
   const page=await browser.newPage(),errors:string[]=[];page.setDefaultTimeout(2400);page.on('pageerror',cause=>errors.push(cause.message))

@@ -8,7 +8,7 @@ import { Workspaces } from '../desktop/service/workspaces.ts'
 // API Key 回填与明文/密文切换的真实界面验收：隔离数据根 + 真实保存 IPC 落 Key
 // + 真实 Electron 窗口。截图与菜单能力写入 docs/evidence/api-key-reveal/。
 const demoKey = 'sk-demo-eye-toggle-20261015-not-a-real-key'
-const temporary = await mkdtemp(join(tmpdir(), 'xaanink-api-key-reveal-'))
+const temporary = await mkdtemp(join(tmpdir(), 'shakeink-api-key-reveal-'))
 const root = join(temporary, 'data')
 const evidence = resolve('docs/evidence/api-key-reveal')
 await mkdir(evidence, { recursive: true })
@@ -16,7 +16,7 @@ const report = { scope: 'Windows development Electron', startedAt: new Date().to
 const check = (name, ok, detail = '') => { report.checks.push({ name, ok, detail }); console.log(`${ok ? 'PASS' : 'FAIL'} ${name}${detail ? ' — ' + detail : ''}`) }
 const step = name => console.log(`[step ${new Date().toISOString()}] ${name}`)
 
-const environment = { ...process.env, XAANINK_TEST_ROOT: root }
+const environment = { ...process.env, SHAKEINK_TEST_ROOT: root }
 delete environment.ELECTRON_RUN_AS_NODE
 
 async function launch() {

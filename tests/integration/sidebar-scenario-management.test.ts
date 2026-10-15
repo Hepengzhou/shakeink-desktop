@@ -25,7 +25,7 @@ async function createLab(title: string, novelId = "scenario-novel-a") {
   return (await response.json()).scenario as { id: string; title: string }
 }
 before(async () => {
-  root = await mkdtemp(join(tmpdir(), "xaanink-sidebar-scenario-"))
+  root = await mkdtemp(join(tmpdir(), "shakeink-sidebar-scenario-"))
   engine = await PGlite.create({ dataDir: join(root, "database"), relaxedDurability: false })
   await migrateDatabase(engine, await loadMigrations(join(process.cwd(), "prisma/migrations")))
   db = new PrismaClient({ adapter: new LocalPGliteAdapter(engine) })
@@ -40,7 +40,7 @@ after(async () => {
   await db?.$disconnect(); await engine?.close()
   if (root) {
     const owned = await realpath(root), parent = await realpath(tmpdir()), inside = relative(parent, owned)
-    assert(inside && !inside.startsWith("..") && !isAbsolute(inside) && basename(owned).startsWith("xaanink-sidebar-scenario-"), "Remove only this owned isolated fixture")
+    assert(inside && !inside.startsWith("..") && !isAbsolute(inside) && basename(owned).startsWith("shakeink-sidebar-scenario-"), "Remove only this owned isolated fixture")
     assert.equal(resolve(root), owned)
     await rm(owned, { recursive: true, force: true })
   }

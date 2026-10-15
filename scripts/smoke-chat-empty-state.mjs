@@ -9,7 +9,7 @@ import {defaultState} from '../desktop/core/settings.ts'
 import {Workspaces} from '../desktop/service/workspaces.ts'
 
 assert.equal(process.platform,'win32','Actual Windows required')
-const temporary=await mkdtemp(join(tmpdir(),'xaanink-chat-empty-')),evidence=resolve('docs/evidence/chat-empty-state')
+const temporary=await mkdtemp(join(tmpdir(),'shakeink-chat-empty-')),evidence=resolve('docs/evidence/chat-empty-state')
 const checks=[],errors=[],httpRequests=[],runtime=[],nativeObservations=[],screenshots=[],startedAt=new Date().toISOString()
 const limitations=[]
 let app,page,theme
@@ -29,7 +29,7 @@ async function launch(selectedTheme){
  const state=structuredClone(defaultState);state.settings.appearance.theme=theme
  state.onboarding={version:1,completed:true,step:'welcome',textModelId:null,imageModelId:null,receipt:null}
  await writeFile(join(root,'state.json'),JSON.stringify({schemaVersion:1,revision:0,value:state}))
- app=await _electron.launch({args:[resolve('.')],env:{...process.env,XAANINK_TEST_ROOT:root},timeout:60000})
+ app=await _electron.launch({args:[resolve('.')],env:{...process.env,SHAKEINK_TEST_ROOT:root},timeout:60000})
  page=await app.firstWindow({timeout:60000});page.setDefaultTimeout(12000)
  await page.context().setOffline(true)
  // Playwright enables focus emulation on Chromium pages by default. Remove
@@ -43,7 +43,7 @@ async function launch(selectedTheme){
  await skip.waitFor({timeout:45000});await skip.click()
  await expect(page.getByTestId('chat-empty-state')).toBeVisible()
  await page.waitForFunction(theme=>document.documentElement.classList.contains(theme),theme)
- assert.equal(page.url(),'xaanink://app/')
+ assert.equal(page.url(),'shakeink://app/')
  const bootstrap=await page.evaluate(()=>window.desktop.bootstrap());assert.equal(bootstrap.models.length,0);assert.equal(bootstrap.platform,'win32');assert.equal(bootstrap.dataRoot,root)
  runtime.push(await app.evaluate(({app})=>({platform:process.platform,versions:process.versions,version:app.getVersion(),listeningServers:process._getActiveHandles().filter(h=>h.constructor.name==='Server'&&h.listening).length})))
 }
@@ -140,6 +140,6 @@ try{
  await writeFile(output('windows-electron-failure.json'),JSON.stringify({status:'failed',startedAt,theme,checks,errors,nativeObservations,error:redact(error.stack||error)},null,2)+'\n');throw error
 }finally{
  await app?.close().catch(()=>{})
- assert.equal(dirname(resolve(temporary)),resolve(tmpdir()));assert.ok(basename(temporary).startsWith('xaanink-chat-empty-'))
+ assert.equal(dirname(resolve(temporary)),resolve(tmpdir()));assert.ok(basename(temporary).startsWith('shakeink-chat-empty-'))
  await rm(temporary,{recursive:true,force:true})
 }

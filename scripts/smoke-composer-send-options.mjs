@@ -9,21 +9,21 @@ import {defaultState} from '../desktop/core/settings.ts'
 import {Workspaces} from '../desktop/service/workspaces.ts'
 
 assert.equal(process.platform,'win32','This acceptance runs on actual Windows')
-const temporary=await mkdtemp(join(tmpdir(),'xaanink-composer-send-')),root=join(temporary,'data')
+const temporary=await mkdtemp(join(tmpdir(),'shakeink-composer-send-')),root=join(temporary,'data')
 const evidence=resolve('docs/evidence/composer-send-options'),checks=[],errors=[],requests=[]
 const startedAt=new Date().toISOString()
 let app,page
 await mkdir(root,{recursive:true});await mkdir(evidence,{recursive:true})
 const capture=name=>join(evidence,name)
 async function launch(){
- app=await electron.launch({args:[resolve('.')],env:{...process.env,XAANINK_TEST_ROOT:root},timeout:45000})
+ app=await electron.launch({args:[resolve('.')],env:{...process.env,SHAKEINK_TEST_ROOT:root},timeout:45000})
  page=await app.firstWindow({timeout:45000});page.setDefaultTimeout(10000)
  page.on('pageerror',error=>errors.push(error.message))
  page.on('request',request=>{if(/^https?:/i.test(request.url()))requests.push(new URL(request.url()).protocol)})
  await page.getByRole('button',{name:'暂不配置',exact:true}).click({timeout:45000})
  await expect(page.locator('.chat-composer-editable')).toBeVisible()
  await expect(page.locator('.chatpane')).toHaveAttribute('aria-busy','false')
- assert.equal(page.url(),'xaanink://app/')
+ assert.equal(page.url(),'shakeink://app/')
  const state=await page.evaluate(()=>window.desktop.bootstrap())
  assert.equal(state.platform,'win32');assert.equal(state.models.length,0)
  assert.deepEqual(state.settings.shortcuts.win32,{})
@@ -104,6 +104,6 @@ try{
  await app?.close().catch(()=>{})
  // This exact directory is created above by mkdtemp and owns both test roots.
   assert.equal(dirname(resolve(temporary)),resolve(tmpdir()))
-  assert.ok(basename(temporary).startsWith('xaanink-composer-send-'))
+  assert.ok(basename(temporary).startsWith('shakeink-composer-send-'))
  await rm(temporary,{recursive:true,force:true})
 }

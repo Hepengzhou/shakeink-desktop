@@ -24,9 +24,9 @@
 - 选择头像仅显示main规范化的data URL；UI自己的session+sequence隔离晚到成功/错误，第二次读取结果先到仍保留第二次。取消选择/替换错误保留旧有效预览；新图片读取期间保存禁用。四种取消路径清session并调用cancelAvatar，晚到旧session不能覆盖重开的新笔名和头像。
 - saving同步ref锁和禁用控件防重复保存、修改/选图与内部取消。外点关闭设置立即卸载ProfileSettings，清会话，不能让退出动画保持旧请求有效。已经开始的原子提交不由UI伪造回滚；未入main或未开始CAS的取消按会话拒绝。退出/崩溃flush及物理磁盘持久性仍另需验证。
 - 子框显式X可访问，finalFocus为原用户编辑按钮；源码体现分层和返焦意图，受控UI primitive不实现BaseUI focus manager，所以不声称实际Tab陷阱、Escape或返焦已原生验收。实际对话框onOpenChange(false)的取消回调和unmount清理已受控执行。
-- main的chooseAvatar参数仅UUID，无renderer文件路径；actual trusted校验窗口、主frame及xaanink://app来源，preload仅导出明确choose/cancel方法。picker拿到的本地路径仅main流向资产服务；窗口导航/renderer消失/销毁按owner取消。
+- main的chooseAvatar参数仅UUID，无renderer文件路径；actual trusted校验窗口、主frame及shakeink://app来源，preload仅导出明确choose/cancel方法。picker拿到的本地路径仅main流向资产服务；窗口导航/renderer消失/销毁按owner取消。
 - save-profile是严格envelope，当前avatar身份须匹配确认资料；普通update禁止绕过用户资料事务。main先persist规范化资产，再以CAS确认资料，成功才send新state并清本次draft；CAS失败不发布笔名/头像，原资料继续生效，同draft可重试且不会增加多个资产副本。可能留下尚未引用的完整资产供重试，不宣称无孤立文件或已完成清理/迁移。
-- 资料成功后Profile卡、DesktopApp原DashboardShell/SidebarTree账号触发器与菜单均读取新确认值。头像URL为受控UUID的本地 `xaanink://asset/global`，损坏/缺失显示原首字回退；原工作台保持local-author稳定ID，没有为资料变更换编辑器key。这里对工作台保持是源码复核，不借此宣称草稿/undo的资料场景已真实测试。
+- 资料成功后Profile卡、DesktopApp原DashboardShell/SidebarTree账号触发器与菜单均读取新确认值。头像URL为受控UUID的本地 `shakeink://asset/global`，损坏/缺失显示原首字回退；原工作台保持local-author稳定ID，没有为资料变更换编辑器key。这里对工作台保持是源码复核，不借此宣称草稿/undo的资料场景已真实测试。
 - scheme仅GET/HEAD、固定global UUID路径，拒绝query/凭据与任意路径；源文件读取限界/符号链接保护来自41。响应为image/png、nosniff、禁止活动内容的CSP；本次对scheme接线是源码检查，尚未在Electron真实图片加载中执行负例。
 
 ## 证据精度与未验收范围

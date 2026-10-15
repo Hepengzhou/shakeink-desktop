@@ -1,7 +1,7 @@
 /* 数据目录恢复对话框 · 设计预览脚本。仅占位演示，不连接任何真实文件或接口。 */
 (function () {
-  var DEFAULT_ROOT = "C:\\Users\\Administrator\\.xaanink";
-  var CUSTOM_ROOT = "D:\\写作数据\\xaanink-data";
+  var DEFAULT_ROOT = "C:\\Users\\Administrator\\.shakeink";
+  var CUSTOM_ROOT = "D:\\写作数据\\shakeink-data";
 
   var scenes = {
     "checking": {

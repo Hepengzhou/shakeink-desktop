@@ -12,7 +12,7 @@
 import type { ChipData } from "./composer-editor"
 
 /** 自定义拖拽 MIME（全小写：部分浏览器会归一 types） */
-export const CHIP_DRAG_MIME = "application/x-xaanink-chip"
+export const CHIP_DRAG_MIME = "application/x-shakeink-chip"
 
 /** 名称中的方括号/换行会破坏 @[…] 序列语法，替换为空格（与提及候选同口径） */
 export function sanitizeChipName(name: string): string {

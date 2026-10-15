@@ -39,7 +39,7 @@ window.mountEmpty=(platform,width,count)=>{
 } }] }).then(result => result.outputFiles![0].text)
 
 let browser: Browser
-test.before(async () => { browser = await chromium.launch({ headless: true, ...(process.env.XAANINK_TEST_CHROMIUM ? { executablePath: process.env.XAANINK_TEST_CHROMIUM } : {}) }) })
+test.before(async () => { browser = await chromium.launch({ headless: true, ...(process.env.SHAKEINK_TEST_CHROMIUM ? { executablePath: process.env.SHAKEINK_TEST_CHROMIUM } : {}) }) })
 test.after(async () => { await browser?.close() })
 async function scenario(platform: "darwin" | "win32" | null, width: number, count: number, run: (page: Page) => Promise<void>) {
   const page = await browser.newPage({ viewport: { width: 1100, height: 600 } }), errors: string[] = []

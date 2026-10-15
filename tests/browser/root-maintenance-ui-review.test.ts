@@ -30,7 +30,7 @@ globalThis.reviewMount=(seed,config={})=>{
 };
 `},bundle:true,platform:"browser",format:"iife",write:false,tsconfig:"tsconfig.json"}).then(result=>result.outputFiles![0].text)
 let browser:Browser
-test.before(async()=>{browser=await chromium.launch({headless:true,executablePath:process.env.XAANINK_TEST_CHROMIUM})})
+test.before(async()=>{browser=await chromium.launch({headless:true,executablePath:process.env.SHAKEINK_TEST_CHROMIUM})})
 test.after(async()=>{await browser?.close()})
 const initial:RootMaintenanceState={version:1,revision:1,phase:"copying",theme:"paper",sourcePath:"/本地/原目录",targetPath:"/本地/目标目录",copiedFiles:1,totalFiles:4,canCancel:true,canContinue:false,pendingCount:0}
 async function isolated(run:(page:Page)=>Promise<void>){

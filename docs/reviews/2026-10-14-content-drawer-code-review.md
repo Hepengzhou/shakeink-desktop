@@ -179,7 +179,7 @@ Native04补核：只有一个2^24空DIV的global rect width三帧差1，公共Mo
 
 ### 旧测试迁移的最终默认环境补审
 
-独立读取 `regression-migration-04/run.mjs`、run.json及migration.tap：runner显式 `XAANINK_REGRESSION_DIAGNOSTIC:""`，不会安装新rAF诊断observer；真实Chrome、Node24.19.0、concurrency2，四文件30 tests / 30 pass / 0 fail/cancel/skip/todo，退出0、记录22份源前后稳定，63.32秒。本次14份生产源按规范化路径与green05及当前文件独立重算全部一致。migration02也实读30/30带observer成功；migration03原计划关闭observer但runner替换未生效，只诚实算带observer重复核，不能当默认环境证据，最终默认结论只依据04。
+独立读取 `regression-migration-04/run.mjs`、run.json及migration.tap：runner显式 `SHAKEINK_REGRESSION_DIAGNOSTIC:""`，不会安装新rAF诊断observer；真实Chrome、Node24.19.0、concurrency2，四文件30 tests / 30 pass / 0 fail/cancel/skip/todo，退出0、记录22份源前后稳定，63.32秒。本次14份生产源按规范化路径与green05及当前文件独立重算全部一致。migration02也实读30/30带observer成功；migration03原计划关闭observer但runner替换未生效，只诚实算带observer重复核，不能当默认环境证据，最终默认结论只依据04。
 
 最终实码再次核对：DRAG复用真实store所需appearance.zoom；SURF隐藏保活改为closed/实际V0、inert/ARIA、Panel/Tabs/body身份与颜色保留，真实Tabclose仍删除body；narrow正确等两侧终态，实际V、批准underlay及零占位/边缘检查保持.1/.03精度、色彩、无sep。两left仍为原真实click→70/100ms，再检查原phase/partialV/几何，只有无RPC的Node时间wrapper和可关闭诊断记录，没有新driver、删帧或容差变化。诊断guard限制到有Shell/sidebar的fixture，empty-caption原键盘与尺寸oracle不变。
 

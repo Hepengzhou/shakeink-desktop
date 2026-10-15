@@ -17,13 +17,13 @@
     "version": "0.1.0-alpha",
     "target": "win32-x64-nsis",
     "status": "built-and-scoped-package-verified; full-regression-not-green",
-    "artifact": "release/XaanInk-0.1.0-alpha-win-x64.exe",
+    "artifact": "release/ShakeInk-0.1.0-alpha-win-x64.exe",
     "verification": "docs/reviews/2026-10-14-alpha-release-verification.md",
     "review": "docs/reviews/2026-10-14-alpha-release-review.md",
     "productionScope": "Project metadata only; current Web-derived business components preserved and included in build.",
     "allRepositoryAcceptancePassed": false,
     "installerExecuted": true,
-    "localInstallation": {"date": "2026-10-14", "path": "C:/Program Files/xaanink", "version": "0.1.0-alpha", "installerExitCode": 0, "evidence": "docs/evidence/alpha-release/local-installation.json", "resourceEvidence": "docs/evidence/alpha-release/local-installation-resources.json", "scope": "Existing per-machine reinstall verified; no full business acceptance."},
+    "localInstallation": {"date": "2026-10-14", "path": "C:/Program Files/xaanink", "renameNote": "2026-10-15 品牌改名 ShakeInk；该 path 为改名前 0.1.0-alpha 真实安装位置的事实记录，故意保留原名。新安装使用 shakeink 目录。", "version": "0.1.0-alpha", "installerExitCode": 0, "evidence": "docs/evidence/alpha-release/local-installation.json", "resourceEvidence": "docs/evidence/alpha-release/local-installation-resources.json", "scope": "Existing per-machine reinstall verified; no full business acceptance."},
     "macOSExecuted": false
   },
   "promptLibraryExpansionRevision": {
@@ -5161,7 +5161,7 @@
     "names": {
       "full": "玄印写作",
       "short": "玄印",
-      "english": "XaanInk"
+      "english": "ShakeInk"
     },
     "compatibility": "旧目录、作品、锁和控制文件按原家族继续读取；新建应用/作品和导出使用新名称；不重写旧数据。",
     "status": "verified-macos-arm64",

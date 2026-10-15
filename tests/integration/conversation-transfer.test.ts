@@ -180,7 +180,7 @@ test('CHAT34-I05: catalog failure after actual novel commit survives restart; a 
   const failure=mock.method(catalog,'update',async()=>{throw Error('controlled catalog registration failure after ready')})
   await assert.rejects(works.create(originalProof,request,()=>{}),/controlled catalog registration failure/)
   failure.mock.restore()
-  const manifest=JSON.parse(await readFile(join(original,'xaanink-work.json'),'utf8')) as {phase:string;novelId:string;id:string}
+  const manifest=JSON.parse(await readFile(join(original,'shakeink-work.json'),'utf8')) as {phase:string;novelId:string;id:string}
   assert.equal(manifest.phase,'ready');assert(manifest.novelId)
   assert.deepEqual(await works.list(),[],'pending metadata is not a ready catalog work')
   await works.run('inbox',async()=>{

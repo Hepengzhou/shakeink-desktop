@@ -26,7 +26,7 @@
 
 RL100-01/03 修复同时经作者 RE33-15 的最后发布 observer 变更 pointer RED 验证。紧贴实际 app.relaunch 的受信闭包前无后置 await；提交后失效只保留已经发生的提交事实，不伪造回滚。
 
-导航限制须精确理解：同文档事件保留 owner 解决同 URL hydration 误退出；IPC 仍严格要求 senderFrame.url 为 `xaanink://app/`。非根 path/query/fragment 不获得 bridge 权限。本审核未把事件 owner 保留扩大为任意 history 地址可读 IPC。作者已确认此边界，v2 历史合同不回写。
+导航限制须精确理解：同文档事件保留 owner 解决同 URL hydration 误退出；IPC 仍严格要求 senderFrame.url 为 `shakeink://app/`。非根 path/query/fragment 不获得 bridge 权限。本审核未把事件 owner 保留扩大为任意 history 地址可读 IPC。作者已确认此边界，v2 历史合同不回写。
 
 ## 启动、历史结果与界面接线
 

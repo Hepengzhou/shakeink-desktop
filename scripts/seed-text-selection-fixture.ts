@@ -11,7 +11,7 @@ import { DraftJournal } from "../desktop/main/draft-journal"
 
 async function seed() {
 const directory = await realpath(resolve(process.argv[2]))
-assert.ok(basename(directory).startsWith("xaanink-text-selection-"))
+assert.ok(basename(directory).startsWith("shakeink-text-selection-"))
 const root = join(directory, "data"), workPath = join(directory, "work")
 await mkdir(workPath, { recursive: true })
 const works = new Workspaces(root, resolve("prisma/migrations"))

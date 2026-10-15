@@ -32,7 +32,7 @@
 - `tdd-red.log` 中 8 个 F01/F02/F03 失败为实际 main 来源的 source/选项断言，属于产品逻辑红灯；同次 5 个 browser hook 启动超时属于环境失败，不计产品红灯。
 - `tdd-cold-red.log` 两个真实 cold 模块在构造时仍为 system，期望 light，实际断言失败，不是解析/依赖错误。
 - `tdd-layout-red.log` 在 .75 zoom 下菜单 x=1780、width=28，保留区 right=1736，菜单面积/间距断言实质失败；它先停于菜单断言，不能单独证明恢复入口红灯。
-- 补充的 `tdd-restore-red.log` 使用可选 `XAANINK_CAPTION_HEADER_SOURCE` 执行真实 HEAD 旧顶栏和当前菜单。已验证隔离旧来源与 HEAD 一致；恢复按钮 x=1400、width=28，菜单 x=1268、width=28、caption right=1302，恢复按钮断言实质失败。该环境变量只被测试读取，不改变产品入口；这是独立旧源码回放的补充红灯，不能改变最初 browser 启动超时的事实或替代其执行记录。
+- 补充的 `tdd-restore-red.log` 使用可选 `SHAKEINK_CAPTION_HEADER_SOURCE` 执行真实 HEAD 旧顶栏和当前菜单。已验证隔离旧来源与 HEAD 一致；恢复按钮 x=1400、width=28，菜单 x=1268、width=28、caption right=1302，恢复按钮断言实质失败。该环境变量只被测试读取，不改变产品入口；这是独立旧源码回放的补充红灯，不能改变最初 browser 启动超时的事实或替代其执行记录。
 
 ### 绿灯及限制
 

@@ -6,14 +6,14 @@ import {createRequire} from 'node:module'
 import {mkdtemp,mkdir,rm,readFile,writeFile,readdir,realpath} from 'node:fs/promises'
 import {tmpdir} from 'node:os'
 import {join,resolve} from 'node:path'
-const require=createRequire(import.meta.url),temporary=await realpath(await mkdtemp(join(tmpdir(),'xaanink-recovery-export-native-'))),root=join(temporary,'data'),destination=join(temporary,'exports'),evidence='docs/evidence/implementation-21',checks=[],errors=[],startedAt=new Date().toISOString()
+const require=createRequire(import.meta.url),temporary=await realpath(await mkdtemp(join(tmpdir(),'shakeink-recovery-export-native-'))),root=join(temporary,'data'),destination=join(temporary,'exports'),evidence='docs/evidence/implementation-21',checks=[],errors=[],startedAt=new Date().toISOString()
 let app,page,passed=false
 async function ready(current){page=current??await app.firstWindow();page.on('pageerror',e=>errors.push(e.message));await page.getByRole('button',{name:'账号菜单'}).waitFor({timeout:60000});await app.evaluate(({app,BrowserWindow})=>{app.focus({steal:true});BrowserWindow.getAllWindows()[0].focus()})}
 async function settings(){await page.getByRole('button',{name:'账号菜单'}).click();await page.getByRole('menuitem',{name:'设置',exact:true}).click()}
 try{
  assert.equal(process.platform,'darwin');await mkdir(evidence,{recursive:true});await mkdir(destination)
  const seed=JSON.parse(execFileSync(process.execPath,['--import','tsx','scripts/seed-electron-fixture.ts',temporary],{encoding:'utf8'}).trim().split('\n').at(-1))
- app=await electron.launch({executablePath:require('electron'),args:[resolve('.')],env:{...process.env,XAANINK_TEST_ROOT:root},timeout:60000});await ready()
+ app=await electron.launch({executablePath:require('electron'),args:[resolve('.')],env:{...process.env,SHAKEINK_TEST_ROOT:root},timeout:60000});await ready()
  await page.locator('.chat-composer-editable').click();await page.keyboard.insertText('导出后仍待确认的对话输入')
  await page.getByText(/外观测试章/).last().click();await page.getByRole('button',{name:'编辑',exact:true}).click();const editor=page.locator('.monaco-editor').first();await expect(editor).toBeVisible({timeout:30000});await editor.getByRole('textbox',{name:'Editor content',exact:true}).press('Meta+ArrowDown');await page.keyboard.insertText('\n只导出恢复副本，不批准这段正文。');await expect(editor.locator('.view-lines')).toContainText('只导出恢复副本')
  await settings();await page.getByRole('switch',{name:'启动时恢复上次工作台',exact:true}).click();await expect(page.getByRole('switch',{name:'启动时恢复上次工作台',exact:true})).toHaveAttribute('aria-checked','false');await page.getByRole('button',{name:'关闭设置',exact:true}).click()
@@ -27,7 +27,7 @@ try{
  const statePath=join(root,'state.json'),before=await readFile(statePath);await app.evaluate((_,target)=>{globalThis.recoveryExport21.target=target},statePath);await save.click();await expect(page.getByText('导出失败，原草稿仍保留在本机',{exact:true})).toBeVisible();assert.deepEqual(await readFile(statePath),before);await expect(save).toBeEnabled()
  checks.push('controlled native chooser selecting live application state.json is rejected without altering any configuration bytes')
  const target=join(destination,'恢复草稿.json');await app.evaluate((_,target)=>{globalThis.recoveryExport21.target=target},target);await save.click();await expect(page.getByText('恢复草稿已导出',{exact:true})).toBeVisible();await expect(save).toBeEnabled()
- const exported=JSON.parse(await readFile(target,'utf8'));assert.equal(exported.format,'xaanink-recovery');assert.equal(exported.version,1);assert(JSON.stringify(exported.snapshot.sources.recovery).includes('导出后仍待确认的对话输入'));assert(JSON.stringify(exported.snapshot.sources.recovery).includes('只导出恢复副本，不批准这段正文'));assert(JSON.stringify(exported.snapshot.sources.recovery).includes('operationId'))
+ const exported=JSON.parse(await readFile(target,'utf8'));assert.equal(exported.format,'shakeink-recovery');assert.equal(exported.version,1);assert(JSON.stringify(exported.snapshot.sources.recovery).includes('导出后仍待确认的对话输入'));assert(JSON.stringify(exported.snapshot.sources.recovery).includes('只导出恢复副本，不批准这段正文'));assert(JSON.stringify(exported.snapshot.sources.recovery).includes('operationId'))
  const chapter=await page.evaluate(async ids=>(await(await fetch(`/api/novels/${ids.novelId}/chapters/${ids.chapterId}`)).json()).chapter,seed);assert(!chapter.content.includes('只导出恢复副本'));await page.screenshot({path:join(evidence,'native-recovery-export.png')});assert.deepEqual(errors,[])
  checks.push('same original recovery dialog exports a verified complete JSON containing readable input and original inert execution metadata; database正文 remains unapproved')
  await writeFile(join(evidence,'native-recovery-export.json'),JSON.stringify({scope:'development actual macOS arm64 Electron original editor/composer/recovery UI and actual native save IPC; SaveDialog returns and activate event controlled, not physical OS chooser/Dock, Windows or formal acceptance',startedAt,completedAt:new Date().toISOString(),platform:process.platform,arch:process.arch,checks,errors,passed:true},null,2)+'\n');passed=true;console.log('Native recovery export passed.')

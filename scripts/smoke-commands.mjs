@@ -5,13 +5,13 @@ import {execFileSync} from 'node:child_process'
 import {mkdtemp,mkdir,rm,writeFile} from 'node:fs/promises'
 import {tmpdir,homedir} from 'node:os'
 import {join,resolve} from 'node:path'
-const temporary=await mkdtemp(join(tmpdir(),'xaanink-commands-')),evidence='docs/evidence/implementation-07'
+const temporary=await mkdtemp(join(tmpdir(),'shakeink-commands-')),evidence='docs/evidence/implementation-07'
 const checks=[],errors=[],startedAt=new Date().toISOString()
 let app,clipboardSaved=false
 await mkdir(evidence,{recursive:true})
 try{
  execFileSync(process.execPath,['--import','tsx','scripts/seed-electron-fixture.ts',temporary],{encoding:'utf8'})
- app=await electron.launch({args:[resolve('.')],env:{...process.env,XAANINK_TEST_ROOT:join(temporary,'data')},timeout:45000})
+ app=await electron.launch({args:[resolve('.')],env:{...process.env,SHAKEINK_TEST_ROOT:join(temporary,'data')},timeout:45000})
  const page=await app.firstWindow({timeout:45000})
  page.on('pageerror',error=>errors.push(error.message))
  await page.getByRole('button',{name:'账号菜单'}).waitFor({timeout:45000})

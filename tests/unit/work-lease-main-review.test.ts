@@ -31,7 +31,7 @@ const deadPid=(async()=>{const p=spawn(process.execPath,['-e','process.exit(0)']
 
 async function fixture(){
  assert.ok(callback);assert.ok(services)
- const root=await realpath(await mkdtemp(join(tmpdir(),'xx-main-review90-'))),gate=new BusinessGate(),events:string[]=[],id=randomUUID(),session={owner:52,id:randomUUID(),ready:true},frame={url:'xaanink://app/'},contents={id:52,mainFrame:frame},window={webContents:contents,isDestroyed:()=>false},event={sender:contents,senderFrame:frame}
+ const root=await realpath(await mkdtemp(join(tmpdir(),'xx-main-review90-'))),gate=new BusinessGate(),events:string[]=[],id=randomUUID(),session={owner:52,id:randomUUID(),ready:true},frame={url:'shakeink://app/'},contents={id:52,mainFrame:frame},window={webContents:contents,isDestroyed:()=>false},event={sender:contents,senderFrame:frame}
  await mkdir(join(root,'.xuanxiang-lock'))
  const ownerBytes=JSON.stringify({token:randomUUID(),pid:await deadPid,host:hostname()});await writeFile(join(root,'.xuanxiang-lock/owner.json'),ownerBytes);await writeFile(join(root,'author.txt'),'作者正文，保持字节不变')
  const directory=await directoryIdentity(root),manifest={schemaVersion:1,id,phase:'ready' as const,novelId:'novel-review90',title:'真实FS夹具',requestId:randomUUID(),requestHash:'a'.repeat(64),createdAt:new Date().toISOString()};await writeFile(join(root,'xuanxiang-work.json'),JSON.stringify(manifest))

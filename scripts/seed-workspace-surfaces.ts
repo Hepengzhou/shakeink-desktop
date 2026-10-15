@@ -11,7 +11,7 @@ import { pendingQuestionSchema } from '../src/lib/chat-protocol'
 
 async function main() {
 const directory=await realpath(resolve(process.argv[2]))
-assert(basename(directory).startsWith('xaanink-surfaces-'),'Isolated test directory required')
+assert(basename(directory).startsWith('shakeink-surfaces-'),'Isolated test directory required')
 const root=join(directory,'data'),path=join(directory,'work')
 await mkdir(path,{recursive:true})
 const info=await stat(path,{bigint:true}),works=new Workspaces(root,resolve('prisma/migrations'))

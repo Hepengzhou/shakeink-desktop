@@ -7,8 +7,8 @@ import { resolve, join } from 'node:path'
 import { createHash } from 'node:crypto'
 
 const directory = resolve('design/workspace-surfaces')
-const isolated = await mkdtemp(join(tmpdir(), 'xaanink-surface-design-'))
-const env = { ...process.env, XAANINK_TEST_ROOT: join(isolated, 'data') }
+const isolated = await mkdtemp(join(tmpdir(), 'shakeink-surface-design-'))
+const env = { ...process.env, SHAKEINK_TEST_ROOT: join(isolated, 'data') }
 delete env.ELECTRON_RUN_AS_NODE
 await mkdir(directory, { recursive: true })
 let application

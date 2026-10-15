@@ -32,7 +32,7 @@ async function fixture(){
  await writeFile(join(source,'catalog.json'),JSON.stringify({schemaVersion:1,revision:0,value:[]}));await new DataRootManager(bootstrap,source).adopt(await directoryIdentity(source))
  const trace:string[]=[],pickerEntered=Promise.withResolvers<void>(),pickerGate=Promise.withResolvers<void>(),confirmEntered=Promise.withResolvers<void>(),confirmGate=Promise.withResolvers<void>(),flushEntered=Promise.withResolvers<void>(),flushGate=Promise.withResolvers<void>()
  let cancelledPicker=false,declined=false,holdPicker=false,holdConfirm=false,holdFlush=false
- const frame={url:'xaanink://app/'},contents={id:71,mainFrame:frame},event={sender:contents,senderFrame:frame},owner={owner:71,id:randomUUID(),ready:true}
+ const frame={url:'shakeink://app/'},contents={id:71,mainFrame:frame},event={sender:contents,senderFrame:frame},owner={owner:71,id:randomUUID(),ready:true}
  const dependencies={workLease:null,applicationMetadata:new ApplicationMetadataGate(),draftJournal:{read:async()=>null},conversationDirectories:{revokeAll(){},flush:async()=>{}},recoveryExports:{cancelWindow(){},flush:async()=>{}},fileExports:{cancelWindow(){},flush:async()=>{}},bootstrapPath:bootstrap,dataRoot:source,DataRootManager,RootMigrationRequests,RootMigrationHandoff,CloseCoordinator,BusinessGate,DirectoryAuthority,authority:new DirectoryAuthority(),z,
   window:{webContents:contents,isDestroyed:()=>false,close:()=>trace.push('window-close')},draftSession:owner,
   repository:{read:async()=>{trace.push('read-settings');return{settings:{general:{defaultParent:source}}}}},homedir:()=>source,
@@ -57,7 +57,7 @@ async function fixture(){
 test('I71-01: actual migrate IPC trusts only current main frame and validates action before opening any native dialog',{timeout:5000},async()=>{
  const r=await fixture()
  try{
-  for(const event of [{...r.event,sender:{}},{...r.event,senderFrame:{url:'xaanink://app/'}},{...r.event,senderFrame:{url:'https://remote.invalid/'}}])await assert.rejects(r.call('start',event),/不受信/)
+  for(const event of [{...r.event,sender:{}},{...r.event,senderFrame:{url:'shakeink://app/'}},{...r.event,senderFrame:{url:'https://remote.invalid/'}}])await assert.rejects(r.call('start',event),/不受信/)
   for(const input of ['prepare',{},null])await assert.rejects(r.call(input,r.event));assert.deepEqual(r.trace,[]);await assert.rejects(readFile(join(r.bootstrap,'root-migration-request.json')),{code:'ENOENT'})
  }finally{await r.cleanup()}
 })

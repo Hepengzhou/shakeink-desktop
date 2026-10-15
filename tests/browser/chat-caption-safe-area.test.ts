@@ -10,7 +10,7 @@ import { chromium, type Browser, type Page } from "playwright-core"
 
 // Real ChatPanel header, WindowsMenuControl and styles; this fixture does not
 // claim full DashboardShell responsive or native Windows acceptance.
-const tree = ts.createSourceFile("ChatPanel.tsx", readFileSync(process.env.XAANINK_CAPTION_HEADER_SOURCE ?? "src/components/layout/ChatPanel.tsx", "utf8"), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX)
+const tree = ts.createSourceFile("ChatPanel.tsx", readFileSync(process.env.SHAKEINK_CAPTION_HEADER_SOURCE ?? "src/components/layout/ChatPanel.tsx", "utf8"), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX)
 let header = ""
 function visit(node: ts.Node) {
   if (ts.isJsxElement(node)) {
@@ -40,7 +40,7 @@ window.mountTitle=(platform,zoom,font,sidebarHidden)=>{
  const root=createRoot(document.getElementById('app'));flushSync(()=>root.render(<App/>));
 };` }, bundle: true, platform: "browser", format: "iife", write: false, tsconfig: "tsconfig.json" }).then(result => result.outputFiles![0].text)
 let browser: Browser
-test.before(async () => { browser = await chromium.launch({ headless: true, ...(process.env.XAANINK_TEST_CHROMIUM ? { executablePath: process.env.XAANINK_TEST_CHROMIUM } : {}) }) })
+test.before(async () => { browser = await chromium.launch({ headless: true, ...(process.env.SHAKEINK_TEST_CHROMIUM ? { executablePath: process.env.SHAKEINK_TEST_CHROMIUM } : {}) }) })
 test.after(async () => { await browser?.close() })
 async function scenario(platform: "darwin" | "win32" | null, width: number, zoom: number, font: number, sidebar: boolean, caption: number | null, run: (page: Page) => Promise<void>) {
   const page = await browser.newPage({ viewport: { width: Math.round(width / zoom), height: 600 } }), errors: string[] = []

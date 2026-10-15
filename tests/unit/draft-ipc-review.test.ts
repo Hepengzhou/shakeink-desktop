@@ -16,7 +16,7 @@ function fixture() {
   const handlers = new Map<string, (...args: unknown[]) => Promise<unknown>>()
   let finish!: (value: unknown) => void
   const pending = new Promise(resolve => { finish = resolve })
-  const frame = { url: "xaanink://app/" }, contents = { id: 51, mainFrame: frame }, event = { sender: contents, senderFrame: frame }
+  const frame = { url: "shakeink://app/" }, contents = { id: 51, mainFrame: frame }, event = { sender: contents, senderFrame: frame }
   const draftSession = { owner: 51, id: randomUUID(), ready: true }, calls: unknown[] = []
   const draftJournal = { read: () => pending, persist: (...args: unknown[]) => { calls.push(args); return pending } }
   mainFunction("ipcMain", "window", "z", "draftSession", "draftJournal", transformSync(body, { loader: "ts" }).code + "\nregisterIpc()")(
@@ -32,7 +32,7 @@ test("J51-IPC01: an old persist receipt cannot cross a renderer nonce change dur
 test("J51-IPC02: an awaited journal read cannot return manuscript data to a no-longer-current main frame", async () => {
   const f = fixture(), pending = f.call("desktop:draft-read")
   const rejected = assert.rejects(pending, /不受信|窗口/)
-  f.contents.mainFrame = { url: "xaanink://app/" }; f.finish({ privateDraft: "不得返回旧frame" })
+  f.contents.mainFrame = { url: "shakeink://app/" }; f.finish({ privateDraft: "不得返回旧frame" })
   await rejected
 })
 test("J51-IPC03: preload forwards only the draft session nonce and snapshot on the two narrow channels", async () => {

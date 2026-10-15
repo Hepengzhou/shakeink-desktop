@@ -16,7 +16,7 @@
 
 [Electron About 文档](https://www.electronjs.org/docs/latest/api/app#appsetaboutpaneloptionsoptions)：macOS 原生面板未指定 credits 时，从主 bundle 查找 Credits.html。[Electron macOS 实现](https://github.com/electron/electron/blob/main/shell/browser/browser_mac.mm) 的 ShowAboutPanel 使用 initWithString 处理 credits，直接传 HTML 字符串不会产生链接。因此采用安装包 `Contents/Resources/Credits.html`，保留原生面板；开发版 Electron 默认 bundle 与正式包不同，macOS 链接需正式包验收。
 
-项目仓库地址由用户提供：[mySingleLive/xaanink-desktop](https://github.com/mySingleLive/xaanink-desktop)。本轮网页工具访问首页返回 Internal Error，不能据此断言仓库公开性/可用性，不阻止固定目标入口实现。
+项目仓库地址由用户提供：[mySingleLive/shakeink-desktop](https://github.com/mySingleLive/shakeink-desktop)。本轮网页工具访问首页返回 Internal Error，不能据此断言仓库公开性/可用性，不阻止固定目标入口实现。
 
 ## 结论
 

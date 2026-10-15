@@ -7,7 +7,7 @@ import sharp from 'sharp'
 
 const project = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const brand = '玄印写作'
-const englishBrand = 'XaanInk'
+const englishBrand = 'ShakeInk'
 const fontSource = 'design/assets/NotoSansSC-Regular.ttf'
 const fontBytes = await readFile(join(project, fontSource))
 const fontHash = createHash('sha256').update(fontBytes).digest('hex')

@@ -6,11 +6,11 @@ import {createRequire} from 'node:module'
 import {mkdtemp,rm,writeFile,realpath,mkdir} from 'node:fs/promises'
 import {tmpdir} from 'node:os'
 import {join,resolve} from 'node:path'
-const require=createRequire(import.meta.url),temporary=await realpath(await mkdtemp(join(tmpdir(),'xaanink-macos-reopen-'))),root=join(temporary,'data'),evidence='docs/evidence/implementation-12',startedAt=new Date().toISOString(),errors=[]
+const require=createRequire(import.meta.url),temporary=await realpath(await mkdtemp(join(tmpdir(),'shakeink-macos-reopen-'))),root=join(temporary,'data'),evidence='docs/evidence/implementation-12',startedAt=new Date().toISOString(),errors=[]
 let app,page,passed=false
 try{
  assert.equal(process.platform,'darwin');await mkdir(evidence,{recursive:true});execFileSync(process.execPath,['--import','tsx','scripts/seed-electron-fixture.ts',temporary],{encoding:'utf8'})
- app=await electron.launch({executablePath:require('electron'),args:[resolve('.')],env:{...process.env,XAANINK_TEST_ROOT:root},timeout:60000})
+ app=await electron.launch({executablePath:require('electron'),args:[resolve('.')],env:{...process.env,SHAKEINK_TEST_ROOT:root},timeout:60000})
  page=await app.firstWindow();page.on('pageerror',error=>errors.push(error.message));await page.getByRole('button',{name:'账号菜单'}).waitFor({timeout:60000})
  const pid=app.process().pid,before=await page.evaluate(()=>window.desktop.bootstrap())
  await page.evaluate(()=>window.desktop.command('window.close')).catch(()=>{})

@@ -33,7 +33,7 @@ equalLines 保留普通 UI 与分栏 border 比较，单独验证真实 caption 
 独立运行修订后相同命令：
 
 ```powershell
-$env:XAANINK_TEST_CHROMIUM='C:\Program Files\Google\Chrome\Application\chrome.exe'
+$env:SHAKEINK_TEST_CHROMIUM='C:\Program Files\Google\Chrome\Application\chrome.exe'
 & 'C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe' --import tsx --test --test-name-pattern='WCO-S04' tests/browser/empty-content-hide.test.ts
 ```
 

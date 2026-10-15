@@ -12,7 +12,7 @@ import type { AvatarDraft } from "@desktop/shared/ipc"
 function Avatar({ name, source }: { name: string; source?: string }) {
   return <>{name.slice(0, 1)}{source && <img key={source} src={source} alt="" className="absolute inset-0 size-full object-cover" onError={event => { event.currentTarget.hidden = true }} />}</>
 }
-const assetUrl = (id: string | null) => id ? `xaanink://asset/global/${id}` : undefined
+const assetUrl = (id: string | null) => id ? `shakeink://asset/global/${id}` : undefined
 export interface ProfileEditorDialogProps {
   open?: boolean
   title?: string

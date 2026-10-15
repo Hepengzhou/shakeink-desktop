@@ -41,12 +41,12 @@ CSS 与精确正文标记未发现阻断问题。当前新增事件适配器有�
 
 执行环境：Node v24.21.0，已安装的 `C:/Program Files/Google/Chrome/Application/chrome.exe`，隔离合成文字，所有浏览器网络路由 abort。
 
-首次直接运行被沙箱阻止子进程（spawn EPERM），升级运行后默认 Playwright 浏览器缓存不存在；随后显式设置 XAANINK_TEST_CHROMIUM 使用现有 Chrome，未安装新浏览器。
+首次直接运行被沙箱阻止子进程（spawn EPERM），升级运行后默认 Playwright 浏览器缓存不存在；随后显式设置 SHAKEINK_TEST_CHROMIUM 使用现有 Chrome，未安装新浏览器。
 
 命令：
 
 ```powershell
-$env:XAANINK_TEST_CHROMIUM='C:\Program Files\Google\Chrome\Application\chrome.exe'
+$env:SHAKEINK_TEST_CHROMIUM='C:\Program Files\Google\Chrome\Application\chrome.exe'
 & 'C:/Users/Administrator/AppData/Local/npm-cache/_npx/387698761821791d/node_modules/node/bin/node.exe' --import tsx --test tests/browser/text-selection.test.ts
 ```
 
@@ -68,7 +68,7 @@ $env:XAANINK_TEST_CHROMIUM='C:\Program Files\Google\Chrome\Application\chrome.ex
 
 ## Windows 脚本能证明的范围
 
-`seed-text-selection-fixture.ts` 只接受真实路径 basename 以 xaanink-text-selection- 开头的测试目录；在该目录内使用真实 Workspaces/Prisma/VersionedStore/DraftJournal 创建合成作品、章节和保留草稿。未配置模型或真实 Key，未使用用户工作目录。
+`seed-text-selection-fixture.ts` 只接受真实路径 basename 以 shakeink-text-selection- 开头的测试目录；在该目录内使用真实 Workspaces/Prisma/VersionedStore/DraftJournal 创建合成作品、章节和保留草稿。未配置模型或真实 Key，未使用用户工作目录。
 
 `verify-text-selection.mjs` 运行实际编译的 Windows 开发态 Electron，隔离 root、真实恢复 dialog、零模型 ChatPanel、双主题设置、实际章节及 Monaco/Markdown；scope 已区分开发态/安装包/macOS/物理 IME。审查脚本不等于实际执行通过。
 

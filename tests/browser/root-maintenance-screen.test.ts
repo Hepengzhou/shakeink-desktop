@@ -38,7 +38,7 @@ globalThis.mountWithoutBridge=()=>{delete window.desktopMaintenance;window.deskt
 ` }, bundle: true, platform: "browser", format: "iife", write: false, tsconfig: "tsconfig.json" }).then(result => result.outputFiles![0].text)
 
 let browser: Browser
-test.before(async () => { browser = await chromium.launch({ headless: true, ...(process.env.XAANINK_TEST_CHROMIUM ? { executablePath: process.env.XAANINK_TEST_CHROMIUM } : {}) }) })
+test.before(async () => { browser = await chromium.launch({ headless: true, ...(process.env.SHAKEINK_TEST_CHROMIUM ? { executablePath: process.env.SHAKEINK_TEST_CHROMIUM } : {}) }) })
 test.after(async () => { await browser?.close() })
 const initial: RootMaintenanceState = { version: 1, revision: 1, phase: "preparing", theme: "paper", sourcePath: "/Volumes/写作/旧数据", targetPath: "/Volumes/写作/新数据", copiedFiles: 0, totalFiles: null, canCancel: true, canContinue: false, pendingCount: 0 }
 async function scenario(run: (page: Page) => Promise<void>) {
@@ -134,7 +134,7 @@ test("RUI12-07: cleanup-pending is truthful and distinct from complete, cancelle
   await mount(page,{...initial,phase:"cleanup-pending",canContinue:true,canCancel:false,pendingCount:3})
   await page.getByText("旧目录仍有 3 项待清理，可继续使用新目录。",{exact:true}).waitFor()
   assert.doesNotMatch(await page.getByRole("status").innerText(),/全部清理完成/)
-  if(process.env.XAANINK_TEST_SCREENSHOTS)await page.screenshot({path:"docs/evidence/implementation-12/root-maintenance-ui-paper-cleanup-pending.png"})
+  if(process.env.SHAKEINK_TEST_SCREENSHOTS)await page.screenshot({path:"docs/evidence/implementation-12/root-maintenance-ui-paper-cleanup-pending.png"})
   const terminals=[["complete","迁移完成"],["cancelled","迁移已取消"],["failed","迁移失败"],["recovery-required","需要恢复"]] as const
   for (const [index,[phase,text]] of terminals.entries()) {
     await emit(page,{revision:index+2,phase,canCancel:false,canContinue:phase==="complete",pendingCount:0})
@@ -184,7 +184,7 @@ test("RUI12-11: paper and ink use original semantic surface/font/Button, with a 
   assert.equal(await page.locator('[data-slot="button"]').count(),2)
   assert.equal(await page.locator(".desktop-drag").count(),1)
   const ink=await page.locator("main").evaluate(element=>({surface:getComputedStyle(element).backgroundColor,foreground:getComputedStyle(element).color,font:getComputedStyle(element).fontFamily}))
-  if(process.env.XAANINK_TEST_SCREENSHOTS)await page.screenshot({path:"docs/evidence/implementation-12/root-maintenance-ui-ink.png"})
+  if(process.env.SHAKEINK_TEST_SCREENSHOTS)await page.screenshot({path:"docs/evidence/implementation-12/root-maintenance-ui-ink.png"})
   await emit(page,{revision:2,theme:"paper",sourcePath})
   const paper=await page.locator("main").evaluate(element=>({surface:getComputedStyle(element).backgroundColor,foreground:getComputedStyle(element).color,font:getComputedStyle(element).fontFamily}))
   assert.notEqual(ink.surface,paper.surface); assert.notEqual(ink.foreground,paper.foreground); assert.equal(ink.font,paper.font)
@@ -195,7 +195,7 @@ test("RUI12-11: paper and ink use original semantic surface/font/Button, with a 
   await page.getByRole("button",{name:"取消迁移",exact:true}).scrollIntoViewIfNeeded()
   const button=await page.getByRole("button",{name:"取消迁移",exact:true}).boundingBox()
   assert.ok(button&&button.y>=0&&button.y+button.height<=621,JSON.stringify(button))
-  if(process.env.XAANINK_TEST_SCREENSHOTS)await page.screenshot({path:"docs/evidence/implementation-12/root-maintenance-ui-paper-narrow.png"})
+  if(process.env.SHAKEINK_TEST_SCREENSHOTS)await page.screenshot({path:"docs/evidence/implementation-12/root-maintenance-ui-paper-narrow.png"})
 }))
 
 test("RUI12-12: missing restricted bridge shows a safe unavailable state and never calls a workbench bridge", async () => scenario(async page => {

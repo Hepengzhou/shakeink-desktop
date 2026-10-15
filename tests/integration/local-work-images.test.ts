@@ -32,7 +32,7 @@ test("built worker saves original cover/scene histories into a work and serves e
   const created=await rpc.call<{novel:{id:string}}>("create-work",{selection:await grants.consume(grant.id,"create-work","image-fixture"),input:{title:"本地图片原组件",requestId:"create-image-fixture"}})
   const novel=created.novel.id,small=await sharp({create:{width:3,height:2,channels:3,background:"#cbbba3"}}).png().toBuffer()
   const cover=await request(`/api/novels/${novel}/cover/images`,upload(small));assert.equal(cover.status,200)
-  const marker=JSON.parse(await readFile(join(directory,"xaanink-work.json"),"utf8"))
+  const marker=JSON.parse(await readFile(join(directory,"shakeink-work.json"),"utf8"))
   assert.match(cover.data.url,new RegExp(`^/_desktop/assets/${marker.id}/[a-f0-9-]+\\.png$`))
   assert.deepEqual(Buffer.from((await rpc.call<{bytes:Uint8Array}>("image-asset",cover.data.url)).bytes),small)
   assert.equal((await request(`/api/novels/${novel}/cover/images`)).data.images.length,1)

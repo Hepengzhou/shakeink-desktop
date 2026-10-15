@@ -50,7 +50,7 @@ const portableSettingsSchema=settingsSchema.extend({
 })
 const modelPaths:ModelSelectionPath[]=["/agent/textModelId","/agent/reviewModelId","/agent/imageModelId"]
 const fileSchema=z.object({
- format:z.enum(["xuanxiang-settings","xaanink-settings"]),version:z.literal(1),exportedAt:z.iso.datetime(),
+ format:z.enum(["xuanxiang-settings","shakeink-settings"]),version:z.literal(1),exportedAt:z.iso.datetime(),
  settings:portableSettingsSchema,modelReferences:z.array(referenceSchema).max(1000),
 }).strict().superRefine((file,context)=>{
  const references=new Map(file.modelReferences.map(reference=>[reference.id,reference]))
@@ -140,7 +140,7 @@ export function exportConfiguration(current:ConfigurationSnapshot):string{
  if(!parsed.success)return fail("INVALID_SNAPSHOT")
  const {defaultParent:_path,...general}=parsed.data.general,{avatarAssetId:_avatar,...user}=parsed.data.user
  const references=current.models.map(model=>({id:model.id,name:model.name,provider:model.provider,...(model.providerName===undefined?{}:{providerName:model.providerName}),protocol:model.protocol,modelId:model.modelId,kind:model.kind}))
- const file=fileSchema.safeParse({format:"xaanink-settings",version:1,exportedAt:new Date().toISOString(),settings:{...parsed.data,general,user},modelReferences:references})
+ const file=fileSchema.safeParse({format:"shakeink-settings",version:1,exportedAt:new Date().toISOString(),settings:{...parsed.data,general,user},modelReferences:references})
  if(!file.success)return fail("INVALID_SCHEMA")
  const text=JSON.stringify(file.data,null,2)+"\n"
  if(Buffer.byteLength(text,"utf8")>MAX_CONFIGURATION_BYTES)return fail("CONFIG_TOO_LARGE")

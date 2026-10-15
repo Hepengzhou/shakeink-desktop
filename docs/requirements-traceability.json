@@ -13,7 +13,7 @@
       "renderer": "ModelConfigurationDialog 异步回填（竞态/范围守卫）、Eye/EyeOff 切换 type=password/text、未修改的回填 Key 映射为空串保持留空保留原密钥与不提升 authRevision；input-commands/native-text-edits/text-context-selection 移除掩码态复制例外，按 data-desktop-clipboard 属性继续禁止引用外发",
       "semantics": "密文态复制/剪切三层禁用（命令 enabled、剪贴板 available、菜单能力布尔）；明文态回到普通文本框原生行为"
     },
-    "results": {"scopedUnitAndIntegration": "166/169（3 个失败为工作树内进行中 model-catalog 工作所致，已用改动前对话框复现确认与本功能无关）", "scopedBrowser": "4/4（系统 Chrome，XAANINK_TEST_CHROMIUM）", "typecheck": "passed", "realElectronAcceptance": "15/15（隔离数据根 + 真实保存 IPC 落 Key + 真实原生菜单/系统剪贴板 + 眼睛按钮无动画计算样式与按压几何断言，scripts/verify-api-key-reveal.mjs）", "fullSuiteExecuted": false},
+    "results": {"scopedUnitAndIntegration": "166/169（3 个失败为工作树内进行中 model-catalog 工作所致，已用改动前对话框复现确认与本功能无关）", "scopedBrowser": "4/4（系统 Chrome，SHAKEINK_TEST_CHROMIUM）", "typecheck": "passed", "realElectronAcceptance": "15/15（隔离数据根 + 真实保存 IPC 落 Key + 真实原生菜单/系统剪贴板 + 眼睛按钮无动画计算样式与按压几何断言，scripts/verify-api-key-reveal.mjs）", "fullSuiteExecuted": false},
     "evidence": "docs/evidence/api-key-reveal/（密文回填、明文、回切密文三张截图与 report.json 菜单能力记录）",
     "limits": "未跑全量；未做真实 macOS 验证；浏览器用例用系统 Chrome 代替 Electron Chromium。密钥仅经新 IPC 进入渲染进程输入框，不进日志/事件/对话引用；演示使用隔离数据根与公开假 Key，已清理测试剪贴板与临时目录。"
   },
@@ -39,13 +39,13 @@
     "version": "0.1.0-alpha",
     "target": "win32-x64-nsis",
     "status": "built-and-scoped-package-verified; full-regression-not-green",
-    "artifact": "release/XaanInk-0.1.0-alpha-win-x64.exe",
+    "artifact": "release/ShakeInk-0.1.0-alpha-win-x64.exe",
     "sha256": "58949af762101bf347139f113a2d1113d3c97ebbee28abcccba02b8566740d89",
     "plan": "docs/reviews/2026-10-14-alpha-release-plan.md",
     "review": "docs/reviews/2026-10-14-alpha-release-review.md",
     "verification": "docs/reviews/2026-10-14-alpha-release-verification.md",
     "results": {"versionTests": "5/5", "build": "passed", "packagingReview": "4/4", "packagedWindowsChecks": "22/22", "core": {"tests": 2069, "pass": 2028, "fail": 38, "cancelled": 1, "skipped": 2}, "browserInitial": {"tests": 550, "pass": 545, "fail": 5}, "browserAffectedFilesSerialRecheck": {"files": 4, "tests": 63, "pass": 63, "fail": 0, "stableSources": true}},
-    "localInstallation": {"date": "2026-10-14", "path": "C:/Program Files/xaanink", "previousVersion": "0.1.0", "version": "0.1.0-alpha", "installerExitCode": 0, "installedExecutableMatchesRelease": true, "projectResources": 340, "packagedFiles": 26763, "evidence": "docs/evidence/alpha-release/local-installation.json", "resourceEvidence": "docs/evidence/alpha-release/local-installation-resources.json", "scope": "User-authorized reinstall into existing per-machine location; registry, executable and installed project resources verified. No user data read or full business acceptance."},
+    "localInstallation": {"date": "2026-10-14", "path": "C:/Program Files/xaanink", "renameNote": "2026-10-15 品牌改名 ShakeInk；该 path 为改名前 0.1.0-alpha 真实安装位置的事实记录，故意保留原名。新安装使用 shakeink 目录。", "previousVersion": "0.1.0", "version": "0.1.0-alpha", "installerExitCode": 0, "installedExecutableMatchesRelease": true, "projectResources": 340, "packagedFiles": 26763, "evidence": "docs/evidence/alpha-release/local-installation.json", "resourceEvidence": "docs/evidence/alpha-release/local-installation-resources.json", "scope": "User-authorized reinstall into existing per-machine location; registry, executable and installed project resources verified. No user data read or full business acceptance."},
     "boundaries": "Isolated packaged app checks use no models/keys. Narrow navigation fallback only; wide focus not accepted. Local NSIS reinstall verified separately; macOS not executed. Full repository acceptance remains incomplete."
   },
   "promptLibraryExpansionRevision": {
@@ -120,7 +120,7 @@
     "date": "2026-10-13",
     "displayVersion": "0.10-alpha",
     "packageVersion": "0.10.0-alpha",
-    "repository": "https://github.com/mySingleLive/xaanink-desktop",
+    "repository": "https://github.com/mySingleLive/shakeink-desktop",
     "entries": ["settings-about-last-highlighted-row", "onboarding-completed-welcome", "standalone-about"],
     "status": "implemented-scoped-verified-full-core-not-all-green",
     "research": "design/version-star/01-research.md",
@@ -3073,7 +3073,7 @@
     "names": {
       "full": "玄印写作",
       "short": "玄印",
-      "english": "XaanInk"
+      "english": "ShakeInk"
     },
     "compatibility": "旧目录、作品、锁和控制文件按原家族继续读取；新建应用/作品和导出使用新名称；不重写旧数据。",
     "status": "verified-macos-arm64",
@@ -3301,7 +3301,7 @@
   "startupRecovery": {
     "date": "2026-10-12",
     "scope": [
-      "默认配置目录 [用户目录]/.xaanink 缺失/为空 → 自动创建初始化并进入新人引导",
+      "默认配置目录 [用户目录]/.shakeink 缺失/为空 → 自动创建初始化并进入新人引导",
       "目录存在但文件丢失 → 冷态自动修复（指针重建/marker 重建/初始化续跑）",
       "无法修复 → 恢复对话框 [退出应用]/[重置配置数据]，二次确认后清空重建并自动重启进引导",
       "消灭只能退出的启动死局（含自定义根丢失的重置出口与 worker 启动失败路由）"
@@ -3340,7 +3340,7 @@
     "boundaries": [
       "BRAND_BOOTSTRAP_CONFLICT 与 LEGACY_BACKUP_RECOVERY* 维持错误框人工处理（保护恢复证据链）",
       "不恢复已被删除的用户数据；自定义目标目录与作品目录永不删除",
-      "隔离测试根 XAANINK_TEST_ROOT 下分类/重置只作用于隔离根"
+      "隔离测试根 SHAKEINK_TEST_ROOT 下分类/重置只作用于隔离根"
     ],
     "verification": {
       "typecheck": "passed",

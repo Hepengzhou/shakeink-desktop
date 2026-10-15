@@ -25,7 +25,7 @@ const body=["trusted","exportDraftSnapshot","registerIpc"].map(name=>{
 }).join("\n")
 const snapshot=():DraftSnapshot=>({version:1,revision:3,createdAt:new Date().toISOString(),autosaves:[],sources:{chat:{draft:"unapproved source"}},issues:[]})
 function rig(chosen:{canceled:boolean;filePath?:string},hooks:Partial<Pick<FileExportOptions,"beforeRename"|"beforeDirectorySync">>={}){
- const handlers=new Map<string,(...args:unknown[])=>Promise<unknown>>(),frame={url:"xaanink://app/"},contents={id:53,mainFrame:frame},event={sender:contents,senderFrame:frame}
+ const handlers=new Map<string,(...args:unknown[])=>Promise<unknown>>(),frame={url:"shakeink://app/"},contents={id:53,mainFrame:frame},event={sender:contents,senderFrame:frame}
  const draftSession={owner:53,id:randomUUID()},events:PrepareClose[]=[],channel=new RendererCloseChannel(value=>events.push(value));let dialogs=0
  const dialog={showSaveDialog:async()=>{dialogs++;return chosen}}
  const recoveryExports=new FileExports({...hooks,assertOwner:owner=>{if(owner!==`53:${draftSession.id}`)throw Error("草稿所属窗口已变化")},chooseSave:async()=>{const result=await dialog.showSaveDialog();return result.canceled?null:result.filePath??null},guardTarget:async()=>{}})

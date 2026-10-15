@@ -44,7 +44,7 @@ for (const [provider, id] of [['openai', 'gpt-6.1-sol'], ['zai', 'glm-5.3'], ['m
 
 async function fixture(options = {}) {
   const { ModelCatalogRepository } = await import('../../desktop/main/model-catalog-repository')
-  const root = await mkdtemp(join(tmpdir(), 'xaanink-catalog-')), path = join(root, 'model-catalogs.json')
+  const root = await mkdtemp(join(tmpdir(), 'shakeink-catalog-')), path = join(root, 'model-catalogs.json')
   return { root, path, repo: new ModelCatalogRepository(path, options), reopen: () => new ModelCatalogRepository(path), async close() { await rm(root, { recursive: true, force: true }) } }
 }
 test('MC-03/06/07: durable replacement, empty snapshots, no credentials/grants and scope isolation', async () => {

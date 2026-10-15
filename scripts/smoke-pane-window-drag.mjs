@@ -46,7 +46,7 @@ if (process.argv[2] === '--verify-report') {
 }
 
 const directory = await realpath(resolve(process.argv[2] ?? ''))
-assert(directory.startsWith('/private/tmp/xaanink-pane-drag-'), 'Explicit isolated fixture required')
+assert(directory.startsWith('/private/tmp/shakeink-pane-drag-'), 'Explicit isolated fixture required')
 const root = join(directory, 'data'), evidence = resolve('docs/evidence/implementation-44')
 await mkdir(evidence, { recursive: true })
 const report = { scope: 'macOS development Electron, full real React workbench, system mouse through cua_repl; Windows unexecuted', startedAt: new Date().toISOString(), sourceHashes: {}, checks: [] }
@@ -61,11 +61,11 @@ async function inspect(page) {
   return { window, regions }
 }
 try {
-  app = await _electron.launch({ args: [resolve('.')], env: { ...process.env, XAANINK_TEST_ROOT: root }, timeout: 45000 })
+  app = await _electron.launch({ args: [resolve('.')], env: { ...process.env, SHAKEINK_TEST_ROOT: root }, timeout: 45000 })
   const page = await app.firstWindow({ timeout: 45000 })
   page.on('pageerror', error => errors.push(error.message))
   await page.getByRole('button', { name: '账号菜单' }).waitFor({ timeout: 45000 })
-  assert.equal(page.url(), 'xaanink://app/')
+  assert.equal(page.url(), 'shakeink://app/')
   const bootstrap = await page.evaluate(() => window.desktop.bootstrap())
   assert.equal(bootstrap.dataRoot, root); assert.equal(bootstrap.models.length, 0)
   await writeFile(join(directory, 'native-window.json'), JSON.stringify({ ready: true, sequence, ...await inspect(page) }, null, 2))

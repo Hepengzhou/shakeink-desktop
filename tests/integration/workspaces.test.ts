@@ -21,7 +21,7 @@ test("DESK-D01/D04: explicit work directories hold independent original schema d
     const b = await works.create(await selected(join(root, "乙")), { title: "乙", requestId: "request-two" })
     const titles = await Promise.all([a,b].map(work => works.run(work.id, async () => (await prisma.novel.findMany()).map(novel => novel.title))))
     assert.deepEqual(titles, [["甲"], ["乙"]])
-    assert.equal(JSON.parse(await readFile(join(a.path, "xaanink-work.json"), "utf8")).novelId, a.novelId)
+    assert.equal(JSON.parse(await readFile(join(a.path, "shakeink-work.json"), "utf8")).novelId, a.novelId)
     await works.run(a.id, async () => {
       await assert.rejects(createNovelOnce("local-author", { title: "不允许隐式建书", requestId: "unselected-directory" }), { code: "DIRECTORY_REQUIRED" })
     })
@@ -37,7 +37,7 @@ test("DESK-D01/D04: explicit work directories hold independent original schema d
     await assert.rejects(works.open(await selected(join(root, "copy"))), /重复|重新关联/)
     await rename(a.path, join(root, "moved-original")); await mkdir(a.path)
     await assert.rejects(works.create(await selected(a.path), { title: "甲", requestId: "request-one" }), /变化/)
-    await assert.rejects(readFile(join(a.path, "xaanink-work.json")), { code: "ENOENT" })
+    await assert.rejects(readFile(join(a.path, "shakeink-work.json")), { code: "ENOENT" })
   } finally { await works.close(); await rm(root, { recursive: true, force: true }) }
 })
 test("DESK-D02/D03: refuse nonempty creation and missing/mismatched work data without creating an empty database", async () => {
@@ -62,7 +62,7 @@ test("DESK-D02/D03: refuse nonempty creation and missing/mismatched work data wi
     await mkdir(path); await mkdir(other); const proof = await selected(path)
     await rename(path, join(root, "old")); await symlink(other, path, "dir")
     await assert.rejects(works.create(proof, { title: "不应写入", requestId: "swapped-path" }), /变化|授权/)
-    await assert.rejects(readFile(join(other, "xaanink-work.json")), { code: "ENOENT" })
+    await assert.rejects(readFile(join(other, "shakeink-work.json")), { code: "ENOENT" })
   } finally { await works.close(); await rm(root, { recursive: true, force: true }) }
 })
 
@@ -92,7 +92,7 @@ test("DESK-D03: failed first migration can resume the same work creation without
     const directory = join(root, "selected"); await mkdir(directory)
     const input = { title: "重试作品", requestId: "retry-work-request" }
     await assert.rejects(works.create(await selected(directory), input), /syntax error/)
-    const before = JSON.parse(await readFile(join(directory, "xaanink-work.json"), "utf8"))
+    const before = JSON.parse(await readFile(join(directory, "shakeink-work.json"), "utf8"))
     assert.equal(before.phase,"creating")
     await writeFile(join(directory, "author.txt"), "保留我")
     await works.close(); works = new Workspaces(join(root, "app"), migrations); await works.initialize()
@@ -107,10 +107,10 @@ test("DESK-D03: ordinary opens never steal stale directory leases", async () => 
   try {
     await works.initialize(); const directory = join(root, "selected"); await mkdir(directory)
     const work = await works.create(await selected(directory), { title: "原作品", requestId: "stale-work-request" })
-    await mkdir(join(directory, ".xaanink-lock")); const owner = JSON.stringify({ token: "previous-token", host: hostname(), pid: 2147483647 })
-    await writeFile(join(directory, ".xaanink-lock", "owner.json"), owner)
+    await mkdir(join(directory, ".shakeink-lock")); const owner = JSON.stringify({ token: "previous-token", host: hostname(), pid: 2147483647 })
+    await writeFile(join(directory, ".shakeink-lock", "owner.json"), owner)
     await assert.rejects(works.run(work.id, () => prisma.novel.count()), /锁需要恢复/)
-    assert.equal(await readFile(join(directory, ".xaanink-lock", "owner.json"), "utf8"), owner)
+    assert.equal(await readFile(join(directory, ".shakeink-lock", "owner.json"), "utf8"), owner)
   } finally { await works.close(); await rm(root, { recursive: true, force: true }) }
 })
 
@@ -122,7 +122,7 @@ test("DESK-D03: owned unready inbox resumes initialization after a migration err
     await assert.rejects(works.run("inbox", () => prisma.user.count())); await works.close()
     works = new Workspaces(join(root, "app"), migrations); await works.initialize()
     assert.equal(await works.run("inbox", () => prisma.user.count()), 1)
-    assert.equal(JSON.parse(await readFile(join(root, "app", "xaanink-app.json"), "utf8")).inboxReady, true)
+    assert.equal(JSON.parse(await readFile(join(root, "app", "shakeink-app.json"), "utf8")).inboxReady, true)
   } finally { await works?.close(); await rm(root, { recursive: true, force: true }) }
 })
 
@@ -142,7 +142,7 @@ test("DESK-D04: failed LRU retirement retains the real engine and lease for a la
     await assert.rejects(works.run("inbox", () => prisma.user.count()), /fixture close failure/)
     await assert.rejects(works.run(records[0].id, () => prisma.novel.count()), /关闭未完成/)
     await works.close()
-    await assert.rejects(readFile(join(records[0].path, ".xaanink-lock", "owner.json")), { code: "ENOENT" })
+    await assert.rejects(readFile(join(records[0].path, ".shakeink-lock", "owner.json")), { code: "ENOENT" })
     assert.equal(await works.run(records[0].id, () => prisma.novel.count()), 1)
   } finally { await works.close(); await rm(root, { recursive: true, force: true }) }
 })

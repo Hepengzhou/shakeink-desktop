@@ -25,7 +25,7 @@ work-lease-handoff 已输出全部 22 个结果，包括 LH23-20 实际 120 秒�
 
 类型检查（session 58025）、UI 构建（74694）、desktop 构建、打包（58959）均实际 exit 0；after-pack 验证 314 资源、PGlite 已关闭。命令日志及会话编号汇总于 `checks.json`，静态 JSON 中的 exit 字段不能单独代替真实执行记录。
 
-最终安装器 `release/XaanInk-0.1.0-win-x64.exe`：276571803 bytes，SHA256 `c01a495d7f98e14a8211b79a143b71289b43cbb99cbb65307ae57d7731344d29`。dist/main 与包内 main 均为 `8935653ae32a3760dc616cbe127b16cd913a443d5c5c485804086fc71d5bd400`，与上一轮相同；CSS 源为 `2abb25ebe1b07dc521b351ad951ea51431c2906a74fb1d27eb98a26053a51a43`。已运行 unpacked exe，未执行 NSIS 安装/升级。
+最终安装器 `release/ShakeInk-0.1.0-win-x64.exe`：276571803 bytes，SHA256 `c01a495d7f98e14a8211b79a143b71289b43cbb99cbb65307ae57d7731344d29`。dist/main 与包内 main 均为 `8935653ae32a3760dc616cbe127b16cd913a443d5c5c485804086fc71d5bd400`，与上一轮相同；CSS 源为 `2abb25ebe1b07dc521b351ad951ea51431c2906a74fb1d27eb98a26053a51a43`。已运行 unpacked exe，未执行 NSIS 安装/升级。
 
 两个完整运行的源快照一致，977 个来源相对上轮最新完整运行仅 CSS 与 caption-alignment 测试两个文件 hash 改变。本轮构建/测试沿用既有 catalog 的 LF 字节，9 个 catalog 源临时只归一换行，routes 由既有生成器输出 LF；结束后 10 个文件均恢复精确原始字节，归一 LF 后仍逐字节匹配两套运行快照，其它源无运行后变化。11 个产品/关联测试源当前 raw hash 均与两套完整运行一致。prepare/restore 脚本与恢复记录保留，没有遗失其它人的修改或把换行等价称为 raw 全树相同。
 

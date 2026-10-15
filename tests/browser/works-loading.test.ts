@@ -30,7 +30,7 @@ window.mountWorksFixture=({healthy=false,reason='stale-lease',bridge=true,empty=
 } }], loader: { '.css': 'empty' } }).then(result => result.outputFiles![0].text)
 
 let browser: Browser
-test.before(async () => { browser = await chromium.launch({ headless: true, executablePath: process.env.XAANINK_TEST_CHROMIUM }) })
+test.before(async () => { browser = await chromium.launch({ headless: true, executablePath: process.env.SHAKEINK_TEST_CHROMIUM }) })
 test.after(async () => { await browser?.close() })
 async function scenario(options: Record<string, unknown>, run: (page: Page) => Promise<void>) {
   const page = await browser.newPage(), errors: string[] = []

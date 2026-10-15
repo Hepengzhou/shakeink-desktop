@@ -105,8 +105,8 @@ async function windowFixture(platform:'darwin'|'win32'='darwin'){
  class Window extends EventEmitter{
   static getAllWindows(){return windows.filter(window=>!window.isDestroyed())}
   preferences:any;webContents:any;destroyed=false
-  constructor(preferences:any){super();this.preferences=preferences;this.webContents=Object.assign(new EventEmitter(),{id:501,mainFrame:{url:'xaanink://app/'},session:preferences.webPreferences.session,send(){},setWindowOpenHandler(){}});windows.push(this)}
-  isDestroyed(){return this.destroyed}setMenu(){}show(){}focus(){}minimize(){trace.push('minimize')}setTitle(value:string){this.preferences.title=value}async loadURL(url:string){assert.equal(url,'xaanink://app/')}
+  constructor(preferences:any){super();this.preferences=preferences;this.webContents=Object.assign(new EventEmitter(),{id:501,mainFrame:{url:'shakeink://app/'},session:preferences.webPreferences.session,send(){},setWindowOpenHandler(){}});windows.push(this)}
+  isDestroyed(){return this.destroyed}setMenu(){}show(){}focus(){}minimize(){trace.push('minimize')}setTitle(value:string){this.preferences.title=value}async loadURL(url:string){assert.equal(url,'shakeink://app/')}
  }
  const templates:any[][]=[],popupOwners:any[]=[],menu={buildFromTemplate(template:any[]){templates.push(template);return{items:template,popup(options:{window:unknown}){popupOwners.push(options.window);trace.push('popup')}}},setApplicationMenu(){}}
  const electron={app,BrowserWindow:Window,ipcMain:{handle:(key:string,run:(...args:any[])=>any)=>handlers.set(key,run)},Menu:menu,nativeTheme:{shouldUseDarkColors:false},session:{fromPartition:()=>memory,get defaultSession():never{throw Error('ORIGINAL_SESSION_FORBIDDEN')}},dialog:{async showOpenDialog(){entered.resolve();return picker.promise},async showMessageBox(){return{response:0}}}}
@@ -126,7 +126,7 @@ test('RL100-04 main-frame document navigation invalidates the old restricted bri
   await f.entered.promise
   // Installed Electron uses details.isMainFrame. This is an actual callback
   // on the original module, with the Electron emitter boundary controlled.
-  f.windows[0].webContents.emit('did-start-navigation',{isMainFrame:true,url:'xaanink://app/'})
+  f.windows[0].webContents.emit('did-start-navigation',{isMainFrame:true,url:'shakeink://app/'})
   assert.throws(()=>f.state(),/UNTRUSTED/)
   await new Promise(setImmediate);assert.equal(f.trace.includes('quit'),false,'process exit waits actual picker work')
   f.picker.resolve({canceled:false,filePaths:[f.moved]});await choice.catch(()=>{})
@@ -186,7 +186,7 @@ test('RL100-07 Windows-branch popup is fixed and owner-bound; renderer templates
   await f.command('menu');assert.deepEqual(f.popupOwners,[f.windows[0]])
   const owned=f.windows[0],handler=f.handlers.get('desktop:relocation-command')!
   await assert.rejects(handler({sender:owned.webContents,senderFrame:owned.webContents.mainFrame},{type:'menu',path:f.moved,template:[{role:'quit'}]}))
-  await assert.rejects(handler({sender:owned.webContents,senderFrame:{url:'xaanink://app/'}},'menu'))
+  await assert.rejects(handler({sender:owned.webContents,senderFrame:{url:'shakeink://app/'}},'menu'))
   owned.webContents.emit('did-start-navigation',{isMainFrame:true})
   await assert.rejects(f.command('menu'))
   assert.equal(f.popupOwners.length,1)

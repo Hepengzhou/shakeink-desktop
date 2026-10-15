@@ -17,7 +17,7 @@ function deferred<T>() {
  */
 export class LocalPGliteAdapter implements SqlDriverAdapterFactory {
   readonly provider = "postgres" as const
-  readonly adapterName = "xaanink-pglite"
+  readonly adapterName = "shakeink-pglite"
   constructor(private readonly engine: PGlite,private readonly assertAuthority?:()=>Promise<void>) {}
 
   async connect(): Promise<SqlDriverAdapter> {

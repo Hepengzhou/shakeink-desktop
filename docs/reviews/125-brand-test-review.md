@@ -1,6 +1,6 @@
 # 玄印写作改名测试用例独立审核
 
-2026-10-08。审核依据：已通过的 `121-brand-rename-plan.md`、`122-brand-rename-plan-review.md`；用户最新中文全名「玄印写作」、简称「玄印」、英文名「XaanInk」，并要求兼容旧版数据、新建数据使用新名称。
+2026-10-08。审核依据：已通过的 `121-brand-rename-plan.md`、`122-brand-rename-plan-review.md`；用户最新中文全名「玄印写作」、简称「玄印」、英文名「ShakeInk」，并要求兼容旧版数据、新建数据使用新名称。
 
 ## 结论
 
@@ -28,4 +28,4 @@
 
 现有 lease 恢复的 stale/live/unknown owner 和最终删除竞态、journal 多阶段恢复、目录重定位、两家族离线导出保护、旧配置/模板原文导入及当前格式导出必须随实现保持有效；这些属于 123 明列的其他验收范围，31 个兼容顶层用例不能代替它们。P04/P05/P06 的实际 UI、残留审计、Keychain 跨进程假凭证验证也必须分别执行并保留证据。`encryptionFamily` 单元断言不证明系统密钥可解密。Windows 未实际运行时保持未执行。
 
-已独立复读改名前 `/private/tmp/xaanink-core-before.log` 的最终统计：**1578 tests，1551 pass，22 fail，5 cancelled，0 skipped**。这些原有失败/取消不能写为通过，也不能与改名范围的新回归混淆。本代理未运行实现后的验证；最终通过状态应由实际命令与界面证据确定。
+已独立复读改名前 `/private/tmp/shakeink-core-before.log` 的最终统计：**1578 tests，1551 pass，22 fail，5 cancelled，0 skipped**。这些原有失败/取消不能写为通过，也不能与改名范围的新回归混淆。本代理未运行实现后的验证；最终通过状态应由实际命令与界面证据确定。

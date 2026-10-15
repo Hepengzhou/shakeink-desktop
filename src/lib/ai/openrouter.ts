@@ -83,7 +83,7 @@ export function openRouterFetch(record: Pick<AIModel, "free" | "modelId">, fetch
       body.plugins = [{ id: "auto-router", excluded_models: ["moonshotai/*", "*/*kimi*", "*/*moonshot*"] }]
     }
     const headers = new Headers(init.headers)
-    headers.set("X-OpenRouter-Title", "XaanInk")
+    headers.set("X-OpenRouter-Title", "ShakeInk")
     if (sessionId) headers.set("x-session-id", sessionId)
     return fetcher(input, { ...init, headers, body: JSON.stringify(body) })
   }

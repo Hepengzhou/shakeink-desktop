@@ -18,7 +18,7 @@
 
 ## 权限、背压与数据作用域
 
-- main 的公开 IPC 核验当前窗口 webContents、mainFrame 及 `xaanink://app` 来源；preload 仅公开有限 bridge，不暴露任意 ipcRenderer、文件读取、shell 或 worker RPC 方法。目录 grant 限定 purpose/owner、一次性消费，renderer 不能用 create/open-work 指定未经原生选择授权的裸路径。
+- main 的公开 IPC 核验当前窗口 webContents、mainFrame 及 `shakeink://app` 来源；preload 仅公开有限 bridge，不暴露任意 ipcRenderer、文件读取、shell 或 worker RPC 方法。目录 grant 限定 purpose/owner、一次性消费，renderer 不能用 create/open-work 指定未经原生选择授权的裸路径。
 - 请求契约严格校验版本、UUID、方法、路径、头字段与 8MiB 正文，流式正文在读取过程中也受上限约束；拒绝越界路径、cookie/账号头、未知字段及未知 worker 命令。静态路由注册不会按输入构造 import 路径；协议 realpath 核对 out 边界，renderer 导航、webview、弹窗与远程网络受主进程限制。
 - 响应按 pull 读取、递增 seq、单个未完成 read、每帧最多 64KiB；worker 对较大 chunk 保留 remainder，renderer 校验帧类型/大小/顺序。暂停消费不会通过该通道无界主动推送所有帧。EOF、消费取消和取消后迟到响应释放 reader、完成请求 scope；有限未读 body 的真实 worker close 探针正常完成。此结论不涵盖任意业务 handler 忽略 abort 的无限后台任务。
 - runWithGlobal 在请求期间持有 inbox 与作品 scope，globalDatabase 来源是可信 inbox context；scoped client 在实际调用时解析 ALS，不缓存作品 client，无可信 global context 拒绝借库，事务内仍禁止重新借用。cost-config/network-retry/timeouts/renderPrompt 及正文审核模板读取使用 globalPrisma；模板管理的 request prisma 由 global 路由保证落到 inbox。后台 retainer 的最后写入与退出 flush 交由第 33 号独立审核，不在本记录重复宣称完成。

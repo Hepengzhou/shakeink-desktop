@@ -10,7 +10,7 @@ import { workspaceTabSchema } from '../src/lib/desktop/workspace-draft-source'
 
 async function main() {
   const directory = await realpath(resolve(process.argv[2]))
-  assert(basename(directory).startsWith('xaanink-tabs-'), 'Fresh isolated ContentTabs test directory required')
+  assert(basename(directory).startsWith('shakeink-tabs-'), 'Fresh isolated ContentTabs test directory required')
   const root = join(directory, 'data'), path = join(directory, 'work')
   await mkdir(path, { recursive: true })
   const info = await stat(path, { bigint: true })

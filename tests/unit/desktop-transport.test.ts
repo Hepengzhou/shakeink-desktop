@@ -34,7 +34,7 @@ test("IPC-02: abort and service loss promptly reject body/header waits without r
     const abort = new AbortController(); let closed = false; let started = false
     const port = { close() { closed = true }, start() { started = true }, postMessage() {}, onmessage: null }
     requestImpl = async input => {
-      message({ source: fakeWindow, data: { type: "xaanink-response-port", id: input.id }, ports: [port] })
+      message({ source: fakeWindow, data: { type: "shakeink-response-port", id: input.id }, ports: [port] })
       const later = (remaining: number) => { if (remaining === 0) abort.abort(); else queueMicrotask(() => later(remaining - 1)) }
       later(steps)
       return { id: input.id, status: 200, headers: {} }

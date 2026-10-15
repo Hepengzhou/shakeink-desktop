@@ -20,7 +20,7 @@ const list = async (works: Workspaces) => {
 }
 
 test('WL-01/02/03: real databases retain healthy summaries beside stale leases; repair and retry reopen original data', { timeout: 120000 }, async () => {
-  const base = await realpath(await mkdtemp(join(tmpdir(), 'xaanink-works-load-')))
+  const base = await realpath(await mkdtemp(join(tmpdir(), 'shakeink-works-load-')))
   let works = new Workspaces(join(base, 'data'), resolve('prisma/migrations'))
   try {
     await works.initialize()
@@ -41,19 +41,19 @@ test('WL-01/02/03: real databases retain healthy summaries beside stale leases; 
     assert.deepEqual(good.novels.map(n => n.id), [stale.novelId, healthy.novelId])
     assert.ok(good.novels.every(n => !('premise' in n)))
     await works.close()
-    const lock = join(stale.path, '.xaanink-lock'); await mkdir(lock)
+    const lock = join(stale.path, '.shakeink-lock'); await mkdir(lock)
     const owner = JSON.stringify({ token: randomUUID(), host: hostname(), pid: 2147483647 })
     assert.throws(() => process.kill(2147483647, 0), { code: 'ESRCH' })
     await writeFile(join(lock, 'owner.json'), owner)
     const catalog = await readFile(join(base, 'data', 'catalog.json'))
-    const manifest = await readFile(join(stale.path, 'xaanink-work.json'))
+    const manifest = await readFile(join(stale.path, 'shakeink-work.json'))
     works = new Workspaces(join(base, 'data'), resolve('prisma/migrations')); await works.initialize()
     const partial = await list(works)
     assert.deepEqual(partial.novels.map(n => n.id), [healthy.novelId])
     assert.deepEqual(partial.unavailableWorks, [{ workId: stale.id, novelId: stale.novelId, title: stale.title, reason: 'stale-lease' }])
     await assert.rejects(works.run(stale.id, () => prisma.novel.count()), { code: 'WORK_LEASE_STALE' })
     assert.deepEqual(await readFile(join(base, 'data', 'catalog.json')), catalog)
-    assert.deepEqual(await readFile(join(stale.path, 'xaanink-work.json')), manifest)
+    assert.deepEqual(await readFile(join(stale.path, 'shakeink-work.json')), manifest)
     assert.equal(await readFile(join(lock, 'owner.json'), 'utf8'), owner)
     await works.close()
     await rename(healthy.path, healthy.path + '-absent')
@@ -74,7 +74,7 @@ test('WL-01/02/03: real databases retain healthy summaries beside stale leases; 
     const restored = await list(works)
     assert.equal(restored.novels.length, 2); assert.deepEqual(restored.unavailableWorks, [])
     assert.equal(await works.run(stale.id, () => prisma.novel.count()), 1)
-    assert.deepEqual(await readFile(join(stale.path, 'xaanink-work.json')), manifest)
+    assert.deepEqual(await readFile(join(stale.path, 'shakeink-work.json')), manifest)
     assert.deepEqual(await readFile(join(base, 'data', 'catalog.json')), catalog)
   } finally {
     // The old Promise.all route rejects before its healthy sibling finishes.

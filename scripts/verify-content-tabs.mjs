@@ -9,7 +9,7 @@ import { createHash } from 'node:crypto'
 assert.equal(process.platform, 'win32', 'Actual Windows is required for this evidence')
 const label = process.argv[2] ?? 'target-01'
 assert(/^[a-z0-9-]+$/.test(label), 'Safe evidence label required')
-const directory = await mkdtemp(join(tmpdir(), 'xaanink-tabs-')), root = join(directory, 'data')
+const directory = await mkdtemp(join(tmpdir(), 'shakeink-tabs-')), root = join(directory, 'data')
 const evidence = resolve('docs/evidence/content-tabs', label + '-electron')
 const report = {
   scope: 'ContentTabs TABS-01..12 only; actual current Windows Electron with complete real React workspace, isolated synthetic data, zero models and offline renderer. Playwright/CDP synthesized pointer/keyboard; no physical OS mouse, native window dragging, Windows IME, macOS, installer or full regression acceptance.',
@@ -28,7 +28,7 @@ async function built(directory) {
 }
 await built(resolve('dist')); await built(resolve('.next/static'))
 report.electronExecutableHash = hash(await readFile(resolve('node_modules/electron/dist/electron.exe')))
-const env = { ...process.env, XAANINK_TEST_ROOT: root }; delete env.ELECTRON_RUN_AS_NODE
+const env = { ...process.env, SHAKEINK_TEST_ROOT: root }; delete env.ELECTRON_RUN_AS_NODE
 let app, page, editorHandle, editor, initialEditorText, currentDraftText
 const track = () => page.locator('.content-tabs-track')
 const tabs = () => track().locator('.content-tab[data-tab-id]')
@@ -43,7 +43,7 @@ async function launch() {
   page = await app.firstWindow({ timeout: 90000 }); page.on('pageerror', error => report.errors.push(error.message))
   await page.context().setOffline(true)
   await page.getByRole('button', { name: '账号菜单', exact: true }).waitFor({ timeout: 90000 })
-  assert.equal(page.url(), 'xaanink://app/')
+  assert.equal(page.url(), 'shakeink://app/')
   const bootstrap = await page.evaluate(() => window.desktop.bootstrap())
   assert.equal(bootstrap.dataRoot, root); assert.equal(bootstrap.models.length, 0)
   assert.equal(await page.evaluate(() => navigator.onLine), false)

@@ -15,7 +15,7 @@ await mkdir(evidenceParent,{recursive:true})
 // Labels identify immutable attempts. EEXIST must reject before any report or
 // screenshot can overwrite a prior failed run.
 await mkdir(evidence)
-const directory=await mkdtemp(join(tmpdir(),'xaanink-sidebar-')),root=join(directory,'data')
+const directory=await mkdtemp(join(tmpdir(),'shakeink-sidebar-')),root=join(directory,'data')
 const isolatedDirectories=[directory]
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex')
 const safe=text=>isolatedDirectories.reduce((output,owned)=>output.replaceAll(owned,'<isolated-fixture>').replaceAll(owned.replaceAll('\\','\\\\'),'<isolated-fixture>'),String(text)).replace(/\bsk-[A-Za-z0-9_-]{12,}\b/g,'<redacted-key-shaped-text>')
@@ -159,12 +159,12 @@ try{
  report.electronExecutableHash=hash(await readFile(executable));for(const path of bundleRoots)await hashDirectory(path)
  await runProcess(process.execPath,['--import','tsx','scripts/seed-sidebar-navigation.ts',directory]);fixture=JSON.parse(await readFile(join(directory,'fixture.json'),'utf8'));assert.equal(fixture.synthetic,true)
  report.fixture={realWorkDatabases:fixture.works.length,formalCharacters:fixture.works.reduce((n,work)=>n+work.characters.length,0),foreshadowCharacters:fixture.works.length,chapters:27,statuses:fixture.statuses,models:0,publicSyntheticData:true}
- const env={...process.env,XAANINK_TEST_ROOT:root};delete env.ELECTRON_RUN_AS_NODE
+ const env={...process.env,SHAKEINK_TEST_ROOT:root};delete env.ELECTRON_RUN_AS_NODE
  app=await _electron.launch({args:executablePath?[]:[resolve('.')],...(executablePath?{executablePath}:{}),env,timeout:90000})
  page=await app.firstWindow({timeout:90000});page.setDefaultTimeout(15000)
  observePage(page,'initial')
  await page.context().setOffline(true);await skipModelGuide();await bounds(1800);await page.evaluate(()=>document.fonts.ready);await installRequestObserver()
- assert.equal(page.url(),'xaanink://app/');const bootstrap=await page.evaluate(()=>window.desktop.bootstrap());assert.equal(bootstrap.dataRoot,root);assert.equal(bootstrap.models.length,0);assert.equal(await page.evaluate(()=>navigator.onLine),false)
+ assert.equal(page.url(),'shakeink://app/');const bootstrap=await page.evaluate(()=>window.desktop.bootstrap());assert.equal(bootstrap.dataRoot,root);assert.equal(bootstrap.models.length,0);assert.equal(await page.evaluate(()=>navigator.onLine),false)
  report.runtime=await app.evaluate(({BrowserWindow})=>({platform:process.platform,electron:process.versions.electron,node:process.versions.node,chromium:process.versions.chrome,bounds:BrowserWindow.getAllWindows()[0].getBounds(),zoom:BrowserWindow.getAllWindows()[0].webContents.getZoomFactor(),mainListeningServers:process._getActiveHandles().filter(handle=>handle.constructor.name==='Server'&&handle.listening).length}))
  assert.equal(report.runtime.mainListeningServers,0);await record('SN-07-real-offline-workspace',{transport:'real desktop IPC',protocol:page.url(),rendererOffline:true,models:0,mainListeningServers:0,networkObservation:'after firstWindow'})
  native=await startNative();await native.probe([]);await nativeRegions('native-calibration-open')
@@ -262,10 +262,10 @@ try{
 
  await stage('SN-12-real-empty-content-and-Chat-caption',async()=>{
   await app.close();app=null
-  const emptyDirectory=await mkdtemp(join(tmpdir(),'xaanink-sidebar-'));isolatedDirectories.push(emptyDirectory)
+  const emptyDirectory=await mkdtemp(join(tmpdir(),'shakeink-sidebar-'));isolatedDirectories.push(emptyDirectory)
   await runProcess(process.execPath,['--import','tsx','scripts/seed-sidebar-navigation.ts',emptyDirectory])
   const emptyFixture=JSON.parse(await readFile(join(emptyDirectory,'fixture.json'),'utf8'));assert.equal(emptyFixture.synthetic,true);assert.equal(emptyFixture.tabs.length,2)
-  const emptyEnv={...process.env,XAANINK_TEST_ROOT:join(emptyDirectory,'data')};delete emptyEnv.ELECTRON_RUN_AS_NODE
+  const emptyEnv={...process.env,SHAKEINK_TEST_ROOT:join(emptyDirectory,'data')};delete emptyEnv.ELECTRON_RUN_AS_NODE
   app=await _electron.launch({args:executablePath?[]:[resolve('.')],...(executablePath?{executablePath}:{}),env:emptyEnv,timeout:90000});page=await app.firstWindow({timeout:90000});observePage(page,'empty-content-original-UI');await page.context().setOffline(true);await skipModelGuide();await bounds(1800);await page.waitForFunction(()=>document.querySelectorAll('.content-tabs .content-tab[data-tab-id]').length===2);await settle()
   const emptyBootstrap=await page.evaluate(()=>window.desktop.bootstrap());assert.equal(emptyBootstrap.dataRoot,join(emptyDirectory,'data'));assert.equal(emptyBootstrap.models.length,0);assert.equal(await phase(),'open');assert.deepEqual(await page.locator('.content-tab[data-tab-id]').evaluateAll(tabs=>tabs.map(tab=>tab.dataset.tabId)),emptyFixture.tabs.map(tab=>tab.id))
   // Wait for the actual initial Works queries before measuring a static tree.

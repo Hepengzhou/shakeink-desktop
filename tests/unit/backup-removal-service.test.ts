@@ -56,7 +56,7 @@ test('BR-S06 actual connect delegates schema migration transaction and rollback 
   const mock=context.mock.method(PGlite,'create',async()=>engine as unknown as PGlite),sql='SELECT 1',internal=f.works as unknown as {migrations:Array<{id:string;sql:string;checksum:string}>;connect:(path:string,create:boolean)=>Promise<{db:{$disconnect:()=>Promise<void>};engine:PGlite;unlock:()=>Promise<void>}>}
   internal.migrations=[{id:'removal-schema',sql,checksum:createHash('sha256').update(sql).digest('hex')}]
   try{if(failure)await assert.rejects(internal.connect(path,false),/TEST_SCHEMA_FAILURE/);else{const connection=await internal.connect(path,false);await connection.db.$disconnect();await connection.engine.close();await connection.unlock()}
-   assert.equal(events.filter(row=>row==='dump').length,0);assert.equal(events.includes(failure?'rollback':'commit'),true);assert.equal(events.includes(failure?'commit':'rollback'),false);assert.equal((await readdir(path)).includes('snapshots'),false);assert.equal(engine.closed,true);await assert.rejects(readFile(join(path,'.xaanink-lock/owner.json')),{code:'ENOENT'})
+   assert.equal(events.filter(row=>row==='dump').length,0);assert.equal(events.includes(failure?'rollback':'commit'),true);assert.equal(events.includes(failure?'commit':'rollback'),false);assert.equal((await readdir(path)).includes('snapshots'),false);assert.equal(engine.closed,true);await assert.rejects(readFile(join(path,'.shakeink-lock/owner.json')),{code:'ENOENT'})
   }finally{mock.mock.restore();await f.works.close()}
  }
 })

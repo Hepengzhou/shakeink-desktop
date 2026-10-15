@@ -1,6 +1,6 @@
 # 玄印写作品牌改名组合验证
 
-2026-10-08。最终中文全名「玄印写作」、简称「玄印」、英文名「XaanInk」。本次改名、编译、封包和 macOS arm64 启动已完成；所有活动单元/集成测试及打包检查通过。实现、用例和独立审核见 121–129，验证 harness 收尾独立审核见 131。用户选择旧数据兼容、新数据使用新名称。
+2026-10-08。最终中文全名「玄印写作」、简称「玄印」、英文名「ShakeInk」。本次改名、编译、封包和 macOS arm64 启动已完成；所有活动单元/集成测试及打包检查通过。实现、用例和独立审核见 121–129，验证 harness 收尾独立审核见 131。用户选择旧数据兼容、新数据使用新名称。
 
 ## 最终结果
 
@@ -11,13 +11,13 @@
 | 完整活动核心 | `node --import tsx --test --test-concurrency=2 tests/unit/*.test.ts tests/integration/*.test.ts`：1618 tests，1618 pass，0 fail/cancel/skip，342598 ms，exit 0。 |
 | 实际新名称 ZIP 与资源组 | `npm run test:package`：14/14 pass，0 fail/cancel/skip；完整 unzip CRC、UTF-8 路径、27011 条包文件表、关键文件字节、截断负例、314 项应用资源与原生图标校验通过。 |
 | 原生旧安装包 → 新安装包 | `node scripts/smoke-brand.mjs --packaged`：exit 0；真实旧 safeStorage 假凭证可解密，公开状态无 Key；原 DraftJournal 的草稿在实际 scheme 变化后恢复。 |
-| 新安装实际应用 | 原生新 marker 为 XaanInk；无默认模型、无示例作品；真实菜单为玄印/文件/编辑/视图/窗口/帮助，关于玄印写作、退出玄印；sandbox=true，原工作台离线协议加载，无 renderer pageerror。 |
-| 用户可见启动 | 最终 `.app` 在新隔离目录保持运行。CUA 实际观察窗口「玄印写作」、`xaanink://app/` 和上述六组系统菜单；主进程只读 lsof 检查无 TCP LISTEN。 |
+| 新安装实际应用 | 原生新 marker 为 ShakeInk；无默认模型、无示例作品；真实菜单为玄印/文件/编辑/视图/窗口/帮助，关于玄印写作、退出玄印；sandbox=true，原工作台离线协议加载，无 renderer pageerror。 |
+| 用户可见启动 | 最终 `.app` 在新隔离目录保持运行。CUA 实际观察窗口「玄印写作」、`shakeink://app/` 和上述六组系统菜单；主进程只读 lsof 检查无 TCP LISTEN。 |
 | 文件检查 | `git diff --check` exit 0。 |
 
-原始最终日志分别为 `/private/tmp/xaanink-core-final2.log`、`xaanink-typecheck-last.log`、`xaanink-package-tests-final2.log`、`xaanink-native-brand-final.log`。本机脱敏摘要/日志、源码 hash 与截图保存在 `docs/evidence/brand-rename/`：`verification.json`、`native-brand.json`、`legacy-fixture-build.json`、`core-final.log`、`package-final.log`、`native-upgrade.png` 和 `native-current-about.png`。证据目录按仓库现有规则不公开提交；没有作者数据或真实 Key 进入证据。
+原始最终日志分别为 `/private/tmp/shakeink-core-final2.log`、`shakeink-typecheck-last.log`、`shakeink-package-tests-final2.log`、`shakeink-native-brand-final.log`。本机脱敏摘要/日志、源码 hash 与截图保存在 `docs/evidence/brand-rename/`：`verification.json`、`native-brand.json`、`legacy-fixture-build.json`、`core-final.log`、`package-final.log`、`native-upgrade.png` 和 `native-current-about.png`。证据目录按仓库现有规则不公开提交；没有作者数据或真实 Key 进入证据。
 
-当前应用目录为 `release/mac-arm64/玄印写作.app`，bundle ID 为 `ink.xaanink.desktop`，版本 0.1.0。ZIP 为 `release/XaanInk-0.1.0-mac-arm64.zip`，350257126 bytes，SHA-256：
+当前应用目录为 `release/mac-arm64/玄印写作.app`，bundle ID 为 `ink.shakeink.desktop`，版本 0.1.0。ZIP 为 `release/ShakeInk-0.1.0-mac-arm64.zip`，350257126 bytes，SHA-256：
 
 ```
 8e626805fbe756adc78afa45da582980c9d7d41bde0781e9e524e32b7adea7a1
@@ -29,7 +29,7 @@
 
 产品标题、菜单、关于、导出元数据、协议、npm/安装包名称与真实矢量字标已改新名称。18 套 SVG 的原图形 group 保持，horizontal/formal 使用许可字体的实际新字标 path；原无字图形继续作为 ICNS/ICO 来源，独立资产审核见 126/128。
 
-旧 app/work marker、storage、租约、恢复 audit 和历史迁移控制按权威 marker 家族继续读取，不重命名原目录或改写 checksum。新作品、新安装根、新导出使用 XaanInk。损坏旧状态、双 marker 或异家族控制不会静默创建空新库。原加密名称只作为已有安装数据的 OS 兼容身份保留，初始化完成后显示新名称。来源仓库链接和原始历史检查 JSON/截图保留事实，不把过去的界面证据改成当前品牌验证。上游 Web 仓库未修改。
+旧 app/work marker、storage、租约、恢复 audit 和历史迁移控制按权威 marker 家族继续读取，不重命名原目录或改写 checksum。新作品、新安装根、新导出使用 ShakeInk。损坏旧状态、双 marker 或异家族控制不会静默创建空新库。原加密名称只作为已有安装数据的 OS 兼容身份保留，初始化完成后显示新名称。来源仓库链接和原始历史检查 JSON/截图保留事实，不把过去的界面证据改成当前品牌验证。上游 Web 仓库未修改。
 
 ## 测试修复与失误记录
 

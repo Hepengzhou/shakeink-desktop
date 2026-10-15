@@ -6,14 +6,14 @@ import {createRequire} from 'node:module'
 import {mkdtemp,rm,writeFile,readFile,readdir,realpath,mkdir} from 'node:fs/promises'
 import {tmpdir} from 'node:os'
 import {join,resolve} from 'node:path'
-const require=createRequire(import.meta.url),temporary=await realpath(await mkdtemp(join(tmpdir(),'xaanink-native-application-backup-'))),root=join(temporary,'data'),evidence=process.env.XAANINK_BACKUP_EVIDENCE??'docs/evidence/implementation-30',startedAt=new Date().toISOString(),checks=[],errors=[],nativeLog=[]
+const require=createRequire(import.meta.url),temporary=await realpath(await mkdtemp(join(tmpdir(),'shakeink-native-application-backup-'))),root=join(temporary,'data'),evidence=process.env.SHAKEINK_BACKUP_EVIDENCE??'docs/evidence/implementation-30',startedAt=new Date().toISOString(),checks=[],errors=[],nativeLog=[]
 let app,page,passed=false
 async function settings(){await page.getByRole('button',{name:'账号菜单'}).click();await page.getByRole('menuitem',{name:'设置',exact:true}).click();await expect(page.getByRole('button',{name:'立即备份',exact:true})).toBeVisible()}
 async function recovery(){await page.getByRole('button',{name:'查看备份',exact:true}).click();await expect(page.getByRole('dialog',{name:'备份与草稿恢复'})).toBeVisible();await expect(page.getByRole('list',{name:'应用数据备份列表'}).getByRole('listitem')).toHaveCount(1,{timeout:60000})}
 try{
  assert.equal(process.platform,'darwin');await mkdir(evidence,{recursive:true});execFileSync(process.execPath,['--import','tsx','scripts/seed-electron-fixture.ts',temporary],{encoding:'utf8'})
  const work=JSON.parse(await readFile(join(root,'catalog.json'),'utf8')).value[0];assert(work)
- app=await electron.launch({executablePath:require('electron'),args:[resolve('.')],env:{...process.env,XAANINK_TEST_ROOT:root},timeout:60000})
+ app=await electron.launch({executablePath:require('electron'),args:[resolve('.')],env:{...process.env,SHAKEINK_TEST_ROOT:root},timeout:60000})
  app.process().stderr.on('data',chunk=>nativeLog.push(String(chunk)));page=await app.firstWindow();page.on('pageerror',error=>errors.push(error.message));await page.getByRole('button',{name:'账号菜单'}).waitFor({timeout:60000});await settings()
  await page.getByRole('combobox',{name:'备份间隔'}).selectOption('60');await page.getByRole('combobox',{name:'保留备份份数'}).selectOption('2');await expect.poll(async()=>{const general=(await page.evaluate(()=>window.desktop.bootstrap())).settings.general;return[general.backupIntervalMinutes,general.backupRetention]}).toEqual([60,2])
  await page.getByRole('button',{name:'立即备份',exact:true}).click();await expect(page.getByRole('button',{name:'正在备份…',exact:true})).toBeDisabled()

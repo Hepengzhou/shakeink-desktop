@@ -11,7 +11,7 @@ const syntax=ts.createSourceFile("main.ts",source,ts.ScriptTarget.Latest,true)
 const body=["trusted","registerIpc"].map(name=>{const node=syntax.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text===name);assert.ok(node);return node.getText(syntax)}).join("\n")
 function fixture(){
  const handlers=new Map<string,(...args:unknown[])=>Promise<unknown>>(),writes:string[]=[]
- const frame={url:"xaanink://app/"},contents={mainFrame:frame},event={sender:contents,senderFrame:frame}
+ const frame={url:"shakeink://app/"},contents={mainFrame:frame},event={sender:contents,senderFrame:frame}
  let focused=true,text="选中的正文",resolveRead:((value:string)=>void)|undefined
  const clipboard={readText:()=>new Promise<string>(resolve=>{resolveRead=resolve}),writeText:async(value:string)=>{writes.push(value)}}
  const menus:InputContextState[]=[];let resolveMenu!:()=>void
@@ -27,7 +27,7 @@ test("clipboard write only accepts bounded text from focused trusted main render
  for(const value of [null,{text:"伪造"},"x".repeat(1024*1024+1)])await assert.rejects(f.invoke("desktop:clipboard-write",value))
  f.setFocus(false);await assert.rejects(f.invoke("desktop:clipboard-write","后台内容"),/聚焦/)
  f.setFocus(true);await assert.rejects(f.handlers.get("desktop:clipboard-write")!({sender:{},senderFrame:f.event.senderFrame},"跨窗口"),/不受信/)
- await assert.rejects(f.handlers.get("desktop:clipboard-write")!({sender:f.event.sender,senderFrame:{url:"xaanink://app/"}},"子框架"),/不受信/)
+ await assert.rejects(f.handlers.get("desktop:clipboard-write")!({sender:f.event.sender,senderFrame:{url:"shakeink://app/"}},"子框架"),/不受信/)
  assert.deepEqual(f.writes,["选中的正文"])
 })
 test("clipboard read rechecks focus and frame after the async native read",async()=>{

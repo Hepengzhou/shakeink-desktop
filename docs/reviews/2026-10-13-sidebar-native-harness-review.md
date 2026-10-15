@@ -10,9 +10,9 @@
 
 | 范围 | 源证据及评估 |
 | --- | --- |
-| 写入安全与隔离 | `seed-sidebar-navigation.ts:19–23` 对参数和系统temp做realpath，检查规范化相对路径位于temp、目录名以xaanink-sidebar-开头且内容为空，然后只在该根创建data/work子目录。验证器`:10–18`限制label字符、先以exclusive mkdir保留不可覆盖的本轮证据目录，再mkdtemp新建seed根；没有递归删除或读取真实用户作品的代码。失败目录保留。 |
+| 写入安全与隔离 | `seed-sidebar-navigation.ts:19–23` 对参数和系统temp做realpath，检查规范化相对路径位于temp、目录名以shakeink-sidebar-开头且内容为空，然后只在该根创建data/work子目录。验证器`:10–18`限制label字符、先以exclusive mkdir保留不可覆盖的本轮证据目录，再mkdtemp新建seed根；没有递归删除或读取真实用户作品的代码。失败目录保留。 |
 | 真实Workspaces/数据库/Profile | Seed `:23,26–74`使用正式Workspaces、正式迁移、真实Prisma上下文及DraftJournal，两个正式作品数据库和inbox均经原服务创建/写入并finally关闭；资料为明示合成数据。`:75–81`从正式defaultState和schema保存隔离Profile/onboarding，无模型或Key。数据不注入renderer store。 |
-| 实际启动根 | 验证器`:129–138,228–232`用同一Node启动seed，再以XAANINK_TEST_ROOT启动原Electron/可选打包exe，断言实际bootstrap.dataRoot、0模型、xaanink协议。`desktop/main/index.ts:68–83,229`与`brand-startup-paths.ts:27–36`证明有效隔离根的userData/bootstrap/session位于测试目录，非真实appData fallback。空内容全屏另建第二个owned temp根。 |
+| 实际启动根 | 验证器`:129–138,228–232`用同一Node启动seed，再以SHAKEINK_TEST_ROOT启动原Electron/可选打包exe，断言实际bootstrap.dataRoot、0模型、shakeink协议。`desktop/main/index.ts:68–83,229`与`brand-startup-paths.ts:27–36`证明有效隔离根的userData/bootstrap/session位于测试目录，非真实appData fallback。空内容全屏另建第二个owned temp根。 |
 | 真transport及观察 | 验证器`:49–50`的readApi调用正式fetch，observer只记录后转发原fetch，未fake响应/API；设置/Profile更新调用原desktop.settings IPC。`:132–138`启动原完整工作台，renderer从firstWindow后设offline，主进程listening Server计数必须0；`:39,223,231`三次launch均挂同一pageerror/HTTP观察。该网络观察明示从firstWindow起，不声称覆盖更早启动网络或全系统端口。 |
 | 真实UI与实例保留 | `:163–175`由真实Tabs/分组与键盘动作检查分类、折叠hidden/inert、节点DOM仍连接和右Tabs顺序/激活；实际Monaco通过原“编辑”入口挂载，真实键盘写草稿，`:58`验证原Monaco DOM handle仍连接、重新激活可见及view-lines文本哈希。`:186–195`UI触发POST/PATCH/DELETE后由真实本地GET验证持久数据。仅声称同一真实Monaco DOM和可见草稿保留，不用CSS示例/替代组件证明编辑器实例或其它29类业务。 |
 | 原生坐标与DPI | 验证器`:70,74,91`从实际BrowserWindow取HWND/zoom，DOM CSS点乘真实Electron zoom后交原生helper。PS `:19–26,31–38`显式切调用线程至PER_MONITOR_AWARE_V2、验证已生效，用ClientToScreen原点及窗口DPI/96得到屏幕物理坐标，签名低16位打包WM_NCHITTEST，finally恢复线程context。这避免调用线程DPI虚拟化；Windows消息的坐标/HTCAPTION=2/HTCLIENT=1依据见下文官方来源。 |

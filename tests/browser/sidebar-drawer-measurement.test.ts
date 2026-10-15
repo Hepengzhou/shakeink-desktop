@@ -6,7 +6,7 @@ import { withDrawer } from "../helpers/sidebar-drawer-fixture"
 import type { WorkspaceLayout } from "../../src/lib/desktop/workspace-draft-source"
 
 let browser: Browser
-test.before(async () => { browser = await chromium.launch({ headless: true, ...(process.env.XAANINK_TEST_CHROMIUM ? { executablePath: process.env.XAANINK_TEST_CHROMIUM } : {}) }) })
+test.before(async () => { browser = await chromium.launch({ headless: true, ...(process.env.SHAKEINK_TEST_CHROMIUM ? { executablePath: process.env.SHAKEINK_TEST_CHROMIUM } : {}) }) })
 test.after(async () => { await browser?.close() })
 const initial: WorkspaceLayout = { version: 1, narrowPane: "sidebar", sidebarVisible: true, chatVisible: true, contentVisible: true, sizes: { sidebar: 20, chat: 30, content: 50 }, lastSidebarSize: 20, lastContentSize: 50, lastChatSize: 30 }
 

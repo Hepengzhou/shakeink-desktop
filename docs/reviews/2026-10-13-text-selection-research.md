@@ -26,4 +26,4 @@
 
 当前工作区已有 creation-context 修改，本任务保留它们，不改用户数据和 Key。
 
-最终入口复核发现 `desktop/main/index.ts` 的 Windows「关于」窗口使用独立 data URL HTML，不加载 React 全局 CSS；标题/版本/说明均为 UI，需在该文档加入标准/WebKit 禁选样式。其它维护/重定位窗口加载同一 `xaanink://app/`，已被全局策略覆盖。
+最终入口复核发现 `desktop/main/index.ts` 的 Windows「关于」窗口使用独立 data URL HTML，不加载 React 全局 CSS；标题/版本/说明均为 UI，需在该文档加入标准/WebKit 禁选样式。其它维护/重定位窗口加载同一 `shakeink://app/`，已被全局策略覆盖。

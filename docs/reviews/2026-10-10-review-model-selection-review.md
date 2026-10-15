@@ -92,7 +92,7 @@
 
 首次源码 review 识别 UI 默认变化竞态：PATCH 提交 A 期间 bootstrap 默认改 B，旧 JSX 会显示 B 并随后宣称已应用，实际保存 A。已反馈作者，修正为点击时保存 submitted id/name，pending 和 success 均展示“本次审核模型”及冻结名称。独立浏览器探针实际结果：`submittedModel=review-A`、`defaultNow=review-B`、`pendingShowsSubmittedA=true`、`successShowsSubmittedA=true`、`successClaimsB=false`、`errors=[]`，退出 0。探针首次等待 B 的超时已加载修正后的源，另一次变量遮蔽错误属于 harness，均不是有效业务 RED，不计通过。
 
-独立执行命令：Node 24.19.0 + `--import tsx --test --test-concurrency=1 tests/unit/model-guidance.test.ts tests/integration/review-model-selection.test.ts tests/browser/review-model-selection.test.ts`；`XAANINK_TEST_CHROMIUM` 为本机 Chrome。结果 **17/17 通过，0 fail/cancelled/skipped/todo，退出 0**。其中真实浏览器只渲染本次真实 React 组件、全网络拦截；数据库/SDK/授权测试采用隔离 PGlite 与人工模型 transport，真实供应商发送为零。
+独立执行命令：Node 24.19.0 + `--import tsx --test --test-concurrency=1 tests/unit/model-guidance.test.ts tests/integration/review-model-selection.test.ts tests/browser/review-model-selection.test.ts`；`SHAKEINK_TEST_CHROMIUM` 为本机 Chrome。结果 **17/17 通过，0 fail/cancelled/skipped/todo，退出 0**。其中真实浏览器只渲染本次真实 React 组件、全网络拦截；数据库/SDK/授权测试采用隔离 PGlite 与人工模型 transport，真实供应商发送为零。
 
 复验涵盖实际 SDK 审核 A、用量与子任务相同快照、历史 Turn/Attempt/Plan 不变、幂等重放、第二次手动/网络 Attempt 保留 A、真正空快照 legacy 文本仍阻断、非空审核不替换、错身份/活跃执行/不存在/停用/错类别/缺 Key 拒绝、外部不确定 effects 仍要求对账，以及弹窗单飞/无来源/无默认/终态刷新/切换迟到和模型名称冻结。作者其它 green 没有叠加到该独立 17 的数量。
 

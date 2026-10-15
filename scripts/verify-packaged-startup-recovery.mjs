@@ -7,14 +7,14 @@ import {mkdtemp, mkdir, readFile, writeFile, rm, realpath} from 'node:fs/promise
 import {tmpdir} from 'node:os'
 import {join, resolve} from 'node:path'
 
-const temporary = await realpath(await mkdtemp(join(tmpdir(), 'xaanink-packaged-recovery-')))
+const temporary = await realpath(await mkdtemp(join(tmpdir(), 'shakeink-packaged-recovery-')))
 const root = join(temporary, 'data')
 const evidence = 'docs/evidence/startup-recovery'
 const startedAt = new Date().toISOString(), checks = [], errors = []
 let app, passed = false
 try {
   await mkdir(evidence, {recursive: true})
-  app = await electron.launch({executablePath: resolve('release/win-unpacked/玄印写作.exe'), args: [], env: {...process.env, XAANINK_TEST_ROOT: root}, timeout: 60000})
+  app = await electron.launch({executablePath: resolve('release/win-unpacked/玄印写作.exe'), args: [], env: {...process.env, SHAKEINK_TEST_ROOT: root}, timeout: 60000})
   const page = await app.firstWindow()
   page.on('pageerror', e => errors.push(e.message))
   await page.getByRole('heading', {name: '选择主题', exact: true}).waitFor({timeout: 90000})
@@ -23,7 +23,7 @@ try {
   assert.ok(body.includes('作品阁'), 'workbench shell not rendered behind onboarding')
   await page.screenshot({path: join(evidence, 'packaged-fresh-onboarding.png')})
   checks.push('packaged win-unpacked exe cold-boots with a missing isolated root: workbench shell renders and the onboarding theme step shows; no recovery dialog')
-  const marker = JSON.parse(await readFile(join(root, 'xaanink-app.json'), 'utf8'))
+  const marker = JSON.parse(await readFile(join(root, 'shakeink-app.json'), 'utf8'))
   const pointer = JSON.parse(await readFile(join(`${root}-bootstrap`, 'data-root.json'), 'utf8'))
   assert.equal(marker.phase, 'ready'); assert.equal(marker.inboxReady, true); assert.equal(pointer.rootId, marker.id)
   checks.push('data root initialized on disk: ready marker with inboxReady, pointer rootId matches marker id')

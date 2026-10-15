@@ -12,7 +12,7 @@ DesktopApp同步caption zoom；Windows顶部行与按钮/SVG采用反zoom尺寸�
 
 实质TDD RED：ALIGN五项中三项失败，记录真实中心错位/窄导航位置；三处CLOSE接线用例在未接线时全失败。整cell修正另保存旧真实geometry的1项行为RED、10项5通过5失败的实现前记录。缺新增helper/沙箱spawn EPERM不计像素行为RED。原图定量比较属于后续机械校准，不冒称原先像素TDD。
 
-首次关联组合49/49通过；整cell最终CLOSE 10/10通过。最终关联52项、完整core/browser footer及来源SHA以 `docs/evidence/caption-alignment/verification.json` 为准。旧core/browser保存为before-cell，不能与新源拼接。最终browser使用既有Chrome，明确XAANINK_TEST_CHROMIUM；最初漏设路径导致207项hook环境失败，单独保留browser-missing-runtime，不计产品行为验证。完整失败/取消/跳过都保留，不按通过处理。
+首次关联组合49/49通过；整cell最终CLOSE 10/10通过。最终关联52项、完整core/browser footer及来源SHA以 `docs/evidence/caption-alignment/verification.json` 为准。旧core/browser保存为before-cell，不能与新源拼接。最终browser使用既有Chrome，明确SHAKEINK_TEST_CHROMIUM；最初漏设路径导致207项hook环境失败，单独保留browser-missing-runtime，不计产品行为验证。完整失败/取消/跳过都保留，不按通过处理。
 
 最终相关52项全部通过（逐个从最新完整core/browser提取，不把矩阵场景重复加计）。完整core：1741项，1601通过、125失败、13取消、2跳过，exit1，246文件，1201747ms。完整browser：212项，184通过、28失败、0取消/跳过，exit1，29文件，372544ms。较早完整core为1739/1608pass/123fail/6cancel/2skip、browser212/187pass/25fail，保留为before-cell；本次结果未证明额外失败是基线或与修改无关。
 
@@ -39,7 +39,7 @@ bundled Node v24.19.0、TypeScript新几何检查exit0；完整生产UI构建exi
 
 ## 交付和限制
 
-最终安装器：`release/XaanInk-0.1.0-win-x64.exe`，276571859 bytes；SHA256 `5c17d54b6bbd84f5d9878314c1132f358fac407c95cd919eb02dbadc3c0d2270`。最终desktop与包内main SHA256均 `8935653ae32a3760dc616cbe127b16cd913a443d5c5c485804086fc71d5bd400`；最终accent源SHA256 `4c2620e63e5c213c0b9431bdcaebdd073db2ba7bbe560f2c79682a8b8afc9b23`，与新core/browser和原生采样一致。package-geometry实际session exit0。最新native X关闭后driver/application exit0，所有测试与验收session已结束。
+最终安装器：`release/ShakeInk-0.1.0-win-x64.exe`，276571859 bytes；SHA256 `5c17d54b6bbd84f5d9878314c1132f358fac407c95cd919eb02dbadc3c0d2270`。最终desktop与包内main SHA256均 `8935653ae32a3760dc616cbe127b16cd913a443d5c5c485804086fc71d5bd400`；最终accent源SHA256 `4c2620e63e5c213c0b9431bdcaebdd073db2ba7bbe560f2c79682a8b8afc9b23`，与新core/browser和原生采样一致。package-geometry实际session exit0。最新native X关闭后driver/application exit0，所有测试与验收session已结束。
 
 产品源码与最终core来源一致，桌面dist/main与最终包resources/app/dist/main字节一致。包的实际unpacked exe已运行；NSIS安装器没有执行，不称安装/升级验收通过。setShape是实验性API，固定Electron布局没有覆盖其他版本/RTL；没有多屏、其他真实OS DPI、跨应用遮挡/失焦完整矩阵、全部钳制区域点击、快速hover逐帧/pressed像素同步、真实maintenance/relocation窗口或完整关闭失败/取消矩阵。正式W03/W04及29类业务验收保持原状态，全量失败不可忽略。
 

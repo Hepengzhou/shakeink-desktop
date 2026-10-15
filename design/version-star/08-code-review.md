@@ -10,7 +10,7 @@
 
 - **实际版本。** `package.json:3`、`package-lock.json` 顶层及根包均为合法 SemVer `0.10.0-alpha`。`desktop/shared/project-info.ts:10` 仅将零 patch 的 alpha 缩写为用户格式；`desktop/main/index.ts:497` 的 bootstrap 与 `:694` / `:699` 的 About 从 `app.getVersion()` 派生，未固定旧显示版本。普通版本、非零 patch 与其他 prerelease 的保持行为有单测。
 - **三个准确入口。** `SettingsDialog.tsx:72` 将共享真实 React 组件放在关于 Group 最后一行，原版本、反馈、帮助仍保留；`OnboardingController.tsx:83` 只在 welcome 正文挂载，原开始创作与提交、退出和焦点逻辑未变。Windows About 使用 `project-about.ts:5` 的真实 HTML 生成器；macOS 保留原生 About。三处文案不同，地址一致，没有 Star 数量、身份读取或支持完成状态。
-- **固定外部能力与 frame 校验。** `DesktopBridge.openProjectRepository()` 无 URL 参数，`preload/index.ts:27` 仅调用固定 IPC。`main/index.ts:570` 先调用既有 `trusted`，其 `:125` 校验主窗口 webContents、主 frame、`xaanink:` 协议与 `app` 主机，再打开共享常量。渲染器额外传入的参数不会成为目标地址。
+- **固定外部能力与 frame 校验。** `DesktopBridge.openProjectRepository()` 无 URL 参数，`preload/index.ts:27` 仅调用固定 IPC。`main/index.ts:570` 先调用既有 `trusted`，其 `:125` 校验主窗口 webContents、主 frame、`shakeink:` 协议与 `app` 主机，再打开共享常量。渲染器额外传入的参数不会成为目标地址。
 - **About 边界及新路由。** `project-about.ts:12` 的共享 forward 只有完整字符串等于固定仓库地址才调用外部打开。链接现采用 `target="_blank"` 与 `rel="noopener noreferrer"`，`setWindowOpenHandler` 对精确仓库打开系统浏览器，并始终返回 deny，禁止创建内嵌 popup；其他 popup 不调用 shell。普通导航先 preventDefault 再使用同一 forward。`main/index.ts:697` 保留 sandbox、contextIsolation、禁用 Node 且无 preload；`:698` 在 loadURL 前安装处理器，并在仍存在的所属窗口显示打开失败。HTML 转义实际版本且 CSP 禁止默认资源，只有内联样式；无脚本或远程资源。paper/ink 依据实际设置，仅 system 使用系统明暗。
 - **可选行为及重试。** `ProjectStarPrompt.tsx:10` 使用 ref 锁与 disabled pending 防连续触发；失败显示 role=alert 并恢复按钮。操作不写设置或引导，不锁开始创作；异步结果仅影响当前组件的本地状态。正文、说明和图标来自共享真实产品文案。
 - **主题与短窗。** `src/app/desktop.css:213` 起新增规则使用现有主题 token，设置末行具有轻背景与左强调线，并保留左右布局；按钮允许换行，copy 可收缩。已有设置 body 与欢迎 body 的 overflow/min-height、独立 footer 继续承载短窗口滚动。实际 800×600 / 150% 及相反系统主题仍须本轮窗口证据，静态 CSS 不能证明可见性。

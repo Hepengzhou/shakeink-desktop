@@ -56,7 +56,7 @@ function screen(){
  render();return{find,fill(name:string,value:string){const s=find(name);assert.equal(s.disabled,false);s.props.onChange(s.type==='ModelChoiceSelect'?value:{target:{value}});render()},click(name:string){const s=find(name);assert.equal(s.disabled,false);s.props.onClick();render()},has(type:string,name:string){render();return surfaces.some(s=>s.type===type&&s.name===name)},alerts(){render();return surfaces.filter(s=>s.props.role==='alert').map(s=>s.name)},finish(){contexts.forEach(ctx=>ctx.hooks.forEach((h:any)=>h.cleanup?.()))}}
 }
 for(const kind of ['TEXT','IMAGE']as const)test(`ONB-08 real ${kind} editor retries post-rename creation through Controller/store/repo without duplicate validation`,async()=>{
- const root=await mkdtemp(join(tmpdir(),'xaanink-onboarding-integration-')),previous=Object.getOwnPropertyDescriptor(globalThis,'window'),old=store.useDesktopStore.getState()
+ const root=await mkdtemp(join(tmpdir(),'shakeink-onboarding-integration-')),previous=Object.getOwnPropertyDescriptor(globalThis,'window'),old=store.useDesktopStore.getState()
  let fail=false,encrypted=0
  const repo=new ModelRepository(join(root,'state.json'),{isEncryptionAvailable:()=>true,encryptString(value){encrypted++;return Buffer.from(value.split('').reverse().join(''))},decryptString:value=>value.toString().split('').reverse().join('')},{replace(){},remove(){}},{beforeDirectorySync:async()=>{if(fail)throw Error('synthetic durability failure')}})
  const sessionId=crypto.randomUUID(),calls:OnboardingAction[]=[]

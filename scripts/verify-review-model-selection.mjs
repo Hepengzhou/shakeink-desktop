@@ -7,13 +7,13 @@ import { spawnSync } from 'node:child_process'
 import { _electron } from 'playwright-core'
 const evidence = resolve(process.argv[2] || 'docs/evidence/review-model-selection/target-01')
 await mkdir(evidence, { recursive: true })
-const base = await mkdtemp(join(tmpdir(), 'xaanink-review-selection-'))
+const base = await mkdtemp(join(tmpdir(), 'shakeink-review-selection-'))
 const seeded = spawnSync(process.execPath, ['--import', 'tsx', resolve('scripts/seed-review-model-selection.ts'), base], { encoding: 'utf8' })
 assert.equal(seeded.status, 0, seeded.stderr)
 const fixture = JSON.parse(await readFile(join(base, 'fixture.json'), 'utf8'))
 const report = { status: 'running', checks: [], errors: [], sourceHashes: {}, isolation: { syntheticData: true, actualUserDataAccessed: false, rendererOffline: true, providerRequests: 0, httpListenerStarted: false }, limitations: ['Model-required notice is injected by the test with a synthetic invocation identity; actual invocation identity and SDK provider model are independently verified by scoped tests.', 'No actual DeepSeek call, physical OS clicks, macOS, installation package or full regression.'] }
 for (const file of ['src/lib/services/chat-turn.ts', 'desktop/service/models.ts', 'desktop/main/model-service.ts', 'desktop/main/model-guidance.ts', 'desktop/shared/model-task.ts', 'desktop/shared/task-defaults.ts', 'desktop/shared/ipc.ts', 'src/components/desktop/ReviewModelSelection.tsx', 'src/components/desktop/ModelRequiredDialog.tsx', 'desktop/handlers/chat/conversations/[id]/route.ts', 'prisma/schema.prisma', 'prisma/migrations/20261010090000_review_attempt_selection/migration.sql', 'scripts/seed-review-model-selection.ts', 'scripts/verify-review-model-selection.mjs', 'dist/main/index.cjs', 'dist/service/index.cjs']) report.sourceHashes[file] = createHash('sha256').update(await readFile(file)).digest('hex')
-const env = { ...process.env, XAANINK_TEST_ROOT: fixture.root }; delete env.ELECTRON_RUN_AS_NODE
+const env = { ...process.env, SHAKEINK_TEST_ROOT: fixture.root }; delete env.ELECTRON_RUN_AS_NODE
 let app, page, reviewId
 const check = label => report.checks.push({ label })
 async function launch() {
@@ -22,7 +22,7 @@ async function launch() {
   await page.context().setOffline(true)
   await page.getByRole('button', { name: '账号菜单', exact: true }).waitFor({ timeout: 90000 })
   const bootstrap = await page.evaluate(() => window.desktop.bootstrap())
-  assert.equal(bootstrap.dataRoot, fixture.root); assert.equal(page.url(), 'xaanink://app/')
+  assert.equal(bootstrap.dataRoot, fixture.root); assert.equal(page.url(), 'shakeink://app/')
   report.runtime = await app.evaluate(() => ({ platform: process.platform, electron: process.versions.electron, node: process.versions.node }))
 }
 async function close() {

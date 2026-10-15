@@ -54,7 +54,7 @@ globalThis.mountRecovery=()=>{
 } }] }).then(result => result.outputFiles![0].text)
 
 let browser: Browser
-test.before(async () => { browser = await chromium.launch({ headless: true, ...(process.env.XAANINK_TEST_CHROMIUM ? { executablePath: process.env.XAANINK_TEST_CHROMIUM } : {}) }) })
+test.before(async () => { browser = await chromium.launch({ headless: true, ...(process.env.SHAKEINK_TEST_CHROMIUM ? { executablePath: process.env.SHAKEINK_TEST_CHROMIUM } : {}) }) })
 test.after(async () => { await browser?.close() })
 const layout = { version: 1, narrowPane: "content", contentVisible: true, sidebarVisible: true, chatVisible: true, sizes: { sidebar: 20, chat: 35, content: 45 }, lastContentSize: 45, lastSidebarSize: 20, lastChatSize: 35 }
 async function scenario(width: number, run: (page: Page) => Promise<void>) {

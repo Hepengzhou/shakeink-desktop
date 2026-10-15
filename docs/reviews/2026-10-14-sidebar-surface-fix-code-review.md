@@ -16,7 +16,7 @@
 - 新浏览器用例比较实际标准滚动条属性、伪元素和滚动槽；双主题浮层定位要求误差小于 1px，并实际命中卡片中心/右侧。生命周期用例包括已打开卡和不足 400ms 的待定悬停取消；模态测试先要求卡能绘制，再打开真实创作向导，要求卡仍在 DOM 且被遮罩/弹窗盖住。上一轮审核提出的两项前提断言已落实。
 - `drawerSeedNavigation` 只向现有 QueryClient 注入公开合成作品、空 worlds/characters 等数据，Shell/Group/Panel/SidebarTree/浮层继续为真实组件。原 helper 的聊天 body 隔离边界仍明确，不把浏览器 helper 当真实数据库或完整 ChatPanel 证明。
 - `run-checks.mjs` 使用实际命令退出码、完整 TAP 汇总和失败标题，任何失败停止后续步骤；固定范围文件清单、120s 测试超时、15min 外层预算，没有跳过失败或修改断言。每个 label 先拒绝已有报告/日志，源码运行前后 SHA 比较；它只改证据文件和正常编译产物，没有接触用户数据。
-- `verify-sidebar-surfaces.mjs` 限 Windows，创建新 `xaanink-sidebar-*` 临时目录，调用现有真实 seed。seed 约束 canonical tmpdir 内、目录前缀且初始为空，使用 Workspaces/PGlite 生产服务。Electron 只使用该临时 `XAANINK_TEST_ROOT`，bootstrap 再校验 root 和零模型；所引用 HWND 来自这一隔离 Electron 进程，没有枚举/操作正常应用窗口。
+- `verify-sidebar-surfaces.mjs` 限 Windows，创建新 `shakeink-sidebar-*` 临时目录，调用现有真实 seed。seed 约束 canonical tmpdir 内、目录前缀且初始为空，使用 Workspaces/PGlite 生产服务。Electron 只使用该临时 `SHAKEINK_TEST_ROOT`，bootstrap 再校验 root 和零模型；所引用 HWND 来自这一隔离 Electron 进程，没有枚举/操作正常应用窗口。
 - Windows verifier 保持严格位置/AI 区域包含范围/实际 DOM 命中、移动保留/滚动清理/抽屉清理/真实业务 Dialog 断言。原生结果要求三个 label 数量/顺序完全对应请求，真实空白 caption 为 HTCAPTION=2，卡中心/右侧为 HTCLIENT=1；原生读取前后又验证卡仍绘制且未位移，避免读已消失卡或空结果产生假通过。源码/bundle/可执行文件运行前后 SHA 保持检查，无测试 CSS 注入或浮层替身。
 
 ## 已读执行证据与限度

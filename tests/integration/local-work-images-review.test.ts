@@ -44,7 +44,7 @@ test("IMG60-W01: privately built real worker persists original item/character im
     const grants = new DirectoryAuthority()
     async function create(directory: string, title: string) { const owner = randomUUID(), grant = await grants.issue(directory, "create-work", owner); return rpc!.call<{ novel: { id: string } }>("create-work", { selection: await grants.consume(grant.id, "create-work", owner), input: { title, requestId: randomUUID() } }) }
     const first = await create(work, "独立图片作品"), second = await create(other, "隔离图片作品")
-    const novel = first.novel.id, manifest = JSON.parse(await readFile(join(work, "xaanink-work.json"), "utf8")), foreignManifest = JSON.parse(await readFile(join(other, "xaanink-work.json"), "utf8"))
+    const novel = first.novel.id, manifest = JSON.parse(await readFile(join(work, "shakeink-work.json"), "utf8")), foreignManifest = JSON.parse(await readFile(join(other, "shakeink-work.json"), "utf8"))
     const item = await request(`/api/novels/${novel}/items`, { name: "本地信物" }), character = await request(`/api/novels/${novel}/characters`, { name: "本地作者角色", roleType: "PROTAGONIST" })
     assert.equal(item.status, 200); assert.equal(character.status, 200)
     const small = await sharp({ create: { width: 4, height: 3, channels: 3, background: "#a09078" } }).jpeg().toBuffer()

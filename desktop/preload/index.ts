@@ -39,6 +39,6 @@ const bridge: DesktopBridge = {
   },
 }
 ipcRenderer.on("desktop:response-port", (event, data: { id: string }) => {
-  if (event.ports.length === 1) window.postMessage({ type: "xaanink-response-port", id: data.id }, window.location.origin, event.ports)
+  if (event.ports.length === 1) window.postMessage({ type: "shakeink-response-port", id: data.id }, window.location.origin, event.ports)
 })
 contextBridge.exposeInMainWorld("desktop", bridge)

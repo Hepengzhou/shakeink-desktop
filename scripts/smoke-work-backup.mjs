@@ -6,13 +6,13 @@ import {createRequire} from 'node:module'
 import {mkdtemp,rm,writeFile,readFile,readdir,realpath,mkdir} from 'node:fs/promises'
 import {tmpdir} from 'node:os'
 import {join,resolve} from 'node:path'
-const require=createRequire(import.meta.url),temporary=await realpath(await mkdtemp(join(tmpdir(),'xaanink-native-backup-'))),root=join(temporary,'data'),evidence='docs/evidence/implementation-13',startedAt=new Date().toISOString(),errors=[],checks=[]
+const require=createRequire(import.meta.url),temporary=await realpath(await mkdtemp(join(tmpdir(),'shakeink-native-backup-'))),root=join(temporary,'data'),evidence='docs/evidence/implementation-13',startedAt=new Date().toISOString(),errors=[],checks=[]
 let app,page,passed=false
 async function settings(){await page.getByRole('button',{name:'账号菜单'}).click();await page.getByRole('menuitem',{name:'设置',exact:true}).click();await expect(page.getByRole('button',{name:'立即备份',exact:true})).toBeVisible()}
 try{
  assert.equal(process.platform,'darwin');await mkdir(evidence,{recursive:true});execFileSync(process.execPath,['--import','tsx','scripts/seed-electron-fixture.ts',temporary],{encoding:'utf8'})
  const catalog=JSON.parse(await readFile(join(root,'catalog.json'),'utf8')),work=catalog.value[0];assert(work)
- app=await electron.launch({executablePath:require('electron'),args:[resolve('.')],env:{...process.env,XAANINK_TEST_ROOT:root},timeout:60000})
+ app=await electron.launch({executablePath:require('electron'),args:[resolve('.')],env:{...process.env,SHAKEINK_TEST_ROOT:root},timeout:60000})
  page=await app.firstWindow();page.on('pageerror',error=>errors.push(error.message));await page.getByRole('button',{name:'账号菜单'}).waitFor({timeout:60000});await settings()
  await page.getByRole('combobox',{name:'备份间隔'}).selectOption('1');await page.getByRole('combobox',{name:'保留备份份数'}).selectOption('2');await expect.poll(async()=>(await page.evaluate(()=>window.desktop.bootstrap())).settings.general.backupRetention).toBe(2)
  await page.getByRole('button',{name:'立即备份',exact:true}).click();await expect(page.getByRole('status').filter({hasText:'已完成 1 部作品备份'})).toBeVisible({timeout:60000});const first=JSON.parse(await readFile(join(root,'backup-plan.json'),'utf8')).value.lastSuccess

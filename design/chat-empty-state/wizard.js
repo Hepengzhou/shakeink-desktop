@@ -1,7 +1,7 @@
 'use strict';
 // Local design interaction using the app's public, fixed template corpus.
 const creationWizard = (() => {
-  const data = window.XAANINK_WIZARD_DATA;
+  const data = window.SHAKEINK_WIZARD_DATA;
   const modal = document.querySelector('#wizard-dialog');
   const draftInput = document.querySelector('#draft');
   const filterRoot = document.querySelector('#wizard-filters');

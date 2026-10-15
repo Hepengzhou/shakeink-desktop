@@ -31,7 +31,7 @@ contents=contents.replace("return {model,calls,bridgeCalls,unexpected,client,", 
 const bundle=build({stdin:{contents,loader:'tsx',resolveDir:process.cwd()},bundle:true,write:false,platform:'browser',format:'esm',outfile:'text-context-fixture.js',external:['/brand/*'],loader:{'.ttf':'dataurl'},define:{'process.env.NODE_ENV':'"development"','process.env':'{}'},minify:true,tsconfig:'tsconfig.json'}).then(result=>({script:result.outputFiles!.find(file=>file.path.endsWith('.js'))!.text,css:result.outputFiles!.find(file=>file.path.endsWith('.css'))?.text??''}))
 const cssPath=resolve('src/app/globals.css'),stylesheet=(async()=>(await postcss([tailwindcss()]).process(await readAsync(cssPath,'utf8'),{from:cssPath})).css+'\n'+await readAsync('src/app/desktop.css','utf8'))()
 let browser:Browser
-test.before(async()=>{browser=await chromium.launch({headless:true,executablePath:process.env.XAANINK_TEST_CHROMIUM??'C:/Program Files/Google/Chrome/Application/chrome.exe'})})
+test.before(async()=>{browser=await chromium.launch({headless:true,executablePath:process.env.SHAKEINK_TEST_CHROMIUM??'C:/Program Files/Google/Chrome/Application/chrome.exe'})})
 test.after(async()=>{await browser?.close()})
 async function frames(page:Page){await page.evaluate(()=>new Promise<void>(done=>requestAnimationFrame(()=>requestAnimationFrame(()=>done()))))}
 async function scenario(run:(page:Page)=>Promise<void>){

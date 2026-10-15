@@ -23,7 +23,7 @@ API Key 保持密码掩码。默认复制、剪切与粘贴通过现有命令所
 | 实际 macOS 模型配置回归 | 11 项检查通过，含手动保存、取消、假 Key 的真实 safeStorage 加密、自定义本机接口 | evidence/model-dialog-repair/native-models.json |
 | 实际 macOS 启动回归 | 10 项检查通过，含原生菜单、沙箱、主题持久化与快捷键录制/冲突 | evidence/model-dialog-repair/native-baseline.json |
 
-全量命令使用 Node 24.19.0：`node --import tsx --test --test-concurrency=1 --test-reporter=tap tests/unit/*.test.ts tests/integration/*.test.ts` 与相同参数的 `tests/browser/*.test.ts`。浏览器使用系统 Google Chrome，路径由 XAANINK_TEST_CHROMIUM 明确指定。原生命令为 `XAANINK_NATIVE_INPUT_MENU=1 node scripts/smoke-byok.mjs`、`node scripts/smoke-models.mjs`、`node scripts/smoke-electron.mjs`；全部使用规范化 TMPDIR 和独立 XAANINK_TEST_ROOT，退出 0。
+全量命令使用 Node 24.19.0：`node --import tsx --test --test-concurrency=1 --test-reporter=tap tests/unit/*.test.ts tests/integration/*.test.ts` 与相同参数的 `tests/browser/*.test.ts`。浏览器使用系统 Google Chrome，路径由 SHAKEINK_TEST_CHROMIUM 明确指定。原生命令为 `SHAKEINK_NATIVE_INPUT_MENU=1 node scripts/smoke-byok.mjs`、`node scripts/smoke-models.mjs`、`node scripts/smoke-electron.mjs`；全部使用规范化 TMPDIR 和独立 SHAKEINK_TEST_ROOT，退出 0。
 
 ## 逐项覆盖
 

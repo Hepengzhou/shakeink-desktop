@@ -12,7 +12,7 @@ import type {RootRelocationPhase,RootRelocationState} from '../../desktop/shared
 
 const deferred=<T,>()=>{let resolve!:(value:T)=>void,reject!:(error:unknown)=>void;const promise=new Promise<T>((yes,no)=>{resolve=yes;reject=no});return{resolve,reject,promise}}
 async function fixture(extra:Partial<RootRelocationControllerOptions>={},mode:'blocked'|'lost'='blocked'){
- const base=await realpath(await mkdtemp(join(tmpdir(),'xaanink-recovery-controller-'))),boot=join(base,'boot'),defaultRoot=join(base,'root'),owner=randomUUID()
+ const base=await realpath(await mkdtemp(join(tmpdir(),'shakeink-recovery-controller-'))),boot=join(base,'boot'),defaultRoot=join(base,'root'),owner=randomUUID()
  await mkdir(boot)
  let wipes=0,restarts=0,quits=0,picks=0
  const trace:string[]=[]

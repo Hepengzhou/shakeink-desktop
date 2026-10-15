@@ -14,7 +14,7 @@ window.mountReview=()=>{
  return{calls,workId,backupId,reply:value=>accept(value),fail:()=>reject(Error('候选校验失败，原文件已保留')),unmount:()=>root.unmount()};
 };`},bundle:true,platform:'browser',format:'iife',write:false,tsconfig:'tsconfig.json'}).then(r=>r.outputFiles![0].text)
 let browser:Browser
-test.before(async()=>{browser=await chromium.launch({headless:true,executablePath:process.env.XAANINK_TEST_CHROMIUM})})
+test.before(async()=>{browser=await chromium.launch({headless:true,executablePath:process.env.SHAKEINK_TEST_CHROMIUM})})
 test.after(async()=>{await browser?.close()})
 async function scenario(run:(page:Page)=>Promise<void>){
  const page=await browser.newPage(),errors:string[]=[];page.setDefaultTimeout(2400);page.on('pageerror',error=>errors.push(error.message))

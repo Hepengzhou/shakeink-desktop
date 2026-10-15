@@ -9,7 +9,7 @@
 - EMPTY-01/02 验证真实 `ContentTabs` 零 Tab 分支的按钮唯一、可见、名称/title/type、无 aria-hidden 祖先、面板内几何，以及点击/Enter/Space与恢复；能让现状 `ContentTabs.tsx:69` 的空拖动条因按钮缺失明确失败，属于有效功能 RED。
 - EMPTY-03/04 分开 fallback 产品表达式和 env 结果注入，包含 .75/1/1.25/1.5/2 实时 zoom、11/14/24 UI 字号、宽/窄面板及多种系统占区。真实按钮/菜单矩形、至少6px间隔和所属面板边界比只断言样式字符串更有验收意义；`desktop.css:7,10` 的菜单宽28px、偏移6px也被纳入，而非只考虑原生138px占区。
 - EMPTY-05 保留有 Tab 导轨、全屏、关闭、选中/滚动，以及最后 Tab 转空态。既有 `pane-window-drag.test.ts` 已直接挂载真实 `ContentTabs`、编译真实 Tailwind/desktop CSS、验证拖动区和真实 Tab 操作；新用例可沿用其与无关正文/保存层隔离方式，不需复制产品 JSX。
-- EMPTY-06 明确使用隔离 dataRoot、完整真实 macOS Electron/DashboardShell/ChatPanel 和离线 xaanink 协议，弥补组件宿主无法证明 `DashboardShell` 动画卸载、恢复、布局记忆和原生 no-drag 命中的边界。点击及键盘后验证窗口没有移动、最大化或退出，可发现实际拖动命中错误。
+- EMPTY-06 明确使用隔离 dataRoot、完整真实 macOS Electron/DashboardShell/ChatPanel 和离线 shakeink 协议，弥补组件宿主无法证明 `DashboardShell` 动画卸载、恢复、布局记忆和原生 no-drag 命中的边界。点击及键盘后验证窗口没有移动、最大化或退出，可发现实际拖动命中错误。
 - EMPTY-07 明确完整活动 unit/integration/browser、完整 typecheck 和两类构建，且把源构建、安装包状态和 Windows 目标机未执行分开陈述，符合仓库实施/验收台账要求。
 
 ## 证据边界与执行要求

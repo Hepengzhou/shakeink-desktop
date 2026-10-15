@@ -31,7 +31,7 @@ export async function verifyProjectResources(project, appRoot) {
   const packaged = (await walk(root)).map(file => relative(root, file.path).split(sep).join('/'))
   const allowed = path => entries.includes(path) || path.startsWith('out/') || path.startsWith('prisma/migrations/') || path.startsWith('runtime-licenses/') || ['package.json', 'LICENSE', 'THIRD_PARTY_NOTICES.md'].includes(path)
   for (const path of packaged) {
-    if (path.endsWith('.map') || /(^|\/)\.env(\.|$)/.test(path) || /\.(db(?:-shm|-wal)?|sqlite3?(?:-shm|-wal)?)$/.test(path) || /(^|\/)PG_VERSION$/.test(path) || /^out\/(?:.*\/)?(?:database|backups|\.(?:xuanxiang|xaanink)(?:-storage)?)\//.test(path)) throw new Error(`包中含禁止的文件：${path}`)
+    if (path.endsWith('.map') || /(^|\/)\.env(\.|$)/.test(path) || /\.(db(?:-shm|-wal)?|sqlite3?(?:-shm|-wal)?)$/.test(path) || /(^|\/)PG_VERSION$/.test(path) || /^out\/(?:.*\/)?(?:database|backups|\.(?:xuanxiang|shakeink)(?:-storage)?)\//.test(path)) throw new Error(`包中含禁止的文件：${path}`)
     if (!path.startsWith('node_modules/') && !allowed(path)) throw new Error(`包中含禁止的项目文件：${path}`)
     if (/^node_modules\/.*\/(test|tests|__tests__|example|examples)\//.test(path)) throw new Error(`包中含依赖开发资源：${path}`)
   }
@@ -70,7 +70,7 @@ export async function inspectPackagedApp(project, appPath) {
   const info = JSON.parse(stdout)
   const metadata = JSON.parse(await readFile(join(project, 'package.json'), 'utf8'))
   const packagedMetadata = JSON.parse(await readFile(join(appRoot, 'package.json'), 'utf8'))
-  for (const [key, value] of Object.entries({CFBundleIdentifier: 'ink.xaanink.desktop', CFBundleName: '玄印写作', CFBundleDisplayName: '玄印写作', CFBundleShortVersionString: metadata.version, CFBundleVersion: metadata.version, CFBundleExecutable: '玄印写作'})) if (info[key] !== value) throw new Error(`实际 Info.plist 错误：${key}`)
+  for (const [key, value] of Object.entries({CFBundleIdentifier: 'ink.shakeink.desktop', CFBundleName: '玄印写作', CFBundleDisplayName: '玄印写作', CFBundleShortVersionString: metadata.version, CFBundleVersion: metadata.version, CFBundleExecutable: '玄印写作'})) if (info[key] !== value) throw new Error(`实际 Info.plist 错误：${key}`)
   if (packagedMetadata.version !== metadata.version || packagedMetadata.main !== 'dist/main/index.cjs') throw new Error('实际包 metadata 与入口/版本不一致')
   const nativeMenu=await verifyMacMenuLocalization(app)
   const resources = await verifyProjectResources(project, appRoot)
@@ -103,11 +103,11 @@ export async function inspectPackagedApp(project, appPath) {
     if (!stdout.trim().split(/\s+/).includes(process.arch === 'x64' ? 'x86_64' : process.arch)) throw new Error(`实际运行包含错误架构：${relative(app, path)}`)
     architectures.push({path: relative(app, path), architectures: stdout.trim().split(/\s+/)})
   }
-  return {format: 'xaanink-macos-static-package-check', schemaVersion: 1, scope: 'Static .app contents and dependencies only; no Electron execution/native acceptance', checkedAt: new Date().toISOString(), app, version: metadata.version, bundleId: info.CFBundleIdentifier, nativeMenu, arch: process.arch, projectResources: resources.projectResources, productionModulesIncludeNextAndPrisma: resources.packaged.includes('node_modules/next/package.json') && resources.packaged.includes('node_modules/prisma/package.json'), externalModules, architectures, files}
+  return {format: 'shakeink-macos-static-package-check', schemaVersion: 1, scope: 'Static .app contents and dependencies only; no Electron execution/native acceptance', checkedAt: new Date().toISOString(), app, version: metadata.version, bundleId: info.CFBundleIdentifier, nativeMenu, arch: process.arch, projectResources: resources.projectResources, productionModulesIncludeNextAndPrisma: resources.packaged.includes('node_modules/next/package.json') && resources.packaged.includes('node_modules/prisma/package.json'), externalModules, architectures, files}
 }
 
 export async function verifyPackagedDependencies(appRoot) {
-  const temporary = await mkdtemp(join(tmpdir(), 'xaanink-package-resources-'))
+  const temporary = await mkdtemp(join(tmpdir(), 'shakeink-package-resources-'))
   const environment = {...process.env}
   delete environment.NODE_PATH
   let passed = false

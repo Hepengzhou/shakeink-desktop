@@ -37,7 +37,7 @@ window.mount=(theme)=>{document.documentElement.className=theme;const root=creat
 window.mountOverlay=(kind)=>{const el=document.createElement('div');document.body.appendChild(el);const root=createRoot(el);flushSync(()=>root.render(kind==='toast'?<Toaster/>:kind==='dialog'?<Dialog defaultOpen><DialogContent><DialogTitle id='dialog-title'>UI dialog heading</DialogTitle><DialogDescription id='dialog-description'>UI dialog help</DialogDescription><textarea id='dialog-input' defaultValue='Original dialog input'/></DialogContent></Dialog>:<DropdownMenu><DropdownMenuTrigger id='menu-trigger'>UI menu trigger</DropdownMenuTrigger><DropdownMenuContent><DropdownMenuItem id='menu-item' onClick={()=>window.menuClicked=true}>UI menu action</DropdownMenuItem></DropdownMenuContent></DropdownMenu>));if(kind==='toast')toast.info('UI notification title',{description:'UI notification help',duration:Infinity});};
 ` }, bundle: true, write: false, platform: "browser", format: "iife", tsconfig: "tsconfig.json", define: { "process.env.NODE_ENV": '"production"' } }).then(r => r.outputFiles![0].text)
 let browser: Browser
-test.before(async () => { browser = await chromium.launch({ headless: true, ...(process.env.XAANINK_TEST_CHROMIUM ? { executablePath: process.env.XAANINK_TEST_CHROMIUM } : {}) }) })
+test.before(async () => { browser = await chromium.launch({ headless: true, ...(process.env.SHAKEINK_TEST_CHROMIUM ? { executablePath: process.env.SHAKEINK_TEST_CHROMIUM } : {}) }) })
 test.after(async () => { await browser?.close() })
 async function scenario(theme: string, run: (page: Page) => Promise<void>) {
   const page = await browser.newPage({ viewport: { width: 1200, height: 1600 } }), errors: string[] = []

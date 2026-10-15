@@ -1,6 +1,6 @@
 # 玄印写作品名与安装身份回归用例
 
-2026-10-08。中文全名「玄印写作」、简称「玄印」、英文名「XaanInk」。本文件补充 123 的数据兼容用例；先独立审核，再执行改名前失败与实现后复验。
+2026-10-08。中文全名「玄印写作」、简称「玄印」、英文名「ShakeInk」。本文件补充 123 的数据兼容用例；先独立审核，再执行改名前失败与实现后复验。
 
 - BRAND-P01：真实 npm/lock 元数据、builder productName、bundle ID、安装包文件名及两平台菜单使用规定全名/简称；现有 macOS builder 和 packaging tests 同步改断言验证真实 Info.plist 与 executable。
 - BRAND-P02：实际应用 HTML metadata、加载文案、可访问名、本地协议、DOCX/PDF 默认作者元数据采用新品牌。

@@ -9,15 +9,15 @@
 - catalog 两处计数改为当前实际生成的 darwin 417 / win32 401；独立读取 shipped JSON 确认为 Monaco 0.56.0 和该计数。完整 assembled/shipped/trusted 字段相等及破坏输入拒绝断言保留。
 - 两处 CSS 读取由旧固定哈希文件改为当前全部 CSS chunks 的排序拼接；原 UI/命令/焦点断言保留。
 - 三个恢复预览相关文件只移除已无生产消费者的假 workBackup 桥，并更新准确文案定位。独立核对真实 RecoveryDialog 对应列表、导出、作品草稿与空态文案；原原稿/隐藏元数据/复制/完整导出/失败保持断言保留。
-- file-export fixture 改为真实 service.export() 的 `xaanink-local-templates` 输出；实际 shared schema 仍允许旧品牌输入。该改动未削弱已有文件内容与正文格式解析断言。
+- file-export fixture 改为真实 service.export() 的 `shakeink-local-templates` 输出；实际 shared schema 仍允许旧品牌输入。该改动未削弱已有文件内容与正文格式解析断言。
 - 两个 lease 文件将不存在的 WorkBackupsPanel 相关部分按已批准备份退役范围拆分，活动测试直接使用真实 WorkLeasePendingDialog/DesktopApp，保留单飞、屏障、异常、卸载晚回执等要求，Proxy 拒绝备份桥读取。late ordinary state 测试确实发送高 revision 状态并验证接纳后仍保留屏障，而非用空状态绕开原要求。
 - 独立用 Git HEAD 原件与两个 `tests/retired/backups/mixed-originals/tests/browser/work-lease-ui*.test.ts` 比较，字节完全相等。SHA-256 分别为 `04903863b64caca383f599ffbc713ca906705337948bf8348905d5ffbb28381a`、`3f35d9c8ea391278de14f2d0f4d3621d2ec64617ad7a8a60ac11bdf08cb443ae`，与 139 一致。退役 LUI23-03 保留历史，未计作 passed 或 skipped。
 
-已独立读取 `/private/tmp/xaanink-drag-core.log` 与 `/private/tmp/xaanink-drag-browser-final.log` 的最终结果：core **1624/1624**、browser **176/176**，均 0 fail / cancelled / skipped。该结果是当前活动开发测试通过，不替代整应用正式 530 项业务与平台验收。
+已独立读取 `/private/tmp/shakeink-drag-core.log` 与 `/private/tmp/shakeink-drag-browser-final.log` 的最终结果：core **1624/1624**、browser **176/176**，均 0 fail / cancelled / skipped。该结果是当前活动开发测试通过，不替代整应用正式 530 项业务与平台验收。
 
 ## 原生观察脚本和证据边界
 
-脚本限定显式 `/private/tmp/xaanink-pane-drag-*` 隔离根；启动实际离线 workbench，验证 `xaanink://app/`、指定 dataRoot 和默认无模型；读取真实 BrowserWindow bounds/maximized/fullscreen、当前元素 CSS/geometry，并保存源码 hashes 和截图。脚本不调用 maximize()/setBounds() 伪造鼠标结果。`node --check scripts/smoke-pane-window-drag.mjs`、`git diff --check` 均 exit 0。
+脚本限定显式 `/private/tmp/shakeink-pane-drag-*` 隔离根；启动实际离线 workbench，验证 `shakeink://app/`、指定 dataRoot 和默认无模型；读取真实 BrowserWindow bounds/maximized/fullscreen、当前元素 CSS/geometry，并保存源码 hashes 和截图。脚本不调用 maximize()/setBounds() 伪造鼠标结果。`node --check scripts/smoke-pane-window-drag.mjs`、`git diff --check` 均 exit 0。
 
 原生双击与移动须保留各自输入来源：双击是 CUA 系统鼠标，拖动在 driver 对既有 SidebarWindowControls 也无法移动的条件下采用人真实鼠标，并以聊天明确确认和只读 bounds 观察补证。失败的 CUA drag 不能计为通过；人操作不能标成自动化执行。
 

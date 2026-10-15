@@ -34,7 +34,7 @@ for (const [stage, args] of stages) {
   const startedAt = new Date().toISOString();
   let output = '', error = null;
   const child = spawn(process.execPath, args, { windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'],
-    env: { ...process.env, PATH: `${dirname(process.execPath)};${process.env.PATH ?? ''}`, XAANINK_TEST_CHROMIUM: 'C:/Program Files/Google/Chrome/Application/chrome.exe' } });
+    env: { ...process.env, PATH: `${dirname(process.execPath)};${process.env.PATH ?? ''}`, SHAKEINK_TEST_CHROMIUM: 'C:/Program Files/Google/Chrome/Application/chrome.exe' } });
   for (const stream of [child.stdout, child.stderr]) stream.on('data', chunk => { output += chunk.toString(); });
   const exitCode = await new Promise(done => { child.on('error', value => { error = sanitize(value); done(null); }); child.on('close', done); });
   const clean = sanitize(output); await writeFile(join(directory, `${stage}.log`), clean);

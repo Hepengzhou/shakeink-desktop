@@ -72,7 +72,7 @@ test('RE86-03 recovery export from a failed unready close preserves all data-onl
   await writeFile(join(f.work, 'xuanxiang-work.json'), 'original manifest'); await mkdir(join(f.work, 'database')); const database = join(f.work, 'database', 'recovery.json'); await writeFile(database, 'original database bytes')
   let selected: string | null = database; const rig = f.setup({ chooser: async () => selected }), input = snapshot()
   await assert.rejects(rig.save(input), /内部数据/); assert.equal(await readFile(database, 'utf8'), 'original database bytes')
-  selected = join(f.work, '用户恢复草稿.json'); assert.equal(await rig.save(input), true); const saved = JSON.parse(await readFile(selected, 'utf8')); assert.deepEqual(saved, { format: 'xaanink-recovery', version: 1, snapshot: input }); assert.equal(await readFile(join(f.work, 'xuanxiang-work.json'), 'utf8'), 'original manifest')
+  selected = join(f.work, '用户恢复草稿.json'); assert.equal(await rig.save(input), true); const saved = JSON.parse(await readFile(selected, 'utf8')); assert.deepEqual(saved, { format: 'shakeink-recovery', version: 1, snapshot: input }); assert.equal(await readFile(join(f.work, 'xuanxiang-work.json'), 'utf8'), 'original manifest')
   selected = null; assert.equal(await rig.save(input), false)
 }))
 
@@ -89,8 +89,8 @@ test('RE86-05 actual releaseOwner invalidates recovery export but closeData stil
   const rig = f.setup({ hooks: { beforeDirectorySync: async () => { entered.resolve(); await release.promise } } }), saving = rig.save(snapshot()); void saving.catch(() => {})
   let closed = false, closing: Promise<void> | undefined
   try {
-    await Promise.race([entered.promise, saving.then(() => { throw Error('post-rename physical IO boundary was not entered') })]); assert.equal(JSON.parse(await readFile(target, 'utf8')).format, 'xaanink-recovery'); rig.releaseOwner(); closing = rig.closeData().then(() => { closed = true })
-    await new Promise(setImmediate); assert.equal(closed, false); assert.equal(rig.serviceCalls.includes('close'), false); release.resolve(); await assert.rejects(saving, /窗口|变化/); await closing; assert.equal(rig.serviceCalls.filter(name => name === 'close').length, 1); assert.equal(JSON.parse(await readFile(target, 'utf8')).format, 'xaanink-recovery')
+    await Promise.race([entered.promise, saving.then(() => { throw Error('post-rename physical IO boundary was not entered') })]); assert.equal(JSON.parse(await readFile(target, 'utf8')).format, 'shakeink-recovery'); rig.releaseOwner(); closing = rig.closeData().then(() => { closed = true })
+    await new Promise(setImmediate); assert.equal(closed, false); assert.equal(rig.serviceCalls.includes('close'), false); release.resolve(); await assert.rejects(saving, /窗口|变化/); await closing; assert.equal(rig.serviceCalls.filter(name => name === 'close').length, 1); assert.equal(JSON.parse(await readFile(target, 'utf8')).format, 'shakeink-recovery')
   } finally { release.resolve(); await saving.catch(() => {}); await closing?.catch(() => {}) }
 }))
 test('RE86-06 malformed UTF8, unknown recovery fields and snapshots over 16MiB never open the recovery chooser', { timeout: 5000 }, () => fixture(async f => {

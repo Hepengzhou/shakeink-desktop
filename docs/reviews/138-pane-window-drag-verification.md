@@ -12,13 +12,13 @@ Node 24.18.0；所有活动 unit/integration 与 browser 用例均实际运行�
 
 | 检查 | 结果 | 本机原始日志 |
 | --- | --- | --- |
-| 修改前聚焦 unit/browser | 5/5 因功能断言失败（RED） | `/private/tmp/xaanink-drag-red.log` |
-| 实现后聚焦 unit/browser | 5/5 通过 | `/private/tmp/xaanink-drag-green.log` |
-| 全量 unit/integration | 1624/1624 通过 | `/private/tmp/xaanink-drag-core.log` |
-| 全量 browser | 176/176 通过 | `/private/tmp/xaanink-drag-browser-final.log` |
-| `npm run typecheck` | exit 0 | `/private/tmp/xaanink-drag-typecheck-final.log` |
-| `npm run build:ui` | exit 0，离线静态导出生成 | `/private/tmp/xaanink-drag-build-ui.log` |
-| `npm run build:desktop` | exit 0 | `/private/tmp/xaanink-drag-build-desktop.log` |
+| 修改前聚焦 unit/browser | 5/5 因功能断言失败（RED） | `/private/tmp/shakeink-drag-red.log` |
+| 实现后聚焦 unit/browser | 5/5 通过 | `/private/tmp/shakeink-drag-green.log` |
+| 全量 unit/integration | 1624/1624 通过 | `/private/tmp/shakeink-drag-core.log` |
+| 全量 browser | 176/176 通过 | `/private/tmp/shakeink-drag-browser-final.log` |
+| `npm run typecheck` | exit 0 | `/private/tmp/shakeink-drag-typecheck-final.log` |
+| `npm run build:ui` | exit 0，离线静态导出生成 | `/private/tmp/shakeink-drag-build-ui.log` |
+| `npm run build:desktop` | exit 0 | `/private/tmp/shakeink-drag-build-desktop.log` |
 
 上述日志的本任务审查副本位于 `docs/evidence/implementation-44/{core,browser-final,typecheck-final,build-ui,build-desktop,red,green}.log`，只替换机器目录前缀。原始临时日志仍保留。
 
@@ -28,7 +28,7 @@ Node 24.18.0；所有活动 unit/integration 与 browser 用例均实际运行�
 
 ## macOS 原生窗口
 
-使用实际离线 `xaanink://app/` 工作台和合成小说夹具；启动前检查指定隔离 dataRoot、模型数 0。观察脚本 `scripts/smoke-pane-window-drag.mjs` 只读 BrowserWindow 状态、DOM/CSS 与截图，不调用 setBounds/maximize 模拟结果。数据根位于本任务 `/private/tmp/xaanink-pane-drag-*`；未操作默认用户数据或 Key。
+使用实际离线 `shakeink://app/` 工作台和合成小说夹具；启动前检查指定隔离 dataRoot、模型数 0。观察脚本 `scripts/smoke-pane-window-drag.mjs` 只读 BrowserWindow 状态、DOM/CSS 与截图，不调用 setBounds/maximize 模拟结果。数据根位于本任务 `/private/tmp/shakeink-pane-drag-*`；未操作默认用户数据或 Key。
 
 证据：[最终原生 JSON](../evidence/implementation-44/pane-window-drag-native.json)，内含三个生产文件 SHA-256、各次正常/最大化/复原 bounds、CSS 几何和错误数组（空）。同目录保留各次截图。
 

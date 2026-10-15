@@ -24,7 +24,7 @@
 
 数字输入保留空值、范围外与非整数字号草稿，先校验再调用保存；失焦给字段级可访问错误，失败保留待处理输入，重新输入可重试，Escape 清当前草稿错误并恢复确认值。edit revision 阻止旧 Promise 的失败/完成覆盖新草稿。独立测试涵盖空/越界/非整数不派发、浮点行距、旧失败与新草稿隔离、失败保留/重试/Escape，以及两次串行写中前失败后成功的状态。非法/失败值没有通过 DesktopApp 乐观应用到工作台。
 
-本机字体通过用户打开外观页触发 queryLocalFonts，去重/排序，不发下载请求；通用字体和缺失的历史字体均可展示。自定义 family 清控制字符并转义反斜线/引号，再接通用 fallback 链。main 的权限请求与权限检查都限定为当前 BrowserWindow 的受信主 frame、`xaanink://app/` 和 local-fonts，其他窗口/frame/权限拒绝。权限负例是源码审查，没有冒称运行了恶意 iframe/其他窗口的权限测试。
+本机字体通过用户打开外观页触发 queryLocalFonts，去重/排序，不发下载请求；通用字体和缺失的历史字体均可展示。自定义 family 清控制字符并转义反斜线/引号，再接通用 fallback 链。main 的权限请求与权限检查都限定为当前 BrowserWindow 的受信主 frame、`shakeink://app/` 和 local-fonts，其他窗口/frame/权限拒绝。权限负例是源码审查，没有冒称运行了恶意 iframe/其他窗口的权限测试。
 
 DesktopApp 以确认快照更新主题、界面 family、root rem 字号、正文 family/字号/行距变量；原 DashboardShell 保持挂载。native zoom 在仓库成功提交后设置，并在创建窗口时读取保存值。当前原生脚本验证保存后 getZoomFactor 为 1.25；启动恢复分支经源码复核，不将同一进程的检查扩张为重启验收。
 

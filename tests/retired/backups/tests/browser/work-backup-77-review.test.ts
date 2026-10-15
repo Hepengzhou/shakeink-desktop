@@ -8,7 +8,7 @@ const bundle=build({stdin:{loader:'tsx',resolveDir:process.cwd(),contents:`
  window.fixture={calls,mount(){root=createRoot(document.getElementById('app'));flushSync(()=>root.render(React.createElement(WorkBackupButton)))},unmount(){flushSync(()=>root.unmount())},resolve(index,result){pending[index].resolve(result)},reject(index,message){pending[index].reject(Error(message))}};
  `},bundle:true,platform:'browser',format:'iife',write:false,tsconfig:'tsconfig.json'}).then(result=>result.outputFiles![0].text)
 let browser:Browser
-test.before(async()=>{browser=await chromium.launch({headless:true,...(process.env.XAANINK_TEST_CHROMIUM?{executablePath:process.env.XAANINK_TEST_CHROMIUM}:{})})});test.after(async()=>{await browser?.close()})
+test.before(async()=>{browser=await chromium.launch({headless:true,...(process.env.SHAKEINK_TEST_CHROMIUM?{executablePath:process.env.SHAKEINK_TEST_CHROMIUM}:{})})});test.after(async()=>{await browser?.close()})
 async function scenario(run:(page:Page)=>Promise<void>){const page=await browser.newPage(),errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));await page.route('**/*',route=>route.abort());try{await page.setContent('<div id="app"></div>');await page.addScriptTag({content:await bundle});await page.evaluate(()=>(window as any).fixture.mount());await run(page);assert.deepEqual(errors,[])}finally{await page.close()}}
 test('BU77-01 a partial batch cannot display complete success and an explicit retry replaces its error',()=>scenario(async page=>{
  await page.getByRole('button',{name:'立即备份'}).click();await page.evaluate(()=>(window as any).fixture.resolve(0,{type:'now',saved:[{id:'saved'}],failed:[{title:'离线作品',message:'目录暂不可读'}]}))

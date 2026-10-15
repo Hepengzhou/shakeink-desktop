@@ -11,8 +11,8 @@
 - DRAG-05 明确完整离线 Electron、隔离根、系统鼠标、实际窗口 bounds，并对三处分别拖动和双击两次；必须保留带 StoryWorkflowBar 的完整 ChatPanel 顶部证据。Tab/按钮排除也需真正做鼠标拖动，不能以其 computed style 或直接调用 maximize() 代替。最大化与 panel fullscreen 行为须分开，第二次双击须回到原正常 bounds，窗口不得进入系统 fullscreen。
 - DRAG-06 全量回归、typecheck 和两侧构建与 Windows 未执行记录符合实施台账约束；不能凭样式或测试 API 的平台参数声称 Windows 原生通过。
 
-执行前发现并已报告的夹具问题：`/private/tmp/xaanink-drag-red.log` 中 browser bundle 报 `Could not resolve "react/jsx-runtime"`；`panel-fixture` 的 esbuild onLoad 结果缺少 resolveDir。先为该虚拟 TSX 模块设置工作区 resolveDir 并重跑，确保红测来自缺少 drag/no-drag/标题置顶的实际断言。Chromium 版本缺失导致的启动错误也只能记录为环境错误；显式指定已安装 Chromium 后需记录实际版本，不能当作预期功能红测。
+执行前发现并已报告的夹具问题：`/private/tmp/shakeink-drag-red.log` 中 browser bundle 报 `Could not resolve "react/jsx-runtime"`；`panel-fixture` 的 esbuild onLoad 结果缺少 resolveDir。先为该虚拟 TSX 模块设置工作区 resolveDir 并重跑，确保红测来自缺少 drag/no-drag/标题置顶的实际断言。Chromium 版本缺失导致的启动错误也只能记录为环境错误；显式指定已安装 Chromium 后需记录实际版本，不能当作预期功能红测。
 
-代码审核阶段复查：onLoad 已加入 `resolveDir: process.cwd()`，并显式指定已安装 Chromium。更新后的 `/private/tmp/xaanink-drag-red.log` 记录 5 tests / 0 pass / 5 fail / 0 skipped；三个 browser 测试均为 `none !== drag` 的功能断言失败，两项 AST 测试分别因首行仍为工作流以及 drag 数量为 0 失败。该记录满足本次修改前红测要求。
+代码审核阶段复查：onLoad 已加入 `resolveDir: process.cwd()`，并显式指定已安装 Chromium。更新后的 `/private/tmp/shakeink-drag-red.log` 记录 5 tests / 0 pass / 5 fail / 0 skipped；三个 browser 测试均为 `none !== drag` 的功能断言失败，两项 AST 测试分别因首行仍为工作流以及 drag 数量为 0 失败。该记录满足本次修改前红测要求。
 
 本审核批准先修好测试环境，再完成红→绿实现流程。所有 native 和全量通过状态仍需后续命令及实际界面证据。

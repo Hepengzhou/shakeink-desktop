@@ -41,7 +41,7 @@ export function selectBrandStartupPaths(input: { appData: string; home: string; 
   const family: BrandFamily = legacy?.authoritative ? "legacy" : current?.authoritative ? "current" : "current"
   const bootstrap = family === "legacy" ? legacyBootstrap : currentBootstrap
   const history = family === "legacy" ? legacy : current
-  const fallbackRoot = join(input.home, family === "legacy" ? ".xuanxiang" : ".xaanink")
+  const fallbackRoot = join(input.home, family === "legacy" ? ".xuanxiang" : ".shakeink")
   if (history?.authoritative) {
     const recoveryPaths = { bootstrap, defaultRoot: fallbackRoot, encryptionFamily: family }
     try {
@@ -58,7 +58,7 @@ export function selectBrandStartupPaths(input: { appData: string; home: string; 
       return recoveryPaths
     } catch { throw new BrandStartupPathError("BRAND_POINTER_INVALID", recoveryPaths) }
   }
-  for (const [root, names, boot] of [[join(input.home, ".xuanxiang"), LEGACY_NAMES, legacyBootstrap], [join(input.home, ".xaanink"), CURRENT_NAMES, currentBootstrap]] as const) {
+  for (const [root, names, boot] of [[join(input.home, ".xuanxiang"), LEGACY_NAMES, legacyBootstrap], [join(input.home, ".shakeink"), CURRENT_NAMES, currentBootstrap]] as const) {
     if (!exists(root)) continue
     const recoveryPaths: BrandStartupPaths = { bootstrap: boot, defaultRoot: root, encryptionFamily: names.family }
     try {
@@ -77,5 +77,5 @@ export function selectBrandStartupPaths(input: { appData: string; home: string; 
     }
     return recoveryPaths
   }
-  return { bootstrap: currentBootstrap, defaultRoot: join(input.home, ".xaanink"), encryptionFamily: "current" }
+  return { bootstrap: currentBootstrap, defaultRoot: join(input.home, ".shakeink"), encryptionFamily: "current" }
 }

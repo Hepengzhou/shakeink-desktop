@@ -20,10 +20,10 @@ const bundle=build({entryPoints:['desktop/main/root-relocation-window.ts'],bundl
 }).then(result=>result.outputFiles[0].text)
 interface WindowRecord{preferences:{title:string};titles:string[];webContents:unknown}
 async function fixture(kind:'recovery'|'history'|'marker-invalid'){
- const base=await realpath(await mkdtemp(join(tmpdir(),'xaanink-recovery-window-'))),bootstrap=join(base,'bootstrap'),root=join(base,'root'),out=join(base,'out')
+ const base=await realpath(await mkdtemp(join(tmpdir(),'shakeink-recovery-window-'))),bootstrap=join(base,'bootstrap'),root=join(base,'root'),out=join(base,'out')
  for(const path of[bootstrap,out])await mkdir(path)
  if(kind==='history')await writeFile(join(bootstrap,'root-migration-request.json'),'{"schemaVersion":1}')
- if(kind==='marker-invalid'){await mkdir(join(root,'inbox','database'),{recursive:true});await writeFile(join(root,'catalog.json'),'{}');await writeFile(join(root,'xaanink-app.json'),JSON.stringify({schemaVersion:1,app:'XaanInk',id:randomUUID(),phase:'ready',inboxReady:true}));await new DataRootManager(bootstrap,root).adopt(await directoryIdentity(root));await writeFile(join(root,'xaanink-app.json'),'{损坏标记')}
+ if(kind==='marker-invalid'){await mkdir(join(root,'inbox','database'),{recursive:true});await writeFile(join(root,'catalog.json'),'{}');await writeFile(join(root,'shakeink-app.json'),JSON.stringify({schemaVersion:1,app:'ShakeInk',id:randomUUID(),phase:'ready',inboxReady:true}));await new DataRootManager(bootstrap,root).adopt(await directoryIdentity(root));await writeFile(join(root,'shakeink-app.json'),'{损坏标记')}
  await writeFile(join(out,'index.html'),'<p>restricted recovery</p>')
  const trace:string[]=[],handlers=new Map<string,(...args:any[])=>any>(),instances:any[]=[],paths=new Map<string,string>()
  const isolated={storagePath:null,setPermissionRequestHandler(){},setPermissionCheckHandler(){},webRequest:{onBeforeRequest(){}},protocol:{handle(){}}}
@@ -31,10 +31,10 @@ async function fixture(kind:'recovery'|'history'|'marker-invalid'){
  class Window extends EventEmitter{
   static getAllWindows(){return instances.filter(value=>!value.destroyed)}
   destroyed=false;preferences:any;titles:string[]=[];webContents:any
-  constructor(value:any){super();this.preferences=value;this.webContents=Object.assign(new EventEmitter(),{id:31,mainFrame:{url:'xaanink://app/'},session:value.webPreferences.session,send:()=>trace.push('event'),setWindowOpenHandler:(cb:any)=>this.webContents.openHandler=cb});instances.push(this);trace.push('window')}
-  isDestroyed(){return this.destroyed}setMenu(){}show(){trace.push('show')}focus(){}minimize(){}setTitle(value:string){this.titles.push(value);this.preferences.title=value}async loadURL(url:string){assert.equal(url,'xaanink://app/');trace.push('load')}
+  constructor(value:any){super();this.preferences=value;this.webContents=Object.assign(new EventEmitter(),{id:31,mainFrame:{url:'shakeink://app/'},session:value.webPreferences.session,send:()=>trace.push('event'),setWindowOpenHandler:(cb:any)=>this.webContents.openHandler=cb});instances.push(this);trace.push('window')}
+  isDestroyed(){return this.destroyed}setMenu(){}show(){trace.push('show')}focus(){}minimize(){}setTitle(value:string){this.titles.push(value);this.preferences.title=value}async loadURL(url:string){assert.equal(url,'shakeink://app/');trace.push('load')}
  }
- const electron={app,BrowserWindow:Window,ipcMain:{handle:(id:string,cb:any)=>handlers.set(id,cb)},Menu:{buildFromTemplate:(value:any)=>({items:value,popup(){}}),setApplicationMenu(){}},nativeTheme:{shouldUseDarkColors:false},dialog:{showOpenDialog:async()=>({canceled:true,filePaths:[]}),showMessageBox:async()=>({response:1})},session:{fromPartition:(name:string,options:any)=>{assert.equal(name,'xaanink-root-relocation');assert.deepEqual(options,{cache:false});return isolated},get defaultSession(){throw Error('must not open original session')}}}
+ const electron={app,BrowserWindow:Window,ipcMain:{handle:(id:string,cb:any)=>handlers.set(id,cb)},Menu:{buildFromTemplate:(value:any)=>({items:value,popup(){}}),setApplicationMenu(){}},nativeTheme:{shouldUseDarkColors:false},dialog:{showOpenDialog:async()=>({canceled:true,filePaths:[]}),showMessageBox:async()=>({response:1})},session:{fromPartition:(name:string,options:any)=>{assert.equal(name,'shakeink-root-relocation');assert.deepEqual(options,{cache:false});return isolated},get defaultSession(){throw Error('must not open original session')}}}
  const module={exports:{}as{launchRootRelocation(bootstrap:string,preflight:ReturnType<typeof rootRelocationPreflight>,recovery?:unknown):Promise<void>;launchStartupRecovery(bootstrap:string,input:unknown):Promise<void>}}
  new Function('module','exports','require','__dirname','process',await bundle)(module,module.exports,(id:string)=>id==='electron'?electron:id==='review:close-accent'?closeAccentBoundary:require(id),join(base,'bundle/main'),process)
  const event=()=>({sender:instances[0].webContents,senderFrame:instances[0].webContents.mainFrame})

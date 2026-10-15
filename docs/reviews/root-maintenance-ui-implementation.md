@@ -31,7 +31,7 @@ RUI12-01订阅/初读顺序及old/equal revision；02六个活动阶段和不定
 
 测试仅启动本机已有headless Chromium1228的隔离页，当前组件+React19+BaseUI1.6+原Button实装，受控维护bridge，拦截外网。宣纸清理待处理、玄墨、360px长路径截图已视觉检查，位于implementation-12。没有接触运行中Electron或真实用户根；不提升正式测试用例状态，不宣称真实Windows/native/app.relaunch/迁移通过。等待他人独立审核与主代理组合验收。
 
-复现命令：使用Node24，设置 `XAANINK_TEST_CHROMIUM=<user-home>/Library/Caches/ms-playwright/chromium_headless_shell-1228/chrome-headless-shell-mac-arm64/chrome-headless-shell`，执行 `node --import tsx --test --test-reporter=tap tests/browser/root-maintenance-screen.test.ts`。设置 `XAANINK_TEST_SCREENSHOTS=1`可重建三张受控截图，默认独立复跑不覆盖已冻结截图。浏览器须有正常Mac进程权限；没有依赖远程服务。全量检查为 `node node_modules/typescript/bin/tsc --noEmit --pretty false`。
+复现命令：使用Node24，设置 `SHAKEINK_TEST_CHROMIUM=<user-home>/Library/Caches/ms-playwright/chromium_headless_shell-1228/chrome-headless-shell-mac-arm64/chrome-headless-shell`，执行 `node --import tsx --test --test-reporter=tap tests/browser/root-maintenance-screen.test.ts`。设置 `SHAKEINK_TEST_SCREENSHOTS=1`可重建三张受控截图，默认独立复跑不覆盖已冻结截图。浏览器须有正常Mac进程权限；没有依赖远程服务。全量检查为 `node node_modules/typescript/bin/tsc --noEmit --pretty false`。
 
 ## v2 · 独立审核修复交接
 

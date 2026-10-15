@@ -33,7 +33,7 @@
 
 最终接口补充：短流程先执行 `start-models` 同CAS保留completed=true并进入text，ack前不挂载模型表单；写失败留入口、同身份重复不会清模型/default，未完成full拒绝此动作。主动重开短入口可以重新回text并编辑原确认ID；这些断言以单元和实际Electron分别执行；短流程step与completed=true组合schema合法，默认模型变化仍只在之后model确认发生。
 
-先新增 `tests/unit/onboarding-repository.test.ts`、`onboarding-service.test.ts`、`onboarding-flow.test.ts` 和store关闭专项，记录失败，再分别实现后台原子动作及前端。实测脚本 `scripts/smoke-onboarding.mjs` 用 Playwright Electron 启动真实 `xaanink://app/`，隔离根运行完整配置、图片跳过/确认、welcome、关闭重启、短入口、普通设置兼容和鼠标/键盘/短窗/zoom；检查HTTP请求无供应商访问并且应用没有监听端口。脚本不能引入测试HTTP服务。必要错误用controlled service和真实文件注入，标记为单元/专项，不冒充native UI故障验收。
+先新增 `tests/unit/onboarding-repository.test.ts`、`onboarding-service.test.ts`、`onboarding-flow.test.ts` 和store关闭专项，记录失败，再分别实现后台原子动作及前端。实测脚本 `scripts/smoke-onboarding.mjs` 用 Playwright Electron 启动真实 `shakeink://app/`，隔离根运行完整配置、图片跳过/确认、welcome、关闭重启、短入口、普通设置兼容和鼠标/键盘/短窗/zoom；检查HTTP请求无供应商访问并且应用没有监听端口。脚本不能引入测试HTTP服务。必要错误用controlled service和真实文件注入，标记为单元/专项，不冒充native UI故障验收。
 
 直接关联旧用例按改动选取：model-repository、model-defaults、model-configuration/cancellation、profile-settings/profile-ipc、avatar-assets、configuration-files/transfer、settings-close-flush。现有自制hook测试若无法覆盖抽取子组件，改为真实组件测试或让测试执行抽取后的子组件，不能为了保留旧实现结构而复制逻辑。typecheck和构建必须通过，但不记作业务用例数。禁止 `npm test`/全量脚本入口。
 

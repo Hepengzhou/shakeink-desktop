@@ -1,6 +1,6 @@
 # GitHub 仓库迁移与许可证审核
 
-日期：2026-10-08（Asia/Shanghai）。用户指定目标 `mySingleLive/xaanink-desktop`、主分支 `master`、许可证 GPL-3.0。
+日期：2026-10-08（Asia/Shanghai）。用户指定目标 `mySingleLive/shakeink-desktop`、主分支 `master`、许可证 GPL-3.0。
 
 ## 方案与独立审核
 

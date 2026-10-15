@@ -16,14 +16,14 @@
 
 ### 1.1 关键概念：恢复目标根 `recoveryRoot`
 
-分类器的「默认根」比较基准与重置的清空目标统一为 `recoveryRoot`，**绝不硬编码 `join(home,'.xaanink')`**：
+分类器的「默认根」比较基准与重置的清空目标统一为 `recoveryRoot`，**绝不硬编码 `join(home,'.shakeink')`**：
 
 ```
 recoveryRoot = isolatedRoot ? resolve(isolatedRoot)            // 测试隔离模式：startupPaths.defaultRoot 即隔离根
-             : join(home, family === 'legacy' ? '.xuanxiang' : '.xaanink')
+             : join(home, family === 'legacy' ? '.xuanxiang' : '.shakeink')
 ```
 
-（审核修订：阻断项——隔离模式下分类/重置若指向真实 `~/.xaanink` 会误删开发者数据。）`executeStartupReset` 的防呆校验以该计算值为准。
+（审核修订：阻断项——隔离模式下分类/重置若指向真实 `~/.shakeink` 会误删开发者数据。）`executeStartupReset` 的防呆校验以该计算值为准。
 
 ## 2. 核心模块 `desktop/main/startup-recovery.ts`
 
@@ -82,7 +82,7 @@ export type StartupRecoveryClass =
 
 ### 2.4 修复执行器 `executeStartupRepair(paths, repair, guards): Promise<void>`
 
-异步、冷态（用异步 `atomicWrite`）。`guards = { assertLock(): void; hooks?: { beforeRename?(): void; beforeRemove?(name: string): void } }`——**hooks 是测试注入点**（审核修订）：执行器在每次 `atomicWrite` 的 `beforeRename` 内先调 `hooks.beforeRename?.()` 再做身份复核，使 SR-U-44/45 能确定性注入「执行中文件被替换」。hooks 永不来自渲染端。marker 文件名与 `app` 字段均随家族（current → `xaanink-app.json`/`"XaanInk"`，legacy → `xuanxiang-app.json`/`"Xuanxiangxiezuo-Desktop"`，见 `desktop/shared/brand-names.ts:8-9` 与 `desktop/core/brand-names.ts:8,49`）。
+异步、冷态（用异步 `atomicWrite`）。`guards = { assertLock(): void; hooks?: { beforeRename?(): void; beforeRemove?(name: string): void } }`——**hooks 是测试注入点**（审核修订）：执行器在每次 `atomicWrite` 的 `beforeRename` 内先调 `hooks.beforeRename?.()` 再做身份复核，使 SR-U-44/45 能确定性注入「执行中文件被替换」。hooks 永不来自渲染端。marker 文件名与 `app` 字段均随家族（current → `shakeink-app.json`/`"ShakeInk"`，legacy → `xuanxiang-app.json`/`"Xuanxiangxiezuo-Desktop"`，见 `desktop/shared/brand-names.ts:8-9` 与 `desktop/core/brand-names.ts:8,49`）。
 
 - `pointer`（R1，及 inboxReady=false 的自愈变体）：把 `data-root.json` 改名隔离为 `data-root.corrupt-<ISO8601 时间戳>.json`（留证；该名字不匹配历史名单与 preflight 名单，后续启动视为无指针 → worker `adopt()`/inbox 自愈）。改名前后复核 bootstrap 目录身份。
 - `marker`（R2）：以指针 `rootId` 原子写 `<root>/<家族 marker>`：`{schemaVersion:1, app:<家族 appIdentity>, id:pointer.rootId, phase:'ready', inboxReady:true}`。若存在同名坏文件先改名为 `<marker>.corrupt-<ts>.json` 隔离（不匹配 BRAND_NAMES marker 名单）。写入用 `atomicWrite`（`desktop/core/versioned-store.ts`），`beforeRename` 内复核根目录身份与指针文件未变化。
@@ -107,7 +107,7 @@ export type StartupRecoveryClass =
 
 ### 2.6 重新选择
 
-修复/自动初始化成功后，调用方重新执行 `selectBrandStartupPaths`（纯函数）取得干净路径，再走既有闸门。**重选结果的 bootstrap 与 encryptionFamily 必须与原 `startupPaths` 一致**（userData 已在模块加载期固定不可换）；若重选切到另一家族（如摘除 legacy 悬空指针后循环命中健康的 `~/.xaanink`）→ 转恢复对话框而非继续，避免把 current 根的指针写进 legacy bootstrap（审核修订）。重新选择失败或 preflight 仍非 none → 转恢复对话框（不循环修复，单次启动只修一轮）。
+修复/自动初始化成功后，调用方重新执行 `selectBrandStartupPaths`（纯函数）取得干净路径，再走既有闸门。**重选结果的 bootstrap 与 encryptionFamily 必须与原 `startupPaths` 一致**（userData 已在模块加载期固定不可换）；若重选切到另一家族（如摘除 legacy 悬空指针后循环命中健康的 `~/.shakeink`）→ 转恢复对话框而非继续，避免把 current 根的指针写进 legacy bootstrap（审核修订）。重新选择失败或 preflight 仍非 none → 转恢复对话框（不循环修复，单次启动只修一轮）。
 
 ### 2.7 既有模块的两处小修订（审核修订）
 
@@ -163,12 +163,12 @@ export type StartupRecoveryClass =
 
 `selectBrandStartupPaths` 抛出时：
 - `BrandStartupPathError` 且 `code==='BRAND_BOOTSTRAP_CONFLICT'` → 维持现状（`startupPaths=null` → 错误框）。
-- 其它 → 经 §2.7-1 的修订后所有抛出点都带家族感知的 `recoveryPaths`，`startupPaths = error.recoveryPaths`；防御性兜底（非 BrandStartupPathError 的意外错误）才用 `{bootstrap: join(appData, CURRENT_NAMES.appIdentity), defaultRoot: join(home, '.xaanink'), encryptionFamily: 'current'}`。错误留存待 start() 分类。这样 legacy 根损坏不会被误分类到 current 家族（审核修订）。
+- 其它 → 经 §2.7-1 的修订后所有抛出点都带家族感知的 `recoveryPaths`，`startupPaths = error.recoveryPaths`；防御性兜底（非 BrandStartupPathError 的意外错误）才用 `{bootstrap: join(appData, CURRENT_NAMES.appIdentity), defaultRoot: join(home, '.shakeink'), encryptionFamily: 'current'}`。错误留存待 start() 分类。这样 legacy 根损坏不会被误分类到 current 家族（审核修订）。
 
 ### 4.2 start() 分类钩子（746-756 行区域，`assertNoLegacyBackupRecovery` 之后、relocation 闸门之前）
 
 ```
-const recoveryRoot = isolatedRoot ? resolve(isolatedRoot) : join(homedir(), startupPaths.encryptionFamily === 'legacy' ? '.xuanxiang' : '.xaanink')   // §1.1
+const recoveryRoot = isolatedRoot ? resolve(isolatedRoot) : join(homedir(), startupPaths.encryptionFamily === 'legacy' ? '.xuanxiang' : '.shakeink')   // §1.1
 const classification = classifyStartupRecovery({bootstrap: bootstrapPath, recoveryRoot}, startupPaths.encryptionFamily)
 ```
 
@@ -177,7 +177,7 @@ const classification = classifyStartupRecovery({bootstrap: bootstrapPath, recove
 - `dialog` → `return launchStartupRecovery(bootstrapPath, {recoveryRoot, sourcePath, notice:'pointer-invalid'})`（reason→notice 映射统一为 pointer-invalid 新文案；`history-needs-recovery` 场景由 relocation 闸门的 preflight code 分派，不经此分支）。
 - `none` → **若 `startupSelectionError` 留存**（模块加载期失败但分类器判 none，如内容损坏已超出本功能范围之外的健康场景）：重跑 `selectBrandStartupPaths`，成功则更新 `startupPaths` 并清空错误、继续；失败则 `return launchStartupRecovery(...)`。否则既有闸门原样（relocation → maintenance → lease → launch）。（审核修订：原方案 none 分支未处理留存错误，会在 `launch():211` 的 `startupSelectionError` 检查处撞死局。）
 
-家族默认根：`startupPaths.encryptionFamily==='legacy' ? join(home,'.xuanxiang') : join(home,'.xaanink')`。
+家族默认根：`startupPaths.encryptionFamily==='legacy' ? join(home,'.xuanxiang') : join(home,'.shakeink')`。
 
 ### 4.3 worker 启动失败路由（758-766 行 `failed()`）
 
@@ -190,7 +190,7 @@ const classification = classifyStartupRecovery({bootstrap: bootstrapPath, recove
 ## 5. 安全不变量核对
 
 1. 分类/修复/重置全部发生在：单实例锁持有后、worker 未启动、未建业务 session（恢复窗口用隔离 session）。
-2. 写入范围白名单：`recoveryRoot`（§1.1）内容、bootstrap 控制/历史文件（§2.5-4 名单）、（修复时）marker 文件与指针隔离改名。自定义目标目录、作品目录永不写入；隔离测试模式下目标为隔离根，绝不触碰真实 `~/.xaanink`。
+2. 写入范围白名单：`recoveryRoot`（§1.1）内容、bootstrap 控制/历史文件（§2.5-4 名单）、（修复时）marker 文件与指针隔离改名。自定义目标目录、作品目录永不写入；隔离测试模式下目标为隔离根，绝不触碰真实 `~/.shakeink`。
 3. 所有路径 lstat+realpath 复核、拒符号链接；写用 atomicWrite；读用 observeRootAuthority。
 4. 重置必须先清空默认根（且先删有效性标志文件）再清 bootstrap，保证崩溃后收敛（§2.5-5）。
 5. R2 仅在目录 device/inode 与指针一致时重写 marker——等价于「同一物理目录补发标记」，不采纳外来副本。

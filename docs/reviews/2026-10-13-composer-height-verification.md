@@ -21,13 +21,13 @@
 <node24> scripts/build-desktop.mjs
 <node24> --import tsx scripts/verify-composer-height.mjs red
 <node24> --import tsx scripts/verify-composer-height.mjs green
-XAANINK_REGRESSION_CONCURRENCY=1 XAANINK_REGRESSION_FORCE_EXIT=1 <node24> scripts/check-chat-empty-regression.mjs core composer-height
+SHAKEINK_REGRESSION_CONCURRENCY=1 SHAKEINK_REGRESSION_FORCE_EXIT=1 <node24> scripts/check-chat-empty-regression.mjs core composer-height
 <node24> scripts/check-browser-file-regression.mjs composer-height
 ```
 
 ## 全量回归
 
-启动时全部组件browser回归清单：41/41文件、425/425用例通过，0失败/取消/跳过，完整结束。原38文件全部覆盖，新增3个文字选择文件增加65例（425=360+65）；未改原测试断言。最终报告为 `docs/evidence/chat-empty-state/browser-full-files-composer-height.json`，逐文件JSON/TAP在 `browser-files-composer-height`。测试启动首先被sandbox spawn EPERM阻止，随后缺少默认Playwright Chromium导致完整初次运行5通过/420基础设施失败；该初次报告保存在 `browser-files-composer-height/attempt-1-no-chromium`。使用原测试支持的 `XAANINK_TEST_CHROMIUM` 指向本机已安装Chrome154.0.8037.98后，同一41文件完整重跑全通过；不把初次环境问题算作产品失败或通过。
+启动时全部组件browser回归清单：41/41文件、425/425用例通过，0失败/取消/跳过，完整结束。原38文件全部覆盖，新增3个文字选择文件增加65例（425=360+65）；未改原测试断言。最终报告为 `docs/evidence/chat-empty-state/browser-full-files-composer-height.json`，逐文件JSON/TAP在 `browser-files-composer-height`。测试启动首先被sandbox spawn EPERM阻止，随后缺少默认Playwright Chromium导致完整初次运行5通过/420基础设施失败；该初次报告保存在 `browser-files-composer-height/attempt-1-no-chromium`。使用原测试支持的 `SHAKEINK_TEST_CHROMIUM` 指向本机已安装Chrome154.0.8037.98后，同一41文件完整重跑全通过；不把初次环境问题算作产品失败或通过。
 
 核心unit/integration清单完整结束（exit1）：1953项中1908通过、41失败、2取消、2跳过，耗时1090179ms。证据 `docs/evidence/chat-empty-state/core-full-composer-height.json/.tap`，没有将失败/取消/跳过计为通过。
 

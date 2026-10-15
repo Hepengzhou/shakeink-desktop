@@ -98,7 +98,7 @@ function Viewer() {
     setCompleted(true)
   }
 
-  return <ThemeProvider key={theme} attribute="class" defaultTheme={theme} forcedTheme={theme} themes={["paper", "ink"]} enableSystem={false} storageKey="xaanink-toast-design-only">
+  return <ThemeProvider key={theme} attribute="class" defaultTheme={theme} forcedTheme={theme} themes={["paper", "ink"]} enableSystem={false} storageKey="shakeink-toast-design-only">
     <main>
       <header className="review-heading">
         <div><div className="eyebrow">玄印写作 · 界面设计审核</div><h1>顶部消息，清晰一点。</h1><p>实色表面承托消息，彩色图标表达状态。</p></div>

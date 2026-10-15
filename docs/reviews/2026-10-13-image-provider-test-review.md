@@ -14,7 +14,7 @@
 - IP-03 使用真实 ProviderLogo 输出，覆盖 bytedance、volcengine、大写别名、本地 provider 资产、替代文字及独立模型家族资产；SVG 无 script/image/url 外部依赖断言适合离线产品。资产文件不存在的 ENOENT 不能单独算行为红灯，应由名称/列表/真实 src 行为断言证明旧实现不符合要求。
 - IP-04 使用真实 React/Base UI 控件、浏览器鼠标与键盘，严格比较菜单两项、搜索旧供应商空结果、切换清空草稿；此结果应标作 browser fixture，文档已区分其与原生验收。
 - IP-06 覆盖 matching fallback、不匹配 fallback、菜单值优先、items 不加入旧值和 multiple=false；已有通用搜索/disabled 用例保留。浏览器旧记录打开实际 Base UI 的 exactMenu 有必要，可防止控件把旧值重新加入 items。
-- Windows 脚本确实要求 process.platform===win32、真实 `_electron.launch`、编译产物及源文件指纹、两主题、xaanink:// 页面、图片自然尺寸、真实本地主进程无 HTTP listener，以及受保护的隔离目录清理；scope 说明也明确未覆盖 macOS、安装包、供应商调用。
+- Windows 脚本确实要求 process.platform===win32、真实 `_electron.launch`、编译产物及源文件指纹、两主题、shakeink:// 页面、图片自然尺寸、真实本地主进程无 HTTP listener，以及受保护的隔离目录清理；scope 说明也明确未覆盖 macOS、安装包、供应商调用。
 
 ## 非阻断注意事项及检查
 

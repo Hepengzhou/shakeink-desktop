@@ -17,7 +17,7 @@ const pending=[],returned=[];let root;const install=()=>{window.desktop={applica
 window.review97={returned,install,removeBridge(){window.desktop={}},count:()=>pending.length,mount(strict=false){root=createRoot(document.getElementById('app'));flushSync(()=>root.render(strict?<React.StrictMode><ApplicationBackupsPanel/></React.StrictMode>:<ApplicationBackupsPanel/>))},unmount(){flushSync(()=>root.unmount())},resolve(index,rows){returned.push(rows);pending[index].resolve(rows)},reject(index,message){pending[index].reject(Error(message))}};
 `},bundle:true,platform:'browser',format:'iife',write:false,tsconfig:'tsconfig.json'}).then(result=>result.outputFiles![0].text)
 let browser:Browser
-test.before(async()=>{browser=await chromium.launch({headless:true,executablePath:process.env.XAANINK_TEST_CHROMIUM})})
+test.before(async()=>{browser=await chromium.launch({headless:true,executablePath:process.env.SHAKEINK_TEST_CHROMIUM})})
 test.after(async()=>{await browser?.close()})
 async function isolated(run:(page:Page)=>Promise<void>){const page=await browser.newPage({viewport:{width:840,height:640}}),errors:string[]=[];page.setDefaultTimeout(2500);page.on('pageerror',error=>errors.push(error.message));try{await page.route('**/*',route=>route.abort());await page.setContent('<html lang="zh-CN"><body><div id="app"></div></body></html>');await page.addStyleTag({content:await css});await page.addScriptTag({content:await script});await run(page);assert.deepEqual(errors,[])}finally{await page.close()}}
 const rows=(count:number):ApplicationBackupSummary[]=>Array.from({length:count},(_,index)=>({id:randomUUID(),appId:'2bfe8dfc-5a85-478b-95b3-754c89416912',createdAt:new Date(Date.UTC(2026,9,1,0,index)).toISOString(),bytes:index%2?1024:0}))

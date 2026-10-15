@@ -5,7 +5,7 @@ import type { RootIdentity } from "./data-root"
 import { BRAND_NAMES, otherBrandNames, type BrandNames } from "../shared/brand-names"
 import { workManifestSchema, type WorkManifest } from "../shared/workspace"
 
-const appSchema = z.object({ schemaVersion: z.literal(1), app: z.enum(["Xuanxiangxiezuo-Desktop", "XaanInk"]), id: z.uuid(), phase: z.enum(["initializing", "ready"]), inboxReady: z.boolean() }).strict()
+const appSchema = z.object({ schemaVersion: z.literal(1), app: z.enum(["Xuanxiangxiezuo-Desktop", "ShakeInk"]), id: z.uuid(), phase: z.enum(["initializing", "ready"]), inboxReady: z.boolean() }).strict()
 export type ApplicationMarker = z.infer<typeof appSchema>
 export interface BrandObservation<T> { names: Readonly<BrandNames>; filename: string; value: T; assertCurrent(): void }
 const missing = (error: unknown) => (error as NodeJS.ErrnoException).code === "ENOENT"

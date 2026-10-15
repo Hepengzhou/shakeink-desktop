@@ -4,19 +4,19 @@ import { randomUUID } from "node:crypto"
 import { mkdtemp, mkdir, realpath, writeFile, readFile, readdir, rename, rm, symlink, link, unlink } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
-import { LEGACY_NAMES, CURRENT_NAMES } from "../../desktop/shared/brand-names"
+import { LEGACY_NAMES, CURRENT_NAMES, BRAND_NAMES } from "../../desktop/shared/brand-names"
 import { readApplicationBrand, readApplicationBrandImmediately, readWorkBrand, readWorkBrandImmediately } from "../../desktop/core/brand-names"
 import { directoryIdentity, allowedManagedFile, allowedManagedDirectory } from "../../desktop/core/root-ownership"
 
 // Compatibility fixtures deliberately retain the original literal names.
 const families = [
   { family: "legacy", appMarker: "xuanxiang-app.json", appIdentity: "Xuanxiangxiezuo-Desktop", workManifest: "xuanxiang-work.json", storage: "xuanxiang-storage.json", storageRequired: "xuanxiang-storage-required.json", lock: ".xuanxiang-lock", audit: ".xuanxiang-lease-recovery.json", auditType: "xuanxiang-work-lease-recovery", leaseTemporaryPrefix: ".xuanxiang-lease-recovery-", restores: ".xuanxiang-restores", preserved: ".xuanxiang-preserved", migrationStagePrefix: ".xuanxiang-migration-", rootRecoveryPrefix: ".xuanxiang-root-recovery-" },
-  { family: "current", appMarker: "xaanink-app.json", appIdentity: "XaanInk", workManifest: "xaanink-work.json", storage: "xaanink-storage.json", storageRequired: "xaanink-storage-required.json", lock: ".xaanink-lock", audit: ".xaanink-lease-recovery.json", auditType: "xaanink-work-lease-recovery", leaseTemporaryPrefix: ".xaanink-lease-recovery-", restores: ".xaanink-restores", preserved: ".xaanink-preserved", migrationStagePrefix: ".xaanink-migration-", rootRecoveryPrefix: ".xaanink-root-recovery-" },
+  { family: "current", appMarker: "shakeink-app.json", appIdentity: "ShakeInk", workManifest: "shakeink-work.json", storage: "shakeink-storage.json", storageRequired: "shakeink-storage-required.json", lock: ".shakeink-lock", audit: ".shakeink-lease-recovery.json", auditType: "shakeink-work-lease-recovery", leaseTemporaryPrefix: ".shakeink-lease-recovery-", restores: ".shakeink-restores", preserved: ".shakeink-preserved", migrationStagePrefix: ".shakeink-migration-", rootRecoveryPrefix: ".shakeink-root-recovery-" },
 ] as const
 function appMarker(app: string) { return { schemaVersion: 1, app, id: randomUUID(), phase: "ready", inboxReady: true } }
 function workManifest() { return { schemaVersion: 1, id: randomUUID(), phase: "ready", novelId: "fixture-novel", title: "作者保留的作品", requestId: "brand-fixture-request", requestHash: "fixture-hash", createdAt: "2026-10-08T00:00:00.000Z" } }
 async function fixture(run: (root: string) => Promise<void>) {
-  const root = await realpath(await mkdtemp(join(tmpdir(), "xaanink-brand-names-")))
+  const root = await realpath(await mkdtemp(join(tmpdir(), "shakeink-brand-names-")))
   try { await run(root) } finally { await rm(root, { recursive: true, force: true }) }
 }
 
@@ -139,4 +139,13 @@ test("BRN07 absence never initializes a marker or guesses a family", async () =>
     await assert.rejects(readWorkBrand(proof)); assert.throws(() => readWorkBrandImmediately(proof))
     assert.deepEqual(await readdir(root), [])
   })
+})
+
+// The previous namespace is matched indirectly so this source file itself
+// contains no literal occurrence of it.
+const previousNamespace = new RegExp(["xaan", "ink"].join(""), "i")
+test("BRN08 no brand protocol value retains the previous namespace", () => {
+  for (const names of BRAND_NAMES) for (const [key, value] of Object.entries(names)) {
+    if (typeof value === "string") assert.equal(previousNamespace.test(value), false, `${names.family}.${key}`)
+  }
 })

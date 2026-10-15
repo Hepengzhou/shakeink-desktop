@@ -2,7 +2,7 @@ import {BRAND_NAMES} from '../shared/brand-names'
 import {lstat,realpath} from 'node:fs/promises'
 import {basename,dirname,isAbsolute,join,relative,resolve,sep} from 'node:path'
 const internals=new Set([...BRAND_NAMES.flatMap(names=>[names.workManifest,names.storage,names.storageRequired,names.lock,names.audit,names.restores,names.preserved]),'database','assets','backups','snapshots'])
-const leaseTemporary=/^\.(?:xuanxiang|xaanink)-lease-recovery-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.tmp$/i
+const leaseTemporary=/^\.(?:xuanxiang|shakeink)-lease-recovery-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.tmp$/i
 function inside(path:string,root:string){const value=relative(root,path);return value===''||value!=='..'&&!value.startsWith('..'+sep)&&!isAbsolute(value)}
 async function canonicalRoot(path:string){try{return await realpath(path)}catch(error){if((error as NodeJS.ErrnoException).code==='ENOENT')return resolve(path);throw error}}
 async function exists(path:string){try{await lstat(path);return true}catch(error){if((error as NodeJS.ErrnoException).code==='ENOENT')return false;throw error}}

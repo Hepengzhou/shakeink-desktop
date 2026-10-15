@@ -6,7 +6,7 @@ const require=createRequire(import.meta.url),evidence='docs/evidence/implementat
 let app,page
 await mkdir(evidence,{recursive:true})
 try{
- app=await electron.launch({executablePath:require('electron'),args:[resolve('.')],env:{...process.env,XAANINK_TEST_ROOT:process.argv[2]},timeout:30000})
+ app=await electron.launch({executablePath:require('electron'),args:[resolve('.')],env:{...process.env,SHAKEINK_TEST_ROOT:process.argv[2]},timeout:30000})
  app.process().stderr.on('data',chunk=>logs.push(chunk.toString()))
  app.process().on('exit',(code,signal)=>logs.push(JSON.stringify({processExit:code,signal})))
  page=await app.firstWindow();page.on('pageerror',e=>logs.push('pageerror '+e.message));page.on('close',()=>logs.push('page closed'))

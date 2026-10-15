@@ -9,7 +9,7 @@ import { join, resolve } from 'node:path'
 assert.equal(process.platform, 'darwin', 'This is a real macOS-only acceptance harness')
 // The owned-root boundary rejects symlink ancestors such as macOS /var. Use
 // the canonical /private/tmp path, as the other strict native root harnesses do.
-const directory = await mkdtemp('/private/tmp/xaanink-sidebar-safe-')
+const directory = await mkdtemp('/private/tmp/shakeink-sidebar-safe-')
 const root = join(directory, 'data'), evidence = resolve('docs/evidence/implementation-46')
 await mkdir(evidence, { recursive: true })
 const report = { scope: 'macOS development Electron; full original React workbench; actual native zoom; isolated empty root; Windows and installed package unexecuted', startedAt: new Date().toISOString(), checks: [], errors: [], sourceHashes: {} }
@@ -70,12 +70,12 @@ async function gate(label, action) {
   }
 }
 async function launch() {
-  app = await _electron.launch({ args: [resolve('.')], env: { ...process.env, XAANINK_TEST_ROOT: root }, timeout: 45000 })
+  app = await _electron.launch({ args: [resolve('.')], env: { ...process.env, SHAKEINK_TEST_ROOT: root }, timeout: 45000 })
   page = await app.firstWindow({ timeout: 45000 })
   page.on('pageerror', error => report.errors.push(error.message))
   await page.context().setOffline(true)
   await page.getByRole('button', { name: '账号菜单' }).waitFor({ timeout: 45000 })
-  assert.equal(page.url(), 'xaanink://app/')
+  assert.equal(page.url(), 'shakeink://app/')
   const bootstrap = await page.evaluate(() => window.desktop.bootstrap())
   assert.equal(bootstrap.dataRoot, root); assert.equal(bootstrap.models.length, 0)
   assert.deepEqual(await page.evaluate(async () => (await (await fetch('/api/novels')).json()).novels), [])

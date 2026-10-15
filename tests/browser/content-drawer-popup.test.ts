@@ -4,7 +4,7 @@ import { chromium, type Browser, type Page } from "playwright-core"
 import { openContent, withContentDrawer } from "../helpers/content-drawer-fixture"
 
 let browser: Browser
-test.before(async () => { browser = await chromium.launch({ headless: true, ...(process.env.XAANINK_TEST_CHROMIUM ? { executablePath: process.env.XAANINK_TEST_CHROMIUM } : {}) }) })
+test.before(async () => { browser = await chromium.launch({ headless: true, ...(process.env.SHAKEINK_TEST_CHROMIUM ? { executablePath: process.env.SHAKEINK_TEST_CHROMIUM } : {}) }) })
 test.after(async () => { await browser?.close() })
 
 async function activePopup(page: Page, selector: string) {

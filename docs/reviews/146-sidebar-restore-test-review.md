@@ -8,7 +8,7 @@
 - SAFE-01/02 的判断对象是实际按钮 `boundingBox().x * zoom`，安全带 84–96px 对旧 `.375rem` 左缘产生可辨识的失败，不以实现字符串或固定 style 值代替几何。RED 只能接受这些几何断言失败；缺浏览器、JSX 编译错误或运行错误不算 RED。
 - SAFE-02 同一实例通过已有 desktop store 改变 zoom，配合 DesktopApp 当前 `16 * font / 14` root rem 规则，覆盖 5 个 zoom × 3 个字号，包含 .75/2 与 11/24 四个交叉边界，能发现固定 CSS px、只减固定 12px 或遗漏 zoom 抵消。
 - SAFE-03 覆盖 win32 与无 bootstrap 的原 `.375rem` 位置，以及所有平台侧栏展开/无恢复回调时按钮不渲染；SAFE-04 覆盖鼠标恢复、重复隐藏后恢复、Enter 键恢复、右栏恢复回调，并检查真实 CSS 的 drag/no-drag 属性。相关 callback 调用次数断言能够发现重复触发或误触右栏行为。
-- SAFE-05 明确由完整真实 Electron/DashboardShell/SidebarTree/ChatPanel 补足浏览器夹具没有执行的分栏动画、真实原生缩放、真实 IPC 设置落盘、重开恢复折叠布局与原生按钮可视证据。新空 `XAANINK_TEST_ROOT` 及离线协议隔离真实用户数据；原生截图采用 CUA，不能把 renderer 截图称作原生窗控证据。
+- SAFE-05 明确由完整真实 Electron/DashboardShell/SidebarTree/ChatPanel 补足浏览器夹具没有执行的分栏动画、真实原生缩放、真实 IPC 设置落盘、重开恢复折叠布局与原生按钮可视证据。新空 `SHAKEINK_TEST_ROOT` 及离线协议隔离真实用户数据；原生截图采用 CUA，不能把 renderer 截图称作原生窗控证据。
 - SAFE-06 包括全部活动 unit/integration/browser、完整 typecheck、UI/desktop build 和 diff 审查；退役备份用例与旧安装包不用于替代当前修复验收，Windows 无目标机器时保持未执行记录。这与本次 W05 有限修复、W04 拖动回归的范围一致。
 
 ## 夹具边界与验收注意
@@ -21,7 +21,7 @@
 
 继续静态审核 `scripts/smoke-sidebar-restore-safe-area.mjs` 对 SAFE-05 的覆盖，结论：**脚本可进入真实运行；未发现阻塞缺陷。** 此处仍不是执行结果。
 
-- 脚本限定实际 `process.platform === 'darwin'`，用 `mkdtemp` 创建此前不存在的数据根并将其通过 `XAANINK_TEST_ROOT` 传入 Electron，验证 bootstrap 指向该 root、模型/作品为空、URL 为 `xaanink://app/`，再将页面设为 offline。清理只删除本次生成的临时目录；证据留在仓库指定目录。
+- 脚本限定实际 `process.platform === 'darwin'`，用 `mkdtemp` 创建此前不存在的数据根并将其通过 `SHAKEINK_TEST_ROOT` 传入 Electron，验证 bootstrap 指向该 root、模型/作品为空、URL 为 `shakeink://app/`，再将页面设为 offline。清理只删除本次生成的临时目录；证据留在仓库指定目录。
 - `observe()` 同时读取主进程真实 window/content bounds、`webContents.getZoomFactor()`、原生按钮位置以及 renderer 实际几何/drag 属性。矩阵通过真实 `window.desktop.settings` IPC 更新，等到 root font 已应用再读真实 zoom，覆盖 5 个 zoom × 2 个字号边界。浏览器夹具的模拟缩放不会代替该结果。
 - 三个具名 gate 供 CUA 留下原生默认/最小/最大边界截图；恢复 gate 要求 CUA 点击后 sidebar 实际展开、恢复按钮消失，并断言原生窗口位置/状态/zoom 未改变。ack 记录截图路径及 SHA-256，以便将人工观察与运行报告关联。脚本只检查截图存在且大小合理，**实际截图确有当前原生绿灯及右侧恢复按钮间距，仍由主代理独立查看确认**。
 - 反复恢复包含真实鼠标首次恢复及 Enter 两轮；设置回到默认后退出和重启，验证隐藏布局仍恢复且 Enter 可重新展开。已检查本地 `node_modules/playwright-core/lib/coreBundle.js:44177–44185`：Electron context close 调用 `app.quit()`，项目 `desktop/main/index.ts:300–304` 会进入真实 `before-quit` 保存关闭协调，因此不是仅杀进程伪造正常重开。

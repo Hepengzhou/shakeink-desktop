@@ -6,7 +6,7 @@ import {tmpdir} from 'node:os'
 import {join,resolve,basename} from 'node:path'
 import {execFileSync} from 'node:child_process'
 import {createHash} from 'node:crypto'
-const temporary=await mkdtemp(join(tmpdir(),'xaanink-onboarding-'))
+const temporary=await mkdtemp(join(tmpdir(),'shakeink-onboarding-'))
 const evidence=resolve('docs/evidence/onboarding'),checks=[],errors=[]
 const startedAt=new Date().toISOString()
 assert.ok(process.argv.slice(2).every(arg=>arg==='--packaged')&&process.argv.length<=3)
@@ -16,7 +16,7 @@ let app,page
 const packageStartupListeners=[]
 const guard=join(temporary,'offline-guard.cjs'),harness=join(temporary,'offline-main.cjs'),entry=join(temporary,'offline-entry.cjs'),networkReport=join(temporary,'offline-events.txt')
 await writeFile(guard,`const fs=require('node:fs'),net=require('node:net');
-const record=value=>fs.appendFileSync(process.env.XAANINK_OFFLINE_GUARD_REPORT,value+'\\n');record('guard-loaded');
+const record=value=>fs.appendFileSync(process.env.SHAKEINK_OFFLINE_GUARD_REPORT,value+'\\n');record('guard-loaded');
 const denied=()=>{record('network-denied');throw Error('Offline verification forbids network access')};
 const originalFetch=globalThis.fetch;globalThis.fetch=function(input,...args){const url=typeof input==='string'||input instanceof URL?String(input):input?.url;if(/^https?:/i.test(url??''))return denied();return originalFetch.call(this,input,...args)};
 for(const name of ['node:http','node:https']){const api=require(name);api.request=denied;api.get=denied}
@@ -24,12 +24,12 @@ for(const [prototype,name] of [[net.Server.prototype,'listen'],[net.Socket.proto
 `)
 const preflight=join(temporary,'offline-preflight.txt')
 const localSocket=process.platform==='win32'?`\\\\.\\pipe\\${basename(temporary)}`:join(temporary,'allowed-local.sock')
-execFileSync(process.execPath,['--require',guard,'-e',`const net=require('node:net'),assert=require('node:assert/strict');for(const args of [[443],['443','example.invalid'],[{port:443,host:'example.invalid'}]])assert.throws(()=>new net.Socket().connect(...args),/Offline verification/);for(const args of [[443],['443'],[{port:443}]])assert.throws(()=>net.createServer().listen(...args),/Offline verification/);const server=net.createServer();server.listen(${JSON.stringify(localSocket)},()=>server.close())`],{env:{...process.env,XAANINK_OFFLINE_GUARD_REPORT:preflight},timeout:10000})
+execFileSync(process.execPath,['--require',guard,'-e',`const net=require('node:net'),assert=require('node:assert/strict');for(const args of [[443],['443','example.invalid'],[{port:443,host:'example.invalid'}]])assert.throws(()=>new net.Socket().connect(...args),/Offline verification/);for(const args of [[443],['443'],[{port:443}]])assert.throws(()=>net.createServer().listen(...args),/Offline verification/);const server=net.createServer();server.listen(${JSON.stringify(localSocket)},()=>server.close())`],{env:{...process.env,SHAKEINK_OFFLINE_GUARD_REPORT:preflight},timeout:10000})
 assert.equal((await readFile(preflight,'utf8')).split('\n').filter(line=>line==='network-denied').length,6)
 const beforeEntry=`require(${JSON.stringify(guard)});
 const workers=require('node:worker_threads'),Worker=workers.Worker;workers.Worker=class extends Worker{constructor(file,options={}){super(file,{...options,execArgv:[...(options.execArgv??[]),'--require',${JSON.stringify(guard)}]})}};
-const {app,session,net}=require('electron'),fs=require('node:fs');const denied=()=>{fs.appendFileSync(process.env.XAANINK_OFFLINE_GUARD_REPORT,'network-denied\\n');throw Error('Offline verification forbids network access')};net.fetch=denied;net.request=denied;
-app.whenReady().then(()=>{const requests=session.defaultSession.webRequest,register=requests.onBeforeRequest.bind(requests);requests.onBeforeRequest=(filter,listener)=>{const callback=typeof filter==='function'?filter:listener,wrapped=(request,reply)=>{if(/^https?:/i.test(request.url)){fs.appendFileSync(process.env.XAANINK_OFFLINE_GUARD_REPORT,'network-denied\\n');reply({cancel:true});return}callback(request,reply)};return typeof filter==='function'?register(wrapped):register(filter,wrapped)};requests.onBeforeRequest({urls:['http://*/*','https://*/*']},(_request,reply)=>reply({cancel:true}))});
+const {app,session,net}=require('electron'),fs=require('node:fs');const denied=()=>{fs.appendFileSync(process.env.SHAKEINK_OFFLINE_GUARD_REPORT,'network-denied\\n');throw Error('Offline verification forbids network access')};net.fetch=denied;net.request=denied;
+app.whenReady().then(()=>{const requests=session.defaultSession.webRequest,register=requests.onBeforeRequest.bind(requests);requests.onBeforeRequest=(filter,listener)=>{const callback=typeof filter==='function'?filter:listener,wrapped=(request,reply)=>{if(/^https?:/i.test(request.url)){fs.appendFileSync(process.env.SHAKEINK_OFFLINE_GUARD_REPORT,'network-denied\\n');reply({cancel:true});return}callback(request,reply)};return typeof filter==='function'?register(wrapped):register(filter,wrapped)};requests.onBeforeRequest({urls:['http://*/*','https://*/*']},(_request,reply)=>reply({cancel:true}))});
 `
 await writeFile(entry,beforeEntry)
 await writeFile(harness,beforeEntry+`app.setAppPath(${JSON.stringify(resolve('.'))});require(${JSON.stringify(resolve('dist/main/index.cjs'))});`)
@@ -37,12 +37,12 @@ const dialog=name=>page.getByRole('dialog',{name,exact:true})
 const button=(scope,name)=>scope.getByRole('button',{name,exact:true})
 const state=()=>page.evaluate(()=>window.desktop.bootstrap())
 async function launch(root){
- app=await electron.launch({...packaged?{executablePath:resolve('release/win-unpacked/玄印写作.exe'),args:[]}:{args:[harness]},env:{...process.env,XAANINK_TEST_ROOT:root,XAANINK_OFFLINE_GUARD_REPORT:networkReport},timeout:60000})
+ app=await electron.launch({...packaged?{executablePath:resolve('release/win-unpacked/玄印写作.exe'),args:[]}:{args:[harness]},env:{...process.env,SHAKEINK_TEST_ROOT:root,SHAKEINK_OFFLINE_GUARD_REPORT:networkReport},timeout:60000})
  page=await app.firstWindow({timeout:60000});page.setDefaultTimeout(10000)
  page.on('pageerror',error=>errors.push(error.message))
  try{await page.getByRole('button',{name:'账号菜单',includeHidden:true}).waitFor({timeout:60000})}
  catch(error){console.log(JSON.stringify({startupUrl:page.url(),alerts:await page.getByRole('alert').allTextContents(),status:await page.getByRole('status').allTextContents(),rendererErrors:errors}));if(checks.length===0)await page.screenshot({path:capture('startup-error.png')});throw error}
- assert.equal(page.url(),'xaanink://app/')
+ assert.equal(page.url(),'shakeink://app/')
  if(packaged){
   assert.equal(await app.evaluate(({app})=>app.isPackaged),true);assert.equal(resolve(await app.evaluate(({app})=>app.getAppPath())),packageRoot)
   const listeners=await app.evaluate(()=>process._getActiveHandles().filter(handle=>handle.constructor.name==='Server'&&handle.listening).length);assert.equal(listeners,0);packageStartupListeners.push(listeners)

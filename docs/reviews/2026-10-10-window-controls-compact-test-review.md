@@ -21,7 +21,7 @@
 3. 现有 browser scenario 调整 viewport、向 store 注入 zoom，并替换只读 native env 值；没有设置 Electron webContents 实际缩放。这是 CSS 计算与隔离组件证据，必须如实标注。真实 75/100/200% 安全区及主题切换仍应在 WCO-C04 的 Electron 环境执行。
 4. 当前 WCO-S03 只记录恢复内容入口的 mouse/Enter/Space，现有 bundle 没有 `window.desktop.command`，菜单的可选调用会静默无操作。主代理已明确将在同一真实组件 fixture 添加有限 command 记录 stub，新 WCO-C03 对 click/Enter/Space 核对 `app.menu` 次数/参数；此补充符合要求。实际原生菜单是否弹出由 WCO-C04 验证，bridge fixture 不能替代。
 5. WCO-C04 应落实已通过方案审核中的顶部命中、正常/最大化两种几何、Snap 与最小化/最大化/恢复/关闭行为。读取 readonly Window Controls Overlay 几何和实际状态可证明原生接入；截图提供 glyph 与位置证据。宽高配置单测、DOM 几何与原生操作需分别写结果。
-6. 可用 Node 24 的 `node --import tsx --test --test-reporter=tap tests/unit/window-appearance.test.ts` 与同参数 `tests/browser/chat-caption-safe-area.test.ts` 分别获取聚焦 RED/GREEN；browser 需明确本机 Chromium executable/`XAANINK_TEST_CHROMIUM`。全量活动套件另行执行 `tests/unit/*.test.ts tests/integration/*.test.ts` 及 `tests/browser/*.test.ts`，并按环境选择合理并发、保留失败/取消/跳过统计。类型检查、生产构建、打包和包检查独立记录。
+6. 可用 Node 24 的 `node --import tsx --test --test-reporter=tap tests/unit/window-appearance.test.ts` 与同参数 `tests/browser/chat-caption-safe-area.test.ts` 分别获取聚焦 RED/GREEN；browser 需明确本机 Chromium executable/`SHAKEINK_TEST_CHROMIUM`。全量活动套件另行执行 `tests/unit/*.test.ts tests/integration/*.test.ts` 及 `tests/browser/*.test.ts`，并按环境选择合理并发、保留失败/取消/跳过统计。类型检查、生产构建、打包和包检查独立记录。
 7. 公开 overlay API 不提供每枚 glyph 的 stroke 或尺寸调整，本清单明确未新增“统一线宽”的成功断言，符合方案。交付时只能声明真实验证过的高度、位置、菜单及系统行为，不可从本次测试推导图标已等粗或已缩小。
 
 审核来源均为本仓库现有清单、测试/脚本源文件及先行方案审核，未将本阶段未执行的原生结果提升为 DESK-W03/W04 或双平台正式通过。

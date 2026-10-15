@@ -32,15 +32,15 @@ async function openRestrictedWindow(bootstrap:string,entry:{mode:'lost'|'blocked
  }
  await app.whenReady()
  assertCold()
- const isolated=session.fromPartition('xaanink-root-relocation',{cache:false})
+ const isolated=session.fromPartition('shakeink-root-relocation',{cache:false})
  if(isolated.storagePath!==null)throw Error('RELOCATION_SESSION_NOT_ISOLATED')
  isolated.setPermissionRequestHandler((_contents,_permission,callback)=>callback(false))
  isolated.setPermissionCheckHandler(()=>false)
  isolated.webRequest.onBeforeRequest((details,callback)=>{
-  let allowed=false;try{allowed=['xaanink:','data:','blob:','devtools:'].includes(new URL(details.url).protocol)}catch{}
+  let allowed=false;try{allowed=['shakeink:','data:','blob:','devtools:'].includes(new URL(details.url).protocol)}catch{}
   callback({cancel:!allowed})
  })
- isolated.protocol.handle('xaanink',request=>staticUiResponse(request,join(app.getAppPath(),'out')))
+ isolated.protocol.handle('shakeink',request=>staticUiResponse(request,join(app.getAppPath(),'out')))
  const theme=nativeTheme.shouldUseDarkColors?'ink':'paper'
  syncNativeThemeSource(nativeTheme,theme)
  const nativeAppearance=nativeWindowAppearance(theme,nativeTheme.shouldUseDarkColors)
@@ -76,7 +76,7 @@ async function openRestrictedWindow(bootstrap:string,entry:{mode:'lost'|'blocked
  })
  const title=()=>{const state=controller.state();return state.phase.startsWith('reset')||state.phase==='blocked'&&state.notice!=='history-needs-recovery'||state.notice==='reset-complete'?'数据目录恢复 · 玄印写作':'定位原数据目录 · 玄印写作'}
  const trusted=(event:IpcMainInvokeEvent)=>{
-  if(!ownerAlive||current!==owned||owned.isDestroyed()||event.sender!==owned.webContents||event.senderFrame!==owned.webContents.mainFrame||event.senderFrame.url!=='xaanink://app/')throw Error('UNTRUSTED_RELOCATION_REQUEST')
+  if(!ownerAlive||current!==owned||owned.isDestroyed()||event.sender!==owned.webContents||event.senderFrame!==owned.webContents.mainFrame||event.senderFrame.url!=='shakeink://app/')throw Error('UNTRUSTED_RELOCATION_REQUEST')
  }
  const state=()=>({...controller.state(),platform})
  let popup:ReturnType<typeof Menu.buildFromTemplate>|null=null
@@ -131,7 +131,7 @@ async function openRestrictedWindow(bootstrap:string,entry:{mode:'lost'|'blocked
  owned.once('ready-to-show',()=>{if(!exiting&&!owned.isDestroyed())owned.show()})
  // Reserve owner synchronously before load/ready/close callbacks can run.
  const started=controller.start(owner);void started.catch(()=>{})
- await owned.loadURL('xaanink://app/');loaded=true
+ await owned.loadURL('shakeink://app/');loaded=true
  await started
 }
 export async function launchRootRelocation(bootstrap:string,_initial:RootRelocationPreflight,recovery?:StartupRecoveryWindowInput):Promise<void>{

@@ -8,7 +8,7 @@
 - `desktop/main/index.ts:641–643` 创建真实原生窗控 `{x:14,y:14}`，并用已保存的 `appearance.zoom` 设置 `webContents.setZoomFactor`。设置保存和配置导入路径也在发送新 state 前应用同一 zoom（`index.ts:384,490`）。`desktop/core/settings.ts:3–7` 保证 zoom 为 0.75–2，字号为 11–24，除数不会为零。`src/stores/desktop.ts:7–8` 保留平台并接收提交状态，已有订阅足以实时调整间距。
 - `src/components/desktop/WindowControls.tsx:9–11` 默认字号/zoom 下首个控制按钮左缘为 `8 + 76 + 4 = 88px`，可作为本次视觉锚点。`DesktopApp.tsx:147–150` 会改变 root font size，所以减 `.75rem` 与实际标题 padding 抵消比减固定 12px 正确：相对 chat 左缘为 `padding + margin = 88 / zoom`，Electron zoom 后为 88 个原生窗口逻辑像素。88px 的验收仍须依据原生按钮截图/几何边界；“约 20px”只是方案预期，不能取代实际证据。
 - `DashboardShell.tsx:157–188,452–464` 收起时立即设置隐藏状态后把 sidebar 宽度单调收敛到零。恢复按钮在动画中左缘为 chat 当前左缘加安全偏移，chat 左缘非负，未引入朝原生按钮组移动的负偏移；恢复时按钮按现有条件消失。无需改写 Web 分栏或动画。`src/app/desktop.css:5–6` 继续使标题可拖拽、按钮为 no-drag，新增 margin 不会改变命中与点击合同。
-- 单点调整符合 `docs/implementation-boundaries.md` 的平台安全间距允许范围，也没有复制设计稿、引入示例数据或新 IPC。计划以隔离 `XAANINK_TEST_ROOT` 空目录执行真实 Electron，不读取正常数据根/Key；台账只登记 W05 本次有限修复和 W04 拖动回归，未把浏览器平台状态等同 Windows 原生通过，也不授予整个 W05 通过，符合验收边界。方案最初登记 W04 的文字应由主代理按已确认的 W05 归属修正。
+- 单点调整符合 `docs/implementation-boundaries.md` 的平台安全间距允许范围，也没有复制设计稿、引入示例数据或新 IPC。计划以隔离 `SHAKEINK_TEST_ROOT` 空目录执行真实 Electron，不读取正常数据根/Key；台账只登记 W05 本次有限修复和 W04 拖动回归，未把浏览器平台状态等同 Windows 原生通过，也不授予整个 W05 通过，符合验收边界。方案最初登记 W04 的文字应由主代理按已确认的 W05 归属修正。
 
 ## 测试阶段应保留的条件
 

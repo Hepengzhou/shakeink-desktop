@@ -9,7 +9,7 @@ import { copyFile, cp, mkdtemp, mkdir, readFile, writeFile, rm } from 'node:fs/p
 import { basename, dirname, join, resolve } from 'node:path'
 
 assert.equal(process.platform, 'darwin', 'Native acceptance requires actual macOS')
-const directory = await mkdtemp('/private/tmp/xaanink-empty-hide-'), root = join(directory, 'data')
+const directory = await mkdtemp('/private/tmp/shakeink-empty-hide-'), root = join(directory, 'data')
 const evidenceRoot = resolve(process.argv[2] ?? 'docs/evidence/implementation-47')
 const evidence = join(evidenceRoot, basename(directory))
 await mkdir(evidence, { recursive: true })
@@ -32,12 +32,12 @@ async function windowState() {
   })
 }
 async function launch(empty = true) {
-  app = await _electron.launch({ executablePath, args: [resolve('.')], env: { ...process.env, XAANINK_TEST_ROOT: root }, timeout: 45000 })
+  app = await _electron.launch({ executablePath, args: [resolve('.')], env: { ...process.env, SHAKEINK_TEST_ROOT: root }, timeout: 45000 })
   page = await app.firstWindow({ timeout: 45000 })
   page.on('pageerror', error => report.errors.push(error.message))
   await page.context().setOffline(true)
   await page.getByRole('button', { name: '账号菜单' }).waitFor({ timeout: 45000 })
-  assert.equal(page.url(), 'xaanink://app/')
+  assert.equal(page.url(), 'shakeink://app/')
   const bootstrap = await page.evaluate(() => window.desktop.bootstrap())
   assert.equal(bootstrap.dataRoot, root); assert.equal(bootstrap.models.length, 0)
   if (empty) assert.deepEqual(await page.evaluate(async () => (await (await fetch('/api/novels')).json()).novels), [])

@@ -30,7 +30,7 @@ window.mountExport16=(mode='formats')=>{
  const metadata={title:'本地书名',author:'本地笔名',synopsis:'长简介。'.repeat(90),coverUrl:'/_desktop/assets/work-a/cover.png'};
  const chapterSource='# 本地章稿\n\n正在显示的 **中文源文**。章稿终点。',chapter={id:'c1',volumeId:'v1',index:1,title:'第一章',outline:'大纲',content:chapterSource,wordCount:20,status:'DRAFT',version:1,volume:{id:'v1',novelId:'novel-a',index:1,title:'第一卷',summary:'卷简介'}};
  const collection={...metadata,kind:'content',volumes:[{id:'v2',index:2,title:'第二卷',summary:'',chapters:[{id:'c2',index:2,title:'第二章',text:'第二章终点。'}]},{id:'v1',index:1,title:'第一卷',summary:'',chapters:[{id:'c1',index:1,title:'第一章',text:'长正文。'.repeat(500)+'第一章终点。'}]}]};
- const templateDocument={format:'xaanink-local-templates',schemaVersion:1,prompts:[{key:'user.local',name:'作者模板',content:'保留 {{subject}}',variables:['subject'],enabled:true,version:1,source:'user'}],wizardTemplates:[]};
+ const templateDocument={format:'shakeink-local-templates',schemaVersion:1,prompts:[{key:'user.local',name:'作者模板',content:'保留 {{subject}}',variables:['subject'],enabled:true,version:1,source:'user'}],wizardTemplates:[]};
  window.fetch=async(input,init={})=>{const path=String(input);if(!path.startsWith('/api/'))return originalFetch(input,init);calls.push({path,method:init.method||'GET'});if(path==='/api/templates/export')return Response.json({document:templateDocument});if(path==='/api/admin/prompts')return Response.json({prompts:[],revision:1});if(path==='/api/novels/novel-a/chapters/c1')return Response.json({chapter});if(path.endsWith('/candidates'))return Response.json({candidates:[]});if(path.includes('/comments?'))return Response.json({threads:[]});if(path.includes('/score-report?'))return Response.json({report:{targetType:'CHAPTER_CONTENT',targetId:'c1',targetLabel:'第一章',contentKind:'prose',supportsReaderPanel:true,score:null,scoredAt:null,stale:false,reviewing:false,contentEmpty:false,dimensions:[],agents:[],history:[]}});if(path.endsWith('/foreshadows'))return Response.json({foreshadows:[]});if(path.includes('/manuscript?kind='))return Response.json(collection);throw Error('unexpected local source API '+path)};
  window.desktop={exportFile:input=>window.mainExport16({...input,bytes:Array.from(input.bytes)}),cancelFileExport:id=>window.mainCancel16(id)};
  const client=new QueryClient({defaultOptions:{queries:{retry:false},mutations:{retry:false}}}),root=createRoot(document.getElementById('app'));let open=true,chapterVisible=true;
@@ -39,7 +39,7 @@ window.mountExport16=(mode='formats')=>{
 };` }, loader: { ".css": "empty" }, bundle: true, platform: "browser", format: "iife", write: false, tsconfig: "tsconfig.json", logOverride: { "empty-import-meta": "silent" } }).then(result => result.outputFiles![0].text)
 let browser: Browser
 async function waitFor(check: () => boolean) { const deadline = Date.now() + 8000; while (!check()) { if (Date.now() >= deadline) throw Error("Controlled save request did not arrive"); await new Promise(resolve => setTimeout(resolve, 10)) } }
-test.before(async () => { browser = await chromium.launch({ headless: true, executablePath: process.env.XAANINK_TEST_CHROMIUM }) })
+test.before(async () => { browser = await chromium.launch({ headless: true, executablePath: process.env.SHAKEINK_TEST_CHROMIUM }) })
 test.after(async () => { await browser?.close() })
 async function scenario(mode: string, run: (page: Page, root: string, control: { gate: PromiseWithResolvers<string | null>; paths: string[]; cancelled: string[]; service: FileExports; hold: boolean; cancel: boolean }) => Promise<void>) {
   const root = await mkdtemp(join(tmpdir(), "xuanxiang-browser-export16-")), page = await browser.newPage(), errors: string[] = [], requests: string[] = [], downloads: string[] = []
@@ -78,7 +78,7 @@ test("EXB16-03 actual template manager waits for native-channel completion, canc
 }))
 test("EXB16-04 actual template manager uses the same confirmed main save channel and exports no model credentials", () => scenario("templates", async (page, root, control) => {
   await page.getByRole("button", { name: "导出", exact: true }).click(); await waitFor(() => control.paths.length > 0); await control.service.flush()
-  const document = JSON.parse(await readFile(join(root, "玄印写作模板与提示词.json"), "utf8")); assert.equal(document.format, "xaanink-local-templates"); assert.equal(document.prompts[0].content, "保留 {{subject}}"); assert.doesNotMatch(JSON.stringify(document), /apiKey|encryptedKey|endpoint/)
+  const document = JSON.parse(await readFile(join(root, "玄印写作模板与提示词.json"), "utf8")); assert.equal(document.format, "shakeink-local-templates"); assert.equal(document.prompts[0].content, "保留 {{subject}}"); assert.doesNotMatch(JSON.stringify(document), /apiKey|encryptedKey|endpoint/)
 }))
 test("EXB16-05 the original collection menu exports its local source through the awaited native channel", () => scenario("collection", async (page, root, control) => {
   await page.getByRole("button", { name: "正文导航功能菜单", exact: true }).click(); await page.getByRole("menuitem", { name: "导出整书正文", exact: true }).hover(); await page.getByRole("menuitem", { name: "Markdown (.md)", exact: true }).click()

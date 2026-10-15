@@ -1,6 +1,6 @@
 # macOS 侧栏恢复按钮实现独立 Code Review
 
-2026-10-09（Asia/Shanghai）。审核当前精确 diff、新增 `tests/browser/sidebar-restore-safe-area.test.ts`、`scripts/smoke-sidebar-restore-safe-area.mjs` 以及 `/private/tmp/xaanink-sidebar-safe-red.log`。只写此报告，不修改实现、测试或其他人的文件。
+2026-10-09（Asia/Shanghai）。审核当前精确 diff、新增 `tests/browser/sidebar-restore-safe-area.test.ts`、`scripts/smoke-sidebar-restore-safe-area.mjs` 以及 `/private/tmp/shakeink-sidebar-safe-red.log`。只写此报告，不修改实现、测试或其他人的文件。
 
 结论：**无阻塞代码问题，批准进入 GREEN、全量活动测试与真实 macOS 验收。** 本审核不替代测试执行，也不提前授予 W05 整组或 Windows/安装包通过。
 

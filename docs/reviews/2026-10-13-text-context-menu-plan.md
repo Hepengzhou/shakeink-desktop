@@ -8,7 +8,7 @@
 
 新增 `TextContextMenus`，复用既有原生弹窗的单窗口pending替换、关闭/失焦取消、回调和异常清理机制。按来源生成非空组：引用、输入/编辑历史、剪贴板、选区；editor最后追加“编辑器操作”入口，保留原Monaco全部专属菜单。快捷键从主进程当前平台设置和既有命令目录解析；菜单accelerator只作为标签，不在popup注册第二条命令分发。坐标按真实webContents zoom转换为窗口内容DIP，并限制于所属窗口内容边界。
 
-bridge新增 `showTextContextMenu(request)` 与 `cancelTextContextMenu(requestId)`。主进程验证当前真实sender/主frame/本地xaanink协议、所属BrowserWindow和业务gate；菜单返回后再验证相同owner/frame及requestId。取消只能关闭发起窗口同requestId的pending菜单，迟到取消不得关闭新请求。已有API Key菜单协议保留兼容测试，但真实控制器不再同时安装旧入口，避免一次右键打开两套菜单。
+bridge新增 `showTextContextMenu(request)` 与 `cancelTextContextMenu(requestId)`。主进程验证当前真实sender/主frame/本地shakeink协议、所属BrowserWindow和业务gate；菜单返回后再验证相同owner/frame及requestId。取消只能关闭发起窗口同requestId的pending菜单，迟到取消不得关闭新请求。已有API Key菜单协议保留兼容测试，但真实控制器不再同时安装旧入口，避免一次右键打开两套菜单。
 
 ## 渲染端统一入口
 

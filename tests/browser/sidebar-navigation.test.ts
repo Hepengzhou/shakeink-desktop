@@ -3,7 +3,7 @@ import {test} from 'node:test'
 import {chromium,type Browser} from 'playwright-core'
 import {withSidebar} from '../helpers/sidebar-navigation-fixture'
 let browser:Browser
-test.before(async()=>{browser=await chromium.launch({headless:true,...(process.env.XAANINK_TEST_CHROMIUM?{executablePath:process.env.XAANINK_TEST_CHROMIUM}:{})})})
+test.before(async()=>{browser=await chromium.launch({headless:true,...(process.env.SHAKEINK_TEST_CHROMIUM?{executablePath:process.env.SHAKEINK_TEST_CHROMIUM}:{})})})
 test.after(async()=>{await browser?.close()})
 
 test('SN-01/03/05/08/16 real navigation has compact creation, brand and single-row entries',()=>withSidebar(browser,{},async page=>{

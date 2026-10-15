@@ -15,7 +15,7 @@ assert.equal(process.platform,'win32')
 const modelId=process.argv.find(value=>value.startsWith('--model='))?.slice(8)??'deepseek-flash'
 assert.ok(['deepseek-flash','deepseek-v4-pro'].includes(modelId))
 const full=process.argv.includes('--full'),legacy=process.argv.includes('--legacy-zero')
-const evidence=resolve('docs/evidence/creation-context'),temporary=await realpath(await mkdtemp(join(tmpdir(),'xaanink-creation-')))
+const evidence=resolve('docs/evidence/creation-context'),temporary=await realpath(await mkdtemp(join(tmpdir(),'shakeink-creation-')))
 const root=join(temporary,'data'),work=join(temporary,'novel'),runId=`${modelId}-${legacy?'zero':'saved'}-${full?'full':'first'}-${Date.now()}`
 const report={startedAt:new Date().toISOString(),modelId,legacyZero:legacy,full,status:'running',stage:'prepare-profile',checks:[],turns:[],errors:[],limitations:['Windows development Electron, not an installed package or macOS.','Native directory picker supplies an isolated empty test directory.','No independent TCP listener probe.'],isolation:{userWorksRead:false},sourceHashes:{}}
 let app,page,conversationId,novelId,lastTurnId
@@ -52,7 +52,7 @@ try{
   await mkdir(join(root,'session'),{recursive:true});await writeFile(join(root,'session','Local State'),JSON.stringify({os_crypt:encryption}))
   await writeFile(join(root,'state.json'),JSON.stringify({schemaVersion:1,revision:0,value:state}))
   for(const file of ['desktop/shared/provider-capabilities.ts','desktop/service/models.ts','desktop/handlers/chat/route.ts','dist/main/index.cjs','dist/service/index.cjs'])report.sourceHashes[file]=createHash('sha256').update(await readFile(file)).digest('hex')
-  const env={...process.env,XAANINK_TEST_ROOT:root};delete env.ELECTRON_RUN_AS_NODE
+  const env={...process.env,SHAKEINK_TEST_ROOT:root};delete env.ELECTRON_RUN_AS_NODE
   app=await _electron.launch({args:[resolve('.')],env,timeout:90000});page=await app.firstWindow({timeout:90000});page.setDefaultTimeout(15000)
   // Do not collect renderer text, raw HTTP, stderr, or user data in evidence.
   page.on('pageerror',error=>report.errors.push({kind:'renderer',name:error.name}))
@@ -64,11 +64,11 @@ try{
   // environment. Only main reads its value; it never crosses page evaluation,
   // command arguments, reporting, or the worker boundary.
   report.dedicatedCredential=await app.evaluate(async({safeStorage},{root,id})=>{
-    const key=process.env.XAANINK_CREATION_TEST_KEY
+    const key=process.env.SHAKEINK_CREATION_TEST_KEY
     if(!key)return false
     const fs=process.getBuiltinModule('fs/promises'),path=process.getBuiltinModule('path'),file=path.join(root,'state.json'),state=JSON.parse(await fs.readFile(file,'utf8'))
     state.value.models.find(row=>row.id===id).encryptedKey=safeStorage.encryptString(key).toString('base64')
-    await fs.writeFile(file,JSON.stringify(state));delete process.env.XAANINK_CREATION_TEST_KEY;return true
+    await fs.writeFile(file,JSON.stringify(state));delete process.env.SHAKEINK_CREATION_TEST_KEY;return true
   },{root,id:model.id})
   report.vault=await app.evaluate(async({safeStorage},{root,id})=>{
     const fs=process.getBuiltinModule('fs/promises'),path=process.getBuiltinModule('path'),stored=JSON.parse(await fs.readFile(path.join(root,'state.json'),'utf8')).value.models.find(row=>row.id===id)
@@ -130,4 +130,4 @@ try{
   report.isolation.userStateUnchanged=createHash('sha256').update(await readFile(join(sourcePaths.defaultRoot,'state.json'))).digest('hex')===originalStateHash
   assert.ok(report.isolation.userStateUnchanged);assert.deepEqual(report.errors,[]);report.status='passed';report.completedAt=new Date().toISOString();await persist();console.log(JSON.stringify({event:'complete',modelId,status:report.status,evidence:out()}))
 }catch(error){report.status='failed';report.failure={name:error.name,code:/TEST_[A-Z_0-9]+/.exec(error.message)?.[0]??'ACCEPTANCE_INCOMPLETE'};report.completedAt=new Date().toISOString();await persist();console.log(JSON.stringify({event:'failed',modelId,failure:report.failure,evidence:out()}));process.exitCode=1}
-finally{await app?.close().catch(()=>{});assert.equal(dirname(temporary),resolve(tmpdir()));assert.ok(basename(temporary).startsWith('xaanink-creation-'));await rm(temporary,{recursive:true,force:true})}
+finally{await app?.close().catch(()=>{});assert.equal(dirname(temporary),resolve(tmpdir()));assert.ok(basename(temporary).startsWith('shakeink-creation-'));await rm(temporary,{recursive:true,force:true})}

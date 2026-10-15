@@ -33,5 +33,5 @@
     "src/app/desktop.css": "ae4edb7764953083023ded07d4d04ec9706f173ed20f4b2b033d144c785d9063"
   },
   "status": "failed",
-  "failure": "AssertionError [ERR_ASSERTION]: A whole user-message selection may end at its parent boundary and must remain copyable\n    at file:///D:/Projects/xaanink-desktop/design/text-context-menu/verify-preview.mjs:79:10"
+  "failure": "AssertionError [ERR_ASSERTION]: A whole user-message selection may end at its parent boundary and must remain copyable\n    at file:///D:/Projects/shakeink-desktop/design/text-context-menu/verify-preview.mjs:79:10"
 }

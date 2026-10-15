@@ -7,7 +7,7 @@ import { join, resolve } from 'node:path'
 import { createHash } from 'node:crypto'
 
 assert.equal(process.platform,'win32','This report requires actual Windows')
-const directory=await mkdtemp(join(tmpdir(),'xaanink-surfaces-')),root=join(directory,'data')
+const directory=await mkdtemp(join(tmpdir(),'shakeink-surfaces-')),root=join(directory,'data')
 const label=process.argv[3]??'native-local-01'
 assert(/^[a-z0-9-]+$/.test(label),'Safe evidence label required')
 const evidence=resolve('docs/evidence/workspace-surfaces',label),report={scope:'Actual Windows Electron, current built real React components; isolated synthetic data, zero models, renderer offline; CDP pointer/keyboard, not physical OS mouse/IME or macOS acceptance. No proposed CSS/DOM replacement.',startedAt:new Date().toISOString(),checks:[],errors:[],sourceHashes:{},bundleHashes:{}}
@@ -17,13 +17,13 @@ for(const file of ['src/app/desktop.css','src/app/globals.css','src/components/l
 async function built(dir){for(const e of await readdir(dir,{withFileTypes:true})){const path=join(dir,e.name);if(e.isDirectory())await built(path);else if(/\.(css|js|cjs)$/.test(e.name))report.bundleHashes[path.replace(resolve('.')+'\\','')]=hash(await readFile(path))}}
 await built(resolve('dist'));await built(resolve('.next/static'))
 let app,page
-const env={...process.env,XAANINK_TEST_ROOT:root};delete env.ELECTRON_RUN_AS_NODE
+const env={...process.env,SHAKEINK_TEST_ROOT:root};delete env.ELECTRON_RUN_AS_NODE
 async function launch(){
   const packaged=process.argv[2]
   app=await _electron.launch({...(packaged?{executablePath:resolve(packaged),args:[]}:{args:[resolve('.')]}),env,timeout:90000})
   page=await app.firstWindow({timeout:90000});page.on('pageerror',e=>report.errors.push(e.message));await page.context().setOffline(true)
   await page.getByRole('button',{name:'账号菜单',exact:true}).waitFor({timeout:90000})
-  assert.equal(page.url(),'xaanink://app/')
+  assert.equal(page.url(),'shakeink://app/')
   const state=await page.evaluate(()=>window.desktop.bootstrap());assert.equal(state.dataRoot,root);assert.equal(state.models.length,0)
   report.runtime=await app.evaluate(()=>({platform:process.platform,electron:process.versions.electron,node:process.versions.node}))
   if(packaged)report.packagedExecutableHash=hash(await readFile(resolve(packaged)))

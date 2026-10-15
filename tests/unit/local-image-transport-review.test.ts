@@ -54,12 +54,12 @@ test("IMG60-02: actual streamed renderer transport cancels quota overflow before
 test("IMG60-03: actual main protocol callback returns exact image bytes and HEAD/security headers, with safe failures and no arbitrary RPC", async () => {
   const source = ts.createSourceFile("main.ts", readFileSync("desktop/main/index.ts", "utf8"), ts.ScriptTarget.Latest, true)
   let callback: ts.Expression | undefined
-  function visit(node: ts.Node) { if (ts.isCallExpression(node) && node.expression.getText(source) === "protocol.handle" && node.arguments[0]?.getText(source) === '"xaanink"') callback = node.arguments[1]; ts.forEachChild(node, visit) }
+  function visit(node: ts.Node) { if (ts.isCallExpression(node) && node.expression.getText(source) === "protocol.handle" && node.arguments[0]?.getText(source) === '"shakeink"') callback = node.arguments[1]; ts.forEachChild(node, visit) }
   visit(source); assert.ok(callback)
   const code = transformSync(`export const handler=${callback.getText(source)}`, { loader: "ts", format: "cjs" }).code
   const root = await mkdtemp(join(tmpdir(), "xuanxiang-protocol-review-")); await mkdir(join(root, "out"))
   const bytes = await sharp({ create: { width: 3, height: 2, channels: 3, background: "#91806a" } }).png().toBuffer()
-  const calls: unknown[] = [], url = `xaanink://app/_desktop/assets/${randomUUID()}/${randomUUID()}.png`
+  const calls: unknown[] = [], url = `shakeink://app/_desktop/assets/${randomUUID()}/${randomUUID()}.png`
   let mode: "valid" | "mime" | "oversized" | "failure" = "valid"
   const module = { exports: {} as { handler: (request: Request) => Promise<Response> } }
   const dependencies = { businessGate:new BusinessGate(), staticUiResponse, localImageRequest, service: { call: async (method: string, path: string) => { calls.push({ method, path }); if (mode === "failure") throw Error("private/path/must-not-leak"); return { bytes: mode === "oversized" ? new Uint8Array(10 * 1024 * 1024 + 1) : new Uint8Array(bytes), mime: mode === "mime" ? "text/html" : "image/png" } } }, app: { getAppPath: () => root }, realpath, readFile, join, sep, avatarAssets: { readAsset: async () => { throw Error("not in work-image scope") } } }
@@ -70,7 +70,7 @@ test("IMG60-03: actual main protocol callback returns exact image bytes and HEAD
     assert.match(response.headers.get("cache-control")!, /private.*immutable/)
     const head = await module.exports.handler(new Request(url, { method: "HEAD" })); assert.equal(head.status, 200); assert.equal(head.body, null); assert.equal(head.headers.get("content-length"), String(bytes.length))
     const before = calls.length
-    for (const invalid of [url + "?x=1", url.replace(".png", ".svg"), url.replace(".png", ".png%2f.."), url.replace("xaanink://app", "xaanink://untrusted")]) assert.ok((await module.exports.handler(new Request(invalid))).status >= 400)
+    for (const invalid of [url + "?x=1", url.replace(".png", ".svg"), url.replace(".png", ".png%2f.."), url.replace("shakeink://app", "shakeink://untrusted")]) assert.ok((await module.exports.handler(new Request(invalid))).status >= 400)
     assert.equal((await module.exports.handler(new Request(url, { method: "POST" }))).status, 403)
     assert.equal(calls.length, before, "invalid requests do not call the asset RPC")
     for (const next of ["mime", "oversized", "failure"] as const) { mode = next; const failed = await module.exports.handler(new Request(url)); assert.equal(failed.status, 404); assert.equal(await failed.text(), "") }

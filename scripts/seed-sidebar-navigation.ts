@@ -18,7 +18,7 @@ async function main(){
  assert(process.argv[3]===undefined||emptyFullscreen,'Unknown fixture mode')
  const directory=await realpath(resolve(process.argv[2]??'')),temporary=await realpath(tmpdir())
  const inside=relative(temporary,directory)
- assert(inside&&!inside.startsWith('..')&&!inside.includes(':')&&basename(directory).startsWith('xaanink-sidebar-'),'Fresh canonical xaanink-sidebar-* temporary directory required')
+ assert(inside&&!inside.startsWith('..')&&!inside.includes(':')&&basename(directory).startsWith('shakeink-sidebar-'),'Fresh canonical shakeink-sidebar-* temporary directory required')
  assert.deepEqual(await readdir(directory),[],'Fixture root must be empty before seed')
  const root=join(directory,'data'),works=new Workspaces(root,resolve('prisma/migrations'))
  const fixture:{version:1;synthetic:true;works:any[];unbound:any;activeTabId?:string|null;tabs?:any[];statuses:ChapterStatus[];image:string;emptyFullscreen:boolean}={version:1,synthetic:true,works:[],unbound:null,statuses:['OUTLINE','REVIEWED','WRITTEN','CHAPTER_REVIEWED','FINAL'],image:pixel,emptyFullscreen}

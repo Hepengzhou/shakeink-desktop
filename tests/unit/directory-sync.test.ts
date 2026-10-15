@@ -7,7 +7,7 @@ import { tmpdir } from 'node:os'
 import { syncOwnedDirectory } from '../../desktop/core/directory-sync'
 
 async function fixture(run: (root: { path: string; device: string; inode: string }, base: string) => Promise<void>) {
-  const base = await fs.realpath(await fs.mkdtemp(join(tmpdir(), 'xaanink-directory-identity-'))), path = join(base, 'selected')
+  const base = await fs.realpath(await fs.mkdtemp(join(tmpdir(), 'shakeink-directory-identity-'))), path = join(base, 'selected')
   await fs.mkdir(path); const info = await fs.lstat(path, { bigint: true })
   try { await run({ path, device: String(info.dev), inode: String(info.ino) }, base) } finally { await fs.rm(base, { recursive: true, force: true }) }
 }

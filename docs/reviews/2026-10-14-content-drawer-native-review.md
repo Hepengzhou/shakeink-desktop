@@ -19,7 +19,7 @@
 
 ## 已确认的证据和作用范围
 
-- 脚本使用真实 Electron/目录包、真实协议 React 工作区和现有 Workspaces/PGlite/IPC/DraftJournal seed；通过 `XAANINK_TEST_ROOT` 和 bootstrap 根校验隔离用户数据，0 模型，不替换 renderer body，不导入 renderer store，不创建 fake Monaco。实际表单仅作代表性形态，不冒称全部 29 面板业务验收。
+- 脚本使用真实 Electron/目录包、真实协议 React 工作区和现有 Workspaces/PGlite/IPC/DraftJournal seed；通过 `SHAKEINK_TEST_ROOT` 和 bootstrap 根校验隔离用户数据，0 模型，不替换 renderer body，不导入 renderer store，不创建 fake Monaco。实际表单仅作代表性形态，不冒称全部 29 面板业务验收。
 - 实际 Monaco 从 React hook 的对象发现，随后比较 editor DOM、editor/model 对象 identity、model ID、dispose、文字摘要、selection、scroll、version/alternativeVersion/layoutInfo。隐藏不可见用 `isConnected` 而非 `isVisible` 判断保活。撤销标记在动画之前建立，动画后真实 Ctrl+Z/Ctrl+Y验证既有历史，冷启明确为新实例。
 - 每段重新查询活动 panel/caption/Tab/控件/Monaco 行节点并分配 WeakMap identity，保存直接文本 DOM Range 行框和 textarea 行内容 extent，而非只比较外壳宽度。Native HWND 调用保留原 helper，真实 zoom/DPI/client origin 转换和前后点有效性检查，不能把漂移或 settled 命中计为 motion 通过。
 - Evidence label 限定并拒绝 EEXIST，源/构建/exe hashes 前后比较，不覆盖失败证据；仅合成界面截图，文本报告清理隔离路径/home/Key 形状，无递归删除或移动。离线观测从 firstWindow 开始的边界写清，未宣称 pre-entry/service-worker 无网络；main listening Server 另验。

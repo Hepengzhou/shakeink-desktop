@@ -4,7 +4,7 @@ import { chromium, type Browser, type Page } from "playwright-core"
 import { frames, withContentTabs } from "../helpers/content-tabs-fixture"
 
 let browser: Browser
-test.before(async () => { browser = await chromium.launch({ headless: true, ignoreDefaultArgs: ["--hide-scrollbars"], ...(process.env.XAANINK_TEST_CHROMIUM ? { executablePath: process.env.XAANINK_TEST_CHROMIUM } : {}) }) })
+test.before(async () => { browser = await chromium.launch({ headless: true, ignoreDefaultArgs: ["--hide-scrollbars"], ...(process.env.SHAKEINK_TEST_CHROMIUM ? { executablePath: process.env.SHAKEINK_TEST_CHROMIUM } : {}) }) })
 test.after(async () => { await browser?.close() })
 const tab = (page: Page, id: string) => page.locator(`.content-tabs-track .content-tab[data-tab-id="${id}"]`)
 const order = (page: Page) => page.evaluate(() => (window as any).tabsFixture.order() as string[])

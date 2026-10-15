@@ -3,7 +3,7 @@ import { test } from "node:test"
 import { chromium, type Browser } from "playwright-core"
 import { recordDrawerDriverAction, sampleDrawer, withDrawer } from "../helpers/sidebar-drawer-fixture"
 let browser: Browser
-test.before(async () => { browser = await chromium.launch({ headless: true, ...(process.env.XAANINK_TEST_CHROMIUM ? { executablePath: process.env.XAANINK_TEST_CHROMIUM } : {}) }) })
+test.before(async () => { browser = await chromium.launch({ headless: true, ...(process.env.SHAKEINK_TEST_CHROMIUM ? { executablePath: process.env.SHAKEINK_TEST_CHROMIUM } : {}) }) })
 test.after(async () => { await browser?.close() })
 const close = 'button[aria-label="展开或收起左侧导航栏"]'
 const restore = '[data-sidebar-restore]'

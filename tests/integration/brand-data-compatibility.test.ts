@@ -30,13 +30,13 @@ async function selected(path: string) {
 const families = [
   // This is a historical format fixture; do not replace its xuanxiang tokens.
   { family: "legacy", appMarker: "xuanxiang-app.json", app: "Xuanxiangxiezuo-Desktop", manifest: "xuanxiang-work.json", storage: "xuanxiang-storage.json", required: "xuanxiang-storage-required.json", lock: ".xuanxiang-lock", audit: ".xuanxiang-lease-recovery.json", restores: ".xuanxiang-restores", stage: ".xuanxiang-migration-", recovery: ".xuanxiang-root-recovery-" },
-  { family: "current", appMarker: "xaanink-app.json", app: "XaanInk", manifest: "xaanink-work.json", storage: "xaanink-storage.json", required: "xaanink-storage-required.json", lock: ".xaanink-lock", audit: ".xaanink-lease-recovery.json", restores: ".xaanink-restores", stage: ".xaanink-migration-", recovery: ".xaanink-root-recovery-" },
+  { family: "current", appMarker: "shakeink-app.json", app: "ShakeInk", manifest: "shakeink-work.json", storage: "shakeink-storage.json", required: "shakeink-storage-required.json", lock: ".shakeink-lock", audit: ".shakeink-lease-recovery.json", restores: ".shakeink-restores", stage: ".shakeink-migration-", recovery: ".shakeink-root-recovery-" },
 ] as const
 async function exists(path: string) {
   try { await lstat(path); return true } catch (error) { if ((error as NodeJS.ErrnoException).code === "ENOENT") return false; throw error }
 }
 async function fixture(run: (base: string) => Promise<void>) {
-  const base = await realpath(await mkdtemp(join(tmpdir(), "xaanink-brand-data-")))
+  const base = await realpath(await mkdtemp(join(tmpdir(), "shakeink-brand-data-")))
   try { await run(base) } finally { await rm(base, { recursive: true, force: true }) }
 }
 async function applicationRoot(path: string, names: typeof families[number], inboxReady = false) {
@@ -76,7 +76,7 @@ test("BDC01 a real legacy database opens under the new app, saves, closes and re
       await works.initialize(); const work = await works.open(await selected(path)); assert.equal(work.id, original.id)
       await works.run(work.id, async () => {
         assert.equal(await exists(join(path, ".xuanxiang-lock", "owner.json")), true)
-        assert.equal(await exists(join(path, ".xaanink-lock")), false)
+        assert.equal(await exists(join(path, ".shakeink-lock")), false)
         assert.equal((await prisma.theme.findUnique({ where: { novelId: work.novelId } }))!.synopsis, "原有内容不可丢失")
         await prisma.novel.update({ where: { id: work.novelId }, data: { title: "改名应用保存的新标题" } })
       })
@@ -85,7 +85,7 @@ test("BDC01 a real legacy database opens under the new app, saves, closes and re
       assert.equal(await works.run(work.id, () => prisma.novel.count()), 1)
       await works.close()
       assert.deepEqual(await Promise.all(["xuanxiang-work.json", "xuanxiang-storage.json", "xuanxiang-storage-required.json"].map(name => readFile(join(path, name)))), preserved)
-      for (const name of ["xaanink-work.json", "xaanink-storage.json", "xaanink-storage-required.json", ".xaanink-lock", ".xuanxiang-lock"]) assert.equal(await exists(join(path, name)), false)
+      for (const name of ["shakeink-work.json", "shakeink-storage.json", "shakeink-storage-required.json", ".shakeink-lock", ".xuanxiang-lock"]) assert.equal(await exists(join(path, name)), false)
     } finally { await works.close() }
   })
 })
@@ -98,17 +98,17 @@ for (const appNames of families) {
       try {
         await works.initialize(); const input = { title: "新作品", requestId: "brand-new-work-request" }
         const work = await works.create(await selected(path), input)
-        assert.equal(JSON.parse(await readFile(join(path, "xaanink-work.json"), "utf8")).novelId, work.novelId)
+        assert.equal(JSON.parse(await readFile(join(path, "shakeink-work.json"), "utf8")).novelId, work.novelId)
         assert.equal(await exists(join(path, "xuanxiang-work.json")), false)
         assert.equal((await works.create(await selected(path), input)).id, work.id, "retry remains the same work and manifest")
         await works.close()
         await (await workspaceStorage(path)).initialize()
-        assert.equal(JSON.parse(await readFile(join(path, "xaanink-storage-required.json"), "utf8")).workId, work.id)
-        assert.equal(JSON.parse(await readFile(join(path, "xaanink-storage.json"), "utf8")).state.workId, work.id)
+        assert.equal(JSON.parse(await readFile(join(path, "shakeink-storage-required.json"), "utf8")).workId, work.id)
+        assert.equal(JSON.parse(await readFile(join(path, "shakeink-storage.json"), "utf8")).state.workId, work.id)
         assert.equal(await exists(join(path, "xuanxiang-storage.json")), false)
         works = new Workspaces(app, migrations); await works.initialize(); await works.open(await selected(path))
         await works.run(work.id, async () => {
-          assert.equal(await exists(join(path, ".xaanink-lock", "owner.json")), true); assert.equal(await exists(join(path, ".xuanxiang-lock")), false)
+          assert.equal(await exists(join(path, ".shakeink-lock", "owner.json")), true); assert.equal(await exists(join(path, ".xuanxiang-lock")), false)
           await prisma.novel.update({ where: { id: work.novelId }, data: { title: "新作品实际保存" } })
         })
         await works.close(); works = new Workspaces(app, migrations); await works.initialize()
@@ -127,7 +127,7 @@ test("BDC03 legacy required pointer loss refuses to open or create a replacement
     try {
       await works.initialize(); await assert.rejects(works.open(await selected(path)), /缺失/)
       assert.deepEqual((await readdir(path)).sort(), before); assert.deepEqual(await works.list(), [])
-      assert.equal(await exists(join(path, "xaanink-storage.json")), false)
+      assert.equal(await exists(join(path, "shakeink-storage.json")), false)
       assert.equal(await exists(join(path, "xuanxiang-storage.json")), false)
     } finally { await works.close() }
   })
@@ -149,7 +149,7 @@ test("BDC04 an existing legacy candidate remains authoritative, including after 
       assert.equal((await works.open(await selected(path))).title, "候选内新保存"); await works.close()
       candidateEngine = await PGlite.create({ dataDir: join(path, "database"), relaxedDurability: false })
       try { assert.equal((await candidateEngine.query<{ title: string }>('SELECT title FROM "Novel" WHERE id=$1', [manifest.novelId])).rows[0].title, "旧作品原始正文") } finally { await candidateEngine.close() }
-      assert.equal(await exists(join(path, ".xaanink-restores")), false)
+      assert.equal(await exists(join(path, ".shakeink-restores")), false)
     } finally { await works.close() }
   })
 })
@@ -205,11 +205,11 @@ for (const names of families) {
         const preview = await recovery.prepare(await directoryIdentity(path))
         await assert.rejects(recovery.recover(preview.requestId)); confirmed = preview.requestId
         assert.equal((await recovery.recover(preview.requestId)).status, "recovered")
-        const prefix = names.family === "legacy" ? "xuanxiang" : "xaanink"
+        const prefix = names.family === "legacy" ? "xuanxiang" : "shakeink"
         const audit = JSON.parse(await readFile(join(path, `.${prefix}-lease-recovery.json`), "utf8"))
         assert.equal(audit.payload.type, `${prefix}-work-lease-recovery`)
         assert.equal(await exists(join(path, names.lock)), false)
-        assert.equal(await exists(join(path, names.family === "legacy" ? ".xaanink-lease-recovery.json" : ".xuanxiang-lease-recovery.json")), false)
+        assert.equal(await exists(join(path, names.family === "legacy" ? ".shakeink-lease-recovery.json" : ".xuanxiang-lease-recovery.json")), false)
       } finally { await rival.close(); await works.close() }
     })
   })
@@ -269,7 +269,7 @@ for (const names of families) {
 test("BDC09 a query waiting behind a real PGlite transaction revalidates authority after acquiring the engine queue", { timeout: 60_000 }, async () => {
   await fixture(async base => {
     const path=join(base,"queued-work");await mkdir(path)
-    await writeFile(join(path,"xaanink-work.json"),JSON.stringify({schemaVersion:1,id:randomUUID(),phase:"ready",novelId:randomUUID(),title:"队列原值",requestId:"queue-work",requestHash:"queue-original",createdAt:new Date().toISOString()}))
+    await writeFile(join(path,"shakeink-work.json"),JSON.stringify({schemaVersion:1,id:randomUUID(),phase:"ready",novelId:randomUUID(),title:"队列原值",requestId:"queue-work",requestHash:"queue-original",createdAt:new Date().toISOString()}))
     const engine=await PGlite.create({dataDir:join(path,"database"),relaxedDurability:false})
     let adapter:Awaited<ReturnType<LocalPGliteAdapter["connect"]>>|undefined,transaction:Awaited<ReturnType<NonNullable<typeof adapter>["startTransaction"]>>|undefined,queued:Promise<unknown>|undefined
     const attempted=Promise.withResolvers<void>();let notify=false

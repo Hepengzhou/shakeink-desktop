@@ -172,7 +172,7 @@ export async function executeStartupRepair(paths: StartupRecoveryPaths, repair: 
  * bootstrap control/history files, converging to auto-init on restart. */
 export async function executeStartupReset(paths: StartupRecoveryPaths, context: StartupResetContext, guards: StartupRecoveryGuards): Promise<void> {
   guards.assertLock()
-  const expected = context.isolatedRoot ? resolve(context.isolatedRoot) : join(context.home, context.family === "legacy" ? ".xuanxiang" : ".xaanink")
+  const expected = context.isolatedRoot ? resolve(context.isolatedRoot) : join(context.home, context.family === "legacy" ? ".xuanxiang" : ".shakeink")
   if (!isAbsolute(paths.recoveryRoot) || !samePath(paths.recoveryRoot, expected)) fail("RESET_TARGET_INVALID")
   const boot = brandRootIdentity(paths.bootstrap)
   let root: RootIdentity | null = null

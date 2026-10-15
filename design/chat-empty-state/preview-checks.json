@@ -9584,19 +9584,19 @@
             "theme": "paper",
             "action": "book",
             "normal": {
-              "src": "file:///D:/Projects/xaanink-desktop/design/chat-empty-state/assets/book-paper-first.png",
+              "src": "file:///D:/Projects/shakeink-desktop/design/chat-empty-state/assets/book-paper-first.png",
               "inScheduler": false,
               "transform": "none",
               "animation": "none"
             },
             "hover": {
-              "src": "file:///D:/Projects/xaanink-desktop/design/chat-empty-state/assets/book-paper-first.png",
+              "src": "file:///D:/Projects/shakeink-desktop/design/chat-empty-state/assets/book-paper-first.png",
               "inScheduler": false,
               "transform": "none",
               "animation": "none"
             },
             "focus": {
-              "src": "file:///D:/Projects/xaanink-desktop/design/chat-empty-state/assets/book-paper-first.png",
+              "src": "file:///D:/Projects/shakeink-desktop/design/chat-empty-state/assets/book-paper-first.png",
               "inScheduler": false,
               "transform": "none",
               "animation": "none"
@@ -9608,19 +9608,19 @@
             "theme": "paper",
             "action": "character",
             "normal": {
-              "src": "file:///D:/Projects/xaanink-desktop/design/chat-empty-state/assets/character-paper-first.png",
+              "src": "file:///D:/Projects/shakeink-desktop/design/chat-empty-state/assets/character-paper-first.png",
               "inScheduler": false,
               "transform": "none",
               "animation": "none"
             },
             "hover": {
-              "src": "file:///D:/Projects/xaanink-desktop/design/chat-empty-state/assets/character-paper-first.png",
+              "src": "file:///D:/Projects/shakeink-desktop/design/chat-empty-state/assets/character-paper-first.png",
               "inScheduler": false,
               "transform": "none",
               "animation": "none"
             },
             "focus": {
-              "src": "file:///D:/Projects/xaanink-desktop/design/chat-empty-state/assets/character-paper-first.png",
+              "src": "file:///D:/Projects/shakeink-desktop/design/chat-empty-state/assets/character-paper-first.png",
               "inScheduler": false,
               "transform": "none",
               "animation": "none"
@@ -9632,19 +9632,19 @@
             "theme": "paper",
             "action": "world",
             "normal": {
-              "src": "file:///D:/Projects/xaanink-desktop/design/chat-empty-state/assets/world-paper-first.png",
+              "src": "file:///D:/Projects/shakeink-desktop/design/chat-empty-state/assets/world-paper-first.png",
               "inScheduler": false,
               "transform": "none",
               "animation": "none"
             },
             "hover": {
-              "src": "file:///D:/Projects/xaanink-desktop/design/chat-empty-state/assets/world-paper-first.png",
+              "src": "file:///D:/Projects/shakeink-desktop/design/chat-empty-state/assets/world-paper-first.png",
               "inScheduler": false,
               "transform": "none",
               "animation": "none"
             },
             "focus": {
-              "src": "file:///D:/Projects/xaanink-desktop/design/chat-empty-state/assets/world-paper-first.png",
+              "src": "file:///D:/Projects/shakeink-desktop/design/chat-empty-state/assets/world-paper-first.png",
               "inScheduler": false,
               "transform": "none",
               "animation": "none"
@@ -9656,19 +9656,19 @@
             "theme": "paper",
             "action": "scene",
             "normal": {
-              "src": "file:///D:/Projects/xaanink-desktop/design/chat-empty-state/assets/scene-paper-first.png",
+              "src": "file:///D:/Projects/shakeink-desktop/design/chat-empty-state/assets/scene-paper-first.png",
               "inScheduler": false,
               "transform": "none",
               "animation": "none"
             },
             "hover": {
-              "src": "file:///D:/Projects/xaanink-desktop/design/chat-empty-state/assets/scene-paper-first.png",
+              "src": "file:///D:/Projects/shakeink-desktop/design/chat-empty-state/assets/scene-paper-first.png",
               "inScheduler": false,
               "transform": "none",
               "animation": "none"
             },
             "focus": {
-              "src": "file:///D:/Projects/xaanink-desktop/design/chat-empty-state/assets/scene-paper-first.png",
+              "src": "file:///D:/Projects/shakeink-desktop/design/chat-empty-state/assets/scene-paper-first.png",
               "inScheduler": false,
               "transform": "none",
               "animation": "none"
@@ -9680,19 +9680,19 @@
             "theme": "ink",
             "action": "book",
             "normal": {
-              "src": "file:///D:/Projects/xaanink-desktop/design/chat-empty-state/assets/book-ink-first.png",
+              "src": "file:///D:/Projects/shakeink-desktop/design/chat-empty-state/assets/book-ink-first.png",
               "inScheduler": false,
               "transform": "none",
               "animation": "none"
             },
             "hover": {
-              "src": "file:///D:/Projects/xaanink-desktop/design/chat-empty-state/assets/book-ink-first.png",
+              "src": "file:///D:/Projects/shakeink-desktop/design/chat-empty-state/assets/book-ink-first.png",
               "inScheduler": false,
               "transform": "none",
               "animation": "none"
             },
             "focus": {
-              "src": "file:///D:/Projects/xaanink-desktop/design/chat-empty-state/assets/book-ink-first.png",
+              "src": "file:///D:/Projects/shakeink-desktop/design/chat-empty-state/assets/book-ink-first.png",
               "inScheduler": false,
               "transform": "none",
               "animation": "none"
@@ -9704,19 +9704,19 @@
             "theme": "ink",
             "action": "character",
             "normal": {
-              "src": "file:///D:/Projects/xaanink-desktop/design/chat-empty-state/assets/character-ink-first.png",
+              "src": "file:///D:/Projects/shakeink-desktop/design/chat-empty-state/assets/character-ink-first.png",
               "inScheduler": false,
               "transform": "none",
               "animation": "none"
             },
             "hover": {
-              "src": "file:///D:/Projects/xaanink-desktop/design/chat-empty-state/assets/character-ink-first.png",
+              "src": "file:///D:/Projects/shakeink-desktop/design/chat-empty-state/assets/character-ink-first.png",
               "inScheduler": false,
               "transform": "none",
               "animation": "none"
             },
             "focus": {
-              "src": "file:///D:/Projects/xaanink-desktop/design/chat-empty-state/assets/character-ink-first.png",
+              "src": "file:///D:/Projects/shakeink-desktop/design/chat-empty-state/assets/character-ink-first.png",
               "inScheduler": false,
               "transform": "none",
               "animation": "none"
@@ -9728,19 +9728,19 @@
             "theme": "ink",
             "action": "world",
             "normal": {
-              "src": "file:///D:/Projects/xaanink-desktop/design/chat-empty-state/assets/world-ink-first.png",
+              "src": "file:///D:/Projects/shakeink-desktop/design/chat-empty-state/assets/world-ink-first.png",
               "inScheduler": false,
               "transform": "none",
               "animation": "none"
             },
             "hover": {
-              "src": "file:///D:/Projects/xaanink-desktop/design/chat-empty-state/assets/world-ink-first.png",
+              "src": "file:///D:/Projects/shakeink-desktop/design/chat-empty-state/assets/world-ink-first.png",
               "inScheduler": false,
               "transform": "none",
               "animation": "none"
             },
             "focus": {
-              "src": "file:///D:/Projects/xaanink-desktop/design/chat-empty-state/assets/world-ink-first.png",
+              "src": "file:///D:/Projects/shakeink-desktop/design/chat-empty-state/assets/world-ink-first.png",
               "inScheduler": false,
               "transform": "none",
               "animation": "none"
@@ -9752,19 +9752,19 @@
             "theme": "ink",
             "action": "scene",
             "normal": {
-              "src": "file:///D:/Projects/xaanink-desktop/design/chat-empty-state/assets/scene-ink-first.png",
+              "src": "file:///D:/Projects/shakeink-desktop/design/chat-empty-state/assets/scene-ink-first.png",
               "inScheduler": false,
               "transform": "none",
               "animation": "none"
             },
             "hover": {
-              "src": "file:///D:/Projects/xaanink-desktop/design/chat-empty-state/assets/scene-ink-first.png",
+              "src": "file:///D:/Projects/shakeink-desktop/design/chat-empty-state/assets/scene-ink-first.png",
               "inScheduler": false,
               "transform": "none",
               "animation": "none"
             },
             "focus": {
-              "src": "file:///D:/Projects/xaanink-desktop/design/chat-empty-state/assets/scene-ink-first.png",
+              "src": "file:///D:/Projects/shakeink-desktop/design/chat-empty-state/assets/scene-ink-first.png",
               "inScheduler": false,
               "transform": "none",
               "animation": "none"

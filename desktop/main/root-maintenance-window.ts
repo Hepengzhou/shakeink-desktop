@@ -24,16 +24,16 @@ export async function launchRootMaintenance(bootstrap:string,defaultRoot:string)
   for(const owned of BrowserWindow.getAllWindows())if(owned!==current||owned.webContents.session.storagePath!==null)throw Error('SOURCE_NOT_CLOSED')
  }
  await app.whenReady()
- const isolated=session.fromPartition('xaanink-maintenance',{cache:false})
+ const isolated=session.fromPartition('shakeink-maintenance',{cache:false})
  if(isolated.storagePath!==null)throw Error('MAINTENANCE_SESSION_NOT_ISOLATED')
  isolated.setPermissionRequestHandler((_contents,_permission,callback)=>callback(false))
  isolated.setPermissionCheckHandler(()=>false)
- isolated.webRequest.onBeforeRequest((details,callback)=>callback({cancel:!['xaanink:','data:','blob:','devtools:'].includes(new URL(details.url).protocol)}))
- isolated.protocol.handle('xaanink',request=>staticUiResponse(request,join(app.getAppPath(),'out')))
+ isolated.webRequest.onBeforeRequest((details,callback)=>callback({cancel:!['shakeink:','data:','blob:','devtools:'].includes(new URL(details.url).protocol)}))
+ isolated.protocol.handle('shakeink',request=>staticUiResponse(request,join(app.getAppPath(),'out')))
  let theme:'paper'|'ink'=nativeTheme.shouldUseDarkColors?'ink':'paper'
  try{const root=await manager.resolve();if(root.state==='existing'){const state=await readMetadata(join(root.pointer.root.path,'state.json')) as {value?:{settings?:{appearance?:{theme?:string}}}};const choice=state.value?.settings?.appearance?.theme;if(choice==='paper'||choice==='ink')theme=choice}}catch{ /* The runner presents the authoritative failure without opening a fallback. */ }
  const runner=new RootMaintenanceRunner({requests,bootstrap,defaultRoot,theme,host:{assertMaintenanceClosed:assertClosed},onContinue:async()=>{assertLock();app.relaunch();exiting=true;app.quit()},onQuit:async()=>{exiting=true;app.quit()}})
- const trusted=(event:IpcMainInvokeEvent)=>{if(!current||current.isDestroyed()||event.sender!==current.webContents||event.senderFrame!==current.webContents.mainFrame||event.senderFrame.url!=='xaanink://app/')throw Error('UNTRUSTED_MAINTENANCE_REQUEST')}
+ const trusted=(event:IpcMainInvokeEvent)=>{if(!current||current.isDestroyed()||event.sender!==current.webContents||event.senderFrame!==current.webContents.mainFrame||event.senderFrame.url!=='shakeink://app/')throw Error('UNTRUSTED_MAINTENANCE_REQUEST')}
  ipcMain.handle('desktop:maintenance-state',event=>{trusted(event);return runner.state()})
  ipcMain.handle('desktop:maintenance-command',async(event,input)=>{trusted(event);const command=z.enum(['cancel','continue','quit']).parse(input);if(command==='cancel')await runner.cancel();else if(command==='continue')await runner.continue();else await runner.quit()})
  const close=()=>{
@@ -57,6 +57,6 @@ export async function launchRootMaintenance(bootstrap:string,defaultRoot:string)
  if(process.platform==='darwin')Menu.setApplicationMenu(Menu.buildFromTemplate([{label:'玄印',submenu:[{label:'关于玄印写作',click:()=>{app.setAboutPanelOptions({applicationName:'玄印写作',applicationVersion:app.getVersion()});app.showAboutPanel()}},{type:'separator'},{label:'退出玄印',click:close}]},...['文件','编辑','视图','窗口','帮助'].map(label=>({label,submenu:[]}))]))
  else owned.setMenu(null)
  owned.once('ready-to-show',()=>owned.show())
- await owned.loadURL('xaanink://app/')
+ await owned.loadURL('shakeink://app/')
  void runner.start()
 }

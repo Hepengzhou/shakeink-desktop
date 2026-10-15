@@ -10,7 +10,7 @@ import { DraftJournal } from "../desktop/main/draft-journal"
 
 async function seed() {
 const directory = await realpath(resolve(process.argv[2]))
-assert.ok(basename(directory).startsWith("xaanink-toast-style-"))
+assert.ok(basename(directory).startsWith("shakeink-toast-style-"))
 const theme = process.argv[3]
 assert.ok(theme === "paper" || theme === "ink")
 const root = join(directory, "data")

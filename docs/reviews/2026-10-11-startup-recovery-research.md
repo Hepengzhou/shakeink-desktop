@@ -12,7 +12,7 @@
 3. `desktop/main/root-relocation-window.ts:51` + `desktop/main/root-relocation-controller.ts:40,61,69`：窗口硬编码 `notice:'pointer-invalid'`；blocked 模式 `recoverable=false` → `canChoose=false`。
 4. `src/components/desktop/RootRelocationScreen.tsx:87-90`：只在 `canChoose` 时渲染「定位原数据目录」按钮，`canRestart=false` 时渲染「退出应用」→ 界面上只剩退出。
 
-截图中 `sourcePath` 显示为 `C:\Users\Administrator\.xaanink`，说明指针本身可解析、目录存在但标记文件无效 —— 即「目录在、文件丢」场景。
+截图中 `sourcePath` 显示为 `C:\Users\Administrator\.shakeink`，说明指针本身可解析、目录存在但标记文件无效 —— 即「目录在、文件丢」场景。
 
 ## 2. 两个目录与启动链路
 
@@ -20,8 +20,8 @@
 
 | 目录 | 位置 | 内容 |
 |---|---|---|
-| bootstrap（控制目录） | `%APPDATA%\XaanInk`（即 Electron userData，`desktop/main/brand-startup-paths.ts:38`、`desktop/main/index.ts:68-73`） | `data-root.json` 指针、`root-migration.json`、`root-migration-request.json`、`root-relocation-*`、`application-restore-*` 历史记录 |
-| 数据根（用户所称「配置文件目录」） | `C:\Users\<用户>\.xaanink`（`brand-startup-paths.ts:44,72`） | `xaanink-app.json` 应用标记、`catalog.json` 作品索引、`state.json` 设置/模型/引导进度、`drafts.json` 草稿日志、`inbox/`（含 PGlite 数据库 `inbox/database/`）、`session/`、`assets/global/`、`backups/application/` |
+| bootstrap（控制目录） | `%APPDATA%\ShakeInk`（即 Electron userData，`desktop/main/brand-startup-paths.ts:38`、`desktop/main/index.ts:68-73`） | `data-root.json` 指针、`root-migration.json`、`root-migration-request.json`、`root-relocation-*`、`application-restore-*` 历史记录 |
+| 数据根（用户所称「配置文件目录」） | `C:\Users\<用户>\.shakeink`（`brand-startup-paths.ts:44,72`） | `shakeink-app.json` 应用标记、`catalog.json` 作品索引、`state.json` 设置/模型/引导进度、`drafts.json` 草稿日志、`inbox/`（含 PGlite 数据库 `inbox/database/`）、`session/`、`assets/global/`、`backups/application/` |
 
 注意：**作品本体不存放在数据根内**，每部作品是用户指定的独立外部目录，数据根只用 `catalog.json` 记录其绝对路径与身份（`desktop/service/workspaces.ts:27-29,335-339`）。
 
@@ -29,7 +29,7 @@
 
 1. 模块加载期同步执行 `selectBrandStartupPaths({appData, home, isolatedRoot})`（`desktop/main/index.ts:64-65`）：
    - bootstrap 有权威记录 → 校验指针与数据根标记；失败抛 `BRAND_POINTER_INVALID`（带恢复路径）。
-   - 无权威记录 → 依次看 `~/.xuanxiang`、`~/.xaanink`：存在且非空但标记非法（含 `phase!=="ready"`）→ 抛 `BRAND_DEFAULT_INVALID`，**无恢复路径** → `index.ts:741-743` 弹错误框退出（死局之二）。
+   - 无权威记录 → 依次看 `~/.xuanxiang`、`~/.shakeink`：存在且非空但标记非法（含 `phase!=="ready"`）→ 抛 `BRAND_DEFAULT_INVALID`，**无恢复路径** → `index.ts:741-743` 弹错误框退出（死局之二）。
    - 空目录被跳过（`brand-startup-paths.ts:64`），视为可初始化。
 2. `start()` 三道闸门（`index.ts:746-756`）：`rootRelocationPreflight` → `rootMaintenanceRequired` → `inboxLeaseRecoveryRequired` → `launch()`。
 3. `launch()`（`index.ts:208-216`）：创建 service worker，`waitRootStartup` 45s 屏障等待 `desktop/service/index.ts:40` 的 `startOwnedRoot`：
@@ -45,10 +45,10 @@
 
 | # | 场景 | 现状行为 | 死局？ |
 |---|---|---|---|
-| A1 | `~/.xaanink` 不存在，bootstrap 无记录 | 正常初始化，进引导 | 否 |
-| A2 | `~/.xaanink` 不存在，指针悬空指向它 | relocation `lost` 模式：可「定位原数据目录」，但数据已丢、无目录可定位 | **事实死局** |
-| A3 | `~/.xaanink` 为空目录，无指针 | 正常初始化（空目录被跳过） | 否 |
-| A4 | `~/.xaanink` 为空，指针悬空 | `ROOT_MARKER_INVALID` → blocked | **死局** |
+| A1 | `~/.shakeink` 不存在，bootstrap 无记录 | 正常初始化，进引导 | 否 |
+| A2 | `~/.shakeink` 不存在，指针悬空指向它 | relocation `lost` 模式：可「定位原数据目录」，但数据已丢、无目录可定位 | **事实死局** |
+| A3 | `~/.shakeink` 为空目录，无指针 | 正常初始化（空目录被跳过） | 否 |
+| A4 | `~/.shakeink` 为空，指针悬空 | `ROOT_MARKER_INVALID` → blocked | **死局** |
 | B1 | marker 丢失/损坏，指针完好、其余文件完好（截图场景） | blocked + pointer-invalid | **死局** |
 | B2 | marker `phase=initializing`（上次初始化中断），id 与指针一致 | 有指针 → blocked；无指针 → `BRAND_DEFAULT_INVALID` 错误框。其实 worker 的 `Workspaces.initialize` 本就支持续跑（`workspaces.ts:109-115`） | **死局** |
 | B3 | `catalog.json` 丢失/损坏，marker 完好 | preflight 不查 catalog → worker 初始化失败 → 错误框 | **死局** |
@@ -68,7 +68,7 @@
 | 修复项 | 条件 | 动作 | 依据 |
 |---|---|---|---|
 | R1 指针重建 | `data-root.json` 损坏/无法解析，且数据根完整有效（marker ready + inboxReady、catalog 可读、inbox DB 在） | 隔离损坏指针（改名留证），正常启动时 worker `adopt()` 自愈 | B6 已证明 adopt 路径可靠 |
-| R2 标记重建 | marker 缺失/无法解析，指针完好，且 `catalog.json` 可读、`inbox/` 与 `inbox/database` 存在 | 以 `pointer.rootId` 重写 `xaanink-app.json`（`phase:ready, inboxReady:true`） | 指针 schema `data-root.ts:77` 携带 rootId |
+| R2 标记重建 | marker 缺失/无法解析，指针完好，且 `catalog.json` 可读、`inbox/` 与 `inbox/database` 存在 | 以 `pointer.rootId` 重写 `shakeink-app.json`（`phase:ready, inboxReady:true`） | 指针 schema `data-root.ts:77` 携带 rootId |
 | R3 中断续跑 | marker `phase=initializing` 且 id 与指针一致 | 不放行 relocation，直接进入普通 `launch()`，由 `Workspaces.initialize` 续跑 | `workspaces.ts:109-115` |
 
 以下一律**不可自动修复**，必须交给用户决策（对话框）：
@@ -78,7 +78,7 @@
 - `inbox/database` 缺失而 `inboxReady=true`（B4）—— 收件箱数据真实丢失；
 - marker id 与指针 rootId 不一致、目录被替换（inode 变化且目录非空）—— 可能是外来副本，完整性模型明确禁止静默采纳；
 - bootstrap 存在迁移/恢复记录（`root-migration*.json`、`root-relocation-*`、`application-restore-*`）—— 有在途迁移，数据可能在迁移目标侧；
-- 指针目标为自定义目录（非默认 `~/.xaanink`）。
+- 指针目标为自定义目录（非默认 `~/.shakeink`）。
 
 修复执行位置：主进程、冷态（单实例锁持有、worker 未启动、未建 session），复用 `desktop/core/brand-names.ts` 与 `desktop/core/root-ownership.ts` 的同步校验原语（lstat/realpath/符号链接拒绝/原子写）。
 
@@ -88,7 +88,7 @@
 
 实现要点：
 
-1. **只清空默认数据根 `~/.xaanink` 的内容**（逐条删除目录内条目，保留目录壳或整体重建均可）；指针目标为自定义目录时，**绝不删除该自定义目录**，仅解除绑定。
+1. **只清空默认数据根 `~/.shakeink` 的内容**（逐条删除目录内条目，保留目录壳或整体重建均可）；指针目标为自定义目录时，**绝不删除该自定义目录**，仅解除绑定。
 2. **外科手术式清除 bootstrap 控制/历史文件**：`data-root.json`、`root-migration.json`、`root-migration-request.json`、`root-relocation-*`、`application-restore-*`。bootstrap 同时是 Electron userData，含浏览器运行文件，不能整目录删除。若只删指针而留历史记录，`hasHistory`（`brand-startup-paths.ts:17`）与 preflight（`root-relocation-preflight.ts:25-29`）会把启动判定为 blocked，因此历史记录必须一并清除。
 3. 重置后 `app.relaunch()` + `app.quit()` 走全新进程（复用 relocation 的成熟模式，`root-relocation-window.ts:67`），新进程：无记录 → 数据根空 → 正常初始化 → `adopt` 写指针 → 工作台 → 引导自动出现。
 4. 数据影响（对话框文案必须如实告知）：收件箱内容、设置与模型配置、草稿恢复日志、头像资产、应用备份包将丢失；作品文件在各自独立目录不受影响，但作品索引丢失，重置后需在应用内重新打开作品目录关联。
@@ -97,7 +97,7 @@
 ## 6. 范围边界
 
 - `BRAND_BOOTSTRAP_CONFLICT`（legacy 玄香印 与 current 玄印 双权威记录）：涉及两个品牌的真实数据归属，重置会误伤 legacy 家族，保持现有错误框 + 人工处理，不在本任务范围。
-- `XAANINK_TEST_ROOT` 隔离测试根：仅测试使用，不改变其行为。
+- `SHAKEINK_TEST_ROOT` 隔离测试根：仅测试使用，不改变其行为。
 - 本任务不恢复已被删除的用户数据，只保证「应用永远可以启动」。
 
 ## 7. 测试与证据约定（沿用）

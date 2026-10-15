@@ -20,7 +20,7 @@ window.mountReviewFixture=({origin=true,defaultModel=true,running=false}={})=>{
  window.reviewFixture={calls,patches,query,configured:()=>configured,closed:()=>closed,switch:()=>useChatStore.setState({conversationId:'another-chat'}),changeDefault:()=>useDesktopStore.setState({bootstrap:{settings:{agent:{reviewModelId:'other-model'}},models:[{id:'other-model',name:'后来选择的模型',enabled:true,kind:'TEXT'}]}}),finish:()=>{record={...record,conversation:{...record.conversation,activeAttemptId:null},turnState:{...record.turnState,attempts:[{...record.turnState.attempts[0],status:'failed'}]}};query.invalidateQueries()},resolve:()=>patches.at(-1).resolve(Response.json({conversation:{reviewModelId:'review-fixture'}})),reject:()=>patches.at(-1).resolve(Response.json({error:'secret-native-diagnostic'},{status:409})),unmount:()=>root.unmount()};
 };` }, bundle: true, format: 'iife', platform: 'browser', write: false, tsconfig: 'tsconfig.json', loader: { '.css': 'empty' } }).then(result => result.outputFiles![0].text)
 let browser: Browser
-test.before(async () => { browser = await chromium.launch({ headless: true, executablePath: process.env.XAANINK_TEST_CHROMIUM }) })
+test.before(async () => { browser = await chromium.launch({ headless: true, executablePath: process.env.SHAKEINK_TEST_CHROMIUM }) })
 test.after(async () => { await browser?.close() })
 async function scenario(options: object, run: (page: Page) => Promise<void>) {
   const page = await browser.newPage(), errors: string[] = []; page.setDefaultTimeout(5000)

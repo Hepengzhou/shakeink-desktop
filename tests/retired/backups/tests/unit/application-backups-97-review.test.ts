@@ -13,7 +13,7 @@ const ast=ts.createSourceFile('main.ts',readFileSync('desktop/main/index.ts','ut
 const declaration=(name:string)=>{const node=ast.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text===name);assert.ok(node);return node.getText(ast)}
 let callback='';function find(node:ts.Node){if(ts.isCallExpression(node)&&node.expression.getText(ast)==='businessHandle'&&node.arguments[0]?.getText(ast)==='"desktop:application-backups"')callback=node.arguments[1].getText(ast);ts.forEachChild(node,find)}find(ast);assert.ok(callback)
 function fixture(){
- const gate=new BusinessGate(),frame={url:'xaanink://app/'},contents={mainFrame:frame},window={webContents:contents},event={sender:contents,senderFrame:frame},reply=Promise.withResolvers<unknown>(),entered=Promise.withResolvers<void>(),calls:unknown[][]=[]
+ const gate=new BusinessGate(),frame={url:'shakeink://app/'},contents={mainFrame:frame},window={webContents:contents},event={sender:contents,senderFrame:frame},reply=Promise.withResolvers<unknown>(),entered=Promise.withResolvers<void>(),calls:unknown[][]=[]
  let handler:(event:unknown,input?:unknown)=>Promise<unknown>=async()=>{throw Error('missing actual IPC')}
  const deps={z,applicationBackupControlResultSchema,businessGate:gate,initialWindow:window,ipcMain:{handle:(_channel:string,fn:typeof handler)=>{handler=fn}},service:{call:async(...args:unknown[])=>{calls.push(args);entered.resolve();return reply.promise}}}
  const api=new Function(...Object.keys(deps),transformSync(`let window=initialWindow;${declaration('trusted')}\n${declaration('businessHandle')}\nbusinessHandle('desktop:application-backups',${callback});return{replace(value){window=value}}`,{loader:'ts'}).code)(...Object.values(deps)) as{replace(value:unknown):void}
@@ -23,7 +23,7 @@ const row=()=>({id:randomUUID(),appId:randomUUID(),createdAt:'2026-10-08T04:00:0
 
 test('ABL97-M01 actual trusted owner/frame is rechecked after worker await before returning any summary',async()=>{
  for(const change of ['window-replaced','window-closed','frame-replaced','foreign-url'] as const){const r=fixture(),flight=r.run();await r.entered
-  if(change==='window-replaced')r.replace({webContents:{mainFrame:{url:'xaanink://app/'}}});if(change==='window-closed')r.replace(null);if(change==='frame-replaced')r.contents.mainFrame={url:'xaanink://app/'};if(change==='foreign-url')r.frame.url='https://foreign.invalid/'
+  if(change==='window-replaced')r.replace({webContents:{mainFrame:{url:'shakeink://app/'}}});if(change==='window-closed')r.replace(null);if(change==='frame-replaced')r.contents.mainFrame={url:'shakeink://app/'};if(change==='foreign-url')r.frame.url='https://foreign.invalid/'
   r.reply.resolve({type:'list',backups:[row()]});await assert.rejects(flight,/不受信/);assert.deepEqual(r.calls,[['application-backup',{type:'list'}]])
  }
 })
@@ -35,7 +35,7 @@ test('ABL97-M02 gate closes admission immediately but waits the actual pending r
 })
 
 test('ABL97-M03 invalid list arguments and foreign initial frames cannot reach storage; bad or write receipts cannot cross the public IPC',async()=>{
- const r=fixture();for(const input of [null,{},new Uint8Array([1]),{type:'list'},'/private/data',{path:'/private/data'},false])await assert.rejects(r.run(input));await assert.rejects(r.run(undefined,{sender:r.contents,senderFrame:{url:'xaanink://app/'}}),/不受信/);assert.equal(r.calls.length,0)
+ const r=fixture();for(const input of [null,{},new Uint8Array([1]),{type:'list'},'/private/data',{path:'/private/data'},false])await assert.rejects(r.run(input));await assert.rejects(r.run(undefined,{sender:r.contents,senderFrame:{url:'shakeink://app/'}}),/不受信/);assert.equal(r.calls.length,0)
  for(const value of [{type:'now',backup:{...row(),retained:[],cleanupPending:0}},{type:'list',backups:[{...row(),ciphertext:'private-value'}]},{type:'list',backups:[{...row(),bytes:2**40}]},{type:'list',backups:[{...row(),createdAt:'not-a-date'}]}]){const f=fixture(),flight=f.run();await f.entered;f.reply.resolve(value);await assert.rejects(flight)}
 })
 

@@ -12,7 +12,7 @@
 
 ## 实际命令与结果
 
-工作目录：`D:\Projects\xaanink-desktop`。使用本地 `typescript.transpileModule` 在内存中加载真实TS模块，执行其组装函数；没有保存中间脚本或渲染文件。一次tsx读取遇到esbuild子进程 `spawn EPERM` 后改用该纯内存读取方式，不把失败命令标为通过。
+工作目录：`D:\Projects\shakeink-desktop`。使用本地 `typescript.transpileModule` 在内存中加载真实TS模块，执行其组装函数；没有保存中间脚本或渲染文件。一次tsx读取遇到esbuild子进程 `spawn EPERM` 后改用该纯内存读取方式，不把失败命令标为通过。
 
 ```powershell
 @'

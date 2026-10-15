@@ -17,7 +17,7 @@ const protection={isEncryptionAvailable:()=>true,encryptString:(value:string)=>B
 type OptionalOperation<T> = T extends OnboardingPayload ? Omit<T,"operationId">&{operationId?:string}:never
 type TestPayload=OptionalOperation<OnboardingPayload>
 async function fixture(options:StoreOptions={},operationLimit=4096){
- const root=await mkdtemp(join(tmpdir(),"xaanink-onboarding-repo-")),path=join(root,"state.json"),published:string[]=[]
+ const root=await mkdtemp(join(tmpdir(),"shakeink-onboarding-repo-")),path=join(root,"state.json"),published:string[]=[]
  let encryptionCalls=0
  const repo=new ModelRepository(path,{...protection,encryptString(value){encryptionCalls++;return protection.encryptString(value)}},{replace(model){published.push(model.id)},remove(){}},options,{operationLimit})
  const sessionId=randomUUID()

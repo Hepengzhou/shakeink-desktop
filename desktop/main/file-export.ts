@@ -41,7 +41,7 @@ function validateContent(request: FileExportRequest) {
   if (["txt", "md", "templates", "recovery"].includes(request.format)) {
     const text = new TextDecoder("utf-8", { fatal: true }).decode(request.bytes)
     if (request.format === "templates") templateDocumentSchema.parse(JSON.parse(text))
-    if (request.format === "recovery") {const envelope=z.object({format:z.enum(["xuanxiang-recovery","xaanink-recovery"]),version:z.literal(1),snapshot:z.unknown()}).strict().parse(JSON.parse(text));validateDraftSnapshot(envelope.snapshot)}
+    if (request.format === "recovery") {const envelope=z.object({format:z.enum(["xuanxiang-recovery","shakeink-recovery"]),version:z.literal(1),snapshot:z.unknown()}).strict().parse(JSON.parse(text));validateDraftSnapshot(envelope.snapshot)}
   } else if (request.format === "pdf") {
     if (new TextDecoder().decode(request.bytes.subarray(0, 5)) !== "%PDF-") throw Error("invalid PDF")
   } else if (request.bytes.length < 4 || request.bytes[0] !== 0x50 || request.bytes[1] !== 0x4b || request.bytes[2] !== 3 || request.bytes[3] !== 4) throw Error("invalid DOCX")

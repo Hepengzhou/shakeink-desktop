@@ -12,7 +12,7 @@ assert(/^[a-z0-9-]+$/.test(label))
 const evidence = resolve('docs/evidence/sidebar-surface-fix', label)
 await mkdir(resolve('docs/evidence/sidebar-surface-fix'), { recursive: true })
 await mkdir(evidence) // Each attempt is immutable, including failures.
-const fixtureDirectory = await mkdtemp(join(tmpdir(), 'xaanink-sidebar-')), root = join(fixtureDirectory, 'data')
+const fixtureDirectory = await mkdtemp(join(tmpdir(), 'shakeink-sidebar-')), root = join(fixtureDirectory, 'data')
 const hash = value => createHash('sha256').update(value).digest('hex')
 const safe = value => String(value).replaceAll(fixtureDirectory, '<isolated-fixture>').replace(/\bsk-[A-Za-z0-9_-]{12,}\b/g, '<key-shaped-text>')
 const sources = ['scripts/verify-sidebar-surfaces.mjs', 'scripts/seed-sidebar-navigation.ts', 'scripts/sidebar-native-hit-test.ps1', 'src/app/globals.css', 'src/app/desktop.css', 'src/components/layout/SidebarHoverCard.tsx', 'src/components/layout/SidebarTree.tsx', 'src/components/layout/DashboardShell.tsx', 'src/components/layout/useSidebarDrawer.ts', 'src/components/layout/sidebar-navigation-state.tsx', 'tests/browser/sidebar-surfaces.test.ts', 'tests/helpers/sidebar-drawer-fixture.ts', 'package-lock.json']
@@ -108,7 +108,7 @@ try {
   report.executableHash = hash(await readFile('node_modules/electron/dist/electron.exe'))
   await seed(); const fixture = JSON.parse(await readFile(join(fixtureDirectory, 'fixture.json'), 'utf8')); assert.equal(fixture.synthetic, true)
   report.fixture = { synthetic: true, workDatabases: fixture.works.length, models: 0 }
-  const env = { ...process.env, XAANINK_TEST_ROOT: root }; delete env.ELECTRON_RUN_AS_NODE
+  const env = { ...process.env, SHAKEINK_TEST_ROOT: root }; delete env.ELECTRON_RUN_AS_NODE
   app = await _electron.launch({ args: [resolve('.')], env, timeout: 90000 })
   report.ownedProcessId = app.process().pid
   page = await app.firstWindow({ timeout: 90000 }); page.setDefaultTimeout(15000)
@@ -120,7 +120,7 @@ try {
   await app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows()[0].setBounds({ width: 1800, height: 1000 }))
   await page.evaluate(() => document.fonts.ready)
   const boot = await page.evaluate(() => window.desktop.bootstrap()); assert.equal(boot.dataRoot, root); assert.equal(boot.models.length, 0)
-  assert.equal(page.url(), 'xaanink://app/'); assert.equal(await page.evaluate(() => navigator.onLine), false)
+  assert.equal(page.url(), 'shakeink://app/'); assert.equal(await page.evaluate(() => navigator.onLine), false)
   report.runtime = await app.evaluate(({ BrowserWindow }) => ({ platform: process.platform, electron: process.versions.electron, chromium: process.versions.chrome, bounds: BrowserWindow.getAllWindows()[0].getBounds(), zoom: BrowserWindow.getAllWindows()[0].webContents.getZoomFactor(), listeningServers: process._getActiveHandles().filter(h => h.constructor.name === 'Server' && h.listening).length }))
   assert.equal(report.runtime.listeningServers, 0); passed('real-offline-IPC-workspace')
   native = await startNative()

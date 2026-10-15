@@ -21,10 +21,10 @@ await hashCss(resolve('out/_next'))
 const palettes={paper:{background:'rgb(252, 248, 238)',info:'rgb(53, 108, 175)',success:'rgb(57, 118, 83)'},ink:{background:'rgb(33, 28, 25)',info:'rgb(138, 182, 244)',success:'rgb(137, 197, 157)'}}
 const startedAt=new Date().toISOString()
 for(const initialTheme of['paper','ink']){
-  const directory=await mkdtemp(join(tmpdir(),'xaanink-toast-style-')),root=join(directory,'data')
+  const directory=await mkdtemp(join(tmpdir(),'shakeink-toast-style-')),root=join(directory,'data')
   execFileSync(process.execPath,['--import','tsx','scripts/seed-toast-style-fixture.ts',directory,initialTheme],{cwd:resolve('.'),stdio:'pipe'})
   console.log(`Prepared isolated ${initialTheme} prerequisites.`)
-  const env={...process.env,XAANINK_TEST_ROOT:root};delete env.ELECTRON_RUN_AS_NODE
+  const env={...process.env,SHAKEINK_TEST_ROOT:root};delete env.ELECTRON_RUN_AS_NODE
   let app,page,clipboardCaptured=false,theme=initialTheme
   const toastSelector=type=>`[data-sonner-toast][data-type="${type}"]:not([data-removed="true"])`
   async function stable(locator){await locator.waitFor();await locator.evaluate(async el=>{await new Promise(requestAnimationFrame);await Promise.all(el.getAnimations().filter(a=>a.effect?.getTiming().iterations!==Infinity).map(a=>a.finished.catch(()=>{})))})}

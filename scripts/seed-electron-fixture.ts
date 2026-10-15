@@ -16,8 +16,8 @@ try {
   await works.initialize()
   const state = new VersionedStore(join(root, "state.json"), defaultState, stateSchema.parse)
   const snapshot = await state.read()
-  snapshot.value.settings.appearance.uiFont = "XaanInk Missing Font Fixture"
-  snapshot.value.settings.appearance.bodyFont = "XaanInk Missing Font Fixture"
+  snapshot.value.settings.appearance.uiFont = "ShakeInk Missing Font Fixture"
+  snapshot.value.settings.appearance.bodyFont = "ShakeInk Missing Font Fixture"
   await state.update(snapshot.revision, snapshot.value)
   const work = await works.create({ path, device: String(info.dev), inode: String(info.ino) }, { title: "桌面验收夹具", requestId: "native-appearance-fixture" })
   await works.run(work.id, async () => {

@@ -21,7 +21,7 @@
 | CH-05 | 实际本地会话、正常窗口 | 原侧栏点击后真实消息可见，空态消失；长文正常上限280px，继续内部滚动；短文和清空收回、最小高度52保留 |
 | CH-06 | 同一会话小窗口 | 实际 innerHeight ≤650，computed maxHeight/实际高度仍280px，单一 composer；工具栏在视口中并可打开模式菜单 |
 | CH-07 | 短文键盘输入 | Shift+Enter 实际插入第二行；未触发发送/模型门控；缩短/清空后布局收回 |
-| CH-08 | 运行环境守卫 | xaanink://app/、win32、无配置模型，renderer errors=0，renderer HTTP=0，main listening servers=0；临时目录身份确认后清理；源码/构建 hash 绑定 |
+| CH-08 | 运行环境守卫 | shakeink://app/、win32、无配置模型，renderer errors=0，renderer HTTP=0，main listening servers=0；临时目录身份确认后清理；源码/构建 hash 绑定 |
 
 TDD：先以旧源码执行 UI/desktop 构建，运行同一脚本 `red`，CH-01 预期因原140px与280px要求不同而失败（记录实际尺寸和截图；基础设施失败不算有效红灯）。再只改产品三处上限及注释，构建后运行同一脚本 `green`，全部专项场景应通过。脚本标签只改变证据目录，不改变断言。
 

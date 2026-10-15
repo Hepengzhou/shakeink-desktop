@@ -19,7 +19,7 @@ const built = build({ bundle: true, platform: "node", target: "node24", format: 
 after(async () => { await built; await rm(output, { recursive: true, force: true }) })
 const noopGuards = { assertLock() {} }
 async function fixture() {
-  const base = await realpath(await mkdtemp(join(tmpdir(), "xaanink-startup-recovery-it-")))
+  const base = await realpath(await mkdtemp(join(tmpdir(), "shakeink-startup-recovery-it-")))
   const bootstrap = join(base, "bootstrap"), root = join(base, "默认作者目录")
   await mkdir(bootstrap)
   return { base, bootstrap, root, paths: () => ({ bootstrap, recoveryRoot: root }), async close() { await rm(base, { recursive: true, force: true }) } }
@@ -52,7 +52,7 @@ async function request(rpc: RpcPeer, path: string) {
   return { status: reply.status, data: JSON.parse(Buffer.concat(chunks).toString("utf8")) }
 }
 async function exists(path: string) { try { await lstat(path); return true } catch (error) { if ((error as NodeJS.ErrnoException).code === "ENOENT") return false; throw error } }
-async function readMarker(root: string) { return JSON.parse(await readFile(join(root, "xaanink-app.json"), "utf8")) }
+async function readMarker(root: string) { return JSON.parse(await readFile(join(root, "shakeink-app.json"), "utf8")) }
 async function readPointer(bootstrap: string) { return JSON.parse(await readFile(join(bootstrap, "data-root.json"), "utf8")) }
 /** A genuine initialized root produced by the real worker, then shut down. */
 async function initialized(f: Awaited<ReturnType<typeof fixture>>) {
@@ -103,7 +103,7 @@ test("SR-I-03 a missing marker with an intact pointer is rebuilt with the pointe
   try {
     const original = await initialized(f)
     const pointer = await readPointer(f.bootstrap)
-    await rm(join(f.root, "xaanink-app.json"))
+    await rm(join(f.root, "shakeink-app.json"))
     assert.deepEqual(classifyStartupRecovery(f.paths(), "current"), { kind: "repair", repair: "marker" })
     await executeStartupRepair(f.paths(), "marker", "current", noopGuards)
     assert.equal((await readMarker(f.root)).id, pointer.rootId)
@@ -121,7 +121,7 @@ test("SR-I-04 a pointerless root without marker or backups gets a fresh id that 
   const f = await fixture()
   try {
     await initialized(f)
-    await rm(join(f.bootstrap, "data-root.json")); await rm(join(f.root, "xaanink-app.json"))
+    await rm(join(f.bootstrap, "data-root.json")); await rm(join(f.root, "shakeink-app.json"))
     assert.deepEqual(classifyStartupRecovery(f.paths(), "current"), { kind: "repair", repair: "marker-new-id" })
     await executeStartupRepair(f.paths(), "marker-new-id", "current", noopGuards)
     const marker = await readMarker(f.root)
@@ -140,7 +140,7 @@ test("SR-I-05 an interrupted initialization resumes without any repair write and
   try {
     const id = randomUUID()
     await mkdir(f.root)
-    await writeFile(join(f.root, "xaanink-app.json"), JSON.stringify({ schemaVersion: 1, app: "XaanInk", id, phase: "initializing", inboxReady: false }))
+    await writeFile(join(f.root, "shakeink-app.json"), JSON.stringify({ schemaVersion: 1, app: "ShakeInk", id, phase: "initializing", inboxReady: false }))
     const before = await readdir(f.root)
     assert.deepEqual(classifyStartupRecovery(f.paths(), "current"), { kind: "repair", repair: "resume-init" })
     await executeStartupRepair(f.paths(), "resume-init", "current", noopGuards)

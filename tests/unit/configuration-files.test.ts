@@ -53,7 +53,7 @@ test("selected malformed, oversized, symlink and non-file imports cannot mutate 
 test("configuration export is an atomic portable snapshot and does not expose keys or paths",()=>fixture(async f=>{
  assert.equal(await f.files.export(f.owner),true)
  const text=await readFile(f.destination,"utf8"),parsed=JSON.parse(text)
- assert.equal(parsed.format,"xaanink-settings");assert.equal(parsed.settings.appearance.theme,"paper")
+ assert.equal(parsed.format,"shakeink-settings");assert.equal(parsed.settings.appearance.theme,"paper")
  for(const word of ["encryptedKey","keyMask","apiKey","defaultParent","dataRoot","avatarAssetId",f.root])assert.equal(text.includes(word),false,word)
 }))
 test("cancelled native picker, changed window and symlink export preserve the selected destination",()=>fixture(async f=>{

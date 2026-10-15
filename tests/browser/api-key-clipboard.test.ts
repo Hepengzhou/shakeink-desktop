@@ -30,7 +30,7 @@ globalThis.gate=kind=>{let resolve;const promise=new Promise(yes=>resolve=yes);c
 globalThis.dispose=()=>flushSync(()=>root.unmount());
 `},bundle:true,write:false,platform:"browser",format:"iife",tsconfig:"tsconfig.json",plugins:[{name:"memory-errors",setup(build){build.onResolve({filter:/^sonner$/},args=>({path:args.path,namespace:"fixture"}));build.onLoad({filter:/.*/,namespace:"fixture"},()=>({contents:"export const toast={info:x=>globalThis.errors.push(x),error:x=>globalThis.errors.push(x)}"}))}}]})
 let browser:Browser
-test.before(async()=>{const executablePath=process.env.XAANINK_TEST_CHROMIUM;browser=await chromium.launch({headless:true,...(executablePath?{executablePath}:{})})})
+test.before(async()=>{const executablePath=process.env.SHAKEINK_TEST_CHROMIUM;browser=await chromium.launch({headless:true,...(executablePath?{executablePath}:{})})})
 test.after(async()=>{await browser?.close()})
 async function scenario(run:(page:Page)=>Promise<void>){
  const page=await browser.newPage();await page.route("**/*",route=>route.abort())

@@ -11,7 +11,7 @@ export const wizardInputSchema = z.object({ template: wizardTemplateSchema, enab
 const version = z.number().int().min(1).max(2147483647)
 export const portablePromptSchema = promptInputSchema.extend({ version, source: templateSourceSchema }).strict()
 export const portableWizardSchema = wizardInputSchema.extend({ version, source: templateSourceSchema }).strict()
-export const templateDocumentSchema = z.object({ format: z.enum(["xuanxiang-local-templates", "xaanink-local-templates"]), schemaVersion: z.literal(1), prompts: z.array(portablePromptSchema).max(1000), wizardTemplates: z.array(portableWizardSchema).max(2000) }).strict()
+export const templateDocumentSchema = z.object({ format: z.enum(["xuanxiang-local-templates", "shakeink-local-templates"]), schemaVersion: z.literal(1), prompts: z.array(portablePromptSchema).max(1000), wizardTemplates: z.array(portableWizardSchema).max(2000) }).strict()
 export type TemplateDocument = z.infer<typeof templateDocumentSchema>
 export interface LocalPromptItem { id: string; key: string; name: string; content: string; variables: string[]; version: number; enabled: boolean; updatedAt: string; source: TemplateSource }
 export interface LocalWizardItem { template: WizardTemplate; version: number; enabled: boolean; source: TemplateSource }

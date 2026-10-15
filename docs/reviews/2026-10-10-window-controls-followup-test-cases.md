@@ -20,7 +20,7 @@
 
 8. WCO-N01：使用全新隔离合成夹具，真实 Web 工作台 + Electron 44.6.0。原生截图分别证明 paper 正常、最小化与最大化 hover 清晰，close 正常只有 X、hover 保留红底；非活动窗口符号保持可读，并检查原生应用菜单显示及正常项仍可用的主题副作用。
 9. WCO-N02：设置 UI 切换 paper/ink/system；真实内容隐藏/展开与空/有 Tab、宽窗及最小 760px、缩放 .75/1/2 时恢复入口与 menu/caption 无交集且可点。窄窗真实 y 区按实际导航变化检查，不只比 x。
-10. WCO-N03：实际原生最大化/复原、最小化/恢复、正常关闭和隔离重启。新版解包应用在本地 xaanink 协议、renderer CDP 离线条件下启动，范围限定窗控。本机 OS 主题不修改；若控制 Electron themeSource 驱动对照，明确标为受控源切换，不冒充 OS 设置改变。
+10. WCO-N03：实际原生最大化/复原、最小化/恢复、正常关闭和隔离重启。新版解包应用在本地 shakeink 协议、renderer CDP 离线条件下启动，范围限定窗控。本机 OS 主题不修改；若控制 Electron themeSource 驱动对照，明确标为受控源切换，不冒充 OS 设置改变。
 11. TypeScript、生产构建、Windows 打包与资源/依赖探针；核心全部活动 unit/integration 及 browser 全量执行，采用明确并发和每文件超时避免无限挂起。失败、取消、skip 原样记录，不能将已知失败过滤或称为通过。
 
 原生输入只用 computer-use。物理 Escape 若再次中止则停止本轮原生操作并据实保留未执行；不能从单张 screenshot 或受控事件推出所有窗口状态通过。W03/W04 正式状态仍 planned，仅追加有限开发证据。

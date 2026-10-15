@@ -7,7 +7,7 @@ import {assertDirectory,directoryIdentity,hashRegular,sameIdentity,syncDirectory
 import type {RootIdentity} from './data-root'
 import {workManifestSchema,workspaceImagePattern,type WorkManifest} from '../shared/workspace'
 
-const magic=Buffer.from('XAANINK_BACKUP\x01\n'),MAX_HEADER=1024*1024,MAX_PACKAGE=512*1024*1024
+const magic=Buffer.from('SHAKEINK_BACKUP\x01\n'),MAX_HEADER=1024*1024,MAX_PACKAGE=512*1024*1024
 const sha=(bytes:Uint8Array)=>createHash('sha256').update(bytes).digest('hex')
 const part=z.object({bytes:z.number().int().positive().max(MAX_PACKAGE),sha256:z.string().regex(/^[a-f0-9]{64}$/)}).strict()
 const engineSchema=z.object({pglite:z.string().max(40),postgres:z.string().max(80),migrations:z.array(z.object({id:z.string().min(1).max(200),checksum:z.string().regex(/^[a-f0-9]{64}$/)}).strict()).max(1000)}).strict()

@@ -10,7 +10,7 @@ import { FileExports } from '../../desktop/main/file-export'
 const input = () => ({ id: randomUUID(), format: 'md' as const, filename: 'selected.md', bytes: new TextEncoder().encode('隔离目录同步测试') })
 const failure = (code: string, syscall?: string) => Object.assign(Error('private injected IO'), { code, ...(syscall ? { syscall } : {}) })
 async function fixture(run: (root: string) => Promise<void>) {
-  const root = await fs.mkdtemp(join(tmpdir(), 'xaanink-directory-sync-'))
+  const root = await fs.mkdtemp(join(tmpdir(), 'shakeink-directory-sync-'))
   try { await run(await fs.realpath(root)) } finally { await fs.rm(root, { recursive: true, force: true }) }
 }
 

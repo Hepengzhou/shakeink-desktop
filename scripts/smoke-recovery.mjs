@@ -6,7 +6,7 @@ import {mkdtemp,mkdir,rm,writeFile,readFile} from 'node:fs/promises'
 import {tmpdir} from 'node:os'
 import {join,resolve} from 'node:path'
 import {createHash} from 'node:crypto'
-const temporary=await mkdtemp(join(tmpdir(),'xaanink-recovery-')),evidence='docs/evidence/implementation-08',root=join(temporary,'data')
+const temporary=await mkdtemp(join(tmpdir(),'shakeink-recovery-')),evidence='docs/evidence/implementation-08',root=join(temporary,'data')
 const checks=[],errors=[],startedAt=new Date().toISOString()
 let app
 await mkdir(evidence,{recursive:true})
@@ -23,7 +23,7 @@ const closeWindow=async()=>{
  await expect.poll(()=>app.evaluate(({BrowserWindow})=>BrowserWindow.getAllWindows().length),{timeout:30000}).toBe(0)
 }
 const reopen=async()=>{const opened=app.waitForEvent('window',{timeout:45000});await app.evaluate(({app})=>app.emit('activate'));return ready(await opened)}
-const launch=()=>electron.launch({args:[resolve('.')],env:{...process.env,XAANINK_TEST_ROOT:root},timeout:45000})
+const launch=()=>electron.launch({args:[resolve('.')],env:{...process.env,SHAKEINK_TEST_ROOT:root},timeout:45000})
 const settings=async page=>{await page.getByRole('button',{name:'账号菜单'}).click();await page.getByRole('menuitem',{name:'设置',exact:true}).click()}
 try{
  const seed=JSON.parse(execFileSync(process.execPath,['--import','tsx','scripts/seed-electron-fixture.ts',temporary],{encoding:'utf8'}).trim().split('\n').at(-1))

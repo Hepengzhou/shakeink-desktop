@@ -28,7 +28,7 @@ const bundle=build({stdin:{loader:'tsx',resolveDir:process.cwd(),contents:`
  api.onLoad({filter:/.*/,namespace:'removed-backup-ui'},args=>({loader:'tsx',resolveDir:process.cwd(),contents:children.get(args.path)!.map(name=>`export function ${name}(){return null}`).join(';')}))
  }}]}).then(result=>result.outputFiles![0].text)
 let browser:Browser
-test.before(async()=>{browser=await chromium.launch({headless:true,...(process.env.XAANINK_TEST_CHROMIUM?{executablePath:process.env.XAANINK_TEST_CHROMIUM}:{})})})
+test.before(async()=>{browser=await chromium.launch({headless:true,...(process.env.SHAKEINK_TEST_CHROMIUM?{executablePath:process.env.SHAKEINK_TEST_CHROMIUM}:{})})})
 test.after(async()=>{await browser?.close()})
 async function scenario(mode:'settings'|'drafts'|'long',run:(page:Page)=>Promise<void>){
  const page=await browser.newPage({viewport:{width:1100,height:900}}),errors:string[]=[];page.setDefaultTimeout(10000);page.on('pageerror',error=>errors.push(error.message));await page.route('**/*',route=>route.abort())

@@ -1,5 +1,5 @@
 // 启动配置目录丢失/损坏修复 · 真实系统验证（SR-R-01~05，docs/reviews/2026-10-11-startup-recovery-test-cases.md §8）
-// 真实启动编译后的 Electron 应用（dist/ + out/），全部数据写入 XAANINK_TEST_ROOT 指向的
+// 真实启动编译后的 Electron 应用（dist/ + out/），全部数据写入 SHAKEINK_TEST_ROOT 指向的
 // mkdtemp 隔离临时根，不访问网络。模式参照 scripts/smoke-root-relocation.mjs：
 // playwright _electron.launch + --remote-debugging-port，重置后应用真实 app.relaunch，
 // 用 chromium.connectOverCDP 重连新进程。平台中立：路径一律 node:path，无 darwin 断言。
@@ -14,9 +14,9 @@ import {tmpdir} from 'node:os'
 import {join,resolve} from 'node:path'
 
 const require=createRequire(import.meta.url)
-const temporary=await realpath(await mkdtemp(join(tmpdir(),'xaanink-startup-recovery-')))
+const temporary=await realpath(await mkdtemp(join(tmpdir(),'shakeink-startup-recovery-')))
 const root=join(temporary,'data'),bootstrap=`${root}-bootstrap`
-const markerPath=join(root,'xaanink-app.json'),catalogPath=join(root,'catalog.json'),pointerPath=join(bootstrap,'data-root.json')
+const markerPath=join(root,'shakeink-app.json'),catalogPath=join(root,'catalog.json'),pointerPath=join(bootstrap,'data-root.json')
 const evidence=resolve('docs/evidence/startup-recovery')
 const startedAt=new Date().toISOString(),checks=[],errors=[],pids=new Set(),logs=[]
 const server=createServer();await new Promise(r=>server.listen(0,'127.0.0.1',r))
@@ -24,12 +24,12 @@ const port=server.address().port;await new Promise(r=>server.close(r))
 let app,page,browser,passed=false
 const alive=pid=>{try{process.kill(pid,0);return true}catch{return false}}
 // 全新初始化后根目录允许出现的全部名称（drafts.json/state.json 视退出时落盘时机可有可无）。
-const freshRootEntries=new Set(['xaanink-app.json','xuanxiang-app.json','catalog.json','state.json','drafts.json','backup-plan.json','restore-draft-barrier.json','application-restore-drafts.json','inbox','session','assets','backups'])
+const freshRootEntries=new Set(['shakeink-app.json','xuanxiang-app.json','catalog.json','state.json','drafts.json','backup-plan.json','restore-draft-barrier.json','application-restore-drafts.json','inbox','session','assets','backups'])
 const attach=pid=>{pids.add(pid);return pid}
 const pointer=async()=>JSON.parse(await readFile(pointerPath,'utf8'))
 const marker=async()=>JSON.parse(await readFile(markerPath,'utf8'))
 async function launch(){
- app=await electron.launch({executablePath:require('electron'),args:[resolve('.'),`--remote-debugging-port=${port}`],env:{...process.env,XAANINK_TEST_ROOT:root},timeout:60000})
+ app=await electron.launch({executablePath:require('electron'),args:[resolve('.'),`--remote-debugging-port=${port}`],env:{...process.env,SHAKEINK_TEST_ROOT:root},timeout:60000})
  attach(app.process().pid);app.process().stderr.on('data',data=>logs.push(data.toString()))
  page=await app.firstWindow({timeout:60000});page.on('pageerror',error=>errors.push(error.message))
  return app.process().pid
@@ -39,8 +39,8 @@ async function connect(){
  while(Date.now()<until){try{
   browser=await chromium.connectOverCDP(`http://127.0.0.1:${port}`,{timeout:2000})
   const context=browser.contexts()[0]
-  await expect.poll(()=>context.pages().some(p=>p.url()==='xaanink://app/'),{timeout:5000}).toBe(true)
-  page=context.pages().find(p=>p.url()==='xaanink://app/');page.on('pageerror',error=>errors.push(error.message))
+  await expect.poll(()=>context.pages().some(p=>p.url()==='shakeink://app/'),{timeout:5000}).toBe(true)
+  page=context.pages().find(p=>p.url()==='shakeink://app/');page.on('pageerror',error=>errors.push(error.message))
   const cdp=await browser.newBrowserCDPSession(),info=await cdp.send('SystemInfo.getProcessInfo'),native=info.processInfo.find(p=>p.type==='browser')
   assert(native);attach(native.id);await cdp.detach();return native.id
  }catch(error){last=error;await new Promise(r=>setTimeout(r,250))}}
@@ -57,14 +57,14 @@ async function quitWorkbench(pid){
 }
 async function workbenchWithOnboarding(){
  await page.getByRole('button',{name:'账号菜单',includeHidden:true}).waitFor({timeout:60000})
- assert.equal(page.url(),'xaanink://app/')
+ assert.equal(page.url(),'shakeink://app/')
  assert.equal(await page.getByRole('heading',{name:'无法修复数据目录',exact:true}).count(),0)
  await expect(page.getByRole('dialog',{name:'选择主题',exact:true})).toBeVisible({timeout:30000})
 }
 async function freshRootState(){
  const pointerValue=await pointer(),markerValue=await marker(),catalog=JSON.parse(await readFile(catalogPath,'utf8'))
  assert.equal(pointerValue.root.path,root);assert.equal(markerValue.id,pointerValue.rootId)
- assert.equal(markerValue.phase,'ready');assert.equal(markerValue.inboxReady,true);assert.equal(markerValue.app,'XaanInk')
+ assert.equal(markerValue.phase,'ready');assert.equal(markerValue.inboxReady,true);assert.equal(markerValue.app,'ShakeInk')
  assert.equal(catalog.schemaVersion,1);assert.ok(Array.isArray(catalog.value)&&catalog.value.length===0)
  return {pointerValue,markerValue}
 }
@@ -134,7 +134,7 @@ try{
  assert.ok(stateText===null||!JSON.parse(stateText)?.value?.onboarding)
  const resetEntries=(await readdir(root)).sort()
  assert.ok(resetEntries.every(name=>freshRootEntries.has(name)),`reset root contains non-fresh entries: ${resetEntries.join(',')}`)
- assert.ok(resetEntries.includes('xaanink-app.json')&&resetEntries.includes('catalog.json')&&resetEntries.includes('inbox'))
+ assert.ok(resetEntries.includes('shakeink-app.json')&&resetEntries.includes('catalog.json')&&resetEntries.includes('inbox'))
  const bootstrapEntries=await readdir(bootstrap)
  const controlLike=name=>name==='root-migration.json'||name==='root-migration-request.json'||name.startsWith('root-relocation-')||/^\.?application-recovery-/.test(name)||/^\.?application-restore-/.test(name)||/^\.?desktop-recovery-layout-/.test(name)||name.startsWith('data-root.corrupt-')
  assert.ok(!bootstrapEntries.some(controlLike))
@@ -148,7 +148,7 @@ try{
  await quitWorkbench(app.process().pid)
  checks.push('SR-R-04: a second cold startup after the reset enters the workbench normally with the same rootId and resumes the persisted (incomplete) onboarding state without any recovery dialog')
  assert.deepEqual(errors,[])
- const report={scope:'development real Electron startup-recovery verification: isolated roots via XAANINK_TEST_ROOT, real process exits and one real app.relaunch reconnected over Chromium DevTools Protocol; not packaged installation, not formal acceptance',startedAt,completedAt:new Date().toISOString(),platform:process.platform,arch:process.arch,node:process.version,checks,errors,passed:true}
+ const report={scope:'development real Electron startup-recovery verification: isolated roots via SHAKEINK_TEST_ROOT, real process exits and one real app.relaunch reconnected over Chromium DevTools Protocol; not packaged installation, not formal acceptance',startedAt,completedAt:new Date().toISOString(),platform:process.platform,arch:process.arch,node:process.version,checks,errors,passed:true}
  const redacted=JSON.stringify(report).split(JSON.stringify(temporary).slice(1,-1)).join('<isolated-fixture>')
  await writeFile(join(evidence,'startup-recovery.json'),redacted+'\n')
  passed=true;console.log('Startup recovery smoke passed. Evidence:',join(evidence,'startup-recovery.json'))

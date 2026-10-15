@@ -113,7 +113,7 @@ globalThis.mountAppearance=({kind,planningKind,status='active'})=>{
 type Theme = "paper" | "ink"
 let browser: Browser
 test.before(async () => {
-  browser = await chromium.launch({ headless: true, ...(process.env.XAANINK_TEST_CHROMIUM ? { executablePath: process.env.XAANINK_TEST_CHROMIUM } : {}) })
+  browser = await chromium.launch({ headless: true, ...(process.env.SHAKEINK_TEST_CHROMIUM ? { executablePath: process.env.SHAKEINK_TEST_CHROMIUM } : {}) })
 })
 test.after(async () => { await browser?.close() })
 

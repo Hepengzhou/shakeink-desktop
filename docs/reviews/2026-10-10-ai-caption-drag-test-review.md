@@ -9,7 +9,7 @@
 在产品 `desktop.css` / `useContentTabStrip.ts` 尚无 diff 时，实际执行：
 
 ```powershell
-$env:XAANINK_TEST_CHROMIUM='C:\Program Files\Google\Chrome\Application\chrome.exe'
+$env:SHAKEINK_TEST_CHROMIUM='C:\Program Files\Google\Chrome\Application\chrome.exe'
 node --import tsx --test --test-concurrency=1 tests/browser/ai-caption-drag.test.ts
 ```
 

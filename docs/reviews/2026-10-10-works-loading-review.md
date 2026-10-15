@@ -85,7 +85,7 @@ Code Review 结论：**批准，无阻塞性必须修改项**。没有发现放�
 只读核对 `2026-10-10-works-loading-verification.md`、`docs/evidence/works-loading/target-03/windows-electron.json`、验证驱动和两份台账的 `worksLoadingFix`，并实际查看混合列表、全部不可用、恢复后三张截图。
 
 - 汇总文档记录新增真实数据库 2、新浏览器 11、既有 transport/handoff 23、既有 Tabs/pending 界面 32，合计 **68 项专项用例通过**，并据实保留没有执行全量/完整 Chat 发送/供应商调用的边界。本审核核对主代理执行结果与汇总，不重跑相同测试。此前建议的 partial 后 global refetch 失败已补进真实浏览器用例：确认故障标题和修复入口消失、显示统一查询错误，不输出原始异常。
-- target-03 为 `passed`，12 条检查（包括 3 张截图），`errors: []`，Windows Electron 44.6.0。驱动确实设置 offline、assert 零模型与自建隔离 root，走正式 `xaanink://app/` 和本地 API；健康作品仍可选择，全故障显示两张不可用卡且没有空态，目录返回后可重试。
+- target-03 为 `passed`，12 条检查（包括 3 张截图），`errors: []`，Windows Electron 44.6.0。驱动确实设置 offline、assert 零模型与自建隔离 root，走正式 `shakeink://app/` 和本地 API；健康作品仍可选择，全故障显示两张不可用卡且没有空态，目录返回后可重试。
 - 验证驱动通过真实 `repairWorkLease(start/workId)` 调用主进程交接，只对合成 fixture 的确认/结果弹窗响应和 relaunch 请求计数做控制；随后 fresh Electron launch 再查两作品和原章节 id/content。它检查关闭事件、锁消失、审计 recovered、catalog/manifest 原字节保持，未绕过实际恢复核心和文件 IO。报告与汇总正确声明这不能等同人工 OS 点击、自然原生 relaunch 或真实用户作品恢复。
 - 审核者独立执行只读 SHA256 核验：报告绑定的 **8 个生产源文件、181 个构建文件、3 张截图**全部与当前工作区一致，结果 **mismatches=[]**。此命令没有读取用户目录、正文、Key 或锁 owner。
 - 两份台账均为 `scoped-verified-awaiting-user-lock-confirmation`，68/68、nativeChecks=12，真实用户恢复为 `pending-native-confirmation`，完整应用验收保持 `fullAcceptancePassed:false`。范围没有扩张成全应用通过，也没有提前写用户作品解锁成功。

@@ -10,7 +10,7 @@ import type {CloseReply} from "../../desktop/shared/close"
 const syntax=ts.createSourceFile("main.ts",readFileSync("desktop/main/index.ts","utf8"),ts.ScriptTarget.Latest,true)
 const functions=["trusted","registerIpc","flushDraftForClose"].map(name=>syntax.statements.find(node=>ts.isFunctionDeclaration(node)&&node.name?.text===name)?.getText(syntax)??`function ${name}(){throw Error("unimplemented ${name}")}`).join("\n")
 function rig(){
- const frame={url:"xaanink://app/"},contents={id:12,mainFrame:frame},event={sender:contents,senderFrame:frame},handlers=new Map<string,(...args:unknown[])=>Promise<unknown>>()
+ const frame={url:"shakeink://app/"},contents={id:12,mainFrame:frame},event={sender:contents,senderFrame:frame},handlers=new Map<string,(...args:unknown[])=>Promise<unknown>>()
  const session={owner:12,id:randomUUID(),ready:false},calls:string[]=[],state={session:session as typeof session|null,closing:false,reply:{status:"unmodified"} as CloseReply},bootstrap=Promise.withResolvers<object>(),bootstrapReading=Promise.withResolvers<void>()
  const runtime=mainFunction("ipcMain","window","z","harnessState","draftJournal","closeChannel","repository","app","nativeTheme","restoreDraftBarrier",transformSync(functions.replace(/\bdraftSession\b/g,"harnessState.session").replace(/\bclosingFlow\b/g,"harnessState.closing"),{loader:"ts"}).code+"\nconst dataRoot='/controlled';registerIpc();return {flush:flushDraftForClose}")(
   {handle:(id:string,handler:(...args:unknown[])=>Promise<unknown>)=>handlers.set(id,handler),on(){}},{webContents:contents},z,state,

@@ -33,7 +33,7 @@
 
 ## 生命周期与实际依赖边界
 
-脚本从冻结App的真实可执行文件启动，不传测试根、不改HOME、不注入测试preload。启动后读实际 `app.isPackaged`、0.1.0版本、App路径、默认userData和窗口；等待真实账户菜单，核页面为 `xaanink://app/`。只读bootstrap输出根、主题和模型数量，不输出模型Key。
+脚本从冻结App的真实可执行文件启动，不传测试根、不改HOME、不注入测试preload。启动后读实际 `app.isPackaged`、0.1.0版本、App路径、默认userData和窗口；等待真实账户菜单，核页面为 `shakeink://app/`。只读bootstrap输出根、主题和模型数量，不输出模型Key。
 
 已核安装的 `node_modules/playwright-core/lib/coreBundle.js` 中Electron launch实现：传自定义 `executablePath` 时直接启动该可执行文件；只有未传时才加入 `-r server/electron/loader.js`。Playwright本身仍加入Node/Chromium调试参数，因此运行时应区分harness调试通道与产品HTTP/DB监听，不能宣称无任何调试监听。包字节未改与“没有调试参数”是两个不同事实。
 

@@ -56,7 +56,7 @@ test('WB74-03 caller mutation after create cannot alter the queued sealed packag
 test('WB74-04 separately forged valid checksums do not permit wrong work, file ID or duplicate metadata',async()=>{
  const f=await fixture()
  try{
-  const original=await f.store.create(f.snapshot,2),file=await readFile(f.path(original.id)),magic=Buffer.from('XAANINK_BACKUP\x01\n'),start=magic.length+4,size=file.readUInt32BE(magic.length)
+  const original=await f.store.create(f.snapshot,2),file=await readFile(f.path(original.id)),magic=Buffer.from('SHAKEINK_BACKUP\x01\n'),start=magic.length+4,size=file.readUInt32BE(magic.length)
   const header=JSON.parse(file.subarray(start,start+size).toString()),payload=file.subarray(start+size,-32)
   for(const patch of [(m:any)=>{m.work.id=randomUUID()},(m:any)=>{m.id=randomUUID()},(m:any)=>{m.engine.migrations.push({...m.engine.migrations[0]})}]){
    const metadata=structuredClone(header);patch(metadata);const json=Buffer.from(JSON.stringify(metadata)),length=Buffer.alloc(4);length.writeUInt32BE(json.length)

@@ -5,7 +5,7 @@ import { chromium, type Browser, type Page } from "playwright-core"
 // Actual isolated Chromium DOM Range/Selection + real hook function bodies.
 // All external HTTP is blocked and clipboard/model/editor IO uses controlled
 // substitutes. This is not Electron GUI, real clipboard or native acceptance.
-const executable = process.env.XAANINK_TEST_CHROMIUM
+const executable = process.env.SHAKEINK_TEST_CHROMIUM
 const bundle = (entry: string) => buildSync({ entryPoints: [entry], bundle: true, platform: "browser", format: "cjs", write: false, external: ["react", "@/stores/tabs", "@/lib/desktop/command-runtime"], tsconfig: "tsconfig.json" }).outputFiles[0].text
 const hookCode = bundle("src/components/editor/use-editor-commands.ts"), helperCode = bundle("src/lib/desktop/preview-text-commands.ts")
 let browser: Browser

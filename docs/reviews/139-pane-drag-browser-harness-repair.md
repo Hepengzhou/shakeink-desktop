@@ -1,6 +1,6 @@
 # 139 · 顶部拖窗任务的既有浏览器 harness 修复
 
-2026-10-09。本轮由主代理指定只修复 `tests/browser` 中既有失败夹具，不修改生产文件，也不修改新的 `pane-window-drag.test.ts`。失败基线为 `/private/tmp/xaanink-drag-browser.log`：160 tests、129 pass、31 fail、0 cancelled/skipped。该日志保留；本轮结果不覆盖历史失败或整应用 530 项正式验收状态。
+2026-10-09。本轮由主代理指定只修复 `tests/browser` 中既有失败夹具，不修改生产文件，也不修改新的 `pane-window-drag.test.ts`。失败基线为 `/private/tmp/shakeink-drag-browser.log`：160 tests、129 pass、31 fail、0 cancelled/skipped。该日志保留；本轮结果不覆盖历史失败或整应用 530 项正式验收状态。
 
 ## 非备份夹具修复
 
@@ -9,7 +9,7 @@
 | `command-catalog-generation-review.test.ts` | 当前实际 generator、`desktop/shared/command-catalogs.generated.json` 与 main trusted catalog 已一致为 Monaco 0.56.0、darwin 417 / win32 401；旧固定数为 416/400。只更新当前 pinned count。 | 完整生成 JSON / shipped JSON / trusted catalog 逐字段相等；ID 唯一；MD/fold 命令存在；空平台、版本错误、源码过期、内容/digest/重复ID破坏均拒绝，实际 build 在失败时不写 bundle。 |
 | `configuration-transfer-ui-review.test.ts`、`desktop-modal-commands-review.test.ts` | 读取已不存在的哈希 CSS `.next/static/chunks/2g1tpo-0aaw7s.css`。沿用其他现有浏览器测试做法，列举、排序、读取当前全部 `.css` chunks。 | 原真实 BaseUI popup/focus、单选映射、取消/乱序/失败/重试、modal 命令隔离与 Escape 断言逐条保留。 |
 | `desktop-recovery-integration-review.test.ts`、`recovery-preview.test.ts`、`recovery-preview-review.test.ts` | `src/components/desktop/RecoveryDialog.tsx` 现为“保留的草稿列表”“导出草稿”“作品保留的草稿”“没有需要核对的保留草稿。”；测试仍查询旧备份恢复语境的标签。调整精确定位文本并移除无生产消费者的 `workBackup` 假桥。 | 可读正文、未知/空/长记录、截断但完整导出、原记录字节、复制、只读、选中项稳定、请求不执行、失败后保留与可重试、完整隐藏执行元数据均继续断言。 |
-| `file-export.test.ts` | fixture `/api/templates/export` 仍返回旧 format，而同一测试期望新 format。实际 `desktop/service/template-library.ts` 的 `export()` 输出 `xaanink-local-templates`；`desktop/shared/template-library.ts` 明确兼容旧/新输入。仅令当前输出 fixture 使用实际新品牌 format。 | 真实 main file export 写入、实际 JSON 内容、无 Key/endpoint、取消/卸载不产生文件、正文/整书 TXT/MD/DOCX/PDF 真实解析和顺序保留。旧输入兼容没有在本测试中被改为拒绝。 |
+| `file-export.test.ts` | fixture `/api/templates/export` 仍返回旧 format，而同一测试期望新 format。实际 `desktop/service/template-library.ts` 的 `export()` 输出 `shakeink-local-templates`；`desktop/shared/template-library.ts` 明确兼容旧/新输入。仅令当前输出 fixture 使用实际新品牌 format。 | 真实 main file export 写入、实际 JSON 内容、无 Key/endpoint、取消/卸载不产生文件、正文/整书 TXT/MD/DOCX/PDF 真实解析和顺序保留。旧输入兼容没有在本测试中被改为拒绝。 |
 
 ## 混合 lease 夹具的范围拆分
 
@@ -45,7 +45,7 @@
 
 ```sh
 PATH=/Users/dt_flys/.nvm/versions/node/v24.18.0/bin:$PATH \
-XAANINK_TEST_CHROMIUM=/Users/dt_flys/Library/Caches/ms-playwright/chromium_headless_shell-1228/chrome-headless-shell-mac-arm64/chrome-headless-shell \
+SHAKEINK_TEST_CHROMIUM=/Users/dt_flys/Library/Caches/ms-playwright/chromium_headless_shell-1228/chrome-headless-shell-mac-arm64/chrome-headless-shell \
 node --import tsx --test --test-concurrency=1 \
   tests/browser/command-catalog-generation-review.test.ts \
   tests/browser/configuration-transfer-ui-review.test.ts \
@@ -56,6 +56,6 @@ node --import tsx --test --test-concurrency=1 \
   tests/browser/file-export.test.ts
 ```
 
-第一次定向日志 `/private/tmp/xaanink-drag-browser-repair-targeted.log`：**60/60 pass，0 fail/cancelled/skipped，exit 0，51.04 秒**。之后加强 WL90-U01 为真实 `state` 回执的过程中，`/private/tmp/xaanink-drag-browser-repair-lease-final.log` 保留 **3 pass / 1 fail**：旧 fixture 缺 `revision` 导致更新未获接纳，断言实际 `undefined !== 1`；仅补 fixture 的 `revision:0`，未改生产或该拒绝断言。
+第一次定向日志 `/private/tmp/shakeink-drag-browser-repair-targeted.log`：**60/60 pass，0 fail/cancelled/skipped，exit 0，51.04 秒**。之后加强 WL90-U01 为真实 `state` 回执的过程中，`/private/tmp/shakeink-drag-browser-repair-lease-final.log` 保留 **3 pass / 1 fail**：旧 fixture 缺 `revision` 导致更新未获接纳，断言实际 `undefined !== 1`；仅补 fixture 的 `revision:0`，未改生产或该拒绝断言。
 
-最后对两个 lease 文件的 18 条活动测试重跑：**18/18 pass，0 fail/cancelled/skipped，exit 0，10.57 秒**，原日志 `/private/tmp/xaanink-drag-browser-repair-lease-final2.log`。`git diff --check` 退出 0；两个历史归档与 Git HEAD 原文件逐字比较仍相等。其他七文件保持首次通过后的字节。主代理将独立审核并执行当前全量浏览器回归；此处不声称全量、Electron native 或全部平台验收通过。
+最后对两个 lease 文件的 18 条活动测试重跑：**18/18 pass，0 fail/cancelled/skipped，exit 0，10.57 秒**，原日志 `/private/tmp/shakeink-drag-browser-repair-lease-final2.log`。`git diff --check` 退出 0；两个历史归档与 Git HEAD 原文件逐字比较仍相等。其他七文件保持首次通过后的字节。主代理将独立审核并执行当前全量浏览器回归；此处不声称全量、Electron native 或全部平台验收通过。

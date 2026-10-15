@@ -10,7 +10,7 @@ import { prisma } from '../src/lib/db'
 
 async function main() {
   const base = await realpath(resolve(process.argv[2]))
-  assert(basename(base).startsWith('xaanink-works-loading-'))
+  assert(basename(base).startsWith('shakeink-works-loading-'))
   const works = new Workspaces(join(base, 'data'), resolve('prisma/migrations'))
   const records = []
   try {
@@ -26,7 +26,7 @@ async function main() {
     }
   } finally { await works.close() }
   assert.throws(() => process.kill(2147483647, 0), { code: 'ESRCH' })
-  const lock = join(records[1].path, '.xaanink-lock'); await mkdir(lock)
+  const lock = join(records[1].path, '.shakeink-lock'); await mkdir(lock)
   await writeFile(join(lock, 'owner.json'), JSON.stringify({ token: randomUUID(), host: hostname(), pid: 2147483647 }))
   await writeFile(join(base, 'fixture.json'), JSON.stringify({ root: works.root, records }))
   console.log('Isolated works-loading fixture prepared: 2 real works, 1 stale lease, zero models.')

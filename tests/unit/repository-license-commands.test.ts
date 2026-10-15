@@ -33,13 +33,13 @@ function rig(platform = "darwin", closingFlow = false, closed = false) {
 test("feedback opens the current desktop repository", async () => {
   const r = rig()
   await r.execute("help.feedback")
-  assert.deepEqual(r.urls, ["https://github.com/mySingleLive/xaanink-desktop/issues/new/choose"])
+  assert.deepEqual(r.urls, ["https://github.com/mySingleLive/shakeink-desktop/issues/new/choose"])
 })
 
 test("macOS About shows GPL-3.0 and the installed version", async () => {
   const r = rig()
   await r.execute("app.about")
-  assert.deepEqual(r.panels, [{ applicationName: "玄印写作", applicationVersion: "0.2.3", version: "", copyright: "GPL-3.0 · XaanInk" }])
+  assert.deepEqual(r.panels, [{ applicationName: "玄印写作", applicationVersion: "0.2.3", version: "", copyright: "GPL-3.0 · ShakeInk" }])
   assert.equal(r.shown(), 1)
 })
 
@@ -48,7 +48,7 @@ test("Windows About shows GPL-3.0 and the installed version", async () => {
   await r.execute("app.about")
   assert.equal(r.aboutPages.length, 1)
   const html = decodeURIComponent(r.aboutPages[0].split(",").slice(1).join(","))
-  assert.match(html, /GPL-3\.0 · XaanInk/)
+  assert.match(html, /GPL-3\.0 · ShakeInk/)
   assert.match(html, /版本 0\.2\.3/)
 })
 

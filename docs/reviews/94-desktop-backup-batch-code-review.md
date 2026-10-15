@@ -38,7 +38,7 @@
 - 实际 React 3 文件共 **9/9** PASS（6 相关 + 3 独立），`review94-07-related-browser-final-green.tap`，约 2.59 秒。不包括邻接迁移 UI 的三个用例，不授其通过。
 - 独立全量类型检查 **exit 0、空诊断**：`review94-04-types.txt`。
 
-浏览器相关合跑的第一次运行漏设作者测试所需的 `XAANINK_TEST_CHROMIUM` 环境变量，导致六个作者用例启动前找不到默认浏览器，三个独立用例仍 PASS；保留 `review94-06-related-browser-green.tap`（3 PASS / 6 启动 FAIL）。随后只设置已有 Chromium 1228 的明确路径，未下载浏览器、未修改测试断言，再合跑 9/9。该启动失败不计为产品缺陷。
+浏览器相关合跑的第一次运行漏设作者测试所需的 `SHAKEINK_TEST_CHROMIUM` 环境变量，导致六个作者用例启动前找不到默认浏览器，三个独立用例仍 PASS；保留 `review94-06-related-browser-green.tap`（3 PASS / 6 启动 FAIL）。随后只设置已有 Chromium 1228 的明确路径，未下载浏览器、未修改测试断言，再合跑 9/9。该启动失败不计为产品缺陷。
 
 ## 冻结核验与边界
 

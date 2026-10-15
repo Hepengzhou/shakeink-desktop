@@ -15,7 +15,7 @@ import { VersionedStore } from '../desktop/core/versioned-store.ts'
 assert.equal(process.platform, 'win32', 'Run on actual Windows')
 assert.equal(process.argv.length, 2, 'No packaged, platform-switch, or CSS override mode')
 const evidence = resolve('docs/evidence/dialog-style')
-const temporary = await mkdtemp(join(tmpdir(), 'xaanink-dialog-style-'))
+const temporary = await mkdtemp(join(tmpdir(), 'shakeink-dialog-style-'))
 const root = join(temporary, 'data')
 const startedAt = new Date().toISOString()
 const records = [], checks = [], errors = [], consoleErrors = [], rendererHttpRequests = [], runtime = []
@@ -153,7 +153,7 @@ async function launch(theme) {
   const snapshot = await store.read()
   snapshot.value.settings.appearance.theme = theme
   await store.update(snapshot.revision, snapshot.value)
-  const env = { ...process.env, XAANINK_TEST_ROOT: root }
+  const env = { ...process.env, SHAKEINK_TEST_ROOT: root }
   delete env.ELECTRON_RUN_AS_NODE
   app = await _electron.launch({ args: [resolve('.')], env, timeout: 60000 })
   page = await app.firstWindow({ timeout: 60000 }); page.setDefaultTimeout(15000)
@@ -169,7 +169,7 @@ async function launch(theme) {
   await page.waitForFunction(theme => document.documentElement.classList.contains(theme), theme)
   const gate = page.getByRole('dialog', { name: '尚未配置文本模型', exact: true })
   await expect(gate).toBeVisible({ timeout: 30000 })
-  assert.equal(page.url(), 'xaanink://app/')
+  assert.equal(page.url(), 'shakeink://app/')
   await expect(gate.locator('[data-slot="dialog-close"]')).toHaveCount(0)
   await page.keyboard.press('Escape'); await expect(gate).toBeVisible()
   await page.mouse.click(8, 450); await expect(gate).toBeVisible()
@@ -350,6 +350,6 @@ try {
   await app?.close().catch(() => {})
   // Verify the exact absolute mkdtemp target before recursive removal on Windows.
   assert.equal(dirname(resolve(temporary)), resolve(tmpdir()))
-  assert.ok(basename(temporary).startsWith('xaanink-dialog-style-'))
+  assert.ok(basename(temporary).startsWith('shakeink-dialog-style-'))
   await rm(temporary, { recursive: true, force: true })
 }

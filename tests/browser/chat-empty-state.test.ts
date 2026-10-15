@@ -103,7 +103,7 @@ globalThis.mountChatEmpty=(options={})=>{
 };` }, bundle: true, platform: "browser", format: "esm", outfile: "chat-empty-state-fixture.js", external: ["/brand/*"], loader: { ".ttf": "dataurl" }, define: { "process.env.NODE_ENV": '"development"', "process.env": "{}" }, minify: true, write: false, tsconfig: "tsconfig.json" }).then(result => ({ script: result.outputFiles!.find(file => file.path.endsWith(".js"))!.text, css: result.outputFiles!.find(file => file.path.endsWith(".css"))?.text ?? "" }))
 
 let browser: Browser
-test.before(async () => { if (process.env.XAANINK_CES_DIAGNOSTIC) process.stdout.write("CES fixture: launch\n"); browser = await chromium.launch({ headless: true, timeout: 60_000, ...(process.env.XAANINK_TEST_CHROMIUM ? { executablePath: process.env.XAANINK_TEST_CHROMIUM } : {}) }); if (process.env.XAANINK_CES_DIAGNOSTIC) process.stdout.write("CES fixture: launched\n") })
+test.before(async () => { if (process.env.SHAKEINK_CES_DIAGNOSTIC) process.stdout.write("CES fixture: launch\n"); browser = await chromium.launch({ headless: true, timeout: 60_000, ...(process.env.SHAKEINK_TEST_CHROMIUM ? { executablePath: process.env.SHAKEINK_TEST_CHROMIUM } : {}) }); if (process.env.SHAKEINK_CES_DIAGNOSTIC) process.stdout.write("CES fixture: launched\n") })
 test.after(async () => { await browser?.close() })
 async function frames(page: Page) { await page.evaluate(() => new Promise<void>(done => requestAnimationFrame(() => requestAnimationFrame(() => done())))) }
 const welcome = (page: Page) => page.getByTestId("chat-empty-state")
@@ -111,7 +111,7 @@ const editor = (page: Page) => page.getByTestId("composer-editor")
 const action = (page: Page, name: string) => welcome(page).getByRole("button", { name: new RegExp("^" + name) })
 async function scenario(options: Record<string, unknown>, run: (page: Page) => Promise<void>) {
   const page = await browser.newPage({ viewport: { width: 1400, height: 1000 } }), errors: string[] = []
-  const diagnostic = (step: string) => { if (process.env.XAANINK_CES_DIAGNOSTIC) process.stdout.write("CES fixture: " + step + "\n") }
+  const diagnostic = (step: string) => { if (process.env.SHAKEINK_CES_DIAGNOSTIC) process.stdout.write("CES fixture: " + step + "\n") }
   // This full production bundle decodes the approved sprite sheets and Monaco
   // dependencies. Give navigation/setup an environment budget, without changing
   // any geometry, frame, draft or business assertions.

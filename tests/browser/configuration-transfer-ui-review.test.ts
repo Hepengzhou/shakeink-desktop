@@ -40,7 +40,7 @@ const root=createRoot(document.getElementById('app'));flushSync(()=>root.render(
  builder.onLoad({filter:/.*/,namespace:'controlled'},args=>({contents:args.path==='sonner'?`export const toast={success:x=>globalThis.notifications.push(x),error:x=>globalThis.notifications.push(x),info:x=>globalThis.notifications.push(x)}`:`export function ${args.path.slice(2)}(){return null}`,loader:'js'}))
 }}]}).then(result=>result.outputFiles![0].text)
 let browser:Browser
-test.before(async()=>{browser=await chromium.launch({headless:true,...(process.env.XAANINK_TEST_CHROMIUM?{executablePath:process.env.XAANINK_TEST_CHROMIUM}:{})})})
+test.before(async()=>{browser=await chromium.launch({headless:true,...(process.env.SHAKEINK_TEST_CHROMIUM?{executablePath:process.env.SHAKEINK_TEST_CHROMIUM}:{})})})
 test.after(async()=>{await browser?.close()})
 async function scenario(run:(page:Page)=>Promise<void>,width=1000,height=800){const page=await browser.newPage({viewport:{width,height}}),errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));try{await page.route('**/*',route=>route.request().isNavigationRequest()?route.fulfill({contentType:'text/html',body:'<div id="app"></div>'}):route.abort());await page.goto('http://127.0.0.1:1/configuration-review');await page.addStyleTag({content:css});await page.evaluate(fixture=>{(window as any).fixture=fixture},{state,plan,ids});await page.addScriptTag({content:await bundle});await page.getByRole('button',{name:'打开设置'}).click();await page.getByRole('button',{name:'导入配置',exact:true}).waitFor();await run(page);assert.deepEqual(errors,[])}finally{await page.close()}}
 async function settle(page:Page){await page.evaluate(()=>new Promise<void>(resolve=>requestAnimationFrame(()=>requestAnimationFrame(()=>resolve()))))}

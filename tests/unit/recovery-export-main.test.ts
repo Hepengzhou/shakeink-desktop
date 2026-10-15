@@ -33,7 +33,7 @@ test('actual recovery export cannot overwrite the application state even when se
 }))
 test('actual recovery export uses the same verified native save service for complete inert JSON, and cancel remains false',()=>fixture(async f=>{
  assert.equal(await f.save(snapshot()),false);const target=join(f.outside,'恢复草稿.json');f.select(target);assert.equal(await f.save(snapshot()),true)
- const data=JSON.parse(await readFile(target,'utf8'));assert.equal(data.format,'xaanink-recovery');assert.deepEqual(data.snapshot.sources,snapshot().sources)
+ const data=JSON.parse(await readFile(target,'utf8'));assert.equal(data.format,'shakeink-recovery');assert.deepEqual(data.snapshot.sources,snapshot().sources)
 }))
 
 test('recovery envelopes are validated before a chooser opens and executable values are rejected as data',()=>fixture(async f=>{

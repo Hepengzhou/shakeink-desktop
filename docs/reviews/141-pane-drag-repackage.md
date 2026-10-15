@@ -6,16 +6,16 @@
 
 | 产物 | 精确字节数 | SHA-256 |
 | --- | ---: | --- |
-| `release/XaanInk-0.1.0-mac-arm64.dmg` | 335401091 | `9515e940dfbdbfcb4f0055c81a54ac0098dafaecbdb1e7fa8780e324fa17ac75` |
-| `release/XaanInk-0.1.0-mac-arm64.zip` | 350268743 | `086eeab40761a3b0137a1454cba74f8e8ed362ff2ebd89cec5a8796bfa762695` |
+| `release/ShakeInk-0.1.0-mac-arm64.dmg` | 335401091 | `9515e940dfbdbfcb4f0055c81a54ac0098dafaecbdb1e7fa8780e324fa17ac75` |
+| `release/ShakeInk-0.1.0-mac-arm64.zip` | 350268743 | `086eeab40761a3b0137a1454cba74f8e8ed362ff2ebd89cec5a8796bfa762695` |
 
 本轮实际执行结果：
 
 - `npm run package` exit 0；afterPack 对项目输入逐项验证，包括离线字体、Monaco worker、迁移、许可、平台库和包内依赖。
 - `npm run test:package` exit 0，**14/14 通过、0 fail/cancelled/skipped**。覆盖实际内容/架构/入口/版本、ZIP 全条目 CRC 与文件表、缺资源及截断拒绝、ICNS/ICO 解码、包内 Sharp/PGlite/Prisma 和已安装 builder 过滤/派发条件。Windows 派发用例仍是明确记录的本机 conditional/port 检查，不是 Windows 安装运行。
 - `npm run package:check` exit 0；实际包包含 27011 文件、314 项项目资源、21 条外部依赖解析，全部解析到包内；保存 `release/package-static-manifest.json`。
-- `hdiutil verify release/XaanInk-0.1.0-mac-arm64.dmg` exit 0，磁盘映像校验和有效。
-- 启动实际 `release/mac-arm64/玄印写作.app/Contents/MacOS/玄印写作`，使用新建独立空 dataRoot，不读取默认目录；实际 `app.isPackaged=true`、版本 0.1.0、sandbox=true、模型与小说数均 0。Playwright 在 app.whenReady 后、等待工作台 ready 前设置 renderer CDP offline，最终 `navigator.onLine=false`，`xaanink://app/` 与本地 `/api/novels` 可用，无 HTTP/HTTPS 资源或失败请求、无 pageerror。通过 CUA 点击「显示内容面板」，观察真实工作台和两个 y=0/h=44 的 drag 顶部，正常退出 code=0/signal=null。
+- `hdiutil verify release/ShakeInk-0.1.0-mac-arm64.dmg` exit 0，磁盘映像校验和有效。
+- 启动实际 `release/mac-arm64/玄印写作.app/Contents/MacOS/玄印写作`，使用新建独立空 dataRoot，不读取默认目录；实际 `app.isPackaged=true`、版本 0.1.0、sandbox=true、模型与小说数均 0。Playwright 在 app.whenReady 后、等待工作台 ready 前设置 renderer CDP offline，最终 `navigator.onLine=false`，`shakeink://app/` 与本地 `/api/novels` 可用，无 HTTP/HTTPS 资源或失败请求、无 pageerror。通过 CUA 点击「显示内容面板」，观察真实工作台和两个 y=0/h=44 的 drag 顶部，正常退出 code=0/signal=null。
 
 实际启动证据是 **renderer 离线条件下的安装包启动/资源冒烟**，不是整个操作系统断网，也不是完整业务或新的三区物理拖动验收。主进程 TCP 监听仅为测试注入的 Node inspector / Chromium DevTools，按实际端口和 DevTools 响应核对；未把测试端口误记为产品 HTTP 服务或全进程监听验收。先前 138 的人工拖动/原生双击结果继续保留其开发版范围；本轮没有 Windows 目标系统。
 

@@ -52,7 +52,7 @@ globalThis.mountLeaseUI=(mode='dialog',options={})=>{
  builder.onLoad({filter:/.*/,namespace:"empty-child"},args=>({contents:`export const ${emptyChildren[args.path]}=()=>null`,loader:"js"}))
 }}]}).then(result=>result.outputFiles![0].text)
 let browser:Browser
-test.before(async()=>{browser=await chromium.launch({headless:true,executablePath:process.env.XAANINK_TEST_CHROMIUM})})
+test.before(async()=>{browser=await chromium.launch({headless:true,executablePath:process.env.SHAKEINK_TEST_CHROMIUM})})
 test.after(async()=>{await browser?.close()})
 async function scenario(mode:"dialog"|"app",run:(page:Page)=>Promise<void>,options:Record<string,boolean>={}){
  const page=await browser.newPage({viewport:{width:1000,height:760}}),errors:string[]=[];page.setDefaultTimeout(2200);page.on("pageerror",error=>errors.push(error.message))

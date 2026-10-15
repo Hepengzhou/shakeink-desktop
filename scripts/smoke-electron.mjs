@@ -8,17 +8,17 @@ if (process.argv.includes('--appearance')) { await import('./smoke-appearance.mj
 if (process.argv.includes('--models')) { await import('./smoke-models.mjs'); process.exit(0) }
 if (process.argv.includes('--profile')) { await import('./smoke-profile.mjs'); process.exit(0) }
 if (process.argv.includes('--commands')) { await import('./smoke-commands.mjs'); process.exit(0) }
-const temporary = await mkdtemp(join(tmpdir(), 'xaanink-electron-smoke-'))
+const temporary = await mkdtemp(join(tmpdir(), 'shakeink-electron-smoke-'))
 let app
 const errors = []
 const startedAt = new Date().toISOString()
 try {
-  app = await electron.launch({ args: [resolve('.')], env: { ...process.env, XAANINK_TEST_ROOT: join(temporary, 'data') }, timeout: 45000 })
+  app = await electron.launch({ args: [resolve('.')], env: { ...process.env, SHAKEINK_TEST_ROOT: join(temporary, 'data') }, timeout: 45000 })
   app.process().stderr.on('data', data => { process.stderr.write(data) })
   const page = await app.firstWindow({ timeout: 45000 })
   page.on('pageerror', error => errors.push(error.message))
   await page.getByRole('button', { name: '账号菜单' }).waitFor({ timeout: 45000 })
-  assert.equal(page.url(), 'xaanink://app/')
+  assert.equal(page.url(), 'shakeink://app/')
   assert.deepEqual(await page.evaluate(async () => (await (await fetch('/api/novels')).json()).novels), [])
   await page.getByRole('button', { name: '账号菜单' }).click()
   await page.getByRole('menuitem', { name: '设置', exact: true }).click()

@@ -11,7 +11,7 @@
 
 ## 1. 产品目标与验收范围
 
-为作者提供独立、可安装、完全管理本地数据的玄印写作桌面 App。独立公开仓库为 `mySingleLive/xaanink-desktop`。技术栈为 Electron + 现有 Next.js / React / TypeScript 等 Web 栈，所有创作界面复用 Web 版。
+为作者提供独立、可安装、完全管理本地数据的玄印写作桌面 App。独立公开仓库为 `mySingleLive/shakeink-desktop`。技术栈为 Electron + 现有 Next.js / React / TypeScript 等 Web 栈，所有创作界面复用 Web 版。
 
 交付目标为功能完整的桌面迁移，不以原型、仅包装 Web 网站、在线登录或精简 Markdown 编辑器代替。macOS 与 Windows 均属于验收范围。
 
@@ -136,7 +136,7 @@ HTTP 仅允许作者显式配置的本机回环地址，其他端点要求 HTTPS
 
 不显示底部「保存设置 / 取消」，不出现分组切换的脏状态确认。输入校验失败保留待修正内容，不替换上一有效配置；自动持久化失败提示原因、保留待处理修改并提供重试。关闭或切换不会回滚已确认变更。模型和用户编辑的独立草稿在取消时丢弃；保存失败留在当前编辑框修正或再次保存，不写成已添加记录。最终实现必须将此规则落到本地原子回执，原型的内存更新不计为持久化通过。
 
-关于页版本来自实际安装包 `app.getVersion()`，不得手写 UI 稿版本作为 App 版本。当前 App 尚未发布，设计稿显示「尚未发布」。反馈指向 `https://github.com/mySingleLive/xaanink-desktop/issues/new/choose`。按用户 2026-10-07 回复，帮助文档预留 `https://xuanxiang.ink/docs`，上线后启用；当前禁用并标注尚未上线，不自动探测或访问。
+关于页版本来自实际安装包 `app.getVersion()`，不得手写 UI 稿版本作为 App 版本。当前 App 尚未发布，设计稿显示「尚未发布」。反馈指向 `https://github.com/mySingleLive/shakeink-desktop/issues/new/choose`。按用户 2026-10-07 回复，帮助文档预留 `https://xuanxiang.ink/docs`，上线后启用；当前禁用并标注尚未上线，不自动探测或访问。
 
 默认快捷键：设置 `Cmd/Ctrl+,`；保存 `Cmd/Ctrl+S`；创建作品 `Cmd/Ctrl+N`；新对话 `Cmd/Ctrl+Shift+N`；查找沿用编辑器；关闭当前 Tab `Cmd/Ctrl+W`（编辑器无 Tab 时才交由窗口约定）；应用退出沿用系统。IME 组合输入阶段不触发发送或命令；修改绑定后帮助和菜单一起更新。
 

@@ -18,7 +18,7 @@
 - `tests/unit/image-provider-menu.test.ts` 有实际共享目录及真实 ProviderLogo 输出断言，`model-settings.test.ts` IP-06 验证 items、selectedOption 优先级与单选。`onboarding-editors.test.ts` 新旧 IMAGE 场景覆盖两家、Key/型号清空、取消、原字段保存；完整目录 require stub 已同步为真实 `PROVIDER_PRESETS`。
 - `onboarding-editors.test.ts` 和 `onboarding-retry-integration.test.ts` 仅将新增 IMAGE fixture 从已退役 custom 改为允许的 OpenAI 单选及实际 modelChoices，TEXT 仍 custom；保留重复提交、原子写入不确定状态、冻结字段、retry envelope、一次加密与不重复模型等关键断言，属于用户菜单范围变化所需的合法用例更新。
 - `tests/browser/image-provider-menu.test.ts` 补足 Dialog/Combobox fixture 布局样式；真实触发器以 aria-label 定位，菜单项限定在供应商 listbox 中并按精确文本过滤，避开 img alt 与文本重复及隐藏原生协议 option。所有点击仍为正常 Playwright click，未使用 force。保留两家完整列表、浏览器搜索、键盘切换、旧配置保存、切换后取消及原状态比较。fixture CSS 结果只说明交互逻辑，不能代替产品外观验收。
-- `scripts/verify-image-providers.mjs` 要求实际 Windows、真实 compiled Electron 和 xaanink:// 本地页面；firstWindow 后持续观测并在初始 IMAGE 弹窗可见后离线 reload，避免导航竞争。两主题真实菜单/本地图片、旧记录合成 safeStorage 凭据、实际取消/保存/重开及密文字节比较、产物/源指纹、受保护隔离目录清理均在脚本中落实。公开 fixture 不是用户 Key，脚本没有点击测试连接/发送或触发模型发现；网络说明明确未覆盖进程启动全程，listener 是实际快照。
+- `scripts/verify-image-providers.mjs` 要求实际 Windows、真实 compiled Electron 和 shakeink:// 本地页面；firstWindow 后持续观测并在初始 IMAGE 弹窗可见后离线 reload，避免导航竞争。两主题真实菜单/本地图片、旧记录合成 safeStorage 凭据、实际取消/保存/重开及密文字节比较、产物/源指纹、受保护隔离目录清理均在脚本中落实。公开 fixture 不是用户 Key，脚本没有点击测试连接/发送或触发模型发现；网络说明明确未覆盖进程启动全程，listener 是实际快照。
 - `scripts/smoke-byok.mjs` 仅更新本轮菜单名称/允许范围；`docs/02-product-design.md`、`docs/03-ui-design.md`、`docs/provider-ui-presets.md` 添加最新覆盖说明并保留历史设计边界，没有复活其它已取消需求。台账中其他任务内容不在本次审核修改范围。
 
 ## 已读取证据与剩余验收

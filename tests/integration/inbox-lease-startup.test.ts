@@ -39,7 +39,7 @@ async function fixture(){
  }
  const seed=await launch()
  try{assert.equal(seed.result()?.status,'ready');assert.equal(await seed.rpc.call('ready'),true);assert.equal((await request(seed.rpc,'/api/admin/prompts','POST',{key:'inbox42-original',name:'公开验收模板',content:'原有中文数据必须保留'})).status,201)}finally{await seed.close()}
- const lock=join(root,'inbox/.xaanink-lock'),ownerPath=join(lock,'owner.json')
+ const lock=join(root,'inbox/.shakeink-lock'),ownerPath=join(lock,'owner.json')
  await mkdir(lock);const owner=JSON.stringify({token:randomUUID(),pid:await deadPid,host:hostname()});await writeFile(ownerPath,owner)
  const pointer=await new DataRootManager(bootstrap,root).resolve();assert.equal(pointer.state,'existing');if(pointer.state!=='existing')throw Error('Fixture did not adopt its actual root')
  async function databaseHashes(){
@@ -62,6 +62,6 @@ test('IL42-PG02 explicit inbox lease repair changes no database bytes; actual PG
   const before=await f.databaseHashes(),session=await prepareInboxLeaseRecovery(f.bootstrap,f.options)
   assert.equal((await session.recover(true)).status,'recovered');session.assertRecovered();assert.deepEqual(await f.databaseHashes(),before);assert.equal(inboxLeaseRecoveryRequired(f.pointer),false)
   const running=await f.launch();try{assert.deepEqual(running.result(),{version:1,status:'ready',root:f.root});const reply=await f.request(running.rpc,'/api/admin/prompts');assert.equal(reply.status,200);assert(reply.data.prompts.some((row:{key:string;content:string})=>row.key==='inbox42-original'&&row.content==='原有中文数据必须保留'))}finally{await running.close()}
-  await assert.rejects(lstat(join(f.root,'inbox/.xaanink-lock')),{code:'ENOENT'});assert.equal(inboxLeaseRecoveryRequired(f.pointer),false)
+  await assert.rejects(lstat(join(f.root,'inbox/.shakeink-lock')),{code:'ENOENT'});assert.equal(inboxLeaseRecoveryRequired(f.pointer),false)
  }finally{await f.cleanup()}
 })

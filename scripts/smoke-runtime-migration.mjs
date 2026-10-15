@@ -7,19 +7,19 @@ import {createServer} from 'node:net'
 import {mkdtemp,mkdir,rm,readFile,writeFile,realpath} from 'node:fs/promises'
 import {tmpdir} from 'node:os'
 import {join,resolve} from 'node:path'
-const require=createRequire(import.meta.url),temporary=await realpath(await mkdtemp(join(tmpdir(),'xaanink-runtime-migration-'))),root=join(temporary,'data'),target=join(temporary,'moved-data'),evidence='docs/evidence/implementation-12',startedAt=new Date().toISOString()
+const require=createRequire(import.meta.url),temporary=await realpath(await mkdtemp(join(tmpdir(),'shakeink-runtime-migration-'))),root=join(temporary,'data'),target=join(temporary,'moved-data'),evidence='docs/evidence/implementation-12',startedAt=new Date().toISOString()
 const server=createServer();await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));const port=server.address().port;await new Promise(resolve=>server.close(resolve))
 let app,page,browser,safeCleanup=false;const checks=[],errors=[],pids=new Set(),captured=[]
 async function connect(){
  const until=Date.now()+60000;let error
- while(Date.now()<until){try{const candidate=await chromium.connectOverCDP(`http://127.0.0.1:${port}`,{timeout:2000});const context=candidate.contexts()[0];await expect.poll(()=>context.pages().some(p=>p.url()==='xaanink://app/'),{timeout:5000}).toBe(true);browser=candidate;page=context.pages().find(p=>p.url()==='xaanink://app/');page.on('pageerror',e=>errors.push(e.message));const cdp=await browser.newBrowserCDPSession();const processes=await cdp.send('SystemInfo.getProcessInfo');const main=processes.processInfo.find(p=>p.type==='browser');assert(main);pids.add(main.id);await cdp.detach();return main.id}catch(e){error=e;await new Promise(r=>setTimeout(r,200))}}
+ while(Date.now()<until){try{const candidate=await chromium.connectOverCDP(`http://127.0.0.1:${port}`,{timeout:2000});const context=candidate.contexts()[0];await expect.poll(()=>context.pages().some(p=>p.url()==='shakeink://app/'),{timeout:5000}).toBe(true);browser=candidate;page=context.pages().find(p=>p.url()==='shakeink://app/');page.on('pageerror',e=>errors.push(e.message));const cdp=await browser.newBrowserCDPSession();const processes=await cdp.send('SystemInfo.getProcessInfo');const main=processes.processInfo.find(p=>p.type==='browser');assert(main);pids.add(main.id);await cdp.detach();return main.id}catch(e){error=e;await new Promise(r=>setTimeout(r,200))}}
  throw error??Error('Relaunched application unavailable')
 }
 const alive=pid=>{try{process.kill(pid,0);return true}catch{return false}}
 try{
  await mkdir(evidence,{recursive:true});execFileSync(process.execPath,['--import','tsx','scripts/seed-electron-fixture.ts',temporary],{encoding:'utf8'})
  await mkdir(target);await writeFile(join(root,'author-note.txt'),'retain unknown author file')
- app=await electron.launch({executablePath:require('electron'),args:[resolve('.'),`--remote-debugging-port=${port}`],env:{...process.env,XAANINK_TEST_ROOT:root},timeout:60000})
+ app=await electron.launch({executablePath:require('electron'),args:[resolve('.'),`--remote-debugging-port=${port}`],env:{...process.env,SHAKEINK_TEST_ROOT:root},timeout:60000})
  pids.add(app.process().pid);page=await app.firstWindow({timeout:60000});page.on('pageerror',e=>errors.push(e.message));app.process().stderr.on('data',data=>captured.push(data.toString()))
  await page.getByRole('button',{name:'账号菜单'}).waitFor({timeout:60000});await page.getByRole('button',{name:'账号菜单'}).click();await page.getByRole('menuitem',{name:'设置',exact:true}).click()
  await expect(page.getByRole('textbox',{name:'应用数据目录',exact:true})).toHaveValue(root)

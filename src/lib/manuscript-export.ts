@@ -95,7 +95,7 @@ export async function createManuscriptExport(format: ManuscriptExportFormat, tit
 
 export async function downloadManuscript(blob: Blob, filename: string, options: { signal?: AbortSignal } = {}): Promise<boolean> {
   if (options.signal?.aborted) return false
-  if (typeof window !== "undefined" && (window.desktop || window.location?.protocol === "xaanink:")) {
+  if (typeof window !== "undefined" && (window.desktop || window.location?.protocol === "shakeink:")) {
     const { saveDesktopExport } = await import("./desktop/export")
     return saveDesktopExport(blob, filename, options)
   }

@@ -14,10 +14,10 @@
 
 最终修复复核：
 
-- `/private/tmp/xaanink-historical-build-i_3d3_k0/desktop/main/index.ts` 对 `git show HEAD:desktop/main/index.ts` 恰好两处差异：55 行去除 `isolatedRoot` 的 packaged 条件；192 行改为 `dataRoot = isolatedRoot ?? join(homedir(), ".xuanxiang")`。原名称、safeStorage、ready 顺序和业务入口均未修改。
+- `/private/tmp/shakeink-historical-build-i_3d3_k0/desktop/main/index.ts` 对 `git show HEAD:desktop/main/index.ts` 恰好两处差异：55 行去除 `isolatedRoot` 的 packaged 条件；192 行改为 `dataRoot = isolatedRoot ?? join(homedir(), ".xuanxiang")`。原名称、safeStorage、ready 顺序和业务入口均未修改。
 - 历史 `dist/main/index.cjs` 与历史 `.app/Contents/Resources/app/dist/main/index.cjs` 实际 SHA-256 相同：`7e7d69f500780d1a294f7a0d13670ce8fb78a382e9bc3f62d21ffe34f6aca11a`。两处隔离表达式都存在，新的 harness preflight 正则对实际包字节都通过。
 - `smoke-brand.mjs:33–39` 在启动历史包前要求显式 `--legacy-app` 与 `--packaged` 一致，并检查 bootstrap 与 worker 两处隔离表达式，不再只检查环境变量字面量。启动传递两家族测试环境变量。
-- `smoke-brand.mjs:48–49` 在任何合成 settings/draft 写入前精确验证 `bootstrap().dataRoot === root`。升级和新建测试也验证实际 worker 根。新包实际 main 文件的 `XAANINK_TEST_ROOT` 不受 packaged 条件限制，进入 `selectBrandStartupPaths` 的 isolated 分支，再从选择结果设置 `dataRoot`；与此前 129 通过的路径选择逻辑一致。
+- `smoke-brand.mjs:48–49` 在任何合成 settings/draft 写入前精确验证 `bootstrap().dataRoot === root`。升级和新建测试也验证实际 worker 根。新包实际 main 文件的 `SHAKEINK_TEST_ROOT` 不受 packaged 条件限制，进入 `selectBrandStartupPaths` 的 isolated 分支，再从选择结果设置 `dataRoot`；与此前 129 通过的路径选择逻辑一致。
 
 静态预检和写前实际根断言共同覆盖本次遗漏。实际包也必须包含修复后的编译字节；只改临时源码或只核对 userData 均不足以重新运行准备。
 
@@ -29,7 +29,7 @@
 | closed-work-lease-worker | 给 worker 依赖夹具补只读 `protectedDirectories`；仍执行当前实际 RPC callback，仍拒绝未关闭、关闭进行中、关闭失败、重开和 lookup 期间撤销的目标授权。 |
 | model-provider-alias | Qwen 夹具不再强行配置该 model 不支持的 low/high。合法 capabilities 输入后仍比较别名和 canonical 的 SDK/providerOptions，保留 provider、endpoint、公开 snapshot 和显式 Anthropic protocol 断言。这是别名等价测试，不将同一 helper 派生输入充当 capabilities 表的独立验收。 |
 | desktop-recovery-bindings | 现在执行真实 `installBusinessSources` 注册闭包及两个真实回调。部分注册失败用新的 bootstrap 闭包，符合单次安装的幂等生命周期；仍保留六类 source 注册/解绑、真实 store revision、重复注册错误及原 sentinel 保留断言，没有把失败变成 no-op 通过。 |
-| root-startup | 新建根产物使用当前 marker，迁移 inventory 读取相同实际文件。ROOT11-02/07 只将完整场景超时从 60s 调为 180s，真实 worker 的 `Atomics.wait(...25_000)` 未变，错误 pointer/journal 和禁止默认空库断言保留。`xaanink-core-after.log` 中 ROOT11-02 实际 60000ms 超时；后续 `xaanink-core-final.log` 同场景通过且耗时 62179ms，支持扩大整场景预算。ROOT11-07 before 也超时，after/final 分别 50580/40199ms；不是移除启动边界。 |
+| root-startup | 新建根产物使用当前 marker，迁移 inventory 读取相同实际文件。ROOT11-02/07 只将完整场景超时从 60s 调为 180s，真实 worker 的 `Atomics.wait(...25_000)` 未变，错误 pointer/journal 和禁止默认空库断言保留。`shakeink-core-after.log` 中 ROOT11-02 实际 60000ms 超时；后续 `shakeink-core-final.log` 同场景通过且耗时 62179ms，支持扩大整场景预算。ROOT11-07 before 也超时，after/final 分别 50580/40199ms；不是移除启动边界。 |
 | package-archive | 仅更新 ZIP/App/executable 名称，仍用真实 `unzip -tqq` CRC、JSZip 原始 UTF-8 条目、完整 manifest 文件表和五个关键文件真实字节 SHA 对比，截断 ZIP 负例保留。不能以目录检查替代最终 ZIP 用例。 |
 | desktop-worker 追加修复 | 非法 body `novelId` 现在明确断言严格 schema 返回 400 且未创建模板；再用合法 body 发真实保存并断言 201。query 参数仍保留，继续检查不重定向全局模板。修复原夹具错误，并增加真实拒绝断言。 |
 | local-work-images 追加修复 | 写 build 证据前创建其目录，不跳过私有实际 worker 构建；新建作品读取当前 marker。原图片持久化、跨作品隔离和冷重启读取流程未变。 |
@@ -45,9 +45,9 @@
 PATH=/Users/dt_flys/.nvm/versions/node/v24.18.0/bin:$PATH node --import tsx --test --test-concurrency=1 tests/unit/closed-work-lease-worker.test.ts tests/unit/model-provider-alias.test.ts tests/unit/desktop-recovery-bindings-review.test.ts tests/unit/bootstrap-close.test.ts tests/unit/bootstrap-main-review.test.ts tests/unit/clipboard-ipc.test.ts tests/unit/close-ipc-review.test.ts tests/unit/configuration-files-review.test.ts tests/unit/draft-ipc-review.test.ts tests/unit/draft-ipc.test.ts tests/unit/profile-ipc.test.ts
 ```
 
-实际结果 **52/52 pass，0 fail，0 cancel，0 skip，退出 0**；原日志 `/private/tmp/xaanink-131-harness-review-unit.log`。审核范围 `git diff --check` 退出 0。
+实际结果 **52/52 pass，0 fail，0 cancel，0 skip，退出 0**；原日志 `/private/tmp/shakeink-131-harness-review-unit.log`。审核范围 `git diff --check` 退出 0。
 
-只读检查主代理原日志：before 为 1578 tests、1551 pass、22 fail、5 cancelled；上一组合为 1618 tests、1615 pass、3 fail、0 skip。三项失败分别为非法 body 被预期为 201、证据目录不存在、故障 inbox 在目标创建前失败所以缺少 marker。追加三文件定向修复日志 `/private/tmp/xaanink-core-three-repairs.log` 为 **13/13 pass，0 fail/cancel/skip**，含上述真实目标。这是主代理执行结果，本审核没有以这些定向结果宣称最终全量通过。
+只读检查主代理原日志：before 为 1578 tests、1551 pass、22 fail、5 cancelled；上一组合为 1618 tests、1615 pass、3 fail、0 skip。三项失败分别为非法 body 被预期为 201、证据目录不存在、故障 inbox 在目标创建前失败所以缺少 marker。追加三文件定向修复日志 `/private/tmp/shakeink-core-three-repairs.log` 为 **13/13 pass，0 fail/cancel/skip**，含上述真实目标。这是主代理执行结果，本审核没有以这些定向结果宣称最终全量通过。
 
 旧开发 Electron → 新 packaged fixture 的 crypto 失败不等于旧 packaged 升级结论；真实安装包升级仍待主代理新一轮隔离运行。此前误写事件的修复也不替代该原生结果。实际 ZIP 成品结果、最终全量组合与 native screenshots/hash 应由主代理记录其本次执行和对应产物后验收。
 

@@ -10,7 +10,7 @@ export function installDesktopTransport(bridge: DesktopBridge) {
   bridge.subscribe(event => { if (event.type === "service-disconnected") for (const fail of active.values()) fail(new Error("本地服务已断开，请重新打开应用")) })
   const ports = new Map<string, { resolve(port: MessagePort): void; reject(error: Error): void }>()
   window.addEventListener("message", event => {
-    if (event.source !== window || event.data?.type !== "xaanink-response-port" || event.ports.length !== 1) return
+    if (event.source !== window || event.data?.type !== "shakeink-response-port" || event.ports.length !== 1) return
     const pending = ports.get(event.data.id)
     if (pending) { ports.delete(event.data.id); pending.resolve(event.ports[0]) } else event.ports[0].close()
   })

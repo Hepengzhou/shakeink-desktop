@@ -7,7 +7,7 @@ import { join, resolve } from 'node:path'
 
 // This harness uses synthetic data only. The preparation step runs the actual
 // pre-rename build; the verification step runs the newly packaged application.
-const location = join(tmpdir(), 'xaanink-brand-native-location.json')
+const location = join(tmpdir(), 'shakeink-brand-native-location.json')
 const prepare = process.argv.includes('--prepare-legacy')
 const packaged = process.argv.includes('--packaged')
 const legacyApplication = process.argv.find(value => value.startsWith('--legacy-app='))?.slice('--legacy-app='.length)
@@ -18,7 +18,7 @@ const launch = (root, legacy = false) => electron.launch({
   ...(legacy && legacyApplication ? { executablePath: join(resolve(legacyApplication), 'Contents/MacOS/玄香印'), args: [] } : packaged ? { executablePath: resolve('release/mac-arm64/玄印写作.app/Contents/MacOS/玄印写作'), args: [] } : { args: [resolve('.')] }),
   // Both historical and current builds must isolate even if the wrong build
   // was supplied. Neither can fall back to the author's home directory.
-  env: { ...process.env, XUANXIANG_TEST_ROOT: root, XAANINK_TEST_ROOT: root }, timeout: 60000,
+  env: { ...process.env, XUANXIANG_TEST_ROOT: root, SHAKEINK_TEST_ROOT: root }, timeout: 60000,
 })
 async function ready() {
   const page = await application.firstWindow({ timeout: 60000 })
@@ -37,7 +37,7 @@ try {
       assert(/\b(?:const|var) isolatedRoot = process\.env\.XUANXIANG_TEST_ROOT \?/.test(oldBuild), 'historical packaged bootstrap must honor explicit isolation')
       assert(/dataRoot = isolatedRoot \?\?/.test(oldBuild), 'historical packaged worker must honor the same explicit isolation')
     }
-    temporary = await realpath(await mkdtemp(join(tmpdir(), 'xaanink-brand-upgrade-')))
+    temporary = await realpath(await mkdtemp(join(tmpdir(), 'shakeink-brand-upgrade-')))
     const root = join(temporary, 'legacy-data')
     application = await launch(root, true)
     const page = await ready()
@@ -65,12 +65,12 @@ try {
     const prepared = JSON.parse(await readFile(location, 'utf8'))
     temporary = await realpath(prepared.temporary)
     const allowed = await realpath(tmpdir())
-    assert(temporary.startsWith(join(allowed, 'xaanink-brand-upgrade-')))
+    assert(temporary.startsWith(join(allowed, 'shakeink-brand-upgrade-')))
     assert.equal(prepared.root, join(temporary, 'legacy-data'))
     application = await launch(prepared.root)
     let page = await ready()
     assert.equal(await application.evaluate(({ app }) => app.getPath('userData')), prepared.root + '-bootstrap')
-    assert.equal(page.url(), 'xaanink://app/')
+    assert.equal(page.url(), 'shakeink://app/')
     assert.equal(await application.evaluate(({ app }) => app.name), '玄印写作')
     await expect(page.locator('.chat-composer-editable')).toContainText('改名后仍保留的隔离测试草稿')
     const state = await page.evaluate(() => window.desktop.bootstrap())
@@ -85,12 +85,12 @@ try {
     const root = join(temporary, 'fresh-data')
     application = await launch(root)
     page = await ready()
-    assert.equal(page.url(), 'xaanink://app/'); assert.equal(await page.title(), '玄印写作')
+    assert.equal(page.url(), 'shakeink://app/'); assert.equal(await page.title(), '玄印写作')
     const fresh = await page.evaluate(() => window.desktop.bootstrap())
     assert.equal(fresh.dataRoot, root)
     assert.equal(fresh.models.length, 0); assert.deepEqual(await page.evaluate(async () => (await (await fetch('/api/novels')).json()).novels), [])
-    const identity = JSON.parse(await readFile(join(root, 'xaanink-app.json'), 'utf8'))
-    assert.equal(identity.app, 'XaanInk')
+    const identity = JSON.parse(await readFile(join(root, 'shakeink-app.json'), 'utf8'))
+    assert.equal(identity.app, 'ShakeInk')
     const menus = await application.evaluate(({ Menu }) => Menu.getApplicationMenu().items.map(item => ({ label: item.label, children: item.submenu?.items.map(child => child.label) })))
     assert.deepEqual(menus.map(item => item.label), ['玄印', '文件', '编辑', '视图', '窗口', '帮助'])
     assert(menus[0].children.includes('关于玄印写作')); assert(menus[0].children.includes('退出玄印'))

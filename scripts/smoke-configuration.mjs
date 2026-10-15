@@ -5,18 +5,18 @@ import {execFileSync} from 'node:child_process'
 import {mkdtemp,mkdir,rm,readFile,writeFile} from 'node:fs/promises'
 import {tmpdir} from 'node:os'
 import {join,resolve} from 'node:path'
-const temporary=await mkdtemp(join(tmpdir(),'xaanink-config-smoke-')),root=join(temporary,'data'),evidence='docs/evidence/implementation-09',startedAt=new Date().toISOString()
+const temporary=await mkdtemp(join(tmpdir(),'shakeink-config-smoke-')),root=join(temporary,'data'),evidence='docs/evidence/implementation-09',startedAt=new Date().toISOString()
 let app,page;const checks=[],errors=[]
 try{
  await mkdir(evidence,{recursive:true});execFileSync(process.execPath,['--import','tsx','scripts/seed-electron-fixture.ts',temporary],{encoding:'utf8'})
- app=await electron.launch({args:[resolve('.')],env:{...process.env,XAANINK_TEST_ROOT:root},timeout:45000});page=await app.firstWindow({timeout:45000});page.on('pageerror',e=>errors.push(e.message))
+ app=await electron.launch({args:[resolve('.')],env:{...process.env,SHAKEINK_TEST_ROOT:root},timeout:45000});page=await app.firstWindow({timeout:45000});page.on('pageerror',e=>errors.push(e.message))
  await page.getByRole('button',{name:'账号菜单'}).waitFor({timeout:45000});await page.getByRole('button',{name:'账号菜单'}).click();await page.getByRole('menuitem',{name:'设置',exact:true}).click()
  // Native selection is deliberately controlled; this tests UI→main→real FS,
  // and does not stand in for the separately pending physical OS picker check.
  const destination=join(temporary,'export.json'),incoming=join(temporary,'incoming.json')
  await app.evaluate(({dialog},paths)=>{dialog.showSaveDialog=async()=>({canceled:false,filePath:paths.destination});dialog.showOpenDialog=async()=>({canceled:false,filePaths:[paths.incoming]})},{destination,incoming})
  await page.getByRole('button',{name:'导出配置',exact:true}).click({timeout:3000})
- await expect.poll(async()=>{try{return JSON.parse(await readFile(destination,'utf8')).format}catch(error){if(error.code==='ENOENT')return null;throw error}}).toBe('xaanink-settings')
+ await expect.poll(async()=>{try{return JSON.parse(await readFile(destination,'utf8')).format}catch(error){if(error.code==='ENOENT')return null;throw error}}).toBe('shakeink-settings')
  const portable=JSON.parse(await readFile(destination,'utf8'));for(const field of ['apiKey','encryptedKey','dataRoot','defaultParent','avatarAssetId'])assert(!(await readFile(destination,'utf8')).includes(field))
  checks.push('settings export invokes controlled native-selection seam and writes portable schema to real isolated disk without keys/paths')
  portable.settings.appearance.theme='ink';portable.settings.appearance.uiFontSize=18;portable.settings.user.penName='跨设备作者';await writeFile(incoming,JSON.stringify(portable))

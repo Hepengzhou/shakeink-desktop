@@ -62,7 +62,7 @@ window.mountCaption=({platform,zoom,font,count,shell})=>{
   api.onLoad({ filter: /.*/, namespace: "caption-fixture" }, args => ({ loader: "tsx", resolveDir: process.cwd(), contents: args.path === "caption-chat" || args.path === "./ChatPanel" ? chat : args.path === "./SidebarTree" ? sidebar : args.path.endsWith("use-command-target") ? "export function useDesktopCommands(){}" : `import React from 'react';export const renderTabContent=tab=><p data-panel-body>{tab.title}</p>;export const StagedSaveSurface=({children})=>children;export const StagedInterceptionBootstrap=()=>null;export const StorySources=()=>null;export const StoryActivityBanner=()=>null;export const StoryLivePreview=()=>null;` }))
 } }] }).then(r => r.outputFiles![0].text)
 let browser: Browser
-test.before(async () => { browser = await chromium.launch({ headless: true, ...(process.env.XAANINK_TEST_CHROMIUM ? { executablePath: process.env.XAANINK_TEST_CHROMIUM } : {}) }) })
+test.before(async () => { browser = await chromium.launch({ headless: true, ...(process.env.SHAKEINK_TEST_CHROMIUM ? { executablePath: process.env.SHAKEINK_TEST_CHROMIUM } : {}) }) })
 test.after(async () => { await browser?.close() })
 async function scenario(platform: "win32" | "darwin" | null, zoom: number, font: number, count: number, shell: boolean, width: number, run: (page: Page) => Promise<void>) {
   const page = await browser.newPage({ viewport: { width: Math.round(width / zoom), height: 800 } }), errors: string[] = []

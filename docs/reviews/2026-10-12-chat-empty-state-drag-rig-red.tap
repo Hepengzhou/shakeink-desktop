@@ -3,10 +3,10 @@ TAP version 13
 #     triggerUncaughtException(
 #     ^
 # AssertionError [ERR_ASSERTION]: Original caption/message JSX and ThinkingRow must be available
-#     at assert (D:\\Projects\\xaanink-desktop\\tests\\browser\\ai-caption-message-drag.test.ts:29:1)
-#     at Object.<anonymous> (D:\\Projects\\xaanink-desktop\\tests\\browser\\ai-caption-message-drag.test.ts:132:3)
+#     at assert (D:\\Projects\\shakeink-desktop\\tests\\browser\\ai-caption-message-drag.test.ts:29:1)
+#     at Object.<anonymous> (D:\\Projects\\shakeink-desktop\\tests\\browser\\ai-caption-message-drag.test.ts:132:3)
 #     at Module._compile (node:internal/modules/cjs/loader:1929:14)
-#     at Object.transformer (D:\\Projects\\xaanink-desktop\\node_modules\\tsx\\dist\\register-B1c7OH6V.cjs:22:2188)
+#     at Object.transformer (D:\\Projects\\shakeink-desktop\\node_modules\\tsx\\dist\\register-B1c7OH6V.cjs:22:2188)
 #     at Module.load (node:internal/modules/cjs/loader:1651:32)
 #     at Module._load (node:internal/modules/cjs/loader:1443:12)
 #     at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
@@ -26,7 +26,7 @@ not ok 1 - tests\\browser\\ai-caption-message-drag.test.ts
   ---
   duration_ms: 940.9694
   type: 'test'
-  location: 'D:\\Projects\\xaanink-desktop\\tests\\browser\\ai-caption-message-drag.test.ts:1:1'
+  location: 'D:\\Projects\\shakeink-desktop\\tests\\browser\\ai-caption-message-drag.test.ts:1:1'
   failureType: 'testCodeFailure'
   exitCode: 1
   signal: ~
@@ -38,13 +38,13 @@ not ok 2 - DRAG-01 AI title is the first pane row, before workflow/recovery/crea
   ---
   duration_ms: 0.6163
   type: 'test'
-  location: 'D:\\Projects\\xaanink-desktop\\tests\\unit\\pane-window-drag.test.ts:2:1957'
+  location: 'D:\\Projects\\shakeink-desktop\\tests\\unit\\pane-window-drag.test.ts:2:1957'
   failureType: 'testCodeFailure'
   error: "Cannot read properties of undefined (reading 'children')"
   code: 'ERR_TEST_FAILURE'
   name: 'TypeError'
   stack: |-
-    TestContext.<anonymous> (D:\Projects\xaanink-desktop\tests\unit\pane-window-drag.test.ts:17:22)
+    TestContext.<anonymous> (D:\Projects\shakeink-desktop\tests\unit\pane-window-drag.test.ts:17:22)
     Test.runInAsyncScope (node:async_hooks:227:14)
     Test.run (node:internal/test_runner/test:1402:25)
     Test.start (node:internal/test_runner/test:1262:17)
@@ -55,14 +55,14 @@ not ok 3 - DRAG-04 AI drag contract is restricted to its title, preserving body/
   ---
   duration_ms: 0.147
   type: 'test'
-  location: 'D:\\Projects\\xaanink-desktop\\tests\\unit\\pane-window-drag.test.ts:2:2648'
+  location: 'D:\\Projects\\shakeink-desktop\\tests\\unit\\pane-window-drag.test.ts:2:2648'
   failureType: 'testCodeFailure'
   error: "Cannot read properties of undefined (reading 'openingElement')"
   code: 'ERR_TEST_FAILURE'
   name: 'TypeError'
   stack: |-
-    className (D:\Projects\xaanink-desktop\tests\unit\pane-window-drag.test.ts:8:26)
-    TestContext.<anonymous> (D:\Projects\xaanink-desktop\tests\unit\pane-window-drag.test.ts:27:23)
+    className (D:\Projects\shakeink-desktop\tests\unit\pane-window-drag.test.ts:8:26)
+    TestContext.<anonymous> (D:\Projects\shakeink-desktop\tests\unit\pane-window-drag.test.ts:27:23)
     Test.runInAsyncScope (node:async_hooks:227:14)
     Test.run (node:internal/test_runner/test:1402:25)
     Test.processPendingSubtests (node:internal/test_runner/test:974:18)

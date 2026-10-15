@@ -44,7 +44,7 @@ TDD 证据复核：`docs/evidence/alpha-release/version-red-native.tap` 记录 5
 
 ## 产物核验准备（未对旧产物授通过）
 
-只读检查时 release 内目录包仍是旧产物，旧安装器名为 `XaanInk-0.1.0-win-x64.exe`，不能作为本次 alpha 成品。待新 NSIS 完成后独立读取 packaged `resources/app/package.json`、主 EXE 和安装器 PE machine/version、重算 SHA-256，并核对本次 afterPack/真实 packaged 验证记录。
+只读检查时 release 内目录包仍是旧产物，旧安装器名为 `ShakeInk-0.1.0-win-x64.exe`，不能作为本次 alpha 成品。待新 NSIS 完成后独立读取 packaged `resources/app/package.json`、主 EXE 和安装器 PE machine/version、重算 SHA-256，并核对本次 afterPack/真实 packaged 验证记录。
 
 版本规则来自实际已安装 builder 源码：`winPackager.js:160-161` 的主 EXE opts 分别为 fileVersion=`appInfo.buildVersion`、productVersion=`getVersionInWeirdWindowsForm()`；`appInfo.js:67-87` 默认生成 `0.1.0.0`。`NsisTarget.js:186-187/383-393` 使用数值 `VIProductVersion`，同时 installer string `ProductVersion`/`FileVersion` 为完整 `0.1.0-alpha`。因此主 EXE ProductVersion `0.1.0.0` 不应因缺少 alpha 后缀误拒；最终以实际字段及源规则分别记录。
 
@@ -64,7 +64,7 @@ Windows 可适用打包测试为 `tests/unit/packaging-config.test.ts` 和 `test
 
 | 产物 | 字节数 | PE | FileVersion / ProductVersion | SHA-256 |
 | --- | ---: | --- | --- | --- |
-| `release/XaanInk-0.1.0-alpha-win-x64.exe` | 286286310 | 0x014c，x86 NSIS installer stub | 0.1.0-alpha / 0.1.0-alpha | `58949af762101bf347139f113a2d1113d3c97ebbee28abcccba02b8566740d89` |
+| `release/ShakeInk-0.1.0-alpha-win-x64.exe` | 286286310 | 0x014c，x86 NSIS installer stub | 0.1.0-alpha / 0.1.0-alpha | `58949af762101bf347139f113a2d1113d3c97ebbee28abcccba02b8566740d89` |
 | `.exe.blockmap` | 285387 | 不适用 | 不适用 | `0be178ba6b1634442583443bfd7c92b49ca5174e7f7807aca3c18b28ea11fc4c` |
 | `release/win-unpacked/玄印写作.exe` | 246238720 | 0x8664，x64 app | 0.1.0-alpha / 0.1.0.0 | `4d12fcbcbd75c5e35563f3d73a552895598e369e3d0bb37a19eb70cdc44a0bb3` |
 

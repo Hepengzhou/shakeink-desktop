@@ -49,12 +49,12 @@ test('M71-01: native file-open cannot bypass the closed business gate after a mi
 
 test('M71-02: image protocol reads belong to the same drain and cannot reopen a worker database after close',async()=>{
  const gate=new BusinessGate(),release=Promise.withResolvers<void>(),entered=Promise.withResolvers<void>();let drained=false,rpcs=0
- const code=expression((node):node is ts.CallExpression=>ts.isCallExpression(node)&&node.expression.getText(main)==='protocol.handle'&&node.arguments[0]?.getText(main)==='"xaanink"')
+ const code=expression((node):node is ts.CallExpression=>ts.isCallExpression(node)&&node.expression.getText(main)==='protocol.handle'&&node.arguments[0]?.getText(main)==='"shakeink"')
  const read=evaluate<(request:Request)=>Promise<Response>>(`return ${code}`,{
   businessGate:gate,businessClosed:false,localImageRequest,service:{async call(){rpcs++;entered.resolve();await release.promise;return{bytes:new Uint8Array([137,80,78,71]),mime:'image/png'}}},
   avatarAssets:{readAsset:async()=>{throw Error('not a global avatar')}},staticUiResponse:async()=>new Response(null,{status:404}),
  })
- const request=()=>new Request(`xaanink://app/_desktop/assets/${randomUUID()}/${randomUUID()}.png`)
+ const request=()=>new Request(`shakeink://app/_desktop/assets/${randomUUID()}/${randomUUID()}.png`)
  const work=read(request());await entered.promise;const close=gate.close();void close.then(()=>{drained=true})
  try{
   await new Promise(setImmediate);assert.equal(drained,false,'an admitted asset RPC must finish before the source is declared drained')

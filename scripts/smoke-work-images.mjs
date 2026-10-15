@@ -6,7 +6,7 @@ import {mkdtemp,mkdir,rm,writeFile,readFile,readdir} from 'node:fs/promises'
 import {tmpdir} from 'node:os'
 import {join,resolve} from 'node:path'
 import sharp from 'sharp'
-const temporary=await mkdtemp(join(tmpdir(),'xaanink-native-images-')),root=join(temporary,'data'),evidence='docs/evidence/implementation-10'
+const temporary=await mkdtemp(join(tmpdir(),'shakeink-native-images-')),root=join(temporary,'data'),evidence='docs/evidence/implementation-10'
 const checks=[],errors=[],startedAt=new Date().toISOString();let app,page
 await mkdir(evidence,{recursive:true})
 async function ready(){page=await app.firstWindow({timeout:45000});page.on('pageerror',e=>errors.push(e.message));await page.getByRole('button',{name:'账号菜单'}).waitFor({timeout:45000});await app.evaluate(({app,BrowserWindow})=>{app.focus({steal:true});BrowserWindow.getAllWindows()[0].focus()})}
@@ -15,7 +15,7 @@ try{
  const seed=JSON.parse(execFileSync(process.execPath,['--import','tsx','scripts/seed-electron-fixture.ts',temporary],{encoding:'utf8'}).trim().split('\n').at(-1))
  const files=[]
  for(const [index,color] of ['#c4ab85','#262a30'].entries()){const bytes=await sharp({create:{width:40,height:60,channels:3,background:color}}).png().toBuffer(),path=join(temporary,`image-${index}.png`);await writeFile(path,bytes);files.push({path,bytes})}
- app=await electron.launch({args:[resolve('.')],env:{...process.env,XAANINK_TEST_ROOT:root},timeout:45000});await ready()
+ app=await electron.launch({args:[resolve('.')],env:{...process.env,SHAKEINK_TEST_ROOT:root},timeout:45000});await ready()
  // Prepare a scene through the original local handler. Image uploads below use the actual Web controls.
  const scene=await page.evaluate(async novelId=>(await (await fetch(`/api/novels/${novelId}/scenes`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({name:'本地图像场景'})})).json()).scene,seed.novelId)
  await page.reload();await page.getByRole('button',{name:'账号菜单'}).waitFor()

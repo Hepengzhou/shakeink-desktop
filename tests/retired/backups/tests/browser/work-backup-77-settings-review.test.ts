@@ -17,7 +17,7 @@ const bundle=build({stdin:{loader:'tsx',resolveDir:process.cwd(),contents:`impor
  api.onLoad({filter:/.*/,namespace:'review77'},args=>({loader:'tsx',resolveDir:process.cwd(),contents:args.path==='desktop-store'?store:children.get(args.path)!.map(name=>`export function ${name}(){return null}`).join(';')}))
  }}]}).then(result=>result.outputFiles![0].text)
 let browser:Browser
-test.before(async()=>{browser=await chromium.launch({headless:true,...(process.env.XAANINK_TEST_CHROMIUM?{executablePath:process.env.XAANINK_TEST_CHROMIUM}:{})})});test.after(async()=>{await browser?.close()})
+test.before(async()=>{browser=await chromium.launch({headless:true,...(process.env.SHAKEINK_TEST_CHROMIUM?{executablePath:process.env.SHAKEINK_TEST_CHROMIUM}:{})})});test.after(async()=>{await browser?.close()})
 test('BS77-01 the actual settings selects capture both chosen numbers before queued confirmation restores the controlled DOM',async()=>{
  const page=await browser.newPage({viewport:{width:900,height:900}}),errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));await page.route('**/*',route=>route.abort())
  try{

@@ -5,7 +5,7 @@ import { createServer } from 'node:http'
 import assert from 'node:assert/strict'
 import { tmpdir, homedir } from 'node:os'
 import { join, resolve } from 'node:path'
-const temporary = await mkdtemp(join(tmpdir(), 'xaanink-models-smoke-'))
+const temporary = await mkdtemp(join(tmpdir(), 'shakeink-models-smoke-'))
 const evidence = 'docs/evidence/implementation-04'
 const startedAt = new Date().toISOString(), checks = [], rendererErrors = []
 let app
@@ -22,7 +22,7 @@ await new Promise(resolve => server.listen(0,'127.0.0.1',resolve))
 const endpoint=`http://127.0.0.1:${server.address().port}/v1`
 await mkdir(evidence, { recursive:true })
 try {
-  app = await electron.launch({ args:[resolve('.')], env:{...process.env,XAANINK_TEST_ROOT:join(temporary,'data')},timeout:45000 })
+  app = await electron.launch({ args:[resolve('.')], env:{...process.env,SHAKEINK_TEST_ROOT:join(temporary,'data')},timeout:45000 })
   const page = await app.firstWindow({timeout:45000})
   page.on('pageerror', error => rendererErrors.push(error.message))
   await page.getByRole('button',{name:'账号菜单'}).waitFor({timeout:45000})

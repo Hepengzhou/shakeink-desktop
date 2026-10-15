@@ -21,7 +21,7 @@
 
 ## 实际Windows证据
 
-从新隔离根启动 `xaanink://app/`，模型数为0、renderer离线。应用本身无HTTP监听，脚本未注入设计CSS或替换DOM。关闭首次空态后，真实服务/Prisma/DraftJournal创建隔离合成作品与会话，重新启动后打开真实原面板。合成资料没有写入源码或作者目录。
+从新隔离根启动 `shakeink://app/`，模型数为0、renderer离线。应用本身无HTTP监听，脚本未注入设计CSS或替换DOM。关闭首次空态后，真实服务/Prisma/DraftJournal创建隔离合成作品与会话，重新启动后打开真实原面板。合成资料没有写入源码或作者目录。
 
 固定颜色期望：左 `rgb(245,238,220)`、AI `rgb(250,246,232)`、右 `rgb(248,243,228)`，结构线 `rgb(216,203,166)`。真实规划、SceneWorkspace、试验场、候选稿、正文正文/gutter和preview分别检查；AI真实内嵌编辑器仍为原 `rgb(249,244,228)`，AI任务表面为 `rgb(252,248,238)`。
 
@@ -35,7 +35,7 @@
 
 前六次原生运行各保留独立目录：前置脚本CommonJS格式问题、CSS module定位问题、过严折叠宽度断言均可追溯；没有覆盖失败记录或跳过检查。最终四个产品SHA与代码审核绑定，源码、dist及静态资源SHA保存于native JSON；未声明新安装包已生成。
 
-![真实Windows正文分屏与宣纸三栏](D:/Projects/xaanink-desktop/docs/evidence/workspace-surfaces/native-local-08/implemented-manuscript-split.png)
+![真实Windows正文分屏与宣纸三栏](D:/Projects/shakeink-desktop/docs/evidence/workspace-surfaces/native-local-08/implemented-manuscript-split.png)
 
 ## 完整回归与未通过项
 

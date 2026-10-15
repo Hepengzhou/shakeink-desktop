@@ -20,12 +20,12 @@ import { invalidatePromptCache } from "../../src/lib/prompts/render"
 
 const original = [...THEME_A_TEMPLATES, ...THEME_B_TEMPLATES, ...WORLD_A_TEMPLATES, ...WORLD_B_TEMPLATES, ...CHAR_A_TEMPLATES, ...CHAR_B_TEMPLATES, ...PLOT_A_TEMPLATES, ...PLOT_B_TEMPLATES]
 async function fixture(run: (works: Workspaces, root: string) => Promise<void>) {
-  const base = await mkdtemp(join(tmpdir(), "xaanink-plot-library-")), root = join(base, "data"), works = new Workspaces(root, resolve("prisma/migrations"))
+  const base = await mkdtemp(join(tmpdir(), "shakeink-plot-library-")), root = join(base, "data"), works = new Workspaces(root, resolve("prisma/migrations"))
   try { await works.initialize(); await run(works, root) }
   finally {
     invalidatePromptCache(); await works.close()
     const target = await realpath(base)
-    assert.equal(dirname(target).toLowerCase(), (await realpath(tmpdir())).toLowerCase()); assert.ok(basename(target).startsWith("xaanink-plot-library-"))
+    assert.equal(dirname(target).toLowerCase(), (await realpath(tmpdir())).toLowerCase()); assert.ok(basename(target).startsWith("shakeink-plot-library-"))
     await rm(target, { recursive: true, force: true })
   }
 }

@@ -27,10 +27,11 @@ test('VS-05: standalone About has precise link, escaped actual version and offli
 test('VS-06: only exact project navigation opens externally and rejected open reports once',async()=>{
  const {installProjectAboutLinks}=await import('../../desktop/main/project-about')
  const {PROJECT_REPOSITORY_URL}=await import('../../desktop/shared/project-info')
+ assert.equal(PROJECT_REPOSITORY_URL,'https://github.com/mySingleLive/shakeink-desktop')
  const handlers=new Map<string,Function>();let popup:Function=()=>{},opens:string[]=[],errors=0
  const contents={on:(event:string,handler:Function)=>{handlers.set(event,handler)},setWindowOpenHandler:(handler:Function)=>{popup=handler}}
  installProjectAboutLinks(contents as any,async url=>{opens.push(url)},()=>{errors++})
- for(const url of ['file:///C:/test','javascript:alert(1)','https://github.com.evil.invalid/','https://github.com/mySingleLive/xaanink-desktop/issues',PROJECT_REPOSITORY_URL+'?x=1',PROJECT_REPOSITORY_URL+'#star','https://user@github.com/mySingleLive/xaanink-desktop']){
+ for(const url of ['file:///C:/test','javascript:alert(1)','https://github.com.evil.invalid/','https://github.com/mySingleLive/shakeink-desktop/issues',PROJECT_REPOSITORY_URL+'?x=1',PROJECT_REPOSITORY_URL+'#star','https://user@github.com/mySingleLive/shakeink-desktop']){
   let prevented=false;handlers.get('will-navigate')!({preventDefault(){prevented=true}},url);assert.equal(prevented,true)
   assert.deepEqual(popup({url}),{action:'deny'})
  }

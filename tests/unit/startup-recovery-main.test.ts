@@ -67,14 +67,14 @@ test('SR-U-104b a failing auto-init/repair execution degrades to the recovery wi
   const trace:string[]=[]
   const r=run({classifyStartupRecovery:()=>{trace.push('classify');return kind},executeStartupRepair:async()=>{throw Error('controlled repair failure')}})
   await tick()
-  assert.deepEqual(r.trace,['legacy','recovery-window']);assert.deepEqual(r.windows,[{sourcePath:null,recoveryRoot:'/home/.xaanink'}])
+  assert.deepEqual(r.trace,['legacy','recovery-window']);assert.deepEqual(r.windows,[{sourcePath:null,recoveryRoot:'/home/.shakeink'}])
  }
 })
 test('SR-U-105 the dialog classification routes straight to the recovery window with its source path',async()=>{
  const r=run({classifyStartupRecovery:()=>({kind:'dialog',reason:'content-damaged',sourcePath:'/root'})})
  await tick()
  assert.deepEqual(r.trace,['legacy','recovery-window'])
- assert.deepEqual(r.windows,[{sourcePath:'/root',recoveryRoot:'/home/.xaanink'}])
+ assert.deepEqual(r.windows,[{sourcePath:'/root',recoveryRoot:'/home/.shakeink'}])
 })
 test('SR-U-106 a startup barrier failure terminates the live worker before opening the recovery window',async()=>{
  const r=run(bindings=>({launch:async()=>{bindings.failedRootCode='ROOT_STARTUP_TIMEOUT';bindings.trace.push('ordinary');throw Error('ROOT_STARTUP_TIMEOUT')},worker:{terminate:async()=>{bindings.ordinaryWorkerExited=true;bindings.workerTerminated=true}}}))
@@ -82,7 +82,7 @@ test('SR-U-106 a startup barrier failure terminates the live worker before openi
  assert.deepEqual(r.trace,['legacy','classify','relocation-preflight','maintenance-preflight','inbox-preflight','ordinary','recovery-window'])
  assert.equal(r.bindings.workerTerminated,true,'worker terminated before the window')
  assert.equal(r.bindings.failedRootCode,null)
- assert.deepEqual(r.windows,[{sourcePath:'/root',recoveryRoot:'/home/.xaanink'}])
+ assert.deepEqual(r.windows,[{sourcePath:'/root',recoveryRoot:'/home/.shakeink'}])
  assert.deepEqual(r.errors,[])
 })
 test('SR-U-106b worker already exited skips termination; terminate failure or window failure falls back to the error box',async()=>{
@@ -124,7 +124,7 @@ test('SR-U-109 a reselection that would switch families is refused and never wri
  const r=run({
   startupPaths:{bootstrap:'/legacy-boot',defaultRoot:'/home/.xuanxiang',encryptionFamily:'legacy'},
   classifyStartupRecovery:()=>({kind:'auto-init'}),
-  selectBrandStartupPaths:()=>({bootstrap:'/bootstrap',defaultRoot:'/home/.xaanink',encryptionFamily:'current'}),
+  selectBrandStartupPaths:()=>({bootstrap:'/bootstrap',defaultRoot:'/home/.shakeink',encryptionFamily:'current'}),
  })
  await tick()
  assert.deepEqual(r.trace,['legacy','repair:pointer','recovery-window'])
@@ -139,5 +139,5 @@ test('SR-U-110 a none classification with a retained selection error reselects o
  const stillBroken=run({startupSelectionError:new BrandStartupPathError('BRAND_DEFAULT_INVALID',{bootstrap:'/bootstrap',defaultRoot:'/root',encryptionFamily:'current'}),selectBrandStartupPaths:()=>{throw Error('still invalid')}})
  await tick()
  assert.deepEqual(stillBroken.trace,['legacy','classify','recovery-window'])
- assert.deepEqual(stillBroken.windows,[{sourcePath:null,recoveryRoot:'/home/.xaanink'}])
+ assert.deepEqual(stillBroken.windows,[{sourcePath:null,recoveryRoot:'/home/.shakeink'}])
 })

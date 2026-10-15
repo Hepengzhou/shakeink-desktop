@@ -7,7 +7,7 @@ test('BRAND-S01: existing session drafts retain their text and future saves use 
  const map=new Map([[oldKey,JSON.stringify({version:1,activeKey:entry.draftId,drafts:{[entry.draftId]:entry}})]])
  const store={getItem:(key:string)=>map.get(key)??null,setItem:(key:string,value:string)=>map.set(key,value),removeItem:(key:string)=>map.delete(key)}
  const repository=new ChatSessionRepository(account,store)
- assert.deepEqual(repository.read().entry,entry);assert.equal(chatSessionKey(account),`xaanink-chat-session:v1:${account}`)
+ assert.deepEqual(repository.read().entry,entry);assert.equal(chatSessionKey(account),`shakeink-chat-session:v1:${account}`)
  const old=map.get(oldKey);assert.equal(repository.save(entry),null)
  assert.ok(map.has(chatSessionKey(account)));assert.equal(map.get(oldKey),old)
  assert.deepEqual(new ChatSessionRepository(account,store).read().entry,entry)
@@ -15,7 +15,7 @@ test('BRAND-S01: existing session drafts retain their text and future saves use 
 })
 
 test('BRAND-S02: unreadable current state never falls back to stale legacy drafts or gets overwritten',()=>{
- const account='fixture-author',entry=emptyChatSession(),newKey=`xaanink-chat-session:v1:${account}`,oldKey=`xuanxiang-chat-session:v1:${account}`
+ const account='fixture-author',entry=emptyChatSession(),newKey=`shakeink-chat-session:v1:${account}`,oldKey=`xuanxiang-chat-session:v1:${account}`
  const map=new Map([[newKey,'broken-json'],[oldKey,JSON.stringify({version:1,activeKey:entry.draftId,drafts:{[entry.draftId]:entry}})]])
  const store={getItem:(key:string)=>map.get(key)??null,setItem:(key:string,value:string)=>map.set(key,value),removeItem:(key:string)=>map.delete(key)}
  const repository=new ChatSessionRepository(account,store)

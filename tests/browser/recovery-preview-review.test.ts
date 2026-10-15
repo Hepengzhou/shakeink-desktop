@@ -21,7 +21,7 @@ window.mountReview82=items=>{desktopRecoveryStore.retain(items);installRecoveryD
  const root=createRoot(document.getElementById('app'));flushSync(()=>root.render(React.createElement(RecoveryDialog,{open:true,onOpenChange:()=>{}})));};
 `},bundle:true,platform:'browser',format:'iife',write:false,tsconfig:'tsconfig.json'}).then(result=>result.outputFiles![0].text)
 let browser:Browser
-test.before(async()=>{browser=await chromium.launch({headless:true,...(process.env.XAANINK_TEST_CHROMIUM?{executablePath:process.env.XAANINK_TEST_CHROMIUM}:{})})})
+test.before(async()=>{browser=await chromium.launch({headless:true,...(process.env.SHAKEINK_TEST_CHROMIUM?{executablePath:process.env.SHAKEINK_TEST_CHROMIUM}:{})})})
 test.after(async()=>{await browser?.close()})
 function item(id:string,source:string,value:unknown,reason:RecoveryItem['reason']='WORK_RESTORED'):RecoveryItem{return{id,source,path:'source',reason,createdAt:'2026-10-08T00:00:00.000Z',value}}
 async function scenario(items:RecoveryItem[],run:(page:Page)=>Promise<void>){const page=await browser.newPage(),errors:string[]=[];page.setDefaultTimeout(10000);page.on('pageerror',error=>errors.push(error.message));try{await page.route('http://localhost/**',route=>route.fulfill({contentType:'text/html',body:'<div id="app"></div>'}));await page.goto('http://localhost/');await page.addStyleTag({content:css});await page.addScriptTag({content:await bundle});await page.evaluate(records=>window.mountReview82(records),items);await page.getByRole('dialog').waitFor();await run(page);assert.equal(await page.evaluate(()=>window.review82.requests),0);assert.deepEqual(errors,[])}finally{await page.close()}}

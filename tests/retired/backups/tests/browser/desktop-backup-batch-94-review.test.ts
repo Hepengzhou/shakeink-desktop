@@ -18,7 +18,7 @@ globalThis.reviewMount=()=>{
  render();globalThis.review={calls,remount:()=>{key++;render()},resolve:(index,value)=>calls[index].resolve(value),reject:(index,message)=>calls[index].reject(Error(message)),unmount:()=>flushSync(()=>root.unmount())};
 };`},bundle:true,platform:'browser',format:'iife',write:false,tsconfig:'tsconfig.json'}).then(result=>result.outputFiles![0].text)
 let browser:Browser
-test.before(async()=>{browser=await chromium.launch({headless:true,executablePath:process.env.XAANINK_TEST_CHROMIUM})})
+test.before(async()=>{browser=await chromium.launch({headless:true,executablePath:process.env.SHAKEINK_TEST_CHROMIUM})})
 test.after(async()=>{await browser?.close()})
 async function scenario(run:(page:Page)=>Promise<void>){
  const page=await browser.newPage({viewport:{width:400,height:300}}),errors:string[]=[];page.setDefaultTimeout(2000);page.on('pageerror',error=>errors.push(error.message))

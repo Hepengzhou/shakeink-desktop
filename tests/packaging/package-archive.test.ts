@@ -11,7 +11,7 @@ import JSZip from 'jszip'
 const execute = promisify(execFile)
 const project = resolve(import.meta.dirname, '../..')
 const releaseVersion = JSON.parse(await readFile(join(project, 'package.json'), 'utf8')).version
-const zip = join(project, `release/XaanInk-${releaseVersion}-mac-arm64.zip`)
+const zip = join(project, `release/ShakeInk-${releaseVersion}-mac-arm64.zip`)
 const app = join(project, 'release/mac-arm64/玄印写作.app')
 const sha = (bytes: Buffer) => createHash('sha256').update(bytes).digest('hex')
 

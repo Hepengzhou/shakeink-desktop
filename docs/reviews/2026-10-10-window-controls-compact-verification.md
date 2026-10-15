@@ -24,7 +24,7 @@
 
 `package.log` exit0，Electron44.6.0 win-x64 NSIS，314项资源检查通过，包内PGlite正常关闭。无发布、签名或NSIS安装。
 
-- `release/XaanInk-0.1.0-win-x64.exe`：276569956 bytes。
+- `release/ShakeInk-0.1.0-win-x64.exe`：276569956 bytes。
 - SHA256：`3be618f6e5b1aecfc7b45c6429975ba872201e28270566639be400d6d5811d5a`。
 - 构建main与包内main哈希一致，完整哈希在 `verification.json`。
 

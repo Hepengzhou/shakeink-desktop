@@ -49,7 +49,7 @@ globalThis.mountLeaseUI=(mode='panel',options={})=>{
  builder.onLoad({filter:/.*/,namespace:"empty-child"},args=>({contents:`import React from "react";export const ${emptyChildren[args.path]}=(props)=>React.createElement("output",{hidden:true,"data-child":"${emptyChildren[args.path]}","data-open":String(!!props.open)})`,loader:"js",resolveDir:process.cwd()}))
 }}]}).then(result=>result.outputFiles![0].text)
 let browser:Browser
-test.before(async()=>{browser=await chromium.launch({headless:true,executablePath:process.env.XAANINK_TEST_CHROMIUM})})
+test.before(async()=>{browser=await chromium.launch({headless:true,executablePath:process.env.SHAKEINK_TEST_CHROMIUM})})
 test.after(async()=>{await browser?.close()})
 async function scenario(mode:"panel"|"app",run:(page:Page)=>Promise<void>,options:Record<string,boolean>={}){
  const page=await browser.newPage({viewport:{width:1000,height:760}}),errors:string[]=[];page.setDefaultTimeout(2200);page.on("pageerror",error=>errors.push(error.message))

@@ -21,8 +21,8 @@ Node 24.18.0。完整命令为 `node --import tsx --test --test-concurrency=2 --
 
 浏览器夹具实际引入左导航 `SidebarWindowControls`，按原DOM键盘顺序保留restore→右按钮。所有原有空态几何检查读取两处真实button的子SVG，左右宽高相等且接近当前root rem（允许实际像素舍入0.05px）；右按钮宽高仍1.5rem，SVG完整位于点击区内。Windows fallback45组、env读取注入48组、字号11/14/24及实时zoom矩阵全过，保持面板顶部内定位、菜单至少6px间隔及窗控预留区。Windows证据是浏览器布局合同，不是Windows原生/DPI验收。
 
-真实macOS运行当前out/dist、完整原组件、本地xaanink://app/协议、CDP offline及全新canonical /private/tmp隔离dataRoot。按独立临时Electron.app路径选择本轮窗口。实际CUA原生截图可见左右图标，默认测得二者16×16、右按钮24×24、右距8px；系统鼠标点击后右区卸载，AI恢复入口出现，原生窗口bounds/zoom/最大化/全屏不变。真实zoom .75/1/1.25/1.5/2×字号11/24十组中，左右SVG逐次完全相等，并跟随root rem及原按钮1.5rem。Enter/Space、Shift+Tab/Tab与焦点outline、重开后沿用既有零Tab恢复规则并通过AI入口重新展开、最后Tab自动收起及空区恢复后再次收起均通过。键盘由Electron/CDP注入，未声称硬件键盘/IME验收。
+真实macOS运行当前out/dist、完整原组件、本地shakeink://app/协议、CDP offline及全新canonical /private/tmp隔离dataRoot。按独立临时Electron.app路径选择本轮窗口。实际CUA原生截图可见左右图标，默认测得二者16×16、右按钮24×24、右距8px；系统鼠标点击后右区卸载，AI恢复入口出现，原生窗口bounds/zoom/最大化/全屏不变。真实zoom .75/1/1.25/1.5/2×字号11/24十组中，左右SVG逐次完全相等，并跟随root rem及原按钮1.5rem。Enter/Space、Shift+Tab/Tab与焦点outline、重开后沿用既有零Tab恢复规则并通过AI入口重新展开、最后Tab自动收起及空区恢复后再次收起均通过。键盘由Electron/CDP注入，未声称硬件键盘/IME验收。
 
-本轮证据独立保存于implementation-48，包含日志、原生JSON、CUA原生截图、renderer截图及1247个源码/测试/构建SHA-256；报告中的7个源文件指纹与当前源码一致。immutable报告位于 `implementation-48/xaanink-empty-hide-hxEpuk/empty-content-hide-native.json`，成功alias与其一致。旧implementation-47报告及指纹记录保持，未拿旧证据证明新尺寸。成功后仅清理本轮隔离根，没有使用用户数据或Key。
+本轮证据独立保存于implementation-48，包含日志、原生JSON、CUA原生截图、renderer截图及1247个源码/测试/构建SHA-256；报告中的7个源文件指纹与当前源码一致。immutable报告位于 `implementation-48/shakeink-empty-hide-hxEpuk/empty-content-hide-native.json`，成功alias与其一致。旧implementation-47报告及指纹记录保持，未拿旧证据证明新尺寸。成功后仅清理本轮隔离根，没有使用用户数据或Key。
 
 台账只新增W05的有限development记录、SIZE-01–04及迁移台账同名记录，原W05总status和业务迁移状态保持。未重新打包、安装或发布；Windows原生目标机/DPI、多屏/窄屏全工作台及系统完全断网未执行。上述范围不升级为完整跨平台或安装版验收。

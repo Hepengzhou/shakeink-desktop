@@ -11,7 +11,7 @@ import {Workspaces} from '../desktop/service/workspaces.ts'
 assert.equal(process.platform,'win32','Actual Windows required')
 const tag=process.argv[2]??'green'
 assert.ok(['red','green'].includes(tag))
-const temporary=await mkdtemp(join(tmpdir(),'xaanink-image-providers-'))
+const temporary=await mkdtemp(join(tmpdir(),'shakeink-image-providers-'))
 const evidence=resolve('docs/evidence/image-providers',tag)
 await mkdir(evidence,{recursive:true})
 const report={status:'running',startedAt:new Date().toISOString(),scope:'Actual Windows development Electron; compiled real settings and onboarding React, isolated local state. New-provider checks have zero models/Key; legacy-edit checks use synthetic records and an OS-encrypted public fixture credential. Network/error observation starts after firstWindow and includes an offline reload, not process startup audit. Playwright/CDP input. Not macOS, installed package or supplier-call acceptance.',checks:[],errors:[],rendererHttpRequests:0,runtime:[],sourceHashes:{},bundleHashes:{}}
@@ -22,13 +22,13 @@ async function hashes(directory){for(const entry of await readdir(directory,{wit
 await hashes(resolve('out'));report.bundleHashes['dist/main/index.cjs']=hash(await readFile('dist/main/index.cjs'))
 let app,page,theme
 async function launch(root){
- app=await _electron.launch({args:[resolve('.')],env:{...process.env,XAANINK_TEST_ROOT:root},timeout:60000})
+ app=await _electron.launch({args:[resolve('.')],env:{...process.env,SHAKEINK_TEST_ROOT:root},timeout:60000})
  page=await app.firstWindow({timeout:60000});page.setDefaultTimeout(12000)
  page.on('pageerror',error=>report.errors.push(redact(error.message)))
  page.on('request',request=>{if(/^https?:/i.test(request.url()))report.rendererHttpRequests++})
  await page.context().setOffline(true)
  await app.evaluate(({BrowserWindow})=>BrowserWindow.getAllWindows()[0].setBounds({width:1440,height:900}))
- await page.waitForURL('xaanink://app/',{timeout:45000})
+ await page.waitForURL('shakeink://app/',{timeout:45000})
 }
 async function settings(){
  await page.getByRole('button',{name:'账号菜单',exact:true}).click()
@@ -110,7 +110,7 @@ try{
   await expect(page.getByRole('dialog',{name:'配置文生图模型',exact:true})).toBeVisible({timeout:45000})
   await page.reload();await expect(page.getByRole('dialog',{name:'配置文生图模型',exact:true})).toBeVisible({timeout:45000})
   await page.waitForFunction(theme=>document.documentElement.classList.contains(theme),theme)
-  assert.equal(page.url(),'xaanink://app/')
+  assert.equal(page.url(),'shakeink://app/')
   const bootstrap=await page.evaluate(()=>window.desktop.bootstrap())
   assert.equal(bootstrap.platform,'win32');assert.equal(bootstrap.models.length,0);assert.equal(bootstrap.dataRoot,root)
   await check('IP-07-onboarding',()=>verifyMenu('onboarding'))
@@ -142,7 +142,7 @@ try{
  process.exitCode=1
 }finally{
  await app?.close().catch(()=>{})
- assert.equal(dirname(resolve(temporary)),resolve(tmpdir()));assert.ok(basename(temporary).startsWith('xaanink-image-providers-'))
+ assert.equal(dirname(resolve(temporary)),resolve(tmpdir()));assert.ok(basename(temporary).startsWith('shakeink-image-providers-'))
  await rm(temporary,{recursive:true,force:true});report.cleanedIsolatedData=true;report.completedAt=new Date().toISOString()
  await writeFile(join(evidence,'windows-electron.json'),JSON.stringify(report,null,2)+'\n')
  console.log(JSON.stringify({status:report.status,checks:report.checks.length,error:report.error,evidence:`docs/evidence/image-providers/${tag}/windows-electron.json`}))

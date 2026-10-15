@@ -5,7 +5,7 @@ import { chromium } from "playwright-core"
 
 test("TS-ABOUT standalone production About document prevents selecting all UI text", async () => {
   const template = projectAboutHtml('0.synthetic','paper')
-  const browser = await chromium.launch({ headless: true, ...(process.env.XAANINK_TEST_CHROMIUM ? { executablePath: process.env.XAANINK_TEST_CHROMIUM } : {}) })
+  const browser = await chromium.launch({ headless: true, ...(process.env.SHAKEINK_TEST_CHROMIUM ? { executablePath: process.env.SHAKEINK_TEST_CHROMIUM } : {}) })
   try {
     const page = await browser.newPage({ viewport: { width: 440, height: 380 } })
     await page.route("**/*", route => route.abort())

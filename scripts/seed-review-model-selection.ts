@@ -10,7 +10,7 @@ import { runWithTaskDefaults } from '../desktop/service/task-defaults'
 import { beginChatRequest, finishChatAttempt, scopeFor } from '../src/lib/services/chat-turn'
 import { createPlan } from '../src/lib/sop/plan'
 async function main() {
-  const base = await realpath(resolve(process.argv[2])); assert(basename(base).startsWith('xaanink-review-selection-'))
+  const base = await realpath(resolve(process.argv[2])); assert(basename(base).startsWith('shakeink-review-selection-'))
   const works = new Workspaces(join(base, 'data'), resolve('prisma/migrations'))
   try {
     await works.initialize()

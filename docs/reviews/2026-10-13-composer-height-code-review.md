@@ -12,7 +12,7 @@
 - `:48–50, 109–145` 使用真实 Windows BrowserWindow 调整尺寸，以 renderer `innerHeight` 判断 ≤650 和 >650；paper/ink 分别覆盖空态与有消息会话、小窗口、滚动、收回和 Shift+Enter。
 - `:41–46` 检查模式/发送按钮在视口内，并真实点击模式按钮、打开和关闭菜单。无模型状态的发送按钮本来禁用，本项不将其点击或供应商发送作为通过项。
 - `:81–105, 129–132` 使用隔离 `Workspaces` inbox 与真实 prisma 会话/消息，关闭数据库后再启动 Electron，通过原 SidebarTree 点击条目并确认真实消息，不伪造 renderer 接口或 React 状态。`defaultState` 的模型为空（`desktop/core/settings.ts:40–49`），bootstrap 进一步检查模型数量为0与实际 dataRoot；脚本不读取或写入 Key。
-- `:15, 82, 93, 154–159` 在 mkdtemp 新建的专属目录中创建两套主题数据，Electron 由 `XAANINK_TEST_ROOT` 指向隔离目录。`desktop/main/brand-startup-paths.ts:28–35` 将 bootstrap 设为主题 root 的 `-bootstrap` 兄弟目录，仍位于本次临时总目录内；`desktop/main/index.ts:64–79` 将 userData 设到该隔离 bootstrap。退出后先检查总目录绝对父路径及专属前缀再递归清理，删除目标没有越出本次 mkdtemp 目录。
+- `:15, 82, 93, 154–159` 在 mkdtemp 新建的专属目录中创建两套主题数据，Electron 由 `SHAKEINK_TEST_ROOT` 指向隔离目录。`desktop/main/brand-startup-paths.ts:28–35` 将 bootstrap 设为主题 root 的 `-bootstrap` 兄弟目录，仍位于本次临时总目录内；`desktop/main/index.ts:64–79` 将 userData 设到该隔离 bootstrap。退出后先检查总目录绝对父路径及专属前缀再递归清理，删除目标没有越出本次 mkdtemp 目录。
 - `:22–30, 150–159` 绑定源码和编译输出 hash，失败时保留错误、尺寸和截图，正常进入验证后成功/失败均关闭 Electron、清理隔离数据并写报告。red/green 标签只用于证据目录，相同高度断言保留。
 
 本轮发现并已修复的测试前置问题：旧脚本在 fill 后直接向下 wheel，fill 会把光标置于末尾且可能已滚至底部；旧红灯记录 `scrollTop=740`，等于 `880−140`，此时向下滚动无法继续增大。当前 `scroll():62–70` 已先设 `scrollTop=0` 并 poll 确认，再记录 before 和发出 wheel，最后验证实际滚动增量和高度不变。该赋值只准备起点，成功滚动仍由真实 Electron 的 Playwright/CDP wheel 输入触发。旧红灯在 CH-01 已退出，未进入此分支，修正没有改变形成红灯的280px预期。
@@ -27,7 +27,7 @@
 
 补审实际 green：已读取 `docs/evidence/composer-height/green/windows-electron.json`，状态 passed、15个完成检查；其脚本 hash 与当前补审版 `1726e88dacf1ae44b4217a2d07402e89d3c448af43062238b2455d928045b151` 一致，ChatPanel hash 为 `d28a3133914b77e0ebf323f92fbb1b72edfc0aec7f930e95f2ac5028e4e70507`，CSS hash 为 `99bd8051f2b6b7ccdf8eb376a90ccdc8048918343592da281fdc68905a8ebdf1`。paper/ink 各自实测正常空态及会话高度280px、小窗口空态192px（innerHeight650），7行自然高度167px；短文/清空收回至48px/52px。报告记录 wheel 增量断言、模式菜单实际操作及 Shift+Enter 通过；观察时段renderer错误/HTTP为0，两主题main监听快照均0，隔离数据已清理。主代理已查看真实截图；本补审依据原始JSON与源码hash确认尺寸结果，不另运行专项。
 
-浏览器执行环境：bundled Node v24.19.0。第一次sandbox启动因 spawn EPERM 没有测试子进程启动，记录 `browser-files-composer-height/initial-sandbox-spawn-failure.txt`；批准以相同命令越过子进程sandbox限制后，41文件全部完成但缺失默认 Playwright Chromium headless shell，425用例仅5通过、420基础设施失败。完整初次结果保存在 `browser-files-composer-height/attempt-1-no-chromium`。原测试支持环境变量 `XAANINK_TEST_CHROMIUM`，重跑将其指向已安装 Chrome `154.0.8037.98`，无需修改测试源或安装浏览器。
+浏览器执行环境：bundled Node v24.19.0。第一次sandbox启动因 spawn EPERM 没有测试子进程启动，记录 `browser-files-composer-height/initial-sandbox-spawn-failure.txt`；批准以相同命令越过子进程sandbox限制后，41文件全部完成但缺失默认 Playwright Chromium headless shell，425用例仅5通过、420基础设施失败。完整初次结果保存在 `browser-files-composer-height/attempt-1-no-chromium`。原测试支持环境变量 `SHAKEINK_TEST_CHROMIUM`，重跑将其指向已安装 Chrome `154.0.8037.98`，无需修改测试源或安装浏览器。
 
 最终浏览器全量：同一现有exec session 59858结束，exit0。`browser-full-files-composer-height.json` 记录从 startIndex0 枚举并完成全部41文件，41文件通过，425用例全部通过，失败/取消/跳过/todo均0，complete=true、未尝试文件和失败文件均为空；无watchdog终止或不完整文件。执行时段为北京时间2026-10-13 14:53:50至15:01:54，Node v24.19.0、win32。与此前 `browser-final-file-coverage.json` 的38文件逐项比对无遗漏，新增 `about-text-selection`、`text-selection-cards`、`text-selection` 分别为1/56/8例，因此本轮425为原360加65例。新一轮使用原测试源码和断言，包含完整ChatPanel组件20/20及composer clipboard24/24。逐文件测试hash与TAP/JSON保留在指定目录；初次基础设施失败不删除，也不计为产品通过或本轮有效高度红灯。
 
@@ -47,7 +47,7 @@
 
 第二轮实际green补审：已独立读取 `docs/evidence/composer-height/v2-green/windows-electron.json`，状态passed、15/15完成检查。报告ChatPanel/CSS/专项脚本hash分别为 `a00444df1f152938545938aaa85462feb9c40e870179560f787a9df711942a4e`、`ad8cce982193c6ec072ad12182e6c2b3032ebd0613a43d70b6163e04371a1e7a`、`5ee21b1faef95037942514d67569b02902aedea5503efde5731d6b4bbdc2e0b3`，均与本次读取当前文件一致。两主题正常空态/会话及650px小窗口会话实际高度420px，小窗口空态288px且inline420px；14行自然高度318px（>280且<420），短文/清空分别收回48px/52px。报告还通过真实wheel增量/尺寸不变、菜单实际选择、按钮完整位于视口及Shift+Enter断言；观察时段renderer错误/HTTP均0、两个main监听快照均0、隔离数据已清理。主代理已查看ink会话420/paper空态288截图。本补审以原JSON与当前hash确认新值结果，未额外运行Electron或构建。
 
-主代理授权的第二轮浏览器全量从启动时清单执行，原入口为 `scripts/check-browser-file-regression.mjs composer-height-v2`，使用bundled Node24及测试既有 `XAANINK_TEST_CHROMIUM` 指向已安装Chrome154.0.8037.98。启动时枚举42文件，包含上一轮全部41文件，无缺失；同期新增 `tests/browser/image-provider-menu.test.ts`，其实际结果同样保留，不修改其它任务的源或断言以消除失败。第二轮结果将写入独立 `browser-files-composer-height-v2` 和 `browser-full-files-composer-height-v2.json`，不覆盖第一轮证据；核心并发2由主代理另行执行。
+主代理授权的第二轮浏览器全量从启动时清单执行，原入口为 `scripts/check-browser-file-regression.mjs composer-height-v2`，使用bundled Node24及测试既有 `SHAKEINK_TEST_CHROMIUM` 指向已安装Chrome154.0.8037.98。启动时枚举42文件，包含上一轮全部41文件，无缺失；同期新增 `tests/browser/image-provider-menu.test.ts`，其实际结果同样保留，不修改其它任务的源或断言以消除失败。第二轮结果将写入独立 `browser-files-composer-height-v2` 和 `browser-full-files-composer-height-v2.json`，不覆盖第一轮证据；核心并发2由主代理另行执行。
 
 第二轮浏览器首次全量已完成：原session31484于北京时间2026-10-13 15:32:23至15:43:56执行42/42文件，报告complete=true、startIndex0、无未尝试文件、无watchdog终止。431例为428通过/3失败，取消/跳过/todo均0，39文件通过、3文件失败，主报告status=failed。本轮没有单次全量全绿。环境恢复的PowerShell外层命令返回0不能代表Node回归成功；以主报告status/counts及三个文件各自exitCode1为准。`image-provider-menu.test.ts` 新增6例全部通过，所有实际执行断言和证据均保留，测试源码未改。
 

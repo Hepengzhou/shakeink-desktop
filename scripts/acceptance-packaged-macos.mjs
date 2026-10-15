@@ -60,7 +60,7 @@ async function verifyUnchangedApp() {
 }
 await bounded(verifyUnchangedApp(), 'Full frozen package verification', 90000)
 const parentIdentities = []
-for (const path of [join(homedir(), '.xaanink'), join(homedir(), 'Library/Application Support/Xuanxiangxiezuo-Desktop')]) {
+for (const path of [join(homedir(), '.shakeink'), join(homedir(), 'Library/Application Support/Xuanxiangxiezuo-Desktop')]) {
   const stat = await lstat(path, {bigint: true})
   assert(stat.isDirectory() && !stat.isSymbolicLink())
   parentIdentities.push({path, dev: String(stat.dev), ino: String(stat.ino)})
@@ -68,7 +68,7 @@ for (const path of [join(homedir(), '.xaanink'), join(homedir(), 'Library/Applic
 state.dataEnvironment = {authorization: 'Direct human confirmation; existing test data, no real Key', identities: parentIdentities, cleanup: 'none'}
 // Hash only bounded, regular metadata files; never print user data or secret bytes.
 state.dataEnvironment.beforeMetadata = []
-for (const [directory, names] of [[parentIdentities[0].path, ['state.json', 'catalog.json', 'drafts.json', 'xaanink-app.json']], [parentIdentities[1].path, ['data-root.json']]]) {
+for (const [directory, names] of [[parentIdentities[0].path, ['state.json', 'catalog.json', 'drafts.json', 'shakeink-app.json']], [parentIdentities[1].path, ['data-root.json']]]) {
   for (const name of names) {
     const path = join(directory, name)
     try {
@@ -108,7 +108,7 @@ function boundedMetadataBytes(path,limit) {
 }
 function coldAudit() {
   assertColdDirectories();const work=coldDirectories.find(row=>row.path.endsWith('/inbox')),observation=strictAuditObserver(work)
-  const envelope=observation.phase==='absent'?null:JSON.parse(boundedMetadataBytes(join(work.path,'.xaanink-lease-recovery.json'),16384).bytes)
+  const envelope=observation.phase==='absent'?null:JSON.parse(boundedMetadataBytes(join(work.path,'.shakeink-lease-recovery.json'),16384).bytes)
   observation.assertCurrent();assertColdDirectories();return envelope
 }
 async function initializeColdAssertions() {
@@ -120,7 +120,7 @@ async function initializeColdAssertions() {
   const root=parentIdentities[0].path
   coldDirectories=[...parentIdentities.map(row=>({path:row.path,device:row.dev,inode:row.ino})),canonicalDirectory(join(root,'inbox')),canonicalDirectory(join(root,'inbox/database'))]
   assertColdDirectories()
-  const audit=coldAudit(),lockPath=join(root,'inbox/.xaanink-lock')
+  const audit=coldAudit(),lockPath=join(root,'inbox/.shakeink-lock')
   let lock=null,owner=null
   try {
     lock=canonicalDirectory(lockPath);const stat=lstatSync(lockPath,{bigint:true})
@@ -134,7 +134,7 @@ async function initializeColdAssertions() {
 }
 function assertColdLockAncestor() {
   assertColdDirectories()
-  const path=join(parentIdentities[0].path,'inbox/.xaanink-lock')
+  const path=join(parentIdentities[0].path,'inbox/.shakeink-lock')
   try {const current=canonicalDirectory(path);assert(beforeLease.lock);assert.deepEqual(current,{path:beforeLease.lock.path,device:beforeLease.lock.device,inode:beforeLease.lock.inode})}
   catch(error) {if(error.code!=='ENOENT')throw error}
 }
@@ -142,7 +142,7 @@ async function metadataSnapshot() {
   assertColdDirectories();assertColdLockAncestor()
   const rows = []
   const paths = state.dataEnvironment.beforeMetadata.map(row => row.path)
-  paths.push(join(parentIdentities[0].path, 'inbox/.xaanink-lock/owner.json'), join(parentIdentities[0].path, 'inbox/.xaanink-lease-recovery.json'))
+  paths.push(join(parentIdentities[0].path, 'inbox/.shakeink-lock/owner.json'), join(parentIdentities[0].path, 'inbox/.shakeink-lease-recovery.json'))
   for (const path of paths) {
     assertColdLockAncestor()
     try {const observed=boundedMetadataBytes(path,32*1024*1024);rows.push({path,bytes:Number(observed.stat.size),identity:identity(observed.stat),sha256:hash(observed.bytes)});assertColdLockAncestor()}
@@ -199,15 +199,15 @@ async function finishCold() {
   state.afterColdDatabase = await bounded(databaseSnapshot(), 'After closed inbox database hashes', 90000)
   assert.deepEqual(state.afterColdDatabase, state.beforeColdDatabase, 'Cold helper changed original database files')
   for(const row of state.dataEnvironment.beforeMetadata) assert.deepEqual(state.afterColdMetadata.find(value=>value.path===row.path), row, 'Cold helper changed original application metadata')
-  const owner = join(parentIdentities[0].path, 'inbox/.xaanink-lock/owner.json')
-  const audit = join(parentIdentities[0].path, 'inbox/.xaanink-lease-recovery.json')
+  const owner = join(parentIdentities[0].path, 'inbox/.shakeink-lock/owner.json')
+  const audit = join(parentIdentities[0].path, 'inbox/.shakeink-lease-recovery.json')
   assertColdDirectories()
   if(state.expectedColdOutcome==='cancel') {
     if(beforeLease.lock) assert.deepEqual(canonicalDirectory(beforeLease.lock.path),{path:beforeLease.lock.path,device:beforeLease.lock.device,inode:beforeLease.lock.inode})
     for(const path of [owner,audit]) assert.deepEqual(state.afterColdMetadata.find(row=>row.path===path),state.beforeColdMetadata.find(row=>row.path===path))
   } else {
     assert.equal(state.expectedColdOutcome,'repair')
-    await assert.rejects(lstat(join(parentIdentities[0].path,'inbox/.xaanink-lock')),{code:'ENOENT'})
+    await assert.rejects(lstat(join(parentIdentities[0].path,'inbox/.shakeink-lock')),{code:'ENOENT'})
     const receipt=coldAudit();assert.equal(receipt?.payload.phase,'recovered')
     if(beforeLease.owner) {
       assert.deepEqual(receipt.payload.ownerProof,beforeLease.owner)
@@ -218,7 +218,7 @@ async function finishCold() {
     if(beforeLease.audit?.payload.phase==='observed') {
       assert.equal(receipt.payload.auditId,beforeLease.audit.payload.auditId);assert(receipt.payload.revision>beforeLease.audit.payload.revision)
     } else if(beforeLease.audit) assert.notEqual(receipt.payload.auditId,beforeLease.audit.payload.auditId)
-    await assert.rejects(lstat(join(parentIdentities[0].path,'inbox/.xaanink-lock')),{code:'ENOENT'})
+    await assert.rejects(lstat(join(parentIdentities[0].path,'inbox/.shakeink-lock')),{code:'ENOENT'})
   }
   state.coldDataAssertions={databaseFilesUnchanged:state.afterColdDatabase.length,applicationMetadataUnchanged:true,expectedOutcome:state.expectedColdOutcome,passed:true}
   await save();console.log(JSON.stringify({exited:true,cleanNormalExit:true,pid:launch.pid,exitCode:launch.exitCode,data:state.coldDataAssertions}))
@@ -247,7 +247,7 @@ async function start() {
     void save().catch(saveError => {process.exitCode = 1; console.error('page-error evidence write failed:', saveError.code)})
   })
   await page.getByRole('button', {name: '账号菜单', exact: true}).waitFor({timeout: 45000})
-  assert.equal(page.url(), 'xaanink://app/')
+  assert.equal(page.url(), 'shakeink://app/')
   await save()
   console.log(JSON.stringify({ready: true, runId, pid: launch.pid, ...actual, url: page.url()}))
 }

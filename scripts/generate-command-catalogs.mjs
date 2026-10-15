@@ -7,7 +7,7 @@ import {commandCatalogSources} from './command-catalog-sources.mjs'
 // contexts. This enumerates platform registrations, not native OS acceptance.
 const bundle=await build({stdin:{contents:`import {initializeMonacoCommandCatalog} from './src/lib/desktop/monaco-commands';import {desktopCommandCatalog} from './src/lib/desktop/command-runtime';globalThis.buildCatalog=async platform=>{const release=await initializeMonacoCommandCatalog(platform);try{return desktopCommandCatalog(platform)}finally{release()}};`,resolveDir:process.cwd(),loader:'ts'},bundle:true,format:'iife',platform:'browser',write:false,loader:{'.css':'empty','.ttf':'dataurl'},logLevel:'error'})
 const sourceHashes=Object.fromEntries(await Promise.all(commandCatalogSources.map(async file=>[file,createHash('sha256').update(await readFile(file)).digest('hex')])))
-const browser=await chromium.launch({headless:true,...(process.env.XAANINK_TEST_CHROMIUM?{executablePath:process.env.XAANINK_TEST_CHROMIUM}:{})})
+const browser=await chromium.launch({headless:true,...(process.env.SHAKEINK_TEST_CHROMIUM?{executablePath:process.env.SHAKEINK_TEST_CHROMIUM}:{})})
 const platforms={}
 try{
  for(const [platform,os] of [['darwin','MacIntel'],['win32','Win32']]){

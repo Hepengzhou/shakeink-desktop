@@ -6,14 +6,14 @@
 
 - `native-local-07/windows-electron.json` 的8个源码 SHA-256 全部与当前文件一致；四个产品文件亦与独立 code review 指纹相同。核对包括全局 CSS、verify/seed 脚本及 lockfile，未用旧设计预览代替产品代码。bounded core 结束后重新核对全部8个源码、177个 bundle 及173个 out 静态资源，仍全部匹配；core 中重新生成构建的字节没有使原生证据失效。
 - 原生报告记录的177个 `dist` 与 `.next/static` JS/CSS/CJS 指纹均与当前文件一致。独立补查实际协议加载的 `out/_next/static`：173个资源全部与对应 `.next/static` 文件逐字节一致，包含报告筛选范围外的字体；`out/index.html` 与 `.next/server/app/index.html` 一致，SHA-256 为 `0a8ea9d113daf82cc7b19d19f8592c558472d275a61a65077a4fd4efc3e8e34d`。
-- `desktop/main/index.ts:258,264,704` 的正式协议从当前应用目录 `out` 加载 `xaanink://app/`，拒绝 HTTP/HTTPS 请求；`next.config.mjs:2` 为静态 export。因此本次实际界面与已核对构建资源绑定，而非仅凭 `.next` 名称推断。启动的是当前仓库构建与本机 Electron，**没有新安装包验证结论**。
+- `desktop/main/index.ts:258,264,704` 的正式协议从当前应用目录 `out` 加载 `shakeink://app/`，拒绝 HTTP/HTTPS 请求；`next.config.mjs:2` 为静态 export。因此本次实际界面与已核对构建资源绑定，而非仅凭 `.next` 名称推断。启动的是当前仓库构建与本机 Electron，**没有新安装包验证结论**。
 - native 最终报告 SHA-256：`70457fb4af0be1983ed608c905392a106a612bb5501dd9fdc953912c690d1c1f`。全部六张截图的实际文件哈希与报告记录一致。
 
 ## Windows 有限检查
 
 最终原生运行 `native-local-07`：2026-10-10T08:10:14.113Z 至 08:12:12.041Z，win32、Electron44.6.0、Node24.21.0，status passed，39个检查点、0 pageerrors。39包含13个完整几何记录、6个截图记录及20个其他检查，不等于39个独立测试用例，也不代表29类业务迁移验收完成。
 
-`verify-workspace-surfaces.mjs:10,20,24–27` 新建 temp 隔离根，设置 `XAANINK_TEST_ROOT`，令 renderer 离线，断言正式协议、实际数据根及模型数0；这些是与执行版本哈希绑定的脚本断言，报告未另存 bootstrap 快照，不伪称存在独立隔离字段。真实 Workspaces/Prisma/DraftJournal 仅在新测试根创建合成数据，之后操作真实面板和 settings IPC。脚本未注入设计 CSS、替换产品 DOM 或启用模型调用。
+`verify-workspace-surfaces.mjs:10,20,24–27` 新建 temp 隔离根，设置 `SHAKEINK_TEST_ROOT`，令 renderer 离线，断言正式协议、实际数据根及模型数0；这些是与执行版本哈希绑定的脚本断言，报告未另存 bootstrap 快照，不伪称存在独立隔离字段。真实 Workspaces/Prisma/DraftJournal 仅在新测试根创建合成数据，之后操作真实面板和 settings IPC。脚本未注入设计 CSS、替换产品 DOM 或启用模型调用。
 
 核对固定期望与记录：导航 `rgb(245,238,220)`、AI `rgb(250,246,232)`、内容 `rgb(248,243,228)`，结构线 `rgb(216,203,166)`；正文/gutter/preview、规划、试验场、实际 `.scene-workspace` 和候选稿分别检查。AI 原内嵌编辑器仍为 `rgb(249,244,228)`，任务表面为 `rgb(252,248,238)`。这证明已执行面板的颜色接入，不扩展为未打开业务界面均已验收。
 

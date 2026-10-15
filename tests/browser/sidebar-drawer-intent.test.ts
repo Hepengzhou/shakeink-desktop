@@ -3,7 +3,7 @@ import { test } from "node:test"
 import { chromium, type Browser } from "playwright-core"
 import { sampleDrawer, withDrawer } from "../helpers/sidebar-drawer-fixture"
 let browser: Browser
-test.before(async () => { browser = await chromium.launch({ headless: true, ...(process.env.XAANINK_TEST_CHROMIUM ? { executablePath: process.env.XAANINK_TEST_CHROMIUM } : {}) }) })
+test.before(async () => { browser = await chromium.launch({ headless: true, ...(process.env.SHAKEINK_TEST_CHROMIUM ? { executablePath: process.env.SHAKEINK_TEST_CHROMIUM } : {}) }) })
 test.after(async () => { await browser?.close() })
 
 async function restoreOpenSidebar(page: import("playwright-core").Page) {

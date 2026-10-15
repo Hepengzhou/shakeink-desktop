@@ -154,7 +154,7 @@ function App(){
     const next=event.key==='Home'?0:event.key==='End'?items.length-1:(index+(event.key==='ArrowDown'?1:-1)+items.length)%items.length;items[next]?.focus()
   }
   return <>
-    <header className="review-header"><div className="eyebrow">XAANINK / DESIGN REVIEW / 2026.10.13</div><h1>让导航多一点呼吸</h1><p>左侧导航设计 v6 · 等待 UI 审核 · 所有作品、人物、对话和账户均为合成示意数据</p><nav className="review-links"><a href="research.md">01 调研文档</a><a href="product-design.md">02 产品设计</a><a href="technical-plan.md">技术方案</a></nav></header>
+    <header className="review-header"><div className="eyebrow">SHAKEINK / DESIGN REVIEW / 2026.10.13</div><h1>让导航多一点呼吸</h1><p>左侧导航设计 v6 · 等待 UI 审核 · 所有作品、人物、对话和账户均为合成示意数据</p><nav className="review-links"><a href="research.md">01 调研文档</a><a href="product-design.md">02 产品设计</a><a href="technical-plan.md">技术方案</a></nav></header>
     <div className="controls" aria-label="设计审核工具">
       <div className="control-group"><span className="control-label">主题</span><div className="segments">{[['ink','玄墨'],['paper','宣纸']].map(([value,label])=><button key={value} aria-pressed={theme===value} onClick={()=>setTheme(value)}>{label}</button>)}</div></div>
       <div className="control-group"><label className="control-label" htmlFor="width">栏宽</label><select id="width" disabled={drawer.moving} value={width} onChange={event=>setWidth(Number(event.target.value))}>{[200,260,420].map(value=><option key={value} value={value}>{value}px</option>)}</select></div>

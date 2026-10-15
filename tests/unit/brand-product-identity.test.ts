@@ -16,9 +16,9 @@ const string=(node:ts.Node|undefined)=>node&&ts.isStringLiteral(node)?node.text:
 
 test('BRAND-P01: package and native executable identities use the approved Chinese and English names',()=>{
  const metadata=JSON.parse(read('package.json')),lock=JSON.parse(read('package-lock.json')),config=require('../../electron-builder.config.cjs')
- assert.equal(metadata.name,'xaanink');assert.equal(lock.name,'xaanink');assert.equal(lock.packages[''].name,'xaanink')
- assert.equal(config.productName,'玄印写作');assert.equal(config.appId,'ink.xaanink.desktop')
- assert.equal(config.artifactName,'XaanInk-${version}-${os}-${arch}.${ext}')
+ assert.equal(metadata.name,'shakeink');assert.equal(lock.name,'shakeink');assert.equal(lock.packages[''].name,'shakeink')
+ assert.equal(config.productName,'玄印写作');assert.equal(config.appId,'ink.shakeink.desktop')
+ assert.equal(config.artifactName,'ShakeInk-${version}-${os}-${arch}.${ext}')
  for(const platform of ['darwin','win32'] as const){
   const groups=desktopMenu(platform,{}),commands=groups.flatMap(group=>group.items)
   if(platform==='darwin')assert.equal(groups[0].label,'玄印')
@@ -40,11 +40,11 @@ test('BRAND-P02: actual UI, custom protocol and exported manuscript metadata car
  const pdf=nodes('src/lib/manuscript-export-pdf.ts',node=>ts.isCallExpression(node)&&ts.isPropertyAccessExpression(node.expression)&&node.expression.name.text==='setCreator')[0] as ts.CallExpression
  assert.equal(string(pdf?.arguments[0]),'玄印写作')
  const scheme=nodes('desktop/main/index.ts',node=>ts.isPropertyAssignment(node)&&node.name.getText()==='scheme')[0] as ts.PropertyAssignment
- assert.equal(string(scheme?.initializer),'xaanink')
+ assert.equal(string(scheme?.initializer),'shakeink')
  const handles=nodes('desktop/main/index.ts',node=>ts.isCallExpression(node)&&node.expression.getText()==='protocol.handle') as ts.CallExpression[]
- assert.ok(handles.some(node=>string(node.arguments[0])==='xaanink'))
- for(const name of ['desktop/preload/index.ts','src/lib/desktop/transport.ts'])assert.ok(nodes(name,node=>ts.isStringLiteral(node)&&node.text==='xaanink-response-port').length,`${name}: both port endpoints use the new identity`)
- assert.ok(nodes('desktop/main/index.ts',node=>ts.isStringLiteral(node)&&node.text==='xaanink://app/').length)
+ assert.ok(handles.some(node=>string(node.arguments[0])==='shakeink'))
+ for(const name of ['desktop/preload/index.ts','src/lib/desktop/transport.ts'])assert.ok(nodes(name,node=>ts.isStringLiteral(node)&&node.text==='shakeink-response-port').length,`${name}: both port endpoints use the new identity`)
+ assert.ok(nodes('desktop/main/index.ts',node=>ts.isStringLiteral(node)&&node.text==='shakeink://app/').length)
 })
 
 test('BRAND-P03: every shipped brand vector is named correctly and wordmarks are real paths',()=>{

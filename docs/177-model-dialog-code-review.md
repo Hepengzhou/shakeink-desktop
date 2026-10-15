@@ -37,14 +37,14 @@
 按本轮受控验证授权，经自动审核允许启动已安装浏览器后，实际执行：
 
 ```sh
-XAANINK_TEST_CHROMIUM='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' /Users/dt_flys/.nvm/versions/node/v24.18.0/bin/node --import tsx --test tests/browser/api-key-clipboard.test.ts
+SHAKEINK_TEST_CHROMIUM='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' /Users/dt_flys/.nvm/versions/node/v24.18.0/bin/node --import tsx --test tests/browser/api-key-clipboard.test.ts
 ```
 
 六项通过、0 失败、0 取消、0 跳过，退出 0，耗时 4273.878 ms。包括密码选区 copy/cut、受控 React 更新与原生 undo/redo、粘贴 literal text、复制/剪切/粘贴分别改绑和移除、真实 DOM 的失焦 A→B→A。页面网络全部 abort，剪贴板/菜单桥使用内存公开假值；此结果不代替操作系统剪贴板和真实原生菜单验证。
 
 ### 原生验证边界
 
-`smoke-byok.mjs` 为 20 个供应商/类别执行空 Key 目录与实际单选；`XAANINK_NATIVE_INPUT_MENU=1` 时读取实际系统剪贴板并等待真实 macOS 菜单操作，脚本不直接调用 MenuItem.click 或伪造 invoke 返回。证据记录编译 SHA、网络守卫和 `nativeMenuInteraction`，开关关闭的执行不能覆盖原生菜单用例。原剪贴板只在受控 main 内存保存并在 finally 恢复；不会写入证据。最终仍须执行重新构建后的 macOS Electron、CUA 菜单点击及全部 175 用例覆盖审核，不能以代码审核代替。
+`smoke-byok.mjs` 为 20 个供应商/类别执行空 Key 目录与实际单选；`SHAKEINK_NATIVE_INPUT_MENU=1` 时读取实际系统剪贴板并等待真实 macOS 菜单操作，脚本不直接调用 MenuItem.click 或伪造 invoke 返回。证据记录编译 SHA、网络守卫和 `nativeMenuInteraction`，开关关闭的执行不能覆盖原生菜单用例。原剪贴板只在受控 main 内存保存并在 finally 恢复；不会写入证据。最终仍须执行重新构建后的 macOS Electron、CUA 菜单点击及全部 175 用例覆盖审核，不能以代码审核代替。
 
 ### 测试脚本补充复审：通过
 

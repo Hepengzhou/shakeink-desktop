@@ -9,7 +9,7 @@
 ## 实际运行
 
 ```powershell
-$env:XAANINK_TEST_CHROMIUM='C:/Program Files/Google/Chrome/Application/chrome.exe'
+$env:SHAKEINK_TEST_CHROMIUM='C:/Program Files/Google/Chrome/Application/chrome.exe'
 node --import tsx --test --test-concurrency=1 tests/browser/chat-empty-state.test.ts 2>&1 | Tee-Object -FilePath docs/reviews/2026-10-12-chat-empty-state-browser-green.tap
 exit $LASTEXITCODE
 ```

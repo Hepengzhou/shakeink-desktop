@@ -48,7 +48,7 @@ globalThis.mountLeaseUI=(mode='panel',options={})=>{
  builder.onLoad({filter:/.*/,namespace:"empty-child"},args=>({contents:`export const ${emptyChildren[args.path]}=()=>null`,loader:"js"}))
 }}]}).then(result=>result.outputFiles![0].text)
 let browser:Browser
-test.before(async()=>{browser=await chromium.launch({headless:true,executablePath:process.env.XAANINK_TEST_CHROMIUM})})
+test.before(async()=>{browser=await chromium.launch({headless:true,executablePath:process.env.SHAKEINK_TEST_CHROMIUM})})
 test.after(async()=>{await browser?.close()})
 async function scenario(mode:"panel"|"app",run:(page:Page)=>Promise<void>,options:Record<string,boolean>={}){
  const page=await browser.newPage({viewport:{width:1000,height:760}}),errors:string[]=[];page.setDefaultTimeout(2200);page.on("pageerror",error=>errors.push(error.message))
@@ -103,7 +103,7 @@ test("LUI23-13 original semantic surfaces and Button remain readable without ove
   await page.evaluate(theme=>{document.documentElement.className=theme;document.body.style.background='var(--background)';document.body.style.color='var(--foreground)'},theme)
   const entry=page.getByRole('button',{name:'修复异常退出锁',exact:true});await entry.scrollIntoViewIfNeeded();assert.equal(await entry.getAttribute('data-slot'),'button');const box=await entry.boundingBox();assert.ok(box&&box.x>=0&&box.x+box.width<=361,JSON.stringify(box));assert.equal(await page.locator('section').evaluate(element=>element.scrollWidth<=element.clientWidth),true)
   colors.push(await page.locator('section .bg-card').last().evaluate(element=>getComputedStyle(element).backgroundColor))
-  if(process.env.XAANINK_TEST_SCREENSHOTS)await page.screenshot({path:`docs/evidence/implementation-23/work-lease-ui-${theme}-narrow.png`})
+  if(process.env.SHAKEINK_TEST_SCREENSHOTS)await page.screenshot({path:`docs/evidence/implementation-23/work-lease-ui-${theme}-narrow.png`})
  }
  assert.notEqual(colors[0],colors[1]);assert.doesNotMatch(await page.locator('#app').innerText(),/PID|\/controlled\/local/)
 }))

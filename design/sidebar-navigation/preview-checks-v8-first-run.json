@@ -230,5 +230,5 @@
   "productTests": "not-run",
   "nativeAcceptance": "not-run",
   "browser": "154.0.8037.98",
-  "failure": "page.waitForFunction: Timeout 8000ms exceeded.\n    at D:\\Projects\\xaanink-desktop\\design\\sidebar-navigation\\verify-preview.mjs:145:936"
+  "failure": "page.waitForFunction: Timeout 8000ms exceeded.\n    at D:\\Projects\\shakeink-desktop\\design\\sidebar-navigation\\verify-preview.mjs:145:936"
 }

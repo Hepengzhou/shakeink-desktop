@@ -14,7 +14,7 @@
 
 已确认旧 `acceptance-packaged-macos.mjs` 固定 phase43 evidence、历史授权、冻结 hash 及默认用户根；不适用于当前包。实际打包应用启动应使用新显式隔离根和真实 packaged executable，验证离线协议、无模型、实际顶部拖动 DOM/CSS、错误/网络/监听状态与退出；只能记录为本轮离线启动冒烟，不扩写业务验收。
 
-初审时 `/private/tmp/xaanink-pane-drag-repackage.log` 已显示 macOS arm64 的 afterPack resources 314、PGlite 正常关闭、publish never、跳过签名，并开始当前 ZIP/DMG 输出；尚未据此宣称最终文件生成、测试或 packaged Electron 启动通过。
+初审时 `/private/tmp/shakeink-pane-drag-repackage.log` 已显示 macOS arm64 的 afterPack resources 314、PGlite 正常关闭、publish never、跳过签名，并开始当前 ZIP/DMG 输出；尚未据此宣称最终文件生成、测试或 packaged Electron 启动通过。
 
 最终复查通过门：当前 package 命令正常完成；`test:package` 与 `package:check` 实际结果；DMG/ZIP/app 的新产物与 SHA-256；包内文件与当前 build 输入一致；新隔离数据根实际已打包 app 离线启动和关闭证据。保留原顶部拖动生产源码 hashes，避免把重建的旧输出当作当前修复包。
 
@@ -26,7 +26,7 @@
 - 独立只读计算实际 DMG/ZIP 的文件字节数与 SHA-256，完全等于 `artifacts.json` 和 141：DMG `335401091` bytes / `9515e940dfbdbfcb4f0055c81a54ac0098dafaecbdb1e7fa8780e324fa17ac75`；ZIP `350268743` bytes / `086eeab40761a3b0137a1454cba74f8e8ed362ff2ebd89cec5a8796bfa762695`。
 - 独立只读调用 `verifyProjectResources`，当前打包 app 的 314 项资源与当前 build 输入全部相等；读取当前 static manifest 的版本/架构/品牌/文件/依赖计数并验证非依赖 app 文件的实际 SHA-256 与 manifest 一致。三份顶部拖动生产源码的 SHA-256 仍与上一轮已独立审核的 implementation-44 原生记录一致。未以旧 phase43 冻结文件替代本包输入。
 
-最终 startup 是独立实际 packaged executable 进程 78110；JSON 为 status=passed、app.isPackaged=true、appPath 指向本轮 release app、版本 0.1.0、sandbox=true、userData/dataRoot 均为新 `/private/tmp/xaanink-packaged-drag-WVqTpf/` 内隔离目录。Playwright BrowserContext.setOffline(true) 在 app.whenReady 后、等待工作台 ready 前施加 renderer CDP 离线；最终 online=false，本地协议/API 正常、models/novels 都为 0、requestsFailed/pageerrors 都为空。AI 与显示后的右空面板顶部均为 y=0 / h=44 / drag，截图保留真实空工作台和 composer。正常退出 code=0、signal=null。
+最终 startup 是独立实际 packaged executable 进程 78110；JSON 为 status=passed、app.isPackaged=true、appPath 指向本轮 release app、版本 0.1.0、sandbox=true、userData/dataRoot 均为新 `/private/tmp/shakeink-packaged-drag-WVqTpf/` 内隔离目录。Playwright BrowserContext.setOffline(true) 在 app.whenReady 后、等待工作台 ready 前施加 renderer CDP 离线；最终 online=false，本地协议/API 正常、models/novels 都为 0、requestsFailed/pageerrors 都为空。AI 与显示后的右空面板顶部均为 y=0 / h=44 / drag，截图保留真实空工作台和 composer。正常退出 code=0、signal=null。
 
 主进程两个 loopback TCP listeners 分别按实际 Node inspector port 58036 和 `/json/version` 的 Chromium DevTools websocket 响应识别为测试调试端口；脚本没有把它们当作产品 HTTP 服务，也没有声称检查全系统所有进程监听。该 CDP 条件不等于操作系统断网。本轮截图/DOM/CSS 只核验包中当前顶部结构，不授予新的三处物理拖动或完整安装包原生交互验收。
 

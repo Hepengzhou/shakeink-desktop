@@ -172,14 +172,14 @@ test("CF61-11: the actual main configuration IPC rejects a post-commit reply aft
  try{
   const source=ts.createSourceFile("main.ts",readFileSync("desktop/main/index.ts","utf8"),ts.ScriptTarget.Latest,true)
   const body=["trusted","registerIpc"].map(name=>{const node=source.statements.find(node=>ts.isFunctionDeclaration(node)&&node.name?.text===name);assert.ok(node);return node.getText(source)}).join("\n")
-  const frame={url:"xaanink://app/"},contents={id:17,mainFrame:frame,setZoomFactor(value:number){emits.push(value)}},event={sender:contents,senderFrame:frame},session={owner:17,id:randomUUID(),ready:true},settingsSession=randomUUID()
+  const frame={url:"shakeink://app/"},contents={id:17,mainFrame:frame,setZoomFactor(value:number){emits.push(value)}},event={sender:contents,senderFrame:frame},session={owner:17,id:randomUUID(),ready:true},settingsSession=randomUUID()
   const owner=`17:${session.id}:${settingsSession}`;f.setOwner(owner)
   const handlers=new Map<string,(...args:unknown[])=>Promise<unknown>>(),emits:unknown[]=[]
   mainFunction("ipcMain","window","z","draftSession","closingFlow","configurationFiles","send",transformSync(body,{loader:"ts"}).code+"\nregisterIpc()")({handle:(id:string,handler:(...args:unknown[])=>Promise<unknown>)=>handlers.set(id,handler),on(){}},{webContents:contents},z,session,null,f.files,(value:unknown)=>emits.push(value))
   const handler=handlers.get("desktop:configuration")!;assert.ok(handler)
   const preview=await handler(event,{type:"preview",sessionId:settingsSession}) as {token:string};gated=true
   pending=handler(event,{type:"apply",sessionId:settingsSession,token:preview.token,choices:{selectedPaths:["/appearance/theme"]}});void pending.catch(()=>{});await entered.promise
-  contents.mainFrame={url:"xaanink://app/"};session.id=randomUUID();f.setOwner(`17:${session.id}:${settingsSession}`);allow.resolve()
+  contents.mainFrame={url:"shakeink://app/"};session.id=randomUUID();f.setOwner(`17:${session.id}:${settingsSession}`);allow.resolve()
   await assert.rejects(pending,/不受信|窗口|owner|取消|失效/);pending=undefined
   assert.deepEqual(emits,[])
   assert.equal((await f.repository.read()).settings.appearance.theme,"ink","a commit already renamed remains authoritative")
@@ -218,12 +218,12 @@ test("CF61-14: actual main IPC rejects untrusted frame/extra native paths and ca
  const f=await fixture();let picks=0
  try{
   const source=ts.createSourceFile("main.ts",readFileSync("desktop/main/index.ts","utf8"),ts.ScriptTarget.Latest,true),body=["trusted","registerIpc"].map(name=>{const node=source.statements.find(node=>ts.isFunctionDeclaration(node)&&node.name?.text===name);assert.ok(node);return node.getText(source)}).join("\n")
-  const frame={url:"xaanink://app/"},contents={id:17,mainFrame:frame,setZoomFactor(){}},session={owner:17,id:randomUUID(),ready:true},settingsSession=randomUUID(),owner=`17:${session.id}:${settingsSession}`
+  const frame={url:"shakeink://app/"},contents={id:17,mainFrame:frame,setZoomFactor(){}},session={owner:17,id:randomUUID(),ready:true},settingsSession=randomUUID(),owner=`17:${session.id}:${settingsSession}`
   f.setOwner(owner);f.setImport(async()=>{picks++;return f.source})
   const handlers=new Map<string,(...args:unknown[])=>Promise<unknown>>()
   mainFunction("ipcMain","window","z","draftSession","closingFlow","configurationFiles","send",transformSync(body,{loader:"ts"}).code+"\nregisterIpc()")({handle:(id:string,handler:(...args:unknown[])=>Promise<unknown>)=>handlers.set(id,handler),on(){}},{webContents:contents},z,session,null,f.files,()=>{})
   const handler=handlers.get("desktop:configuration")!,event={sender:contents,senderFrame:frame}
-  await assert.rejects(handler({...event,senderFrame:{url:"xaanink://app/"}},{type:"preview",sessionId:settingsSession}),/不受信/)
+  await assert.rejects(handler({...event,senderFrame:{url:"shakeink://app/"}},{type:"preview",sessionId:settingsSession}),/不受信/)
   await assert.rejects(handler(event,{type:"preview",sessionId:settingsSession,path:f.source}))
   await assert.rejects(handler(event,{type:"preview",sessionId:"not-uuid"}))
   assert.equal(picks,0)

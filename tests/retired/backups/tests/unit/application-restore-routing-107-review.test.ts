@@ -32,12 +32,12 @@ test('AR107-R02 protected avatar and work/scene image routes refuse before asset
  let reads=0;const forbidden=()=>{reads++;throw Error('forbidden ordinary asset read')}
  const handler=evaluate(`return (${callback})`,{applicationBlocked:()=>true,localImageRequest,avatarAssets:{readAsset:forbidden},service:{call:forbidden},businessGate:{run:forbidden},join,app:{getAppPath:()=>'/controlled'},staticUiResponse:()=>new Response('controlled-static-ui')}) as (request:Request)=>Promise<Response>
  const id=randomUUID()
- for(const url of [`xaanink://asset/global/${id}`,`xaanink://app/_desktop/assets/${id}/${id}.png`,`xaanink://app/api/novels/inbox/scenes/fixture/images/${id}/asset`]){
+ for(const url of [`shakeink://asset/global/${id}`,`shakeink://app/_desktop/assets/${id}/${id}.png`,`shakeink://app/api/novels/inbox/scenes/fixture/images/${id}/asset`]){
   assert.equal((await handler(new Request(url))).status,403)
   assert.equal((await handler(new Request(url,{method:'HEAD'}))).status,403)
  }
  assert.equal(reads,0)
- assert.equal(await (await handler(new Request('xaanink://app/'))).text(),'controlled-static-ui')
+ assert.equal(await (await handler(new Request('shakeink://app/'))).text(),'controlled-static-ui')
 })
 
 for(const platform of ['darwin','win32']as const)test(`AR107-R03 protected ${platform} native menu keeps safe window commands and cannot admit ordinary menu actions`,async()=>{

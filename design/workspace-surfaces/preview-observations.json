@@ -7,7 +7,7 @@
   },
   "scope": "UI design preview only; existing Windows Electron React workbench, empty isolated root, temporary DOM/CSS override, renderer offline. Screenshots omit native caption controls. Only visible layout divider strokes are measured. Menu/tablist/business/Markdown dividers, other zooms, right planning/Monaco bodies and pointer-hit behavior not validated by this empty-state preview. No product implementation or acceptance claim.",
   "before": {
-    "url": "xaanink://app/",
+    "url": "shakeink://app/",
     "classes": "paper",
     "dpr": 1.5,
     "viewport": {
@@ -117,7 +117,7 @@
     ]
   },
   "proposed": {
-    "url": "xaanink://app/",
+    "url": "shakeink://app/",
     "classes": "paper",
     "dpr": 1.5,
     "viewport": {

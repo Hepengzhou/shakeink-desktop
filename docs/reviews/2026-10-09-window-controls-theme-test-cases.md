@@ -15,7 +15,7 @@
 
 ## 本机原生验证
 
-采用 Electron 44.6.0、Windows x64，XAANINK_TEST_ROOT 指向新的隔离目录，不打开作者数据、不配置模型、不使用 HTTP 服务。Computer Use 截图必须包含原生 Windows 最小化/最大化/关闭，网页 capturePage 不能单独证明 caption 背景。
+采用 Electron 44.6.0、Windows x64，SHAKEINK_TEST_ROOT 指向新的隔离目录，不打开作者数据、不配置模型、不使用 HTTP 服务。Computer Use 截图必须包含原生 Windows 最小化/最大化/关闭，网页 capturePage 不能单独证明 caption 背景。
 
 7. WTHEME-07：真实 React 工作台的 paper/ink 空态，右上 caption 与周围背景/纸纹连贯；在设置 UI 切换立即生效，符号清楚可读，关闭设置后仍一致。
 8. WTHEME-08：右侧真实内容面板显示/隐藏、有 Tab/无 Tab 时仍透出当前面板底色。仅使用隔离夹具；不复制设计稿内容。

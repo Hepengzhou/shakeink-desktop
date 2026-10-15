@@ -42,7 +42,7 @@
 
 ## 目标脚本补充阅读
 
-仅读取 `scripts/seed-content-tabs.ts` 与 `scripts/verify-content-tabs.mjs`，未修改脚本、未启动另一 Electron 或执行全量。验证脚本通过 `mkdtemp` 创建 `xaanink-tabs-` 独立目录，Electron bootstrap 核对实际 dataRoot、零模型、离线状态及 `xaanink://app/`；seed 通过真实 Workspaces/Prisma/DraftJournal 创建 19 章和 20 个合法业务标签，正文均为合成测试文本。脚本记录源文件、bundle、Electron exe 与截图 SHA256 以及真实 Electron/Node/Chromium/Windows 版本。作用是审计本次目标运行，不把 hash 本身作为业务成功证明。
+仅读取 `scripts/seed-content-tabs.ts` 与 `scripts/verify-content-tabs.mjs`，未修改脚本、未启动另一 Electron 或执行全量。验证脚本通过 `mkdtemp` 创建 `shakeink-tabs-` 独立目录，Electron bootstrap 核对实际 dataRoot、零模型、离线状态及 `shakeink://app/`；seed 通过真实 Workspaces/Prisma/DraftJournal 创建 19 章和 20 个合法业务标签，正文均为合成测试文本。脚本记录源文件、bundle、Electron exe 与截图 SHA256 以及真实 Electron/Node/Chromium/Windows 版本。作用是审计本次目标运行，不把 hash 本身作为业务成功证明。
 
 `target-01-electron` 保留 seed 子进程超时，未把数据准备失败算 UI 失败。`target-02-electron` 已走通 seed，首次编辑保持断言错误地读取隐藏 Monaco 的虚拟化 `.view-lines`；独立阅读指出该 DOM 不代表完整模型。脚本现对隐藏编辑器只核对同一节点连接，并在正常菜单重新激活后等待可见全文/草稿比较，最后使用真实 Ctrl+Z 验证撤销保持。失败记录保留，未降低模型/撤销保持的实际要求。
 

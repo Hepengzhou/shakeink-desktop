@@ -55,7 +55,7 @@ window.mountCards=(kind,theme,empty=false)=>{
  <label id='label-regression-card'><span id='label-regression-chrome'>UI label toggle</span><span id='label-regression-preview' data-text-preview>Label original prose words</span><input id='label-real-control' type='checkbox' onChange={()=>{actions.label++}}/></label>
  </div>}</QueryClientProvider></SelectionLifecycle>));
  render();
- const events=[];document.addEventListener('dragstart',event=>{queueMicrotask(()=>events.push({target:event.target instanceof Element?event.target.tagName:'',prevented:event.defaultPrevented,types:[...(event.dataTransfer?.types??[])],chip:event.dataTransfer?.getData('application/x-xaanink-chip')??'',plain:event.dataTransfer?.getData('text/plain')??''}))});
+ const events=[];document.addEventListener('dragstart',event=>{queueMicrotask(()=>events.push({target:event.target instanceof Element?event.target.tagName:'',prevented:event.defaultPrevented,types:[...(event.dataTransfer?.types??[])],chip:event.dataTransfer?.getData('application/x-shakeink-chip')??'',plain:event.dataTransfer?.getData('text/plain')??''}))});
  window.cardsFixture={events,actions,active:()=>useTabsStore.getState().activeTabId,tabs:()=>useTabsStore.getState().tabs,reference:()=>useSceneUiStore.getState().reference,stopSelection:()=>stopSelection(),addFutureCard:()=>{future=true;render()},addNestedControls:()=>{controls=true;render()},addRegressionBoundaries:()=>{boundaries=true;render()},dispose:()=>{root.unmount();query.clear()}};
 };` },
   bundle: true, write: false, outfile: "isolated-selection-cards.js", platform: "browser", format: "iife",
@@ -75,7 +75,7 @@ const selectors = {
 } as const
 let browser: Browser
 test.before(async () => {
-  browser = await chromium.launch({ headless: true, ...(process.env.XAANINK_TEST_CHROMIUM ? { executablePath: process.env.XAANINK_TEST_CHROMIUM } : {}) })
+  browser = await chromium.launch({ headless: true, ...(process.env.SHAKEINK_TEST_CHROMIUM ? { executablePath: process.env.SHAKEINK_TEST_CHROMIUM } : {}) })
 })
 test.after(async () => { await browser?.close() })
 
@@ -185,7 +185,7 @@ for (const kind of ["scene", "character", "item", "level"] as CardKind[]) {
     const result = await dragText(page, ui)
     assert.equal(result.text, "", "dragged UI header stays unselectable")
     assert.equal(result.active, null, "reference dragging must not click/open the card")
-    const reference = result.drags.find(event => event.types.includes("application/x-xaanink-chip") && !event.prevented)
+    const reference = result.drags.find(event => event.types.includes("application/x-shakeink-chip") && !event.prevented)
     assert.ok(reference, "actual product dragstart must write the reference MIME")
     const chip = JSON.parse(reference.chip)
     assert.equal(chip.kind, kind === "scene" ? "scene" : kind === "level" ? "setting" : kind)
@@ -272,7 +272,7 @@ test("TS-07 helper covers later-mounted actual cards while retaining their UI re
   assert.equal(selection.drags.filter(event => !event.prevented).length, 0)
   const reference = await dragText(page, ui)
   assert.equal(reference.text, ""); assert.equal(reference.active, null)
-  assert.ok(reference.drags.some(event => !event.prevented && event.types.includes("application/x-xaanink-chip")))
+  assert.ok(reference.drags.some(event => !event.prevented && event.types.includes("application/x-shakeink-chip")))
 }))
 
 test("TS-06 helper no-role draggable planning article keeps both preview clicks suppressed while drag is suspended", () => scenario("candidate", "paper", false, async page => {

@@ -11,7 +11,7 @@ import { VersionedStore } from '../../desktop/core/versioned-store.ts'
 import { Workspaces } from '../../desktop/service/workspaces.ts'
 
 const directory = resolve('design/dialog-style')
-const isolated = await mkdtemp(join(tmpdir(), 'xaanink-dialog-design-'))
+const isolated = await mkdtemp(join(tmpdir(), 'shakeink-dialog-design-'))
 const root = join(isolated, 'data')
 await mkdir(root, {recursive:true})
 const workspaces=new Workspaces(root,resolve('prisma/migrations'))
@@ -19,7 +19,7 @@ try{await workspaces.initialize()}finally{await workspaces.close()}
 const seed = structuredClone(defaultState)
 seed.onboarding = {version:1,completed:true,step:'welcome',textModelId:null,imageModelId:null,receipt:null}
 await new VersionedStore(join(root,'state.json'), defaultState, stateSchema.parse).update(0,seed)
-const env = {...process.env,XAANINK_TEST_ROOT:root}
+const env = {...process.env,SHAKEINK_TEST_ROOT:root}
 delete env.ELECTRON_RUN_AS_NODE
 const proposedCss = `
   .paper { --review-dialog-shadow: 0 12px 32px rgba(96,74,38,.14),0 2px 8px rgba(96,74,38,.08); }

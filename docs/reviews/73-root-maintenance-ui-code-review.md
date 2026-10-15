@@ -44,7 +44,7 @@
 路径夹具复核发现早期“4096”描述实际仅3279字符；审核者将自己测试改为精确4096并加入length断言，不计产品缺陷。最终验证以 `review73-06-final-4096-green.tap` 和 `07-final-typecheck.txt` 为准，而非用旧24项证明未执行的4096边界：实际24/24通过，fail/cancelled/skipped/todo均为0、测试exit0，全量TypeScript检查exit0且无诊断。
 
 ```sh
-XAANINK_TEST_CHROMIUM=<user-home>/Library/Caches/ms-playwright/chromium_headless_shell-1228/chrome-headless-shell-mac-arm64/chrome-headless-shell node --import tsx --test --test-reporter=tap tests/browser/root-maintenance-ui-review.test.ts tests/browser/root-maintenance-screen.test.ts
+SHAKEINK_TEST_CHROMIUM=<user-home>/Library/Caches/ms-playwright/chromium_headless_shell-1228/chrome-headless-shell-mac-arm64/chrome-headless-shell node --import tsx --test --test-reporter=tap tests/browser/root-maintenance-ui-review.test.ts tests/browser/root-maintenance-screen.test.ts
 node node_modules/typescript/bin/tsc --noEmit
 ```
 

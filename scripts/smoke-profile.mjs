@@ -8,7 +8,7 @@ import sharp from 'sharp'
 
 // The two native file panels are operated through the computer-use tool. No
 // showOpenDialog mock or DOM file-input replacement is used in this check.
-const temporary = await mkdtemp(join(tmpdir(),'xaanink-profile-smoke-'))
+const temporary = await mkdtemp(join(tmpdir(),'shakeink-profile-smoke-'))
 const fixture = join(temporary,'avatar-fixture.png')
 const evidence = 'docs/evidence/implementation-05'
 const startedAt = new Date().toISOString(), checks = [], rendererErrors = []
@@ -16,7 +16,7 @@ let app
 await mkdir(evidence,{recursive:true})
 await sharp({create:{width:720,height:480,channels:3,background:'#987650'}}).png().toFile(fixture)
 async function launch() {
-  app = await electron.launch({args:[resolve('.')],env:{...process.env,XAANINK_TEST_ROOT:join(temporary,'data')},timeout:45000})
+  app = await electron.launch({args:[resolve('.')],env:{...process.env,SHAKEINK_TEST_ROOT:join(temporary,'data')},timeout:45000})
   const page = await app.firstWindow({timeout:45000})
   page.on('pageerror',error => rendererErrors.push(error.message))
   await page.getByRole('button',{name:'账号菜单'}).waitFor({timeout:45000})

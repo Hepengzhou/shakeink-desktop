@@ -35,6 +35,6 @@
 
 ## 执行命令与记录
 
-具名组件测试：Node24 `--import tsx --test --test-concurrency=1 tests/browser/toast-appearance.test.ts`，`XAANINK_TEST_CHROMIUM` 指向本地Chrome。保留红灯和绿灯记录，构建用 `node_modules/next/dist/bin/next build`；真实Electron用 Node24 `--import tsx scripts/smoke-toast-style.mjs`。不存在全量测试命令或通配测试路径。
+具名组件测试：Node24 `--import tsx --test --test-concurrency=1 tests/browser/toast-appearance.test.ts`，`SHAKEINK_TEST_CHROMIUM` 指向本地Chrome。保留红灯和绿灯记录，构建用 `node_modules/next/dist/bin/next build`；真实Electron用 Node24 `--import tsx scripts/smoke-toast-style.mjs`。不存在全量测试命令或通配测试路径。
 
 证据位于 `docs/evidence/toast-style/`。用例覆盖完整性以最终具名test和实际JSON为准，不把矩阵引用数、HTML设计检查或单次启动冒烟计作业务通过。完成后做独立代码审核，只更新本轮台账。

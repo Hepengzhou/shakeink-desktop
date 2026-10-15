@@ -69,7 +69,7 @@ test("DESK-D01: built worker signals fully initialized owned root while main thr
     // message or Promise callback, matching the pre-app-ready native barrier.
     assert.notEqual(Atomics.wait(startup, 0, 0, 20000), "timed-out")
     assert.equal(Atomics.load(startup, 0), 1)
-    const marker = JSON.parse(await readFile(join(appRoot, "xaanink-app.json"), "utf8"))
+    const marker = JSON.parse(await readFile(join(appRoot, "shakeink-app.json"), "utf8"))
     assert.equal(marker.phase, "ready")
     assert.equal(marker.inboxReady, true)
     assert.ok((await readFile(join(appRoot, "inbox", "database", "PG_VERSION"), "utf8")).trim())

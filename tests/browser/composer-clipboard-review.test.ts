@@ -35,7 +35,7 @@ globalThis.mountReview=()=>{
   return {composer,adapter,writes,selectAll,release:text=>release(text),run:(id='text.paste')=>adapter.run(id,composer),source:()=>editorToText(composer),draft:()=>draft,insertions:()=>insertions,dispose:()=>{adapter.dispose();root.unmount()}};
 };` }, bundle: true, platform: "browser", format: "iife", write: false, tsconfig: "tsconfig.json" }).outputFiles[0].text
 let browser: Browser
-test.before(async () => { const executablePath = process.env.XAANINK_TEST_CHROMIUM; browser = await chromium.launch({ headless: true, ...(executablePath ? { executablePath } : {}) }) })
+test.before(async () => { const executablePath = process.env.SHAKEINK_TEST_CHROMIUM; browser = await chromium.launch({ headless: true, ...(executablePath ? { executablePath } : {}) }) })
 test.after(async () => { await browser?.close() })
 async function scenario(run: (page: import("playwright-core").Page) => Promise<void>) {
   const page = await browser.newPage()

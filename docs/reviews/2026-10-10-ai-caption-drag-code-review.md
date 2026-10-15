@@ -31,7 +31,7 @@
 独立执行修订后的命令：
 
 ```powershell
-$env:XAANINK_TEST_CHROMIUM='C:\Program Files\Google\Chrome\Application\chrome.exe'
+$env:SHAKEINK_TEST_CHROMIUM='C:\Program Files\Google\Chrome\Application\chrome.exe'
 node --import tsx --test --test-concurrency=1 tests/browser/pane-window-drag.test.ts
 ```
 

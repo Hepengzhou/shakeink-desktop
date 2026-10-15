@@ -14,7 +14,7 @@
 | core-full.tap/json | 245 文件，footer 与 JSON 完全一致：1731 tests / 1591 pass / 127 fail / 11 cancelled / 2 skipped，exit 1，约 17.6 分钟。未以 1701 个顶层 TAP 条目替代含子测试的最终计数。 |
 | browser-full.tap/json | 28 文件，194 tests / 161 pass / 33 fail / 0 cancelled / 0 skipped，exit 1，footer 与 JSON 一致。原始输出含 fixture exports 构建错误与异步活动错误，未将载入失败导致缺失的子用例视为通过。 |
 | package.log | Electron 44.6.0、win-x64、NSIS，完成 packaged 阶段；after-pack 输出 projectResources=314、pgliteClosed=true、publish=never。日志与主代理报告的包命令 exit 0 和实际产物一致；没有 NSIS 安装记录或安装通过声明。 |
-| 实际 installer | 当前 `release/XaanInk-0.1.0-win-x64.exe` 为 276569956 bytes；独立 SHA256 为 `3be618f6e5b1aecfc7b45c6429975ba872201e28270566639be400d6d5811d5a`，与 verification.json 一致。 |
+| 实际 installer | 当前 `release/ShakeInk-0.1.0-win-x64.exe` 为 276569956 bytes；独立 SHA256 为 `3be618f6e5b1aecfc7b45c6429975ba872201e28270566639be400d6d5811d5a`，与 verification.json 一致。 |
 | 实际 main | `dist/main/index.cjs` 与 `release/win-unpacked/resources/app/dist/main/index.cjs` 独立 SHA256 均为 `7bcc8e272c592d6ea16e822e164f3ae0b525087697a29584f33f7689fc3278d3`。该结论仅覆盖 main 产物，不扩张为所有 UI/CSS 产物哈希相同。 |
 
 ## 像素与原生样本

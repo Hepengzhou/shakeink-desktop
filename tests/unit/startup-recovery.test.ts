@@ -14,11 +14,11 @@ import {
 } from "../../desktop/main/startup-recovery"
 
 type Family = "legacy" | "current"
-const markerName = (family: Family) => family === "legacy" ? "xuanxiang-app.json" : "xaanink-app.json"
+const markerName = (family: Family) => family === "legacy" ? "xuanxiang-app.json" : "shakeink-app.json"
 const markerText = (family: Family, id: string, phase: "initializing" | "ready" = "ready", inboxReady = true) =>
-  JSON.stringify({ schemaVersion: 1, app: family === "legacy" ? "Xuanxiangxiezuo-Desktop" : "XaanInk", id, phase, inboxReady })
+  JSON.stringify({ schemaVersion: 1, app: family === "legacy" ? "Xuanxiangxiezuo-Desktop" : "ShakeInk", id, phase, inboxReady })
 async function fixture(run: (f: { base: string; bootstrap: string; root: string; paths: { bootstrap: string; recoveryRoot: string } }) => Promise<void>) {
-  const base = await realpath(await mkdtemp(join(tmpdir(), "xaanink-startup-recovery-"))), bootstrap = join(base, "bootstrap"), root = join(base, "root")
+  const base = await realpath(await mkdtemp(join(tmpdir(), "shakeink-startup-recovery-"))), bootstrap = join(base, "bootstrap"), root = join(base, "root")
   await mkdir(bootstrap)
   try { await run({ base, bootstrap, root, paths: { bootstrap, recoveryRoot: root } }) } finally { await rm(base, { recursive: true, force: true }) }
 }
@@ -133,17 +133,17 @@ test("SR-U-12/13/13b a missing or unparseable marker with complete content is re
     assert.deepEqual(classifyStartupRecovery(f.paths, "current"), { kind: "repair", repair: "marker" })
   })
   await fixture(async f => {
-    await contentWithoutMarker(f.root); await writeFile(join(f.root, "xaanink-app.json"), "{损坏")
+    await contentWithoutMarker(f.root); await writeFile(join(f.root, "shakeink-app.json"), "{损坏")
     await writePointer(f.bootstrap, await pointerFor(f.root))
     assert.deepEqual(classifyStartupRecovery(f.paths, "current"), { kind: "repair", repair: "marker" })
   })
   for (const broken of [
-    JSON.stringify({ schemaVersion: 1, app: "XaanInk", id: randomUUID(), phase: "ready" }),
-    JSON.stringify({ schemaVersion: 1, app: "XaanInk", id: randomUUID(), phase: "ready", inboxReady: true, extra: 1 }),
+    JSON.stringify({ schemaVersion: 1, app: "ShakeInk", id: randomUUID(), phase: "ready" }),
+    JSON.stringify({ schemaVersion: 1, app: "ShakeInk", id: randomUUID(), phase: "ready", inboxReady: true, extra: 1 }),
     JSON.stringify({ schemaVersion: 1, app: "Other-App", id: randomUUID(), phase: "ready", inboxReady: true }),
   ]) {
     await fixture(async f => {
-      await contentWithoutMarker(f.root); await writeFile(join(f.root, "xaanink-app.json"), broken)
+      await contentWithoutMarker(f.root); await writeFile(join(f.root, "shakeink-app.json"), broken)
       await writePointer(f.bootstrap, await pointerFor(f.root))
       assert.deepEqual(classifyStartupRecovery(f.paths, "current"), { kind: "repair", repair: "marker" })
     })
@@ -180,19 +180,19 @@ test("SR-U-14/14b/15/15b marker loss with damaged catalog or inbox is a content-
 test("SR-U-16/17/18 a schema-valid marker is matched semantically against the pointer", async () => {
   await fixture(async f => {
     await contentWithoutMarker(f.root); const pointer = await pointerFor(f.root)
-    await writeFile(join(f.root, "xaanink-app.json"), markerText("current", randomUUID()))
+    await writeFile(join(f.root, "shakeink-app.json"), markerText("current", randomUUID()))
     await writePointer(f.bootstrap, pointer)
     assert.deepEqual(classifyStartupRecovery(f.paths, "current"), { kind: "dialog", reason: "root-mismatch", sourcePath: f.root })
   })
   await fixture(async f => {
     await contentWithoutMarker(f.root); const pointer = await pointerFor(f.root)
-    await writeFile(join(f.root, "xaanink-app.json"), markerText("current", pointer.rootId, "initializing"))
+    await writeFile(join(f.root, "shakeink-app.json"), markerText("current", pointer.rootId, "initializing"))
     await writePointer(f.bootstrap, pointer)
     assert.deepEqual(classifyStartupRecovery(f.paths, "current"), { kind: "dialog", reason: "root-mismatch", sourcePath: f.root })
   })
   await fixture(async f => {
     const id = await healthyRoot(f.root, "current"), pointer = await pointerFor(f.root, id)
-    await writeFile(join(f.root, "xaanink-app.json"), markerText("current", id, "ready", false))
+    await writeFile(join(f.root, "shakeink-app.json"), markerText("current", id, "ready", false))
     await writePointer(f.bootstrap, pointer)
     assert.deepEqual(classifyStartupRecovery(f.paths, "current"), { kind: "repair", repair: "pointer" })
   })
@@ -229,7 +229,7 @@ test("SR-U-23/24/25 pointerless marker triage: adoptable, foreign family or inte
     assert.deepEqual(classifyStartupRecovery(f.paths, "current"), { kind: "dialog", reason: "root-mismatch", sourcePath: null })
   })
   await fixture(async f => {
-    await mkdir(f.root); await writeFile(join(f.root, "xaanink-app.json"), markerText("current", randomUUID(), "initializing", false))
+    await mkdir(f.root); await writeFile(join(f.root, "shakeink-app.json"), markerText("current", randomUUID(), "initializing", false))
     assert.deepEqual(classifyStartupRecovery(f.paths, "current"), { kind: "repair", repair: "resume-init" })
     // The resolve() tolerance that makes resume-init reachable (§2.7-2): the
     // pointerless branch accepts an initializing marker, the pointer branch stays strict.
@@ -328,17 +328,17 @@ test("SR-U-41 marker repair rewrites the family marker from the pointer id and r
     await contentWithoutMarker(f.root); const pointer = await pointerFor(f.root); await writePointer(f.bootstrap, pointer)
     await repair(f.paths, "marker")
     const brand = readApplicationBrandImmediately(brandRootIdentity(f.root))
-    assert.deepEqual(brand.value, { schemaVersion: 1, app: "XaanInk", id: pointer.rootId, phase: "ready", inboxReady: true })
+    assert.deepEqual(brand.value, { schemaVersion: 1, app: "ShakeInk", id: pointer.rootId, phase: "ready", inboxReady: true })
     assert.deepEqual(classifyStartupRecovery(f.paths, "current"), { kind: "none" })
   })
 })
 
 test("SR-U-42 a corrupt same-name marker is isolated before the rebuilt marker is written", async () => {
   await fixture(async f => {
-    await contentWithoutMarker(f.root); await writeFile(join(f.root, "xaanink-app.json"), "{坏标记")
+    await contentWithoutMarker(f.root); await writeFile(join(f.root, "shakeink-app.json"), "{坏标记")
     const pointer = await pointerFor(f.root); await writePointer(f.bootstrap, pointer)
     await repair(f.paths, "marker")
-    const entries = await readdir(f.root), quarantined = entries.filter(name => /^xaanink-app\.json\.corrupt-.+\.json$/.test(name))
+    const entries = await readdir(f.root), quarantined = entries.filter(name => /^shakeink-app\.json\.corrupt-.+\.json$/.test(name))
     assert.equal(quarantined.length, 1)
     assert.equal(await readFile(join(f.root, quarantined[0]), "utf8"), "{坏标记")
     assert.equal(readApplicationBrandImmediately(brandRootIdentity(f.root)).value.id, pointer.rootId)
@@ -372,14 +372,14 @@ test("SR-U-44/45 a pointer or root replaced mid-repair aborts the atomic marker 
     await contentWithoutMarker(f.root); const pointer = await pointerFor(f.root); await writePointer(f.bootstrap, pointer)
     await assert.rejects(repair(f.paths, "marker", "current", { assertLock() {}, hooks: { beforeRename() { renameSync(f.root, f.root + "-old"); mkdirSync(f.root) } } }))
     assert.deepEqual(await readdir(f.root), [])
-    assert.equal((await readdir(f.root + "-old")).includes("xaanink-app.json"), false)
+    assert.equal((await readdir(f.root + "-old")).includes("shakeink-app.json"), false)
     assert.equal(JSON.parse(await readFile(join(f.root + "-old", "catalog.json"), "utf8")).schemaVersion, 1)
   })
 })
 
 test("SR-U-46 resume-init never writes any file", async () => {
   await fixture(async f => {
-    await mkdir(f.root); await writeFile(join(f.root, "xaanink-app.json"), markerText("current", randomUUID(), "initializing", false))
+    await mkdir(f.root); await writeFile(join(f.root, "shakeink-app.json"), markerText("current", randomUUID(), "initializing", false))
     const before = await snapshot(f.base)
     await repair(f.paths, "resume-init")
     assert.deepEqual(await snapshot(f.base), before)
@@ -468,7 +468,7 @@ test("SR-U-64 a crash after the validity flags leaves a dialog-classified residu
     let calls = 0
     await assert.rejects(reset(f.paths, f.root, { assertLock() {}, hooks: { beforeRemove() { if (++calls === 4) throw Error("模拟崩溃") } } }))
     assert.equal(calls, 4)
-    assert.equal((await readdir(f.root)).includes("xaanink-app.json"), false)
+    assert.equal((await readdir(f.root)).includes("shakeink-app.json"), false)
     assert.equal((await readdir(f.root)).includes("catalog.json"), false)
     assert.deepEqual(classifyStartupRecovery(f.paths, "current"), { kind: "dialog", reason: "content-damaged", sourcePath: f.root })
     await reset(f.paths, f.root)
@@ -515,7 +515,7 @@ test("SR-U-68 an injected deletion failure rejects RESET_FAILED without rollback
     )
     assert.equal(calls, 1)
     const remaining = await readdir(f.root)
-    assert.equal(remaining.includes("xaanink-app.json"), false, "already-deleted flags stay deleted")
+    assert.equal(remaining.includes("shakeink-app.json"), false, "already-deleted flags stay deleted")
     assert.equal(remaining.includes("inbox"), true, "the failed entry is retained")
     assert.equal(await readFile(join(f.root, "state.json"), "utf8"), "占用", "later entries are untouched")
   })

@@ -8,7 +8,7 @@ import { join, resolve } from 'node:path'
 import { createHash } from 'node:crypto'
 
 assert.equal(process.platform,'win32')
-const directory=await mkdtemp(join(tmpdir(),'xaanink-text-selection-')),root=join(directory,'data'),evidence=resolve('docs/evidence/text-selection')
+const directory=await mkdtemp(join(tmpdir(),'shakeink-text-selection-')),root=join(directory,'data'),evidence=resolve('docs/evidence/text-selection')
 await mkdir(evidence,{recursive:true})
 execFileSync(process.execPath,['--import','tsx','scripts/seed-text-selection-fixture.ts',directory],{cwd:resolve('.'),stdio:'pipe'})
 const fixture=JSON.parse(await readFile(join(directory,'fixture.json'),'utf8'))
@@ -16,7 +16,7 @@ const report={startedAt:new Date().toISOString(),scope:'Actual Windows developme
 for(const file of ['desktop/main/index.ts','src/app/desktop.css','src/components/layout/ChatPanel.tsx','src/components/editor/MarkdownPreview.tsx','src/components/comments/CommentablePreview.tsx','dist/main/index.cjs','dist/preload/index.cjs','out/index.html'])report.sourceHashes[file]=createHash('sha256').update(await readFile(file)).digest('hex')
 async function hashes(dir){for(const entry of await readdir(dir,{withFileTypes:true})){const file=join(dir,entry.name);if(entry.isDirectory())await hashes(file);else if(file.endsWith('.css'))report.sourceHashes[file.slice(resolve('.').length+1).replaceAll('\\','/')]=createHash('sha256').update(await readFile(file)).digest('hex')}}
 await hashes(resolve('out/_next'))
-const env={...process.env,XAANINK_TEST_ROOT:root};delete env.ELECTRON_RUN_AS_NODE
+const env={...process.env,SHAKEINK_TEST_ROOT:root};delete env.ELECTRON_RUN_AS_NODE
 const diagnostic=process.argv.includes('--diagnostic-monaco-baseline')
 let app,page
 const selected=()=>page.evaluate(()=>window.getSelection()?.toString()??'')
@@ -35,7 +35,7 @@ try{
   const skip=page.getByRole('button',{name:'暂不配置',exact:true});await skip.waitFor({timeout:90000});await skip.click()
   await page.getByRole('button',{name:'账号菜单',exact:true}).waitFor({timeout:90000})
   const state=await page.evaluate(()=>window.desktop.bootstrap());assert.equal(state.dataRoot,root);assert.equal(state.models.length,0)
-  report.runtime=await app.evaluate(()=>({platform:process.platform,electron:process.versions.electron,node:process.versions.node}));assert.equal(page.url(),'xaanink://app/')
+  report.runtime=await app.evaluate(()=>({platform:process.platform,electron:process.versions.electron,node:process.versions.node}));assert.equal(page.url(),'shakeink://app/')
   await ui(page.locator('[data-sonner-toast] [data-title]').first(),'real retained-draft toast title')
   const recovery=page.getByRole('dialog',{name:'保留的草稿',exact:true});await page.locator('[data-sonner-toast]').getByRole('button',{name:'查看草稿',exact:true}).click();await recovery.waitFor()
   await ui(recovery.getByRole('heading',{name:'保留的草稿',exact:true}).first(),'real recovery dialog heading')

@@ -20,7 +20,7 @@ const catalog:TrustedShortcutCatalogs={darwin:{resolved:true,commands:[command("
 test("CFG01: portable export is a strict versioned allowlist with no key, authorization, path or avatar data",()=>{
  const state=current(),saved={...model(),encryptedKey:"secret-os-cipher",apiKey:"secret-plain",keyMask:"secret-mask"};state.models=[saved];state.settings.agent.textModelId=saved.id;state.settings.general.defaultParent="/private/author";state.settings.user.avatarAssetId=randomUUID()
  const text=exportConfiguration(state),data=JSON.parse(text)
- assert.equal(data.format,"xaanink-settings");assert.equal(data.version,1)
+ assert.equal(data.format,"shakeink-settings");assert.equal(data.version,1)
  for(const value of ["secret-os-cipher","secret-plain","secret-mask","/private/author",state.settings.user.avatarAssetId,"local-authorized.invalid"])assert.equal(text.includes(value!),false)
  for(const key of ["encryptedKey","apiKey","keyMask","authRevision","enabled","endpoint"])assert.equal(key in data.modelReferences[0],false)
  assert.equal(data.modelReferences[0].id,saved.id);assert.deepEqual(data.settings.shortcuts,state.settings.shortcuts)

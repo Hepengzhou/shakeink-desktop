@@ -1,9 +1,9 @@
 // Project resources and production dependency collection are separate in builder.
 // Keep this list positive so author data, source and development evidence stay out.
 module.exports = {
-  appId: 'ink.xaanink.desktop',
+  appId: 'ink.shakeink.desktop',
   productName: '玄印写作',
-  artifactName: 'XaanInk-${version}-${os}-${arch}.${ext}',
+  artifactName: 'ShakeInk-${version}-${os}-${arch}.${ext}',
   directories: {output: 'release', buildResources: 'build'},
   asar: false,
   npmRebuild: false,
@@ -26,7 +26,7 @@ module.exports = {
     '!**/.env{,.*}',
     '!**/*.{db,db-shm,db-wal,sqlite,sqlite3,sqlite-shm,sqlite-wal,sqlite3-shm,sqlite3-wal}',
     '!**/PG_VERSION',
-    '!out/**/{database,backups,.xuanxiang,.xuanxiang-storage,.xaanink,.xaanink-storage}/**/*',
+    '!out/**/{database,backups,.xuanxiang,.xuanxiang-storage,.shakeink,.shakeink-storage}/**/*',
   ],
   mac: {
     extraFiles: [{from: 'build/Credits.html', to: 'Resources/Credits.html'}],

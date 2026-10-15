@@ -2,7 +2,7 @@
 window.DESKTOP_BUILD_META = Object.freeze({
   appVersion: null,
   designVersion: '0.13',
-  issuesUrl: 'https://github.com/mySingleLive/xaanink-desktop/issues/new/choose',
+  issuesUrl: 'https://github.com/mySingleLive/shakeink-desktop/issues/new/choose',
   documentationUrl: 'https://xuanxiang.ink/docs',
   documentationAvailable: false
 });

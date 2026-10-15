@@ -178,7 +178,7 @@ export default function DesktopApp() {
   const onboardingVisible=onboardingCanShow({ready:true,closing,migration:migrationPending,lease:leasePending,recovery:recoveryOpen})
   const normalDialogs=onboardingVisible&&!guideRequest
   return <>{leaseDialog}<DesktopCommandController /><DesktopNavigation />
-   <div inert={leasePending} className="contents"><DashboardShell user={{ id: "local-author", name: profile.penName, email: profile.email, avatarUrl: profile.avatarAssetId ? `xaanink://asset/global/${profile.avatarAssetId}` : undefined }} /></div>
+   <div inert={leasePending} className="contents"><DashboardShell user={{ id: "local-author", name: profile.penName, email: profile.email, avatarUrl: profile.avatarAssetId ? `shakeink://asset/global/${profile.avatarAssetId}` : undefined }} /></div>
    <WindowsMenuControl /><TemplateManagementDialog open={normalDialogs&&templatesOpen} onOpenChange={setTemplatesOpen}/><SettingsDialog open={normalDialogs&&settingsOpen} onOpenChange={setSettingsOpen} initialSection={settingsSection} />
    {guideRequest&&<OnboardingController key={guideRequest.id} request={guideRequest.mode} suspended={!onboardingVisible} finalFocus={guideFinalFocus} onExit={exitGuide}/>}
    <ModelRequiredDialog notice={normalDialogs?modelRequired:null} onClose={() => setModelRequired(null)} onConfigure={() => {if(modelRequired&&modelOnboardingNeeded(bootstrap,modelRequired)){startGuide('models');return}setModelRequired(null);setSettingsSection(modelRequired?.code === "MODEL_NOT_SELECTED" ? "agent" : "models");setSettingsOpen(true)}} /><RecoveryDialog open={recoveryOpen&&!closing&&!migrationPending&&!leasePending} onOpenChange={value=>{recoveryRef.current=value;setRecoveryOpen(value)}}/>

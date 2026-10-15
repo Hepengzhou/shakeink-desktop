@@ -56,7 +56,7 @@ docs/                      设计、需求/迁移台账、测试用例、审核�
 
 ## 3. IPC、流与资源边界
 
-注册标准、安全、支持 fetch/stream 的 `xaanink://app` 协议用于打包静态资源。`protocol.handle` 必须校验 host/解码后的规范路径、限定到资源根并拒绝 traversal/符号链接逃逸；不设 `bypassCSP`。`webPreferences`: sandbox、contextIsolation 开启，nodeIntegration 关闭。[Electron protocol](https://www.electronjs.org/docs/latest/api/protocol)
+注册标准、安全、支持 fetch/stream 的 `shakeink://app` 协议用于打包静态资源。`protocol.handle` 必须校验 host/解码后的规范路径、限定到资源根并拒绝 traversal/符号链接逃逸；不设 `bypassCSP`。`webPreferences`: sandbox、contextIsolation 开启，nodeIntegration 关闭。[Electron protocol](https://www.electronjs.org/docs/latest/api/protocol)
 
 preload 暴露：`bootstrap`、`request`、`cancelRequest`、`subscribe`、`settings`、`chooseDirectory`、`chooseImage`、`saveExport`、`windowCommand`、`menuCommand`。不暴露任意 `ipcRenderer`、fs、shell 或 raw SQL。每次主进程入口验证发送者等于当前受信主 frame、版本化 schema、大小/类型/方法与已授权作用域。目录桥接返回 opaque grant ID；后续命令不能用 renderer 随意传入绝对路径取得新权限。
 
@@ -64,7 +64,7 @@ preload 暴露：`bootstrap`、`request`、`cancelRequest`、`subscribe`、`sett
 
 流协议为 requestId + workspaceId + conversationId + attemptId + monotonically increasing seq；MessagePort 分帧带字节上限、ack/背压、结束/错误/取消；订阅销毁、窗口关闭、模型撤销会 abort worker 任务。重复或迟到帧丢弃，用户切会话不取消另一个会话或串写。保留原 AI SDK SSE/chat checkpoint 协议，renderer 转成原 ReadableStream，真实完成回执才能结束 busy 状态。取消不得绕过 chat-write fence。
 
-图片/附件统一 `xaanink://asset/<workspace-id>/<asset-id>`，主进程通过已授权 manifest 查询，不直接传原路径或下载远端图像到 renderer。外部链接只允许经过明确用户动作的文档/反馈 URL，用系统浏览器；拒绝任意导航/window.open，下载通过原生保存选择器。
+图片/附件统一 `shakeink://asset/<workspace-id>/<asset-id>`，主进程通过已授权 manifest 查询，不直接传原路径或下载远端图像到 renderer。外部链接只允许经过明确用户动作的文档/反馈 URL，用系统浏览器；拒绝任意导航/window.open，下载通过原生保存选择器。
 
 ## 4. 数据位置与跨作品作用域
 

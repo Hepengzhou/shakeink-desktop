@@ -12,7 +12,7 @@ test('TCM01 strict capabilities forbid text, unknown commands and invalid coordi
 })
 function fixture(){
  let template:MenuItemConstructorOptions[]=[],popup:any,closes=0
- const owner=Object.assign(new EventEmitter(),{isDestroyed:()=>false,isFocused:()=>true,getContentBounds:()=>({x:100,y:120,width:600,height:400}),webContents:Object.assign(new EventEmitter(),{getZoomFactor:()=>2,mainFrame:{url:'xaanink://app/'}})}) as unknown as BrowserWindow
+ const owner=Object.assign(new EventEmitter(),{isDestroyed:()=>false,isFocused:()=>true,getContentBounds:()=>({x:100,y:120,width:600,height:400}),webContents:Object.assign(new EventEmitter(),{getZoomFactor:()=>2,mainFrame:{url:'shakeink://app/'}})}) as unknown as BrowserWindow
  const menus=new TextContextMenus(rows=>{template=rows;return {popup:(args:any)=>{popup=args},closePopup:()=>{closes++}} as unknown as Menu})
  return {owner,menus,get template(){return template},get popup(){return popup},get closes(){return closes}}
 }

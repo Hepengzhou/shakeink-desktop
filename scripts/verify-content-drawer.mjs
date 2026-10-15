@@ -17,7 +17,7 @@ const executable=executablePath??resolve('node_modules/electron/dist/electron.ex
 const evidenceParent=resolve('docs/evidence/content-drawer'),evidence=join(evidenceParent,'windows-'+label)
 await mkdir(evidenceParent,{recursive:true})
 await mkdir(evidence) // EEXIST rejects before an earlier attempt can be overwritten.
-const directory=await mkdtemp(join(tmpdir(),'xaanink-sidebar-')),root=join(directory,'data')
+const directory=await mkdtemp(join(tmpdir(),'shakeink-sidebar-')),root=join(directory,'data')
 const ownedFixtures=[directory],hash=bytes=>createHash('sha256').update(bytes).digest('hex')
 const safe=input=>[...ownedFixtures.map(path=>[path,'<isolated-fixture>']),[process.cwd(),'<repo>'],[homedir(),'<home>'],[tmpdir(),'<temp>']].reduce((text,[path,replacement])=>text.replaceAll(path,replacement).replaceAll(path.replaceAll('\\','\\\\'),replacement),String(input)).replace(/\bsk-[A-Za-z0-9_-]{12,}\b/g,'<redacted-key-shaped-text>')
 const local=path=>relative(resolve('.'),path).replaceAll('\\','/')
@@ -86,7 +86,7 @@ async function launch(launchEnv,name){
  const skip=page.getByRole('button',{name:'暂不配置',exact:true});await skip.waitFor({timeout:60000});await skip.click();await skip.waitFor({state:'hidden'})
  await shell().waitFor({timeout:60000});await settle();await page.evaluate(()=>document.fonts.ready);await page.evaluate(name=>{window.contentDrawerSeparatorCalibration=null;window.contentDrawerLaunchName=name},name)
  const boot=await page.evaluate(()=>window.desktop.bootstrap())
- assert(boot.dataRoot===launchEnv.XAANINK_TEST_ROOT,'Only the owned fixture root is open');assert.equal(boot.models.length,0);assert.equal(page.url(),'xaanink://app/');assert.equal(await page.evaluate(()=>navigator.onLine),false)
+ assert(boot.dataRoot===launchEnv.SHAKEINK_TEST_ROOT,'Only the owned fixture root is open');assert.equal(boot.models.length,0);assert.equal(page.url(),'shakeink://app/');assert.equal(await page.evaluate(()=>navigator.onLine),false)
  const runtime=await app.evaluate(({BrowserWindow})=>{const w=BrowserWindow.getAllWindows()[0];return{platform:process.platform,electron:process.versions.electron,chromium:process.versions.chrome,node:process.versions.node,bounds:w.getBounds(),contentBounds:w.getContentBounds(),zoom:w.webContents.getZoomFactor(),mainListeningServers:process._getActiveHandles().filter(h=>h.constructor.name==='Server'&&h.listening).length}})
  assert.equal(runtime.mainListeningServers,0,'No main-process HTTP listener')
  report.launches.push({name,protocol:page.url(),models:0,rendererOffline:true,runtime});await record(name+'-real-isolated-offline',{models:0,mainListeningServers:0})
@@ -444,7 +444,7 @@ async function nativeControls(name){
 try{
  await snapshotVersions();await runProcess(process.execPath,['--import','tsx','scripts/seed-sidebar-navigation.ts',directory]);fixture=JSON.parse(await readFile(join(directory,'fixture.json'),'utf8'));assert.equal(fixture.synthetic,true)
  report.fixture={synthetic:true,realWorkDatabases:fixture.works.length,source:'unchanged scripts/seed-sidebar-navigation.ts; actual Workspaces/PGlite/DraftJournal schemas',models:0}
- env={...process.env,XAANINK_TEST_ROOT:root};delete env.ELECTRON_RUN_AS_NODE
+ env={...process.env,SHAKEINK_TEST_ROOT:root};delete env.ELECTRON_RUN_AS_NODE
  await launch(env,'initial');await bounds(1800);await appearance({theme:'ink',zoom:1,uiFontSize:14,wordWrap:true})
  native=await startNative();await native.probe([]);await nativeRegions('CD-N07-caption-calibration');await nativeControls('CD-N07-native-controls-open')
 
@@ -525,7 +525,7 @@ try{
 
  await stage('CD-N05-07-real-empty-caption-freeze',async()=>{
   await app.close();app=null;native.close();native=null
-  const empty=await mkdtemp(join(tmpdir(),'xaanink-sidebar-'));ownedFixtures.push(empty);await runProcess(process.execPath,['--import','tsx','scripts/seed-sidebar-navigation.ts',empty,'--empty-fullscreen']);const emptyEnv={...env,XAANINK_TEST_ROOT:join(empty,'data')};await launch(emptyEnv,'empty-caption');await bounds(1800);assert.equal(await page.locator('.content-tab[data-tab-id]').count(),0);await appearance({zoom:1.25});native=await startNative();await native.probe([]);await closeDrawer('CD-N05-empty-caption-close');await startCapture('CD-N05-empty-caption-live-zoom');await showViaRestore();await pause(75);await appearance({zoom:1.5},{settled:false});await stopCapture('CD-N05-empty-caption-live-zoom',{terminal:'open',allowTerminalReflow:true});await nativeControls('CD-N07-empty-caption-native-controls');await closeDrawer('CD-N05-empty-caption-hide');await nativeRegions('CD-N07-empty-hidden-released-caption',{leak:true});await record('CD-N05-empty-caption',{realEmptyDraftJournal:true,frozenCaptionZoom:true,physicalPixelInvarianceClaim:false,screenshot:await screenshot('empty-hidden-caption')})
+  const empty=await mkdtemp(join(tmpdir(),'shakeink-sidebar-'));ownedFixtures.push(empty);await runProcess(process.execPath,['--import','tsx','scripts/seed-sidebar-navigation.ts',empty,'--empty-fullscreen']);const emptyEnv={...env,SHAKEINK_TEST_ROOT:join(empty,'data')};await launch(emptyEnv,'empty-caption');await bounds(1800);assert.equal(await page.locator('.content-tab[data-tab-id]').count(),0);await appearance({zoom:1.25});native=await startNative();await native.probe([]);await closeDrawer('CD-N05-empty-caption-close');await startCapture('CD-N05-empty-caption-live-zoom');await showViaRestore();await pause(75);await appearance({zoom:1.5},{settled:false});await stopCapture('CD-N05-empty-caption-live-zoom',{terminal:'open',allowTerminalReflow:true});await nativeControls('CD-N07-empty-caption-native-controls');await closeDrawer('CD-N05-empty-caption-hide');await nativeRegions('CD-N07-empty-hidden-released-caption',{leak:true});await record('CD-N05-empty-caption',{realEmptyDraftJournal:true,frozenCaptionZoom:true,physicalPixelInvarianceClaim:false,screenshot:await screenshot('empty-hidden-caption')})
  })
  assert.deepEqual(report.errors,[],'No renderer page errors on any launch');assert.deepEqual(report.httpRequests,[],'No observed external HTTP requests on any launch');await endingVersions(true)
  report.status='passed';report.completedAt=new Date().toISOString();await save();console.log('Actual Windows content drawer verification passed: '+local(evidence))

@@ -18,8 +18,8 @@ const savedSchema = z.object({ version: z.literal(1), activeKey: z.string(), dra
 export { entrySchema as chatSessionEntrySchema, savedSchema as chatSessionSnapshotSchema }
 export type ChatSessionEntry = z.infer<typeof entrySchema>
 export type ChatSessionStorage = Pick<Storage, "getItem" | "setItem" | "removeItem">
-export const chatSessionKey = (accountId: string) => `xaanink-chat-session:v1:${accountId}`
-// Read historical snapshots in the same storage; all new writes use XaanInk.
+export const chatSessionKey = (accountId: string) => `shakeink-chat-session:v1:${accountId}`
+// Read historical snapshots in the same storage; all new writes use ShakeInk.
 const legacyChatSessionKey = (accountId: string) => `xuanxiang-chat-session:v1:${accountId}`
 
 export function emptyChatSession(): ChatSessionEntry {
@@ -73,7 +73,7 @@ export function browserSessionStorage(): ChatSessionStorage | null {
 
 export function announceChatLogout(userId: string) {
   if (typeof BroadcastChannel === "undefined") return
-  const channel = new BroadcastChannel("xaanink-chat-account")
+  const channel = new BroadcastChannel("shakeink-chat-account")
   channel.postMessage({ type: "logout", userId })
   channel.close()
 }

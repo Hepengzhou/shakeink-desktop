@@ -10,12 +10,12 @@ import {defaultState} from '../desktop/core/settings.ts'
 import {displayAppVersion} from '../desktop/shared/project-info.ts'
 const releaseVersion=JSON.parse(await readFile(resolve('package.json'),'utf8')).version
 const displayVersion=displayAppVersion(releaseVersion)
-const temporary=await mkdtemp(join(tmpdir(),'xaanink-version-star-'))
+const temporary=await mkdtemp(join(tmpdir(),'shakeink-version-star-'))
 const packaged=process.argv.includes('--packaged')
 const evidence=resolve('docs/evidence/version-star',packaged?'windows-package':'windows-electron')
 await mkdir(evidence,{recursive:true})
 const report={startedAt:new Date().toISOString(),status:'running',packaged,scope:'Actual Windows Electron with production UI, isolated resumed onboarding state, no models or credentials. Real IPC/standalone native window; shell.openExternal intercepted to verify exact routing, not OS browser launch. Renderer network observation begins after firstWindow, includes offline reload. Auto-guide focus validates only the narrow-window visible navigation fallback; wide-window/account-button focus restoration is not claimed. Not macOS, physical keyboard, system DPI or NSIS install.',checks:[],errors:[],httpRequests:0,externalTargets:[],runtime:[],sourceHashes:{}}
-const url='https://github.com/mySingleLive/xaanink-desktop'
+const url='https://github.com/mySingleLive/shakeink-desktop'
 let app,page,theme
 const redact=value=>String(value).replaceAll(temporary,'<isolated-temp>').replaceAll(process.cwd(),'<repo>')
 const sources=['package.json','package-lock.json','scripts/verify-version-star.mjs','desktop/main/index.ts','desktop/main/project-about.ts','desktop/shared/project-info.ts','desktop/preload/index.ts','src/components/layout/SidebarTree.tsx','src/components/desktop/DesktopApp.tsx','src/components/desktop/ProjectStarPrompt.tsx','src/components/desktop/SettingsDialog.tsx','src/components/desktop/OnboardingController.tsx','src/app/desktop.css','electron-builder.config.cjs','build/Credits.html']
@@ -24,13 +24,13 @@ const stateFile=root=>join(root,'state.json')
 async function saved(root){return JSON.parse(await readFile(stateFile(root),'utf8'))}
 async function openSettings(){await page.getByRole('button',{name:/^账号菜单：/}).click();await page.getByRole('menuitem',{name:'设置',exact:true}).click();await page.getByRole('button',{name:'关于我们',exact:true}).click()}
 async function launch(root){
- const environment={...process.env,XAANINK_TEST_ROOT:root}
+ const environment={...process.env,SHAKEINK_TEST_ROOT:root}
  delete environment.ELECTRON_RUN_AS_NODE
  app=await _electron.launch({args:packaged?[]:[resolve('.')],...(packaged?{executablePath:resolve('release/win-unpacked/玄印写作.exe')}:{}),env:environment,timeout:60000})
  page=await app.firstWindow({timeout:60000});page.setDefaultTimeout(20000)
  page.on('pageerror',error=>report.errors.push(redact(error.message)));page.on('request',request=>{if(/^https?:/i.test(request.url()))report.httpRequests++})
  await page.context().setOffline(true)
- await page.waitForURL('xaanink://app/',{timeout:60000})
+ await page.waitForURL('shakeink://app/',{timeout:60000})
  await app.evaluate(({BrowserWindow,shell})=>{BrowserWindow.getAllWindows()[0].setBounds({width:1440,height:900});globalThis.projectOpens=[];shell.openExternal=async url=>{globalThis.projectOpens.push(url)}})
 }
 async function externalCount(){return app.evaluate(()=>globalThis.projectOpens.length)}
@@ -38,7 +38,7 @@ async function snapshotCheck(root,action){const before=await readFile(stateFile(
 async function check(id,action){await action();report.checks.push({theme,id,status:'passed'})}
 async function captureMain(name){
  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))))
- const pixels=await app.evaluate(async({BrowserWindow})=>(await BrowserWindow.getAllWindows().find(win=>win.webContents.getURL().startsWith('xaanink://')).webContents.capturePage()).toPNG().toString('base64'))
+ const pixels=await app.evaluate(async({BrowserWindow})=>(await BrowserWindow.getAllWindows().find(win=>win.webContents.getURL().startsWith('shakeink://')).webContents.capturePage()).toPNG().toString('base64'))
  await writeFile(join(evidence,name),Buffer.from(pixels,'base64'))
 }
 async function fullyInside(locator){
@@ -127,7 +127,7 @@ try{
   })
   await check('VS-07-untrusted-handler',async()=>{
    const denied=await app.evaluate(async({ipcMain,BrowserWindow})=>{
-    const handler=ipcMain._invokeHandlers.get('desktop:open-project-repository'),windows=BrowserWindow.getAllWindows(),main=windows.find(win=>win.webContents.getURL().startsWith('xaanink://')),child=windows.find(win=>win!==main),frame=main.webContents.mainFrame,results=[]
+    const handler=ipcMain._invokeHandlers.get('desktop:open-project-repository'),windows=BrowserWindow.getAllWindows(),main=windows.find(win=>win.webContents.getURL().startsWith('shakeink://')),child=windows.find(win=>win!==main),frame=main.webContents.mainFrame,results=[]
     for(const event of [{sender:child.webContents,senderFrame:child.webContents.mainFrame},{sender:main.webContents,senderFrame:{}}, {sender:{},senderFrame:frame}]){try{await handler(event);results.push(false)}catch{results.push(true)}}
     // Isolated predicate check against the actual registered handler, not a real navigation.
     const descriptor=Object.getOwnPropertyDescriptor(frame,'url')
@@ -149,7 +149,7 @@ try{
  assert.deepEqual(report.errors,[]);assert.equal(report.httpRequests,0);report.status='passed'
 }catch(error){report.status='failed';report.error=redact(error.stack??error);await page?.screenshot({path:join(evidence,'failure.png')}).catch(()=>{});process.exitCode=1}
 finally{
- await app?.close().catch(()=>{});assert.equal(dirname(resolve(temporary)),resolve(tmpdir()));assert.ok(basename(temporary).startsWith('xaanink-version-star-'))
+ await app?.close().catch(()=>{});assert.equal(dirname(resolve(temporary)),resolve(tmpdir()));assert.ok(basename(temporary).startsWith('shakeink-version-star-'))
  await rm(temporary,{recursive:true,force:true});report.cleanedIsolatedData=true;report.completedAt=new Date().toISOString()
  await writeFile(join(evidence,'report.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({status:report.status,checks:report.checks.length,error:report.error,evidence}))
 }

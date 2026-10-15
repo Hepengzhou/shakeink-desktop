@@ -107,7 +107,7 @@ test('REVIEW101-I02: a ready but unregistered creation cannot make another physi
    return originalUpdate(revision,value,guard)
   })
   await assert.rejects(works.create(originalSelection,input),/controlled ready-before-catalog failure/)
-  const manifest=JSON.parse(await readFile(join(originalSelection.path,'xaanink-work.json'),'utf8')) as {id:string;novelId:string;phase:string;requestId:string}
+  const manifest=JSON.parse(await readFile(join(originalSelection.path,'shakeink-work.json'),'utf8')) as {id:string;novelId:string;phase:string;requestId:string}
   assert.equal(manifest.phase,'ready');assert.ok(manifest.novelId);assert.equal(manifest.requestId,input.requestId);assert.deepEqual(await works.list(),[])
   interrupted.mock.restore();interrupted=undefined;await works.close()
   works=new Workspaces(appRoot,migrations);await works.initialize()

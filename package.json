@@ -1,5 +1,5 @@
 {
-  "name": "xaanink",
+  "name": "shakeink",
   "version": "0.1.0-alpha",
   "private": true,
   "scripts": {
@@ -90,6 +90,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mySingleLive/xaanink-desktop.git"
+    "url": "https://github.com/mySingleLive/shakeink-desktop.git"
   }
 }

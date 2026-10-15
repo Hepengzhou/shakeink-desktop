@@ -66,7 +66,7 @@ async function initialized(f: Awaited<ReturnType<typeof fixture>>) {
   if (!await exists(join(f.bootstrap, "data-root.json"))) await new DataRootManager(f.bootstrap, f.root).adopt(await directoryIdentity(f.root))
 }
 async function closedFixtureHost(pointer: RootPointer): Promise<MigrationHost> {
-  const paths = ["xaanink-app.json", "catalog.json"], directories: string[] = ["inbox/database"]
+  const paths = ["shakeink-app.json", "catalog.json"], directories: string[] = ["inbox/database"]
   async function files(path: string, relative: string) {
     for (const entry of await readdir(path, { withFileTypes: true })) {
       const next = `${relative}/${entry.name}`
@@ -85,7 +85,7 @@ test("ROOT11-01 built worker freezes canonical UTF8 root only after seed and dur
   const f = await fixture(), running = await launch(f.root, f.bootstrap)
   try {
     assert.deepEqual(running.result(), { version: 1, status: "ready", root: f.root })
-    const marker = JSON.parse(await readFile(join(f.root, "xaanink-app.json"), "utf8"))
+    const marker = JSON.parse(await readFile(join(f.root, "shakeink-app.json"), "utf8"))
     assert.equal(marker.inboxReady, true)
     const pointer = JSON.parse(await readFile(join(f.bootstrap, "data-root.json"), "utf8"))
     assert.equal(pointer.rootId, marker.id); assert.deepEqual(pointer.root, await directoryIdentity(f.root)); assert.equal(pointer.revision, 1)
@@ -106,10 +106,10 @@ test("ROOT11-02 built worker starts from migrated pointer and preserves seeded u
     const running = await launch(f.root, f.bootstrap)
     try {
       running.wait()
-      assert.equal(await exists(join(f.root, "xaanink-app.json")), false, "old root must not be reinitialized")
+      assert.equal(await exists(join(f.root, "shakeink-app.json")), false, "old root must not be reinitialized")
       assert.deepEqual(running.result(), { version: 1, status: "ready", root: f.target })
       assert.ok((await request(running.rpc, "/api/admin/prompts")).data.prompts.some((row: { key: string }) => row.key === "root_startup_retained"))
-      assert.equal(await exists(join(f.root, "xaanink-app.json")), false, "old root must not be reinitialized")
+      assert.equal(await exists(join(f.root, "shakeink-app.json")), false, "old root must not be reinitialized")
       assert.equal(await exists(join(f.root, "inbox", "database")), false)
     } finally { await running.close() }
   } finally { await f.close() }
@@ -175,14 +175,14 @@ test("ROOT11-07 real startup recovery finishes committed journal before opening 
     const manager = new DataRootManager(f.bootstrap, f.root, { hook(phase) { if (phase === "pointer-written") throw new RootMigrationCrash("simulated terminated fixture migration") } })
     const resolved = await manager.resolve(); if (resolved.state !== "existing") throw Error("fixture pointer absent")
     await assert.rejects(manager.migrate(await directoryIdentity(f.target), await closedFixtureHost(resolved.pointer)), RootMigrationCrash)
-    assert.ok(await exists(join(f.root, "xaanink-app.json")), "old copy exists before recovery")
+    assert.ok(await exists(join(f.root, "shakeink-app.json")), "old copy exists before recovery")
     const running = await launch(f.root, f.bootstrap)
     try {
       running.wait()
       assert.equal(JSON.parse(await readFile(join(f.bootstrap, "root-migration.json"), "utf8")).journal.phase, "complete", "startup must recover before opening a database")
       assert.deepEqual(running.result(), { version: 1, status: "ready", root: f.target })
       assert.equal(JSON.parse(await readFile(join(f.bootstrap, "root-migration.json"), "utf8")).journal.phase, "complete")
-      assert.equal(await exists(join(f.root, "xaanink-app.json")), false)
+      assert.equal(await exists(join(f.root, "shakeink-app.json")), false)
       assert.ok((await request(running.rpc, "/api/admin/prompts")).data.prompts.some((row: { key: string }) => row.key === "root_startup_retained"))
     } finally { await running.close() }
   } finally { await f.close() }

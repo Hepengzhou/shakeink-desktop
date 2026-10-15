@@ -7,7 +7,7 @@ import assert from 'node:assert/strict'
 import { execFileSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
 
-const root = await realpath(await mkdtemp(join(tmpdir(), 'xaanink-byok-native-')))
+const root = await realpath(await mkdtemp(join(tmpdir(), 'shakeink-byok-native-')))
 const checks = [], network = []
 let app
 const restoreClipboard=async()=>{
@@ -26,7 +26,7 @@ try {
   const guard = join(root, 'offline-guard.cjs'), harness = join(root, 'offline-main.cjs'), report = join(root, 'offline-checks.txt')
   await writeFile(guard, `
 const fs = require('node:fs'), net = require('node:net');
-const record = value => fs.appendFileSync(process.env.XAANINK_OFFLINE_GUARD_REPORT, value + '\\n');
+const record = value => fs.appendFileSync(process.env.SHAKEINK_OFFLINE_GUARD_REPORT, value + '\\n');
 record('guard-loaded');
 const denied = () => { record('network-denied'); throw Error('Offline verification forbids network access'); };
 const originalFetch = globalThis.fetch;
@@ -43,20 +43,20 @@ const net=require('node:net'),assert=require('node:assert/strict');
 for(const args of [[443],['443','example.invalid'],[{port:443,host:'example.invalid'}]]) assert.throws(()=>new net.Socket().connect(...args),/Offline verification/);
 for(const args of [[443],['443'],[{port:443}]]) assert.throws(()=>net.createServer().listen(...args),/Offline verification/);
 const server=net.createServer();server.listen(${JSON.stringify(join(root, 'allowed-unix.sock'))},()=>server.close());
-`], { env: { ...process.env, XAANINK_OFFLINE_GUARD_REPORT: preflightReport }, timeout: 10000 })
+`], { env: { ...process.env, SHAKEINK_OFFLINE_GUARD_REPORT: preflightReport }, timeout: 10000 })
   assert.equal((await readFile(preflightReport, 'utf8')).split('\n').filter(value => value === 'network-denied').length, 6)
   await writeFile(harness, `
 require(${JSON.stringify(guard)});
 const workers = require('node:worker_threads'), Worker = workers.Worker;
 workers.Worker = class extends Worker { constructor(file, options = {}) { super(file, { ...options, execArgv: [...(options.execArgv ?? []), '--require', ${JSON.stringify(guard)}] }); } };
 const {app,session,net} = require('electron'), fs = require('node:fs');
-const denied = () => { fs.appendFileSync(process.env.XAANINK_OFFLINE_GUARD_REPORT, 'network-denied\\n'); throw Error('Offline verification forbids network access'); };
+const denied = () => { fs.appendFileSync(process.env.SHAKEINK_OFFLINE_GUARD_REPORT, 'network-denied\\n'); throw Error('Offline verification forbids network access'); };
 net.fetch = denied; net.request = denied;
 app.setAppPath(${JSON.stringify(resolve('.'))});
-app.whenReady().then(() => session.defaultSession.webRequest.onBeforeRequest({urls:['http://*/*','https://*/*']}, (_details,callback) => { fs.appendFileSync(process.env.XAANINK_OFFLINE_GUARD_REPORT,'network-denied\\n'); callback({cancel:true}); }));
+app.whenReady().then(() => session.defaultSession.webRequest.onBeforeRequest({urls:['http://*/*','https://*/*']}, (_details,callback) => { fs.appendFileSync(process.env.SHAKEINK_OFFLINE_GUARD_REPORT,'network-denied\\n'); callback({cancel:true}); }));
 require(${JSON.stringify(resolve('dist/main/index.cjs'))});
 `)
-  app = await electron.launch({ args: [harness], env: { ...process.env, XAANINK_TEST_ROOT: join(root, 'data'), XAANINK_OFFLINE_GUARD_REPORT: report }, timeout: 45000 })
+  app = await electron.launch({ args: [harness], env: { ...process.env, SHAKEINK_TEST_ROOT: join(root, 'data'), SHAKEINK_OFFLINE_GUARD_REPORT: report }, timeout: 45000 })
   const page = await app.firstWindow({ timeout: 45000 })
   page.on('request', request => { if (/^https?:/.test(request.url())) network.push(new URL(request.url()).origin) })
   await page.getByRole('button', { name: '账号菜单' }).waitFor({ timeout: 45000 })
@@ -92,7 +92,7 @@ require(${JSON.stringify(resolve('dist/main/index.cjs'))});
   }
   }
   await dialog.getByRole('button', { name: '取消', exact: true }).click()
-  if(process.env.XAANINK_NATIVE_INPUT_MENU==='1'){
+  if(process.env.SHAKEINK_NATIVE_INPUT_MENU==='1'){
     await page.getByRole('button',{name:'添加文本模型',exact:true}).click()
     const key=dialog.getByLabel('API Key',{exact:true})
     await key.evaluate(element=>{globalThis.__nativeFixtureActivated=false;element.addEventListener('pointerdown',event=>{globalThis.__nativeFixtureActivated=event.isTrusted},{once:true})})
@@ -146,9 +146,9 @@ require(${JSON.stringify(resolve('dist/main/index.cjs'))});
   assert.ok(guardEvents.filter(value => value === 'guard-loaded').length >= 2, 'main and actual service worker both load guards')
   assert.equal(guardEvents.filter(value => value === 'network-denied').length, 0)
   checks.push('provider switching and cancellation clear drafts; main/service deny external HTTP/TCP and TCP listening before startup with zero attempts')
-  if(process.env.XAANINK_NATIVE_INPUT_MENU==='1'){await restoreClipboard();checks.push('actual original clipboard payloads were materialized in owned main memory and restored before reporting success')}
+  if(process.env.SHAKEINK_NATIVE_INPUT_MENU==='1'){await restoreClipboard();checks.push('actual original clipboard payloads were materialized in owned main memory and restored before reporting success')}
   await mkdir('docs/evidence/model-dialog-repair', { recursive: true })
   const compiledArtifacts=Object.fromEntries(await Promise.all(['dist/main/index.cjs','dist/preload/index.cjs','dist/service/index.cjs'].map(async path=>[path,createHash('sha256').update(await readFile(path)).digest('hex')])))
-  await writeFile('docs/evidence/model-dialog-repair/native.json', JSON.stringify({ at: new Date().toISOString(), checks, passed: true, guardPreflight: { tcpFormsRejected: 6, actualUnixSocketAllowed: true }, offlineGuardLoads: guardEvents.filter(value => value === 'guard-loaded').length, blockedNetworkAttempts: 0, realProviderCalls: false, credentialPersistence: false,compiledArtifacts, nativeMenuInteraction:process.env.XAANINK_NATIVE_INPUT_MENU==='1' }, null, 2) + '\n')
+  await writeFile('docs/evidence/model-dialog-repair/native.json', JSON.stringify({ at: new Date().toISOString(), checks, passed: true, guardPreflight: { tcpFormsRejected: 6, actualUnixSocketAllowed: true }, offlineGuardLoads: guardEvents.filter(value => value === 'guard-loaded').length, blockedNetworkAttempts: 0, realProviderCalls: false, credentialPersistence: false,compiledArtifacts, nativeMenuInteraction:process.env.SHAKEINK_NATIVE_INPUT_MENU==='1' }, null, 2) + '\n')
   console.log(JSON.stringify({ passed: true, checks: checks.length }))
 } finally { try{await restoreClipboard()}finally{try{if(app)await app.close()}finally{await rm(root, { recursive: true, force: true })}} }

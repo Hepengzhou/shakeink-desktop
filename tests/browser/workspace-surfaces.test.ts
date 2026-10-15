@@ -113,7 +113,7 @@ window.mountSurfaces=({zoom,font,theme,count})=>{
 } }] }).then(r => r.outputFiles![0].text)
 
 let browser: Browser
-test.before(async () => { browser = await chromium.launch({ headless: true, ...(process.env.XAANINK_TEST_CHROMIUM ? { executablePath: process.env.XAANINK_TEST_CHROMIUM } : {}) }) })
+test.before(async () => { browser = await chromium.launch({ headless: true, ...(process.env.SHAKEINK_TEST_CHROMIUM ? { executablePath: process.env.SHAKEINK_TEST_CHROMIUM } : {}) }) })
 test.after(async () => { await browser?.close() })
 type Options = { dpr?: number; zoom?: number; font?: number; theme?: "paper" | "ink"; count?: number; width?: number }
 async function scenario(options: Options, run: (page: Page) => Promise<void>) {
@@ -130,9 +130,9 @@ async function scenario(options: Options, run: (page: Page) => Promise<void>) {
     await page.evaluate(() => { (window as any).surfaceDiagnostics = [] })
     await run(page); assert.deepEqual(errors, [], "No fixture rendering errors")
   } catch (error) {
-    if (process.env.XAANINK_REGRESSION_DIAGNOSTIC) {
-      await mkdir(process.env.XAANINK_REGRESSION_DIAGNOSTIC, { recursive: true })
-      await writeFile(`${process.env.XAANINK_REGRESSION_DIAGNOSTIC}/surface-${width}-${count}.json`, JSON.stringify({ options, errors, samples: await page.evaluate(() => (window as any).surfaceDiagnostics), failure: error instanceof Error ? error.stack : String(error) }, null, 2) + "\n")
+    if (process.env.SHAKEINK_REGRESSION_DIAGNOSTIC) {
+      await mkdir(process.env.SHAKEINK_REGRESSION_DIAGNOSTIC, { recursive: true })
+      await writeFile(`${process.env.SHAKEINK_REGRESSION_DIAGNOSTIC}/surface-${width}-${count}.json`, JSON.stringify({ options, errors, samples: await page.evaluate(() => (window as any).surfaceDiagnostics), failure: error instanceof Error ? error.stack : String(error) }, null, 2) + "\n")
     }
     throw error
   } finally { await context.close() }

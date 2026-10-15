@@ -2,7 +2,7 @@
 
 2026-10-08。审核对象：`docs/reviews/121-brand-rename-plan.md`。用户已确认「兼容旧版数据，新建数据使用新名称」。仅审核并写入本文；未修改实现、测试，未读取真实用户作品或密钥。
 
-用户最新命名为「玄印写作」、简称「玄印」、英文名「XaanInk」；本次中文名称更正不改变下述数据兼容方案，技术方案仍通过。
+用户最新命名为「玄印写作」、简称「玄印」、英文名「ShakeInk」；本次中文名称更正不改变下述数据兼容方案，技术方案仍通过。
 
 ## 结论
 
@@ -21,7 +21,7 @@ type BrandFamily = "legacy" | "current"
 interface BrandNames {
   family: BrandFamily
   appMarker: string
-  appIdentity: "Xuanxiangxiezuo-Desktop" | "XaanInk"
+  appIdentity: "Xuanxiangxiezuo-Desktop" | "ShakeInk"
   workManifest: string
   storage: string
   storageRequired: string
@@ -50,13 +50,13 @@ readWorkBrandImmediately(root): BrandObservation<WorkManifest>
 
 | 内容 | 旧家族 | 新家族 |
 | --- | --- | --- |
-| 应用 marker 文件 / `app` 值 | `xuanxiang-app.json` / `Xuanxiangxiezuo-Desktop` | `xaanink-app.json` / `XaanInk` |
-| 作品 manifest | `xuanxiang-work.json` | `xaanink-work.json` |
-| 存储指针 / 必须存在见证 | `xuanxiang-storage.json` / `xuanxiang-storage-required.json` | `xaanink-storage.json` / `xaanink-storage-required.json` |
-| writer lease / 审计 | `.xuanxiang-lock` / `.xuanxiang-lease-recovery.json` | `.xaanink-lock` / `.xaanink-lease-recovery.json` |
-| 审计 `type` / 临时前缀 | `xuanxiang-work-lease-recovery` / `.xuanxiang-lease-recovery-` | `xaanink-work-lease-recovery` / `.xaanink-lease-recovery-` |
-| 已恢复的作品候选 | `.xuanxiang-restores` | `.xaanink-restores` |
-| 目录迁移 stage / recovery 前缀 | `.xuanxiang-migration-` / `.xuanxiang-root-recovery-` | `.xaanink-migration-` / `.xaanink-root-recovery-` |
+| 应用 marker 文件 / `app` 值 | `xuanxiang-app.json` / `Xuanxiangxiezuo-Desktop` | `shakeink-app.json` / `ShakeInk` |
+| 作品 manifest | `xuanxiang-work.json` | `shakeink-work.json` |
+| 存储指针 / 必须存在见证 | `xuanxiang-storage.json` / `xuanxiang-storage-required.json` | `shakeink-storage.json` / `shakeink-storage-required.json` |
+| writer lease / 审计 | `.xuanxiang-lock` / `.xuanxiang-lease-recovery.json` | `.shakeink-lock` / `.shakeink-lease-recovery.json` |
+| 审计 `type` / 临时前缀 | `xuanxiang-work-lease-recovery` / `.xuanxiang-lease-recovery-` | `shakeink-work-lease-recovery` / `.shakeink-lease-recovery-` |
+| 已恢复的作品候选 | `.xuanxiang-restores` | `.shakeink-restores` |
+| 目录迁移 stage / recovery 前缀 | `.xuanxiang-migration-` / `.xuanxiang-root-recovery-` | `.shakeink-migration-` / `.shakeink-root-recovery-` |
 
 规则：
 
@@ -67,15 +67,15 @@ readWorkBrandImmediately(root): BrandObservation<WorkManifest>
 5. writer lease 使用作品家族；全局 inbox 没有作品 manifest，使用其父应用根的家族。不得以锁是否存在来推断家族。取得锁前必须拒绝另一家族锁/审计；释放、`assertHeld()` 与恢复需一直绑定所选锁目录及 owner 文件身份。恢复旧锁写旧 audit 类型，不能生成第二套新审计后删除旧锁。
 6. 新目录迁移保持源应用根家族，包括其 marker；这属于移动旧数据，不能藉此升级格式。已有 journal 的 stage/recovery 从 journal 中的准确字符串与源家族校验，保持 checksum 的原始语义。新操作在当前源家族内生成新的控制文件。
 7. 固定列表与路径分类器可以识别两类名称，但获得删除、复制、写入权限时仍必须绑定当前家族及现有 ownership proof；单纯扩大 allowlist 不构成写入授权。所有导出保护则同时封锁两类内部名字、两类临时审计名字和两个 marker，包含未注册/离线目录。
-8. 旧导入格式和值必须按原字节/严格 schema 接受，新导出只写 `xaanink-settings`、`xaanink-local-templates`。不要先全局替换输入 JSON 再解析；那会修改用户模板正文与 checksum。退役备份格式只作为历史兼容/隔离证据保留，不能恢复已取消功能。
+8. 旧导入格式和值必须按原字节/严格 schema 接受，新导出只写 `shakeink-settings`、`shakeink-local-templates`。不要先全局替换输入 JSON 再解析；那会修改用户模板正文与 checksum。退役备份格式只作为历史兼容/隔离证据保留，不能恢复已取消功能。
 
 ## 启动与目录选择
 
 `desktop/main/index.ts:54` 的注释明确实例锁目录在 dataRoot 改变时仍需稳定，`:56` 当前固定旧 bootstrap，`:59` 将其设为 `userData`，`:668` 才取得锁。新的路径选择应在上述位置同步执行，读完候选目录状态之后才创建选中的目录；不能先创建新 bootstrap 然后回头尝试旧目录。
 
 - 原旧 bootstrap 已存在时继续使用它，包括旧 pointer、自定义 dataRoot、未完成 journal/relocation/旧恢复记录。它存在但损坏、无法访问或只剩维护证据时要报错，不能退回新安装。
-- 新旧 bootstrap 同时存在而都包含权威状态时，应报告冲突并保留两边，不自动合并/覆盖。没有旧 bootstrap 时可使用新 `XaanInk` bootstrap；检查旧默认根时仍须验证其真实 marker。
-- `DataRootManager.resolve()`（`desktop/core/data-root.ts:165`）优先验证已有 pointer；保留该优先级。没有 pointer 时，发现合法旧默认根应继续打开旧根；发现非空/坏旧默认根须失败关闭；没有旧状态才把新默认根设为 `~/.xaanink`。
+- 新旧 bootstrap 同时存在而都包含权威状态时，应报告冲突并保留两边，不自动合并/覆盖。没有旧 bootstrap 时可使用新 `ShakeInk` bootstrap；检查旧默认根时仍须验证其真实 marker。
+- `DataRootManager.resolve()`（`desktop/core/data-root.ts:165`）优先验证已有 pointer；保留该优先级。没有 pointer 时，发现合法旧默认根应继续打开旧根；发现非空/坏旧默认根须失败关闭；没有旧状态才把新默认根设为 `~/.shakeink`。
 - `desktop/main/index.ts:192` 与 `:674` 的 ordinary/maintenance 默认根都要使用同一个选择结果；测试隔离 root 与 bootstrap 必须完全阻断宿主旧目录回退。
 - 旧 bootstrap 的稳定锁选择与 Keychain 初始化身份需分别记录；前者避免跨版本两个应用宿主同时运行，后者避免设置存在但 Key 解密失败。
 

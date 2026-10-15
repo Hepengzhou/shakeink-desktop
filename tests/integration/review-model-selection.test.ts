@@ -25,7 +25,7 @@ import { PATCH } from '../../desktop/handlers/chat/conversations/[id]/route'
 import { captureConversationBundle, copyConversationBundle } from '../../desktop/service/conversation-bundle'
 
 test('RMS: explicit review selection repairs new plan attempts while retaining historical model choices', async t => {
-  const root = await mkdtemp(join(tmpdir(), 'xaanink-review-selection-'))
+  const root = await mkdtemp(join(tmpdir(), 'shakeink-review-selection-'))
   const works = new Workspaces(join(root, 'data'), join(process.cwd(), 'prisma/migrations'))
   const draft: ModelDraft = { name: '隔离审核模型', provider: 'custom', protocol: 'openai', modelId: 'fixture-text', endpoint: 'https://fixture.invalid/v1', kind: 'TEXT', enabled: true, contextWindow: 0, thinkingLevels: [], defaultThinking: 'default', apiKey: 'synthetic-main-only-key' }
   let repo!: ModelRepository

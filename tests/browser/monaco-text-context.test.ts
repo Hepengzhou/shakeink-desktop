@@ -50,7 +50,7 @@ const bundled=Promise.all([
  build({entryPoints:['node_modules/monaco-editor/esm/vs/editor/editor.worker.js'],bundle:true,write:false,platform:'browser',format:'esm',minify:true}),
 ]).then(([main,worker])=>({script:main.outputFiles!.find(file=>file.path.endsWith('.js'))!.text,css:main.outputFiles!.find(file=>file.path.endsWith('.css'))?.text??'',worker:worker.outputFiles![0].text}))
 let browser:Browser
-test.before(async()=>{browser=await chromium.launch({headless:true,executablePath:process.env.XAANINK_TEST_CHROMIUM??'C:/Program Files/Google/Chrome/Application/chrome.exe'})})
+test.before(async()=>{browser=await chromium.launch({headless:true,executablePath:process.env.SHAKEINK_TEST_CHROMIUM??'C:/Program Files/Google/Chrome/Application/chrome.exe'})})
 test.after(async()=>{await browser?.close()})
 async function frames(page:Page){await page.evaluate(()=>new Promise<void>(resolve=>requestAnimationFrame(()=>requestAnimationFrame(()=>resolve()))))}
 async function scenario(run:(page:Page)=>Promise<void>){

@@ -16,7 +16,7 @@ const script=build({stdin:{loader:'tsx',resolveDir:process.cwd(),contents:`
  globalThis.review={commands,alerts,emit:state=>flushSync(()=>receive(state)),mutate:()=>{seed.pendingItems[0]='mutated original array'},unmount:()=>flushSync(()=>root.unmount())};
  };`},bundle:true,platform:'browser',format:'iife',write:false,tsconfig:'tsconfig.json'}).then(result=>result.outputFiles![0].text)
 let browser:Browser
-test.before(async()=>{browser=await chromium.launch({headless:true,executablePath:process.env.XAANINK_TEST_CHROMIUM})})
+test.before(async()=>{browser=await chromium.launch({headless:true,executablePath:process.env.SHAKEINK_TEST_CHROMIUM})})
 test.after(async()=>{await browser?.close()})
 function seed(items:string[]|null):RootMaintenanceState{return{version:1,revision:1,phase:'cleanup-pending',theme:'paper',sourcePath:'/本地/旧目录',targetPath:'/本地/新目录',copiedFiles:4,totalFiles:4,canCancel:false,canContinue:true,pendingCount:items?.length??3,pendingItems:items}}
 async function isolated(state:RootMaintenanceState,run:(page:Page)=>Promise<void>){

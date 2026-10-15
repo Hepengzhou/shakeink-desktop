@@ -25,7 +25,7 @@ const handlersSource=transformSync(`${declaration("trusted")}\n${declaration("re
 function deferred<T>(){let resolve!:(value:T)=>void;const promise=new Promise<T>(yes=>{resolve=yes});return {promise,resolve}}
 async function fixture(options:{read?:(state:StateSnapshot)=>Promise<StateSnapshot>;pick?:()=>Promise<{canceled:boolean;filePaths:string[]}>;failSave?:()=>boolean;assets?:Partial<AvatarAssetOptions>}={}){
   const root=await mkdtemp(join(tmpdir(),"xuanxiang-profile-ipc-")),assets=new AvatarAssetService({root,...options.assets}),handlers=new Map<string,(event:unknown,...args:unknown[])=>Promise<unknown>>()
-  const frame={url:"xaanink://app/"},contents={id:37,mainFrame:frame,setZoomFactor(){}}
+  const frame={url:"shakeink://app/"},contents={id:37,mainFrame:frame,setZoomFactor(){}}
   const event={sender:contents,senderFrame:frame},published:unknown[]=[],updates:Settings[]=[],pickerCalls:unknown[]=[],state:StateSnapshot={revision:3,settings:structuredClone(defaultState.settings),models:[]}
   const repository={
     async read(){return options.read?await options.read(structuredClone(state)):structuredClone(state)},

@@ -26,7 +26,7 @@
 
 初始实现只在连接建立时校验 manifest 和控制文件，`Workspaces.run` 复用已持有的 slot 后直接执行业务回调。独立真实 PGlite 复现：创建 current 作品，运行一次以保留连接，新增异家族 audit，再调用 `works.run(... prisma.novel.update ...)`，写入成功。
 
-审核用独立脚本 `/private/tmp/xaanink-brand-review-run.mts` 的初始结果：
+审核用独立脚本 `/private/tmp/shakeink-brand-review-run.mts` 的初始结果：
 
 ```json
 {"nextWrite":"WRITE_ACCEPTED","controlPreserved":true}
@@ -48,10 +48,10 @@
 
 初始 `assertBrandControls` 对 readdir 的 entry 使用精确大小写比较。本机临时目录实际验证：`.XUANXIANG-LOCK` 与 `.xuanxiang-lock` 解析到同一目录，但 current manifest reader 仍接受该根，因此可漏掉实际存在的第二家族锁。
 
-独立脚本 `/private/tmp/xaanink-brand-review-case.mts` 的初始结果：
+独立脚本 `/private/tmp/shakeink-brand-review-case.mts` 的初始结果：
 
 ```json
-{"filesystemResolvesLowercaseLock":true,"readerResult":"current","entries":[".XUANXIANG-LOCK","xaanink-work.json"]}
+{"filesystemResolvesLowercaseLock":true,"readerResult":"current","entries":[".XUANXIANG-LOCK","shakeink-work.json"]}
 ```
 
 已修复：`desktop/core/brand-names.ts:39` 先 case-fold 全部 entry，再检查另一家族控制名称和临时文件前后缀。BRN04 追加两家族的 uppercase storage/required/audit/lock/restores/temp 用例，仍验证原目录内容不变。原独立脚本修复后返回 `readerResult:"BRAND_CONTROL_CONFLICT"`，实际 APFS 小写路径仍解析到原锁。
@@ -60,7 +60,7 @@
 
 初始默认根分支要求 `inboxReady=true`。独立真实 Workspaces 初始化产生合法 `phase=ready,inboxReady=false` 后，普通路径选择器返回 `BRAND_DEFAULT_INVALID` 且无 recoveryPaths，原有 initializer 无法继续。与此同时原 `DataRootManager.resolve` 正确返回 needs-initialize，继续运行真实 inbox 初始化可完成。
 
-独立脚本 `/private/tmp/xaanink-brand-review-initialization.mts` 已确认该差异。修复后默认根保持严格 paired brand 与 ready 阶段检查，允许原 inbox initializer 完成，仍保留已有 inbox 数据缺失/不完整时拒绝重建的保护。pointer 分支仍核对完整 ready/inboxReady/id。
+独立脚本 `/private/tmp/shakeink-brand-review-initialization.mts` 已确认该差异。修复后默认根保持严格 paired brand 与 ready 阶段检查，允许原 inbox initializer 完成，仍保留已有 inbox 数据缺失/不完整时拒绝重建的保护。pointer 分支仍核对完整 ready/inboxReady/id。
 
 原独立脚本复验：选择器返回原 bootstrap/root/current family，`DataRootManager.resolve` 仍返回 needs-initialize，真实 PGlite 初始化结果 `existingInitializerResumes:true`，退出 0。追加 BSP09 覆盖两家族同一原目录的真实初始化、pointer 发布、关闭和重开，实际通过。
 
@@ -84,8 +84,8 @@ PATH=/Users/dt_flys/.nvm/versions/node/v24.18.0/bin:$PATH node --import tsx --te
 PATH=/Users/dt_flys/.nvm/versions/node/v24.18.0/bin:$PATH node --import tsx --test --test-concurrency=1 tests/integration/pglite-adapter.test.ts
 ```
 
-- 品牌/兼容/session：37 tests，37 pass，0 fail，0 skip，退出 0；包括 BDC08、BDC09、BSP09。原日志 `/private/tmp/xaanink-129-brand-review-tests.log`。
-- 既有真实 adapter：12 tests，12 pass，0 fail，0 skip，退出 0；包括隔离、并发阻塞、超时回滚、dispose 和结束幂等。原日志 `/private/tmp/xaanink-129-adapter-review-tests.log`。
+- 品牌/兼容/session：37 tests，37 pass，0 fail，0 skip，退出 0；包括 BDC08、BDC09、BSP09。原日志 `/private/tmp/shakeink-129-brand-review-tests.log`。
+- 既有真实 adapter：12 tests，12 pass，0 fail，0 skip，退出 0；包括隔离、并发阻塞、超时回滚、dispose 和结束幂等。原日志 `/private/tmp/shakeink-129-adapter-review-tests.log`。
 - 上述三个原独立复现脚本均在修复后重新执行，结果见对应章节；全部夹具位于隔离临时目录并 finally 清理，没有读取作者作品或 Key。
 - 审核范围 `git diff --check` 退出 0。
 

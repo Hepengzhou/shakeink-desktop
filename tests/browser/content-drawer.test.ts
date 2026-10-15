@@ -4,7 +4,7 @@ import { chromium, type Browser, type Page } from "playwright-core"
 import { assertFixedFrames, framesDuring, openContent, sampleContent, withContentDrawer, type ContentSample } from "../helpers/content-drawer-fixture"
 
 let browser: Browser
-test.before(async () => { browser = await chromium.launch({ headless: true, ...(process.env.XAANINK_TEST_CHROMIUM ? { executablePath: process.env.XAANINK_TEST_CHROMIUM } : {}) }) })
+test.before(async () => { browser = await chromium.launch({ headless: true, ...(process.env.SHAKEINK_TEST_CHROMIUM ? { executablePath: process.env.SHAKEINK_TEST_CHROMIUM } : {}) }) })
 test.after(async () => { await browser?.close() })
 const restore = '.workspace-chat [data-content-restore]'
 const command = (page: Page, name: "toggle" | "sidebar" | "fullscreen" | "hide" | "activate") => page.evaluate(name => (window as any).contentFixture[name](), name)

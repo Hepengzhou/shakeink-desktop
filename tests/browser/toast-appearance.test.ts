@@ -47,7 +47,7 @@ const palette = {
 const kinds = ["info", "success", "warning", "error", "loading", "normal"]
 const target = '[data-testid="target"]'
 let browser: Browser
-test.before(async () => { browser = await chromium.launch({headless:true,...(process.env.XAANINK_TEST_CHROMIUM?{executablePath:process.env.XAANINK_TEST_CHROMIUM}:{})}) })
+test.before(async () => { browser = await chromium.launch({headless:true,...(process.env.SHAKEINK_TEST_CHROMIUM?{executablePath:process.env.SHAKEINK_TEST_CHROMIUM}:{})}) })
 test.after(async () => { await browser?.close() })
 async function scenario(theme: string, options: Record<string, unknown>, run: (page: Page) => Promise<void>) {
   const page = await browser.newPage({viewport:{width:1100,height:900}}), errors: string[] = []

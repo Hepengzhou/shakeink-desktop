@@ -13,9 +13,9 @@ const label = process.argv[2] ?? 'red'
 assert(/^[a-z0-9-]+$/.test(label))
 const evidence = resolve('docs/evidence/ai-caption-drag', label)
 await mkdir(evidence, { recursive: true })
-const directory = await mkdtemp(join(tmpdir(), 'xaanink-surfaces-'))
+const directory = await mkdtemp(join(tmpdir(), 'shakeink-surfaces-'))
 execFileSync(process.execPath, ['--import', 'tsx', 'scripts/seed-workspace-surfaces.ts', directory], { cwd: resolve('.'), windowsHide: true })
-const env = { ...process.env, XAANINK_TEST_ROOT: join(directory, 'data') }; delete env.ELECTRON_RUN_AS_NODE
+const env = { ...process.env, SHAKEINK_TEST_ROOT: join(directory, 'data') }; delete env.ELECTRON_RUN_AS_NODE
 const app = await _electron.launch({ args: [resolve('.')], env, timeout: 90000 })
 const page = await app.firstWindow(), report = { label, driver: 'computer-use sky OS mouse; harness observes bounds and DOM', checks: [], errors: [], sourceHashes: {} }
 page.on('pageerror', e => report.errors.push(e.message))
@@ -36,7 +36,7 @@ const bootstrap = await page.evaluate(() => window.desktop.bootstrap())
 assert.equal(bootstrap.dataRoot, join(directory, 'data')); assert.equal(bootstrap.models.length, 0)
 report.runtime = await app.evaluate(() => ({ platform: process.platform, versions: process.versions }))
 report.isolation = { freshRoot: true, models: 0, rendererOffline: await page.evaluate(() => !navigator.onLine) }
-await app.evaluate(({ BrowserWindow }, label) => { const w = BrowserWindow.getAllWindows()[0]; w.setBounds({ x: 180, y: 160, width: 1440, height: 900 }); w.setTitle('Xaanink isolated drag ' + label) }, label)
+await app.evaluate(({ BrowserWindow }, label) => { const w = BrowserWindow.getAllWindows()[0]; w.setBounds({ x: 180, y: 160, width: 1440, height: 900 }); w.setTitle('Shakeink isolated drag ' + label) }, label)
 const requestFile = join(evidence, 'request.json'), resultFile = join(evidence, 'response.json')
 async function observe(label, input) {
   const window = await app.evaluate(({ BrowserWindow, screen }) => { const w = BrowserWindow.getAllWindows()[0]; return { bounds: w.getBounds(), contentBounds: w.getContentBounds(), maximized: w.isMaximized(), scale: screen.getDisplayMatching(w.getBounds()).scaleFactor, zoom: w.webContents.getZoomFactor() } })

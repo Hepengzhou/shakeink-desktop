@@ -28,7 +28,7 @@ const commands={
 }
 if(!commands[kind])throw Error('Unknown check '+kind)
 const [command,args]=commands[kind],start=new Date().toISOString()
-const env={...process.env,XAANINK_TEST_CHROMIUM:process.env.XAANINK_TEST_CHROMIUM??'C:/Program Files/Google/Chrome/Application/chrome.exe'}
+const env={...process.env,SHAKEINK_TEST_CHROMIUM:process.env.SHAKEINK_TEST_CHROMIUM??'C:/Program Files/Google/Chrome/Application/chrome.exe'}
 // Child tools must use the same supported Node 24 runtime.
 env.PATH=join(process.execPath,'..')+';'+env.PATH
 const child=spawn(command,args,{cwd:process.cwd(),env,stdio:['ignore','pipe','pipe'],windowsHide:true})

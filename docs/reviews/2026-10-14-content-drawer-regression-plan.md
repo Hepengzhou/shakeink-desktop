@@ -56,6 +56,6 @@ DRAG 的 TypeError 是只读源表达式验证，不伪称本次浏览器已输�
 
 `regression-migration-02` 为四文件 30/30 pass、退出 0、stableSources=true；启用可选 observer。`regression-migration-03` 原计划关闭 observer，但启动后核对 runner 发现 PowerShell 字符串替换没有生效，因此诚实记为仍启用 observer 的同源 30/30 复核，不能作为默认环境结果。
 
-`regression-migration-04/migration.tap` / `run.json` 才是最终默认环境：runner 明确设置 `XAANINK_REGRESSION_DIAGNOSTIC:""`，没有新增逐帧观察器；bundled Node v24.19.0、真实 Chrome、concurrency=2、同四文件 30 tests / 30 pass / 0 fail / 0 cancelled/skipped/todo、退出 0。22 个 tracked 生产/测试路径在执行前后 SHA-256 一致；当前 14 份生产 SHA-256 也全部仍与 green-05 相同。没有继续修改 tests/src 或启动更多用例，后续仅文档与独立审查，根代理负责全 browser 第二轮。
+`regression-migration-04/migration.tap` / `run.json` 才是最终默认环境：runner 明确设置 `SHAKEINK_REGRESSION_DIAGNOSTIC:""`，没有新增逐帧观察器；bundled Node v24.19.0、真实 Chrome、concurrency=2、同四文件 30 tests / 30 pass / 0 fail / 0 cancelled/skipped/todo、退出 0。22 个 tracked 生产/测试路径在执行前后 SHA-256 一致；当前 14 份生产 SHA-256 也全部仍与 green-05 相同。没有继续修改 tests/src 或启动更多用例，后续仅文档与独立审查，根代理负责全 browser 第二轮。
 
 两个原 left phase preflight 在具名诊断和迁移后的正常环境专项都通过；未删 phase/actual partialV 门槛、未放宽首帧/全帧形态、未改变原 driver。首次全量失败的时序原因仍未重现，不称偶发或已证实修复。若全量再次失败，须保留实际阶段/输入时钟证据，再补审具体 driver 或真实产品修订。可选 surface 失败证据目前按 width/count 命名；根代理默认全量不启该 observer。将来若开启全文件诊断且需要多次同参数失败落盘，应先审批为每 fixture 加 serial，避免覆盖，再启动，而不能在运行中改源。

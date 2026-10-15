@@ -29,7 +29,7 @@
 
 `package-final.log` exit 0。Electron 44.6.0，win-x64 NSIS；314 项项目资源与离线依赖检查通过，包内 PGlite 正常关闭。没有发布、签名或安装。
 
-- 产物：`release/XaanInk-0.1.0-win-x64.exe`，276569810 bytes。
+- 产物：`release/ShakeInk-0.1.0-win-x64.exe`，276569810 bytes。
 - SHA-256：`8979151761cee41f95ea3965f4544c6ada20dc932a8ba310a2e413c507b836e2`。
 - 最终 `dist/main/index.cjs` 与包内入口相同：`18ec36822fccddc79d3ec13273c2f01d5256df8d38969a431270a899323e9394`。第一次 followup 包的 main 也是这一哈希；随后只有真实 ContentTabs renderer 安全区改变，第一次包不是最后 renderer 的证明。
 - 构建所需的十个原文件临时 LF 归一化在完成后经 `git diff --quiet` 核对为无内容变化，仅恢复这些文件的换行；实际产品/测试改动保留。最终 `git diff --check` 通过。

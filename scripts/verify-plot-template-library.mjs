@@ -15,7 +15,7 @@ const { Workspaces } = require('../desktop/service/workspaces')
 const { defaultState, stateSchema } = require('../desktop/core/settings')
 const coverage = JSON.parse(await readFile('docs/prompt-library-expansion/coverage.json', 'utf8'))
 const evidence = resolve('docs/evidence/plot-template-library/windows')
-const temporary = await realpath(await mkdtemp(join(tmpdir(), 'xaanink-plot-native-')))
+const temporary = await realpath(await mkdtemp(join(tmpdir(), 'shakeink-plot-native-')))
 const root = join(temporary, 'data')
 const report = { startedAt: new Date().toISOString(), platform: process.platform, status: 'running', scope: 'Actual Windows development Electron, production React/IPC/PGlite, isolated data, native menu callback, offline renderer requests blocked. No supplier generation, physical menu click, installer or macOS claim.', checks: [], errors: [], httpRequests: [], sourceHashes: {} }
 let app, page, passed = false
@@ -25,7 +25,7 @@ for (const file of ['src/lib/creation-wizard/templates/index.ts', 'src/lib/creat
 }
 const check = (name, details = {}) => report.checks.push({ name, ...details })
 async function launch() {
-  app = await electron.launch({ executablePath: require('electron'), args: [resolve('.')], env: { ...process.env, XAANINK_TEST_ROOT: root }, timeout: 60000 })
+  app = await electron.launch({ executablePath: require('electron'), args: [resolve('.')], env: { ...process.env, SHAKEINK_TEST_ROOT: root }, timeout: 60000 })
   await app.context().route(/^https?:\/\//, route => { report.httpRequests.push(route.request().url()); return route.abort() })
   page = await app.firstWindow({ timeout: 60000 }); page.setDefaultTimeout(15000)
   page.on('pageerror', error => report.errors.push(error.message))
@@ -92,7 +92,7 @@ try {
   await writeFile(join(root, 'state.json'), JSON.stringify({ schemaVersion: 1, revision: 0, value: stateSchema.parse(initial) }))
   const state = JSON.parse(await readFile(join(root, 'state.json'), 'utf8'))
   assert.deepEqual(state.value.models, []); check('Isolated startup retains no configured models')
-  await launch(); assert.match(page.url(), /^xaanink:/)
+  await launch(); assert.match(page.url(), /^shakeink:/)
   await manager()
   const rows = await catalog()
   assert.equal(rows.length, coverage.expected.all)
@@ -147,7 +147,7 @@ try {
   // Only delete the exact directory allocated by mkdtemp for this test.
   if (passed) {
     assert.equal(dirname(temporary).toLowerCase(), (await realpath(tmpdir())).toLowerCase())
-    assert.ok(basename(temporary).startsWith('xaanink-plot-native-'))
+    assert.ok(basename(temporary).startsWith('shakeink-plot-native-'))
     await rm(temporary, { recursive: true, force: true })
   }
 }

@@ -33,7 +33,7 @@ node --import tsx --test --test-concurrency=1
   tests/browser/local-template-library-review.test.ts
 ```
 
-以上为一条命令的换行展示；`XAANINK_TEST_CHROMIUM` 实际设为 `C:/Program Files/Google/Chrome/Application/chrome.exe`。构建及Native命令同样使用Node24，并将该运行时加入PATH。原47条模板相关回归与本轮94条一起合跑，总计141；没有用启动冒烟冲抵逐项内容与业务测试。
+以上为一条命令的换行展示；`SHAKEINK_TEST_CHROMIUM` 实际设为 `C:/Program Files/Google/Chrome/Application/chrome.exe`。构建及Native命令同样使用Node24，并将该运行时加入PATH。原47条模板相关回归与本轮94条一起合跑，总计141；没有用启动冒烟冲抵逐项内容与业务测试。
 
 ## 真实Windows证据
 

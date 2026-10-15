@@ -24,15 +24,15 @@ window.mountPlotWizard=()=>{
 };` }, bundle: true, platform: "browser", format: "iife", write: false, tsconfig: "tsconfig.json" }).then(r => r.outputFiles![0].text)
 let browser: Browser, works: Workspaces, base: string
 test.before(async () => {
-  base = await mkdtemp(join(tmpdir(), "xaanink-plot-browser-")); works = new Workspaces(join(base, "data"), resolve("prisma/migrations")); await works.initialize()
+  base = await mkdtemp(join(tmpdir(), "shakeink-plot-browser-")); works = new Workspaces(join(base, "data"), resolve("prisma/migrations")); await works.initialize()
   await works.runWithGlobal("inbox", () => new LocalTemplateLibrary().initialize())
-  browser = await chromium.launch({ headless: true, ...(process.env.XAANINK_TEST_CHROMIUM ? { executablePath: process.env.XAANINK_TEST_CHROMIUM } : {}) })
+  browser = await chromium.launch({ headless: true, ...(process.env.SHAKEINK_TEST_CHROMIUM ? { executablePath: process.env.SHAKEINK_TEST_CHROMIUM } : {}) })
 })
 test.after(async () => {
   await browser?.close(); await works?.close()
   if (base) {
     const target = await realpath(base)
-    assert.equal(dirname(target).toLowerCase(), (await realpath(tmpdir())).toLowerCase()); assert.ok(basename(target).startsWith("xaanink-plot-browser-"))
+    assert.equal(dirname(target).toLowerCase(), (await realpath(tmpdir())).toLowerCase()); assert.ok(basename(target).startsWith("shakeink-plot-browser-"))
     await rm(target, { recursive: true, force: true })
   }
 })

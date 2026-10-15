@@ -46,7 +46,7 @@ test("TPD15-04 local import is preview-only until explicit choices are submitted
  assert.equal(preview.status,200);assert.deepEqual(await library.list(),before)
  assert.equal((await call(dispatcher,"/api/templates/import","POST",{action:"apply",preview:preview.data.preview,choices:[]})).status,400)
  assert.equal((await call(dispatcher,"/api/templates/import","POST",{action:"apply",preview:preview.data.preview,choices:[{kind:"prompt",id:item.key,action:"add"}]})).status,200)
- const exported=await call(dispatcher,"/api/templates/export");assert.equal(exported.status,200);assert.equal(exported.data.document.format,"xaanink-local-templates");assert.ok(exported.data.document.prompts.some((p:any)=>p.key===item.key))
+ const exported=await call(dispatcher,"/api/templates/export");assert.equal(exported.status,200);assert.equal(exported.data.document.format,"shakeink-local-templates");assert.ok(exported.data.document.prompts.some((p:any)=>p.key===item.key))
 }))
 test("TPD15-05 a cancelled local request never creates a template or a version snapshot",async()=>fixture(async(library,dispatcher)=>{
  const before=await library.list(),abort=new AbortController();abort.abort()

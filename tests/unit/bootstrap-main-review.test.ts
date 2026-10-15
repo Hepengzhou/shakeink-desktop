@@ -30,7 +30,7 @@ test("B55-07: failed unready boot closes via actual main handshake without chang
    const snapshot:DraftSnapshot={version:1,revision:1,createdAt:new Date().toISOString(),autosaves:[],sources:{chat:{draft:"original inert manuscript"}},issues:[]}
    if(scenario==="source-failure")await journal.persist(String(owner),snapshot)
    else await writeFile(join(root,"drafts.json"),"CORRUPT AUTHOR RECOVERY\0\n")
-   const before=await readFile(join(root,"drafts.json")),frame={url:"xaanink://app/"},contents={id:owner,mainFrame:frame},event={sender:contents,senderFrame:frame}
+   const before=await readFile(join(root,"drafts.json")),frame={url:"shakeink://app/"},contents={id:owner,mainFrame:frame},event={sender:contents,senderFrame:frame}
    const state={session:{owner,id:nonce,ready:false},closing:false},handlers=new Map<string,(...args:unknown[])=>Promise<unknown>>()
    let renderer!:DesktopDraftSession
    const channel=new RendererCloseChannel(event=>{void renderer.handle(event)})

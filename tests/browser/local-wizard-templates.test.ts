@@ -26,7 +26,7 @@ globalThis.mountWizard=(manager=false,options={})=>{
  return{rows,calls,closed:()=>closed,chat:()=>useChatStore.getState().newConversationPayload,resolveLoad:()=>{hold=false;resolveLoad()},retryLoad:()=>loadError=false,holdSave:()=>holdSave=true,resolveSave:()=>{holdSave=false;resolveSave()},disableSelected:()=>{rows[0].enabled=false;return client.invalidateQueries({queryKey:['desktop','wizard-templates']})}};
 };`},bundle:true,platform:"browser",format:"iife",write:false,tsconfig:"tsconfig.json"}).then(r=>r.outputFiles![0].text)
 let browser:Browser
-test.before(async()=>{browser=await chromium.launch({headless:true,...(process.env.XAANINK_TEST_CHROMIUM?{executablePath:process.env.XAANINK_TEST_CHROMIUM}:{})})})
+test.before(async()=>{browser=await chromium.launch({headless:true,...(process.env.SHAKEINK_TEST_CHROMIUM?{executablePath:process.env.SHAKEINK_TEST_CHROMIUM}:{})})})
 test.after(async()=>{await browser?.close()})
 async function scenario(manager:boolean,options:Record<string,unknown>,run:(page:Page)=>Promise<void>){const page=await browser.newPage(),errors:string[]=[];page.setDefaultTimeout(1800);page.on("pageerror",e=>errors.push(e.message));try{await page.route("**/*",route=>route.request().isNavigationRequest()?route.fulfill({contentType:"text/html",body:'<div id="app"></div>'}):route.abort());await page.goto("http://127.0.0.1:1/local-wizard");await page.addStyleTag({content:await stylesheet});await page.addScriptTag({content:await bundle});await page.evaluate(({manager,options})=>{(window as any).f=(window as any).mountWizard(manager,options)},{manager,options});await run(page);assert.deepEqual(errors,[])}finally{await page.close()}}
 

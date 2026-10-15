@@ -9,16 +9,16 @@ import {tmpdir} from 'node:os'
 import {join,resolve} from 'node:path'
 
 const require=createRequire(import.meta.url)
-const temporary=await realpath(await mkdtemp(join(tmpdir(),'xaanink-native-relocation-')))
+const temporary=await realpath(await mkdtemp(join(tmpdir(),'shakeink-native-relocation-')))
 const root=join(temporary,'data'),moved=join(temporary,'data-moved'),bootstrap=`${root}-bootstrap`
-const evidence=process.env.XAANINK_RELOCATION_EVIDENCE??'docs/evidence/implementation-33/native-attempt-01'
+const evidence=process.env.SHAKEINK_RELOCATION_EVIDENCE??'docs/evidence/implementation-33/native-attempt-01'
 const startedAt=new Date().toISOString(),checks=[],errors=[],pids=new Set(),logs=[]
 const server=createServer();await new Promise(r=>server.listen(0,'127.0.0.1',r))
 const port=server.address().port;await new Promise(r=>server.close(r))
 let app,page,browser,passed=false
 const alive=pid=>{try{process.kill(pid,0);return true}catch{return false}}
 async function launch(){
- app=await electron.launch({executablePath:require('electron'),args:[resolve('.'),`--remote-debugging-port=${port}`],env:{...process.env,XAANINK_TEST_ROOT:root},timeout:60000})
+ app=await electron.launch({executablePath:require('electron'),args:[resolve('.'),`--remote-debugging-port=${port}`],env:{...process.env,SHAKEINK_TEST_ROOT:root},timeout:60000})
  pids.add(app.process().pid);app.process().stderr.on('data',data=>logs.push(data.toString()))
  page=await app.firstWindow();page.on('pageerror',e=>errors.push(e.message))
 }
@@ -27,8 +27,8 @@ async function connect(){
  while(Date.now()<until){try{
   browser=await chromium.connectOverCDP(`http://127.0.0.1:${port}`,{timeout:2000})
   const context=browser.contexts()[0]
-  await expect.poll(()=>context.pages().some(p=>p.url()==='xaanink://app/'),{timeout:5000}).toBe(true)
-  page=context.pages().find(p=>p.url()==='xaanink://app/');page.on('pageerror',e=>errors.push(e.message))
+  await expect.poll(()=>context.pages().some(p=>p.url()==='shakeink://app/'),{timeout:5000}).toBe(true)
+  page=context.pages().find(p=>p.url()==='shakeink://app/');page.on('pageerror',e=>errors.push(e.message))
   const cdp=await browser.newBrowserCDPSession(),info=await cdp.send('SystemInfo.getProcessInfo'),native=info.processInfo.find(p=>p.type==='browser')
   assert(native);pids.add(native.id);await cdp.detach();return native.id
  }catch(error){last=error;await new Promise(r=>setTimeout(r,200))}}
@@ -39,14 +39,14 @@ try{
  assert.equal(process.platform,'darwin');await mkdir(evidence,{recursive:true})
  const seed=JSON.parse(execFileSync(process.execPath,['--import','tsx','scripts/seed-electron-fixture.ts',temporary],{encoding:'utf8'}).trim().split('\n').at(-1))
  const work=JSON.parse(await readFile(join(root,'catalog.json'),'utf8')).value[0]
- const workManifest=await readFile(join(work.path,'xaanink-work.json'))
+ const workManifest=await readFile(join(work.path,'shakeink-work.json'))
  await launch();await page.getByRole('button',{name:'账号菜单'}).waitFor({timeout:60000})
  await page.locator('.chat-composer-editable').click();await page.keyboard.insertText('原目录移动后仍保留的未提交输入')
  const initialProcess=app.process(),initialPid=initialProcess.pid
  await page.evaluate(()=>window.desktop.command('app.quit')).catch(()=>{})
  await expect.poll(()=>alive(initialPid),{timeout:30000}).toBe(false);app=null
  const oldPointer=JSON.parse(await readFile(join(bootstrap,'data-root.json'),'utf8'))
- const pointerBytes=await readFile(join(bootstrap,'data-root.json')),marker=await readFile(join(root,'xaanink-app.json')),catalog=await readFile(join(root,'catalog.json')),drafts=await readFile(join(root,'drafts.json'))
+ const pointerBytes=await readFile(join(bootstrap,'data-root.json')),marker=await readFile(join(root,'shakeink-app.json')),catalog=await readFile(join(root,'catalog.json')),drafts=await readFile(join(root,'drafts.json'))
  assert.ok(drafts.toString().includes('原目录移动后仍保留的未提交输入'))
  await rename(root,moved);await launch()
  await page.getByRole('heading',{name:'定位原数据目录',exact:true}).waitFor({timeout:30000})
@@ -74,7 +74,7 @@ try{
  assert.deepEqual(await readFile(join(bootstrap,'data-root.json')),pointerBytes);await missing(root)
  await choose().click();await expect(page.getByText('所选目录不是原物理数据目录，请选择原目录。复制或跨磁盘恢复需使用备份恢复。',{exact:true})).toBeVisible()
  assert.deepEqual(await readFile(join(bootstrap,'data-root.json')),pointerBytes)
- assert.deepEqual(await readFile(join(work.path,'xaanink-work.json')),workManifest)
+ assert.deepEqual(await readFile(join(work.path,'shakeink-work.json')),workManifest)
  assert.equal((await readdir(bootstrap)).filter(n=>n.startsWith('root-relocation-')).length,0)
  await page.screenshot({path:join(evidence,'wrong-directory.png')})
  checks.push('controlled native picker cancellation and selection of an existing work directory preserve pointer and work bytes; the actual UI rejects the unrelated directory and permits another selection')
@@ -88,9 +88,9 @@ try{
  assert.equal(pointer.revision,oldPointer.revision+1);assert.equal(pointer.rootId,oldPointer.rootId)
  assert.deepEqual(pointer.root,{...oldPointer.root,path:moved})
  assert.equal((await readdir(bootstrap)).filter(n=>n.startsWith('root-relocation-')&&n.endsWith('.json')).length,1)
- await missing(root);assert.deepEqual(await readFile(join(moved,'xaanink-app.json')),marker)
+ await missing(root);assert.deepEqual(await readFile(join(moved,'shakeink-app.json')),marker)
  assert.deepEqual(await readFile(join(moved,'catalog.json')),catalog)
- assert.deepEqual(await readFile(join(work.path,'xaanink-work.json')),workManifest)
+ assert.deepEqual(await readFile(join(work.path,'shakeink-work.json')),workManifest)
  const chapter=await page.evaluate(async ids=>(await(await fetch(`/api/novels/${ids.novelId}/chapters/${ids.chapterId}`)).json()).chapter,seed)
  assert.ok(chapter.content.includes('用于独立桌面测试的中文正文'))
  assert.ok((await readFile(join(moved,'drafts.json'),'utf8')).includes('原目录移动后仍保留的未提交输入'))

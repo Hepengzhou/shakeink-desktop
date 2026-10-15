@@ -8,7 +8,7 @@
 
 ## 真实数据与执行边界
 
-- 每次新建系统临时目录 `xaanink-sidebar-*`，复用 `scripts/seed-sidebar-navigation.ts`。该 seed 通过真实 Workspaces、PGlite、Prisma、DraftJournal 与正式 schema 建立两部合成作品，全部记录及账号仅在隔离目录。`XAANINK_TEST_ROOT` 指向该根；bootstrap 必须返回同一根、零模型及 `xaanink://app/` 协议。
+- 每次新建系统临时目录 `shakeink-sidebar-*`，复用 `scripts/seed-sidebar-navigation.ts`。该 seed 通过真实 Workspaces、PGlite、Prisma、DraftJournal 与正式 schema 建立两部合成作品，全部记录及账号仅在隔离目录。`SHAKEINK_TEST_ROOT` 指向该根；bootstrap 必须返回同一根、零模型及 `shakeink://app/` 协议。
 - 正文、角色、主题通过真实 React UI 和 CDP 键盘/鼠标输入；查询/持久化检查走现有 local fetch→IPC 和 `desktop.readDraft`。不导入或修改 renderer 业务 store，不替换 body，不创建模拟 Monaco，不把 HTML 样稿作为产品证据。
 - Monaco 仅通过现有 React hook 的只读实例发现读取真实对象。动作开始前存 actual editor DOM、editor 对象、model 对象/ID、selection、layoutInfo、scroll、version/alternativeVersion 和正文摘要；之后比较对象 identity、连接状态和 dispose 计数。关闭后的 `isVisible=false` 不代表实例丢失，保活断言使用 `isConnected` 与 editor/model identity。
 - 开发 Electron和传入 exe 的目录包使用同一专项脚本，分别使用不同 label。证据目录创建不带 `recursive`，重复 label 在写任何旧报告之前因 EEXIST 拒绝。每次运行保存完整源文件、构建资源和 Electron exe SHA-256，结束再次检查，不允许构建中途变更与验收混合。
@@ -21,7 +21,7 @@
 ```powershell
 node --version
 node scripts/verify-content-drawer.mjs development-green-01
-node scripts/verify-content-drawer.mjs package-green-01 'D:\Projects\xaanink-desktop\release\win-unpacked\玄印写作.exe'
+node scripts/verify-content-drawer.mjs package-green-01 'D:\Projects\shakeink-desktop\release\win-unpacked\玄印写作.exe'
 ```
 
 开发运行读取当前 `dist`、`.next/static`、`out`；目录包读取 exe 同目录 `resources`。必须已有匹配构建。证据写入 `docs/evidence/content-drawer/windows-<label>/report.json`、每段 `<name>-frames.json` 和阶段截图。失败保留原始报告、截图及未完成 capture，改进后必须使用新 label，不能覆盖 red 或失败证据。

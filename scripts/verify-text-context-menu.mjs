@@ -14,8 +14,8 @@ import {prisma} from '../src/lib/db.ts'
 // it never invokes a MenuItem.click callback or replaces a menu result.
 export async function launchTextMenuAcceptance(executablePath){
  assert.equal(process.platform,'win32')
- const temporary=await mkdtemp(join(tmpdir(),'xaanink-text-context-menu-')),root=join(temporary,'data')
- const theme=process.env.XAANINK_TEXT_MENU_THEME==='ink'?'ink':'paper'
+ const temporary=await mkdtemp(join(tmpdir(),'shakeink-text-context-menu-')),root=join(temporary,'data')
+ const theme=process.env.SHAKEINK_TEXT_MENU_THEME==='ink'?'ink':'paper'
  const evidence=resolve('docs/evidence/text-context-menu'),report={status:'running',scope:executablePath?'Windows packaged offline executable':'Windows development Electron',theme,startedAt:new Date().toISOString(),checks:[],nativeMenus:[],errors:[],httpRequests:0,runtime:null,sourceHashes:{},unavailable:['macOS','physical IME']}
  await mkdir(evidence,{recursive:true})
  const workspaces=new Workspaces(root,resolve('prisma/migrations'));let conversationId
@@ -32,7 +32,7 @@ export async function launchTextMenuAcceptance(executablePath){
  }finally{await workspaces.close()}
  const state=structuredClone(defaultState);state.settings.appearance.theme=theme;state.onboarding={version:1,completed:true,step:'welcome',textModelId:null,imageModelId:null,receipt:null}
  await writeFile(join(root,'state.json'),JSON.stringify({schemaVersion:1,revision:0,value:state}))
- const environment={...process.env,XAANINK_TEST_ROOT:root};delete environment.ELECTRON_RUN_AS_NODE
+ const environment={...process.env,SHAKEINK_TEST_ROOT:root};delete environment.ELECTRON_RUN_AS_NODE
  const app=await _electron.launch({args:executablePath?[]:[resolve('.')],...(executablePath?{executablePath:resolve(executablePath)}:{}),env:environment,timeout:60000})
  const page=await app.firstWindow({timeout:60000});page.setDefaultTimeout(15000)
  page.on('pageerror',error=>report.errors.push(error.message.replaceAll(temporary,'<isolated>')))
@@ -48,7 +48,7 @@ export async function launchTextMenuAcceptance(executablePath){
  const skip=page.getByRole('button',{name:'暂不配置',exact:true});await skip.waitFor({timeout:45000});await skip.click()
  await page.locator('.workspace-sidebar').getByText('文本菜单隔离验收',{exact:true}).click()
  await page.getByText('用户消息可以选取并复制。',{exact:true}).waitFor();await page.bringToFront()
- const bootstrap=await page.evaluate(()=>window.desktop.bootstrap());assert.equal(bootstrap.models.length,0);assert.equal(bootstrap.dataRoot,root);assert.equal(page.url(),'xaanink://app/')
+ const bootstrap=await page.evaluate(()=>window.desktop.bootstrap());assert.equal(bootstrap.models.length,0);assert.equal(bootstrap.dataRoot,root);assert.equal(page.url(),'shakeink://app/')
  report.runtime=await app.evaluate(()=>({versions:process.versions,platform:process.platform,listeningServers:process._getActiveHandles().filter(handle=>handle.constructor.name==='Server'&&handle.listening).length}))
  for(const file of ['dist/main/index.cjs','dist/preload/index.cjs','src/lib/desktop/text-context-menu.ts','src/lib/desktop/text-context-selection.ts','src/components/layout/ChatPanel.tsx'])report.sourceHashes[file]=createHash('sha256').update(await readFile(file)).digest('hex')
  const save=async()=>{report.nativeMenus=await app.evaluate(()=>globalThis.tcmMenus);report.nativeChoices=await app.evaluate(()=>globalThis.tcmChoices);report.nativeReplies=await app.evaluate(()=>globalThis.tcmReplies);report.editorEvents=await page.evaluate(()=>globalThis.tcmEditorEvents??[]);report.clipboardCommands=await page.evaluate(()=>globalThis.tcmClipboardCommands??[]);await writeFile(join(evidence,executablePath?'windows-package.json':'windows-electron.json'),JSON.stringify(report,null,2)+'\n')}
@@ -109,7 +109,7 @@ export async function launchTextMenuAcceptance(executablePath){
   if(['user-copy','ai-copy','quote','zoom'].includes(kind)){assert.ok(!native.ids.includes('text.undo'));assert.ok(!native.ids.includes('text.redo'))}
   report.checks.push({id:kind,status:'passed'});await save();return {kind,clipboard:await clipboard(),draft:await draft()}
  }
- const finish=async()=>{assert.deepEqual(report.errors,[]);assert.equal(report.httpRequests,0);assert.equal(report.runtime.listeningServers,0);report.status='passed-scoped';report.completedAt=new Date().toISOString();await save();await app.close();assert.equal(dirname(resolve(temporary)),resolve(tmpdir()));assert.ok(basename(temporary).startsWith('xaanink-text-context-menu-'));await rm(temporary,{recursive:true,force:true});report.cleanedIsolatedData=true;await writeFile(join(evidence,executablePath?'windows-package.json':'windows-electron.json'),JSON.stringify(report,null,2)+'\n');return report}
+ const finish=async()=>{assert.deepEqual(report.errors,[]);assert.equal(report.httpRequests,0);assert.equal(report.runtime.listeningServers,0);report.status='passed-scoped';report.completedAt=new Date().toISOString();await save();await app.close();assert.equal(dirname(resolve(temporary)),resolve(tmpdir()));assert.ok(basename(temporary).startsWith('shakeink-text-context-menu-'));await rm(temporary,{recursive:true,force:true});report.cleanedIsolatedData=true;await writeFile(join(evidence,executablePath?'windows-package.json':'windows-electron.json'),JSON.stringify(report,null,2)+'\n');return report}
  return {app,page,root,temporary,report,prepare,verify,save,finish,clipboard,draft,composer}
 }
 

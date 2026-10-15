@@ -4,7 +4,7 @@
 
 ## 产物
 
-- `release/XaanInk-0.1.0-alpha-win-x64.exe`：286,286,310 字节，SHA-256 `58949af762101bf347139f113a2d1113d3c97ebbee28abcccba02b8566740d89`。
+- `release/ShakeInk-0.1.0-alpha-win-x64.exe`：286,286,310 字节，SHA-256 `58949af762101bf347139f113a2d1113d3c97ebbee28abcccba02b8566740d89`。
 - 同目录提供 `.exe.blockmap` 和 `.exe.sha256`；打包目录为 `release/win-unpacked`。
 - NSIS 自身为 x86 stub，载荷应用为真实 x64 PE；安装器 FileVersion/ProductVersion 均为 `0.1.0-alpha`。主应用 FileVersion=`0.1.0-alpha`、ProductVersion=`0.1.0.0`，符合本机 builder 的预发布版本编码。
 - `package.json`、lock 根、lock 根包及包内 metadata 均为 `0.1.0-alpha`；现有界面格式显示 `0.1-alpha`。
@@ -41,9 +41,9 @@ core 的 39 个 not-ok 标题（含 1 cancelled）均存在于之前 `baseline-c
 
 ## 后续本机重新安装
 
-用户随后明确要求在本机重新安装最新 release。原系统登记及安装目录 metadata 为 `0.1.0`，位置为 `C:\Program Files\xaanink`，安装前应用未运行。
+用户随后明确要求在本机重新安装最新 release。原系统登记及安装目录 metadata 为 `0.1.0`，位置为 `C:\Program Files\shakeink`，安装前应用未运行。
 
-重新校验同一安装器 SHA-256 后，使用 `/S /allusers /D=C:\Program Files\xaanink` 在原 per-machine 目录执行 NSIS 升级流程，安装器实际 exit 0。该流程向旧卸载器传递 `--updated` 保留用户数据；没有手工删除用户数据或读取作品、Key。
+重新校验同一安装器 SHA-256 后，使用 `/S /allusers /D=C:\Program Files\shakeink` 在原 per-machine 目录执行 NSIS 升级流程，安装器实际 exit 0。该流程向旧卸载器传递 `--updated` 保留用户数据；没有手工删除用户数据或读取作品、Key。
 
 安装后系统登记为「玄印写作 0.1.0-alpha」，包内 metadata 为 `0.1.0-alpha`，主 EXE 与 release 主 EXE SHA-256 完全一致。实际安装目录的项目资源校验 340 项通过，包文件表 26763 项。证据为 `docs/evidence/alpha-release/local-installation.json`、`local-installation-resources.json`。
 

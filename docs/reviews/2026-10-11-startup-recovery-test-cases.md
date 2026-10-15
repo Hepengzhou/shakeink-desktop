@@ -44,7 +44,7 @@
 | SR-U-22 | 无指针 + 根为空 | none |
 | SR-U-22b | 无指针 + 根为普通文件（非目录） | dialog/root-mismatch |
 | SR-U-23 | 无指针 + 根非空 + marker 完全有效（ready，家族相符） | none（adopt 自愈） |
-| SR-U-24 | 无指针 + marker 为另一家族（`~/.xaanink` 内 `xuanxiang-app.json` ready） | dialog/root-mismatch |
+| SR-U-24 | 无指针 + marker 为另一家族（`~/.shakeink` 内 `xuanxiang-app.json` ready） | dialog/root-mismatch |
 | SR-U-25 | 无指针 + marker phase=initializing 且家族相符 | repair/resume-init |
 | SR-U-26 | 无指针 + marker 缺失 + catalog/inbox/database 齐全 + 无 backups/application | repair/marker-new-id |
 | SR-U-27 | 无指针 + marker 缺失 + 存在 `backups/application/` | dialog/default-invalid |
@@ -153,7 +153,7 @@
 
 ## 8. 真实系统验证（Windows 为主目标）
 
-复用 `scripts/smoke-root-relocation.mjs:21` 的 `_electron.launch` + `XAANINK_TEST_ROOT` 模式，新建 `scripts/smoke-startup-recovery.mjs`；证据（截图 + JSON 结果）按 AGENTS.md 落盘 `docs/evidence/startup-recovery/`。
+复用 `scripts/smoke-root-relocation.mjs:21` 的 `_electron.launch` + `SHAKEINK_TEST_ROOT` 模式，新建 `scripts/smoke-startup-recovery.mjs`；证据（截图 + JSON 结果）按 AGENTS.md 落盘 `docs/evidence/startup-recovery/`。
 
 | ID | 场景 | 步骤与期望 |
 |---|---|---|

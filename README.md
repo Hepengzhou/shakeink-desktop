@@ -1,6 +1,6 @@
 # 玄印写作 · 桌面版
 
-独立开源项目 **XaanInk**，中文全称「玄印写作」，简称「玄印」。代码仓库为 [mySingleLive/xaanink-desktop](https://github.com/mySingleLive/xaanink-desktop)，主分支为 `master`。
+独立开源项目 **ShakeInk**，中文全称「玄印写作」，简称「玄印」。代码仓库为 [mySingleLive/shakeink-desktop](https://github.com/mySingleLive/shakeink-desktop)，主分支为 `master`。
 
 基于原 Web 版，使用 Electron、Next.js、React、TypeScript 与原有 UI 技术栈构建纯本地桌面创作应用。作品保存在作者选定的本地目录；AI 只使用作者配置的模型接口与密钥。
 
@@ -41,7 +41,7 @@ python3 -m http.server 4187 --bind 127.0.0.1
 
 需要 Node.js 24。执行 `npm ci`、`npm run generate`、`npm run build:ui`、`npm run build:desktop` 后运行 `npm start`。工作台由 Electron 的本地协议加载，不启动 HTTP 服务或外部数据库。当前开发版本尚不适合承载真实创作数据。
 
-旧版作品、设置、加密模型配置和目录迁移记录继续兼容；已有数据保持原目录及控制文件，新安装默认使用 `~/.xaanink`，新建作品及导出文件使用 XaanInk 标识。原有目录损坏或控制记录冲突时会停止普通启动并保留原文件，不自动创建空库替代。改名方案见 [品牌改名方案](docs/reviews/121-brand-rename-plan.md)，本次完整核心、打包及 macOS 升级结果见 [改名验证记录](docs/reviews/130-brand-rename-verification.md)。
+旧版作品、设置、加密模型配置和目录迁移记录继续兼容；已有数据保持原目录及控制文件，新安装默认使用 `~/.shakeink`，新建作品及导出文件使用 ShakeInk 标识。原有目录损坏或控制记录冲突时会停止普通启动并保留原文件，不自动创建空库替代。改名方案见 [品牌改名方案](docs/reviews/121-brand-rename-plan.md)，本次完整核心、打包及 macOS 升级结果见 [改名验证记录](docs/reviews/130-brand-rename-verification.md)。
 
 核心验证：`npm run test:core:evidence`；隔离的 macOS Electron 定向检查：`node scripts/smoke-electron.mjs`。这些检查不替代正式验收清单。
 

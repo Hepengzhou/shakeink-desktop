@@ -18,9 +18,9 @@ function compile<T>(text:string,deps:Record<string,unknown>):T{return new Functi
 async function fixture(run:(root:string)=>Promise<void>){const root=await realpath(await mkdtemp(join(tmpdir(),'xuanxiang-export-main-review83-')));try{await run(root)}finally{await rm(root,{recursive:true,force:true})}}
 
 test('EXP83-05 actual trusted main guard rejects a same-origin child or stale frame even when sender id matches',()=>{
- const frame={url:'xaanink://app/'},contents={id:8,mainFrame:frame},guard=compile<(event:unknown)=>void>(declaration('trusted').replace(/^function trusted/,'function'),{window:{webContents:contents}})
+ const frame={url:'shakeink://app/'},contents={id:8,mainFrame:frame},guard=compile<(event:unknown)=>void>(declaration('trusted').replace(/^function trusted/,'function'),{window:{webContents:contents}})
  guard({sender:contents,senderFrame:frame})
- for(const event of [{sender:contents,senderFrame:{url:'xaanink://app/'}},{sender:{...contents},senderFrame:frame},{sender:contents,senderFrame:{url:'https://app/'}}])assert.throws(()=>guard(event),/不受信/)
+ for(const event of [{sender:contents,senderFrame:{url:'shakeink://app/'}},{sender:{...contents},senderFrame:frame},{sender:contents,senderFrame:{url:'https://app/'}}])assert.throws(()=>guard(event),/不受信/)
 })
 
 test('EXP83-06 actual closeData must await a real post-rename file write before worker close',()=>fixture(async root=>{

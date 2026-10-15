@@ -218,7 +218,7 @@ export class AvatarAssetService {
         // Windows cannot fs.open a directory. File data was flushed before the
         // atomic rename; crash durability still needs target-OS validation.
         if (process.platform !== "win32") { const directory = await open(dir, "r"); try { await directory.sync() } finally { await directory.close() } }
-        current(); return { assetId, url: `xaanink://asset/global/${assetId}` }
+        current(); return { assetId, url: `shakeink://asset/global/${assetId}` }
       } catch (cause) { if (cause instanceof AvatarAssetError) throw cause; error("ASSET_WRITE_FAILED") }
       finally { if (ownsTemporary) await unlink(temporary).catch(() => undefined) }
     }

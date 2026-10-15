@@ -22,7 +22,7 @@
 
 ## 实际原生尺寸与操作证据
 
-本轮`xaanink-empty-hide-hxEpuk/empty-content-hide-native.json`为status passed、22 checks、errors=[]；native.log有对应gate及最终通过行，命令exit0记录一致。默认记录右SVG16×16、左SVG16×16、右button24×24。对14条布局记录逐项重算，左右宽高均完全相等、与root rem在0.05px容差内一致，button为1.5rem，SVG在button内且button在零Tab右区顶部内；10组实际zoom/font同样全部满足，未发现几何违规。
+本轮`shakeink-empty-hide-hxEpuk/empty-content-hide-native.json`为status passed、22 checks、errors=[]；native.log有对应gate及最终通过行，命令exit0记录一致。默认记录右SVG16×16、左SVG16×16、右button24×24。对14条布局记录逐项重算，左右宽高均完全相等、与root rem在0.05px容差内一致，button为1.5rem，SVG在button内且button在零Tab右区顶部内；10组实际zoom/font同样全部满足，未发现几何违规。
 
 CUA原生图位于48独立运行目录，重算截图hash匹配原生报告。本代理实际查看图，左右收起图标均可见，右图位于空区顶右。独立bundle系统鼠标操作由主代理执行，本审核按其CUA记录摘要、该原生图及随后真实harness卸载/恢复入口/窗口状态断言交叉核对，没有重复操作UI，也没有把renderer截图或gate ack单独当系统点击证明。键盘、重启AI恢复、最后Tab自动收起及空区再次收起仍由完整工作台流程验证。
 

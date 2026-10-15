@@ -24,6 +24,6 @@
 
 ## 已读取日志
 
-`/private/tmp/xaanink-icon-size-red.log`完整终态0通过/8失败，失败为“The empty content hide icon must match the real sidebar hide icon”，实际右14×14对比左16×16；不是组件缺失或环境错误。`/private/tmp/xaanink-icon-size-green.log`完整终态22/22通过，0失败/取消/跳过。主代理报告相应命令exit1/exit0，本代理只读取而未另跑。
+`/private/tmp/shakeink-icon-size-red.log`完整终态0通过/8失败，失败为“The empty content hide icon must match the real sidebar hide icon”，实际右14×14对比左16×16；不是组件缺失或环境错误。`/private/tmp/shakeink-icon-size-green.log`完整终态22/22通过，0失败/取消/跳过。主代理报告相应命令exit1/exit0，本代理只读取而未另跑。
 
 完整套件/native最终审核仍需核对本轮源码指纹和新报告；Windows原生/DPI、当前安装包未执行时保持未执行边界，不提升W05及业务迁移总状态。

@@ -4,7 +4,7 @@ import { chromium, type Browser } from "playwright-core"
 import { frames, withContentTabs } from "../helpers/content-tabs-fixture"
 
 let browser: Browser
-test.before(async () => { browser = await chromium.launch({ headless: true, ...(process.env.XAANINK_TEST_CHROMIUM ? { executablePath: process.env.XAANINK_TEST_CHROMIUM } : {}) }) })
+test.before(async () => { browser = await chromium.launch({ headless: true, ...(process.env.SHAKEINK_TEST_CHROMIUM ? { executablePath: process.env.SHAKEINK_TEST_CHROMIUM } : {}) }) })
 test.after(async () => { await browser?.close() })
 
 test("AIDRAG-01 clipped tabs and close buttons never exclude the adjacent AI caption after scroll/resize", () => withContentTabs(browser, { count: 20, width: 520 }, async page => {

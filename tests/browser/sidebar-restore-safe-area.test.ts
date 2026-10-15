@@ -42,7 +42,7 @@ window.mountTitle=(platform='darwin',zoom=1,font=14,hidden=true,callback=true)=>
 };` }, bundle: true, platform: "browser", format: "iife", write: false, tsconfig: "tsconfig.json" }).then(result => result.outputFiles![0].text)
 
 let browser: Browser
-test.before(async () => { browser = await chromium.launch({ headless: true, ...(process.env.XAANINK_TEST_CHROMIUM ? { executablePath: process.env.XAANINK_TEST_CHROMIUM } : {}) }) })
+test.before(async () => { browser = await chromium.launch({ headless: true, ...(process.env.SHAKEINK_TEST_CHROMIUM ? { executablePath: process.env.SHAKEINK_TEST_CHROMIUM } : {}) }) })
 test.after(async () => { await browser?.close() })
 async function scenario(platform: "darwin" | "win32" | null, hidden: boolean, callback: boolean, run: (page: Page) => Promise<void>) {
   const page = await browser.newPage({ viewport: { width: 1200, height: 600 } }), errors: string[] = []

@@ -14,7 +14,7 @@
 - 高优先级、专用且带 `[data-styled=true]` 的卡片选择器可以覆盖运行时插入的 richColors 卡片规则。描述规则需要相同 styled 约束与额外作用域；Sonner `styles.css:143–145` 的 richColors inherit 不能再次压掉批准的次级描述色。
 - 保留 transform／opacity／堆叠变量、拖滑状态和生命周期，避免固定高度；focus-visible 与 no-drag 的补充直接服务真实卡片交互，未引入新的关闭、计时或业务机制。
 - 顶部安全距离与现有 `desktop.css:32` 的 `44px / --desktop-caption-zoom` 标题区一致。移动端重设容器居中、消息宽度取容器，可解决 Sonner `styles.css:430–464` 的二次扣边距与 center transform 清除问题。
-- 真实 Windows 路径可执行：`desktop/main/index.ts:63–79` 支持 `XAANINK_TEST_ROOT` 并分离 bootstrap；`brand-startup-paths.ts:28–29` 将两者指向隔离目录。DraftJournal 可以写入合法 autosave 快照，`draft-recovery.ts:116` 会保留未匹配编辑副本，随后真实启动信息通知、原“查看草稿”操作及复制成功通知均有真实源代码入口。
+- 真实 Windows 路径可执行：`desktop/main/index.ts:63–79` 支持 `SHAKEINK_TEST_ROOT` 并分离 bootstrap；`brand-startup-paths.ts:28–29` 将两者指向隔离目录。DraftJournal 可以写入合法 autosave 快照，`draft-recovery.ts:116` 会保留未匹配编辑副本，随后真实启动信息通知、原“查看草稿”操作及复制成功通知均有真实源代码入口。
 - 原生 zoom 可由 `SettingsDialog.tsx:69` 的“界面缩放”选择器触发，主进程 `index.ts:405` 调用 webContents.setZoomFactor，`DesktopApp.tsx:166` 更新标题区变量。测试应记录两者实际一致性，浏览器 CSS zoom 不能替代此证据。
 - 本地 Electron 类型 `electron.d.ts:7030,7040` 提供异步 `clipboard.read(): Promise<ClipboardItem[]>` 和 `clipboard.write(ClipboardItem[]): Promise<void>`，允许在主进程内存保留完整原剪贴板并还原；不要把原内容发送到 renderer、输出或证据。仅写隔离样例内容符合边界。
 - 按具名文件执行顶部消息专项用例、区分浏览器组件证明与真实 Electron 证明、明确首窗后 renderer 的监测区间，符合本轮用户“禁止全量测试”的最新约束。未执行的警告／加载原生业务场景、macOS 与安装包明确不标为通过。

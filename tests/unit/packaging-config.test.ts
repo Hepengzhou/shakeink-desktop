@@ -14,7 +14,7 @@ const debugLogger = {isEnabled: false}
 test('专用安装配置通过已安装 builder schema，禁止签名、公证和自动发布', async () => {
   const config = load()
   await validateConfiguration(config, debugLogger)
-  assert.equal(config.appId, 'ink.xaanink.desktop')
+  assert.equal(config.appId, 'ink.shakeink.desktop')
   assert.equal(config.productName, '玄印写作')
   assert.equal(config.asar, false)
   assert.equal(config.directories.output, 'release')
@@ -35,7 +35,7 @@ test('实际 builder 项目 matcher 保留所有必要入口与离线资源，�
   for (const path of ['dist/main/index.cjs', 'dist/service/index.cjs', 'dist/preload/index.cjs', 'dist/preload/maintenance.cjs', 'dist/preload/root-relocation.cjs', 'out/index.html', 'out/_next/static/media/editor.worker.hash.js', 'out/fonts/noto-sans-sc/NotoSansSC-Regular.ttf.gz', 'out/brands/providers/zai.svg', 'prisma/migrations/20260909130000_novel_creation_request/migration.sql', 'LICENSE', 'THIRD_PARTY_NOTICES.md', 'runtime-licenses/LobeHub-Icons-MIT.txt', 'package.json']) assert.equal(allowed(path), true, path)
   for (const path of ['dist', 'dist/main', 'out', 'out/_next', 'prisma', 'prisma/migrations', 'runtime-licenses']) assert.equal(allowed(path, true), true, path)
   for (const path of ['design/desktop-preview.html', 'docs/evidence/private.log', 'tests/retired/backups/source/main.ts', 'scripts/smoke-application-backup.mjs', 'src/app/page.tsx', '.env', '.env.local', 'work/database/PG_VERSION', '.xuanxiang/settings.json', 'out/author.sqlite3', 'out/data/author.db', 'out/database/PG_VERSION', 'dist/main/index.cjs.map', 'dist/service/application-restore-worker.cjs', 'dist/preload/application-restore.cjs', 'release/mac-arm64/玄印写作.app/Contents/Info.plist']) assert.equal(allowed(path), false, path)
-  for (const family of ['xuanxiang','xaanink']) for(const prefix of ['out','out/subdir']) for(const name of [`.${family}`,`.${family}-storage`]) assert.equal(allowed(`${prefix}/${name}/settings.json`),false,`${prefix}/${name}`)
+  for (const family of ['xuanxiang','shakeink']) for(const prefix of ['out','out/subdir']) for(const name of [`.${family}`,`.${family}-storage`]) assert.equal(allowed(`${prefix}/${name}/settings.json`),false,`${prefix}/${name}`)
 })
 
 test('生产依赖 matcher 不删 WASM/数据/许可证，也不默认收集源码映射', () => {

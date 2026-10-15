@@ -102,7 +102,7 @@ test("AVATAR-07: persistence is atomic, privately stored and idempotent across p
     const draft = await f.service.stageSelected(f.owner, f.session, await input(f, await pixelImage(16, 8).png().toBuffer()))
     await assert.rejects(f.service.persistDraft("window-b", f.session, draft.draftId), errorCode("CANCELLED"))
     const first = await f.service.persistDraft(f.owner, f.session, draft.draftId)
-    assert.equal(first.url, `xaanink://asset/global/${first.assetId}`)
+    assert.equal(first.url, `shakeink://asset/global/${first.assetId}`)
     assert.notEqual(first.assetId, draft.draftId)
     assert.deepEqual(await f.service.readAsset(first.assetId), previewBytes(draft))
     f.service.assertActive(f.owner, f.session)

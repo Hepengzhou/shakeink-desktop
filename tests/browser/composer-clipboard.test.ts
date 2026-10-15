@@ -52,7 +52,7 @@ globalThis.mountComposer=(options={})=>{
  };
 };` }, bundle: true, platform: "browser", format: "iife", write: false, tsconfig: "tsconfig.json" }).outputFiles[0].text
 let browser: Browser
-test.before(async () => { const executablePath = process.env.XAANINK_TEST_CHROMIUM; browser = await chromium.launch({ headless: true, ...(executablePath ? { executablePath } : {}) }) })
+test.before(async () => { const executablePath = process.env.SHAKEINK_TEST_CHROMIUM; browser = await chromium.launch({ headless: true, ...(executablePath ? { executablePath } : {}) }) })
 test.after(async () => { await browser?.close() })
 async function fixture(options: Record<string, unknown> = {}) {
   const page = await browser.newPage(); await page.route("**/*", route => route.abort())

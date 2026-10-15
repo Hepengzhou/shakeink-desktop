@@ -14,7 +14,7 @@
 - 计算几何显示面板与线直接相接。原始 PNG 像素核对中，左竖线为 x=631、右竖线为 x=1397 的单列，AI 顶栏为 y=65 的单行；相邻像素回到面板纸色，无附加亮色沟槽。
 - 右规划使用专用内容底色 token 与原变量 fallback；右 Monaco 拟局部覆盖正文和行号槽变量。方案保留原组件，不全局覆写 `--background`、`--border` 或 Monaco 主题，符合实施边界。空态预览脚本没有全局覆写这些变量。
 - 普通 Separator、菜单和 Markdown hr 的实色条纳入后续统一边框的实施范围。文档及采集 scope 均明确这些元素未在空态实例化，本次不宣称这些状态已验证。
-- 预览脚本使用新隔离目录、零配置模型、宣纸主题和真实 `xaanink://app` 工作台。修改仅临时注入预览进程，Git 状态中没有产品源码改动。三个相关源文件及两 PNG 的 SHA256 均经独立复算，与 observations 一致；脚本 `node --check` 通过。此前共同 inspect 中的 authored 声明字段已移除，第三版声明置于根 `proposedDividerDeclaration`，不再误用于当前界面。
+- 预览脚本使用新隔离目录、零配置模型、宣纸主题和真实 `shakeink://app` 工作台。修改仅临时注入预览进程，Git 状态中没有产品源码改动。三个相关源文件及两 PNG 的 SHA256 均经独立复算，与 observations 一致；脚本 `node --check` 通过。此前共同 inspect 中的 authored 声明字段已移除，第三版声明置于根 `proposedDividerDeclaration`，不再误用于当前界面。
 - 主代理用 Chrome 核对第三版 HTML 对比稿：1440px 与 360px 下图片加载及前后切换正常，没有横向溢出或脚本错误。`viewer-checks.json` 的 revision 为 v3，scope 明确是设计查看器检查，独立子代理另核对了查看器截图及记录的一致性。
 
 ## 证据范围

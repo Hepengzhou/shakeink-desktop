@@ -59,7 +59,7 @@ export async function preparePackageResources(project) {
   const versionsPath = join(project, 'node_modules', nativeRoot, 'versions.json')
   const versions = JSON.parse(await readFile(versionsPath, 'utf8'))
   const manifest = {
-    format: 'xaanink-packaged-resource-provenance', schemaVersion: 1,
+    format: 'shakeink-packaged-resource-provenance', schemaVersion: 1,
     brandSource: {path: 'public/brand/logo-icon-paper.svg', sha256: sha(brand)},
     resources,
     nativeLibraries: {package: nativeMetadata.name, version: nativeMetadata.version, license: nativeMetadata.license, versions, noticesSource: 'https://github.com/lovell/sharp-libvips/blob/v1.2.4/THIRD-PARTY-NOTICES.md'},

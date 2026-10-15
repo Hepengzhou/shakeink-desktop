@@ -16,7 +16,7 @@
 - `tsc --noEmit`：exit 0。`npm run build`：exit 0，Prisma、Next TypeScript/静态页面及 desktop 编译完成。
 - `node scripts/package-desktop.mjs`：exit 0，314 项包内项目资源核对通过，包内依赖探针 exit 0、PGlite 正常关闭。这是 Node 资源/依赖探针，不是安装包的 Electron 原生启动验收。
 - 当前编译主进程和 `release/win-unpacked/resources/app/dist/main/index.cjs` SHA256 均为 `3AF5100F144DA4BDDCC7D32B4860EB64A07A5059EE525E56C3B68DE4F27316A9`。
-- 安装包：`release/XaanInk-0.1.0-win-x64.exe`，276569769 bytes；SHA256 `A713F40BEE5F7A8BAD77015F1D36CCE0E6822DB52462A22DCF534ECDC02FA3B8`。没有执行安装或发布。
+- 安装包：`release/ShakeInk-0.1.0-win-x64.exe`，276569769 bytes；SHA256 `A713F40BEE5F7A8BAD77015F1D36CCE0E6822DB52462A22DCF534ECDC02FA3B8`。没有执行安装或发布。
 
 构建与测试前为现有命令目录的原始字节校验临时恢复 LF：逐个与已保存 SHA 比较后，仅调整换行。结束后恢复这些原有文件及生成路由的 checkout 格式，不把换行变化纳入修复。
 
@@ -36,7 +36,7 @@ W71-01 的维修窗口测试也需适配新的真实 background：旧预期 `#fa
 
 ## 真实 Windows 验证范围
 
-使用全新隔离根目录与合成作品夹具、真实 React 工作台，在 Electron 44.6.0 下从 `xaanink` 本地协议启动；renderer CDP 离线。此条件不等于系统断网，也不是安装包启动验收。
+使用全新隔离根目录与合成作品夹具、真实 React 工作台，在 Electron 44.6.0 下从 `shakeink` 本地协议启动；renderer CDP 离线。此条件不等于系统断网，也不是安装包启动验收。
 
 `native-paper.png` 包含实际 Windows 原生三个按钮。正常窗口、paper 主题、系统当次为暗色、右栏隐藏且无 Tab 时，caption 背景和相邻顶部纸纹连续。`native-paper.json` 的 renderer 为 paper/revision 1、启动背景为 `#F4EDDA`；仅证明这一次真实界面状态。
 

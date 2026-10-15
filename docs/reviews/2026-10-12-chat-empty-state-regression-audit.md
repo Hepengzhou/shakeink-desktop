@@ -44,7 +44,7 @@
 运行命令：
 
 ```powershell
-$env:XAANINK_TEST_CHROMIUM='C:/Program Files/Google/Chrome/Application/chrome.exe'
+$env:SHAKEINK_TEST_CHROMIUM='C:/Program Files/Google/Chrome/Application/chrome.exe'
 & 'C:/Users/Administrator/AppData/Local/Temp/node24/node-v24.21.0-win-x64/node.exe' --import tsx --test --test-reporter=tap --test-concurrency=1 tests/unit/pane-window-drag.test.ts tests/browser/ai-caption-message-drag.test.ts
 ```
 
@@ -205,7 +205,7 @@ dialog-appearance 此次有真实最终 25/25 summary、exitCode=0 且无 watchd
 本次完整 RED/GREEN 命令如下；诊断另外带 `--test-name-pattern=LUI23-14` 并指向 diagnostic 副本。未启动全量或并发测试，force-exit 的资源证明边界保持不变。
 
 ```powershell
-$env:XAANINK_TEST_CHROMIUM='C:/Program Files/Google/Chrome/Application/chrome.exe'
+$env:SHAKEINK_TEST_CHROMIUM='C:/Program Files/Google/Chrome/Application/chrome.exe'
 & 'C:/Users/Administrator/AppData/Local/Temp/node24/node-v24.21.0-win-x64/node.exe' --import tsx --test --test-reporter=tap --test-force-exit --test-concurrency=1 --test-timeout=90000 tests/browser/work-lease-ui.test.ts
 ```
 

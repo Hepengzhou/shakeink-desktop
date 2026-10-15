@@ -387,5 +387,5 @@
   "productTests": "not-run",
   "nativeAcceptance": "not-run",
   "browser": "154.0.8037.98",
-  "failure": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n760 !== 210\n\n    at file:///D:/Projects/xaanink-desktop/design/sidebar-navigation/verify-preview.mjs:196:37"
+  "failure": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n760 !== 210\n\n    at file:///D:/Projects/shakeink-desktop/design/sidebar-navigation/verify-preview.mjs:196:37"
 }

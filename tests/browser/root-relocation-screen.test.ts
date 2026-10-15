@@ -32,7 +32,7 @@ globalThis.mountRelocation=(initial,options={})=>{
  unmount:()=>flushSync(()=>root.unmount())};
 };`},bundle:true,platform:'browser',format:'iife',write:false,tsconfig:'tsconfig.json',plugins:process.env.ROOT_RELOCATION_MENU_BASELINE?[{name:'menu-baseline',setup(api){api.onLoad({filter:/RootRelocationScreen\.tsx$/},async()=>({contents:await readFile('docs/evidence/implementation-33/root-relocation-screen-before-menu.tsx.txt','utf8'),loader:'tsx',resolveDir:resolve('src/components/desktop')}))}}]:[]}).then(result=>result.outputFiles[0].text)
 let browser:Browser
-test.before(async()=>{browser=await chromium.launch({headless:true,...process.env.XAANINK_TEST_CHROMIUM?{executablePath:process.env.XAANINK_TEST_CHROMIUM}:{}})})
+test.before(async()=>{browser=await chromium.launch({headless:true,...process.env.SHAKEINK_TEST_CHROMIUM?{executablePath:process.env.SHAKEINK_TEST_CHROMIUM}:{}})})
 test.after(async()=>{await browser?.close()})
 const initial:RootRelocationState={version:1,revision:1,phase:'unavailable',theme:'paper',sourcePath:'/旧目录/玄印写作',targetPath:null,notice:'root-unavailable',unreadResultCount:null,canChoose:true,canCancel:false,canRestart:false,canReset:false,defaultPath:null}
 async function scenario(run:(page:Page)=>Promise<void>){const page=await browser.newPage({viewport:{width:680,height:560}}),errors:string[]=[];page.setDefaultTimeout(1500);page.on('pageerror',e=>errors.push(e.message));try{await page.route('**/*',route=>route.request().isNavigationRequest()?route.fulfill({contentType:'text/html',body:'<div id="app"></div>'}):route.abort());await page.goto('http://127.0.0.1:1/relocation');await page.addStyleTag({content:await stylesheet});await page.addScriptTag({content:await bundle});await run(page);assert.deepEqual(errors,[])}finally{await page.close()}}
@@ -97,13 +97,13 @@ test('RU33-11 Windows menu icon precedes system controls and sends only a single
  await mount(page,{...initial,platform:'win32'});const button=page.getByRole('button',{name:'应用菜单',exact:true});await button.waitFor();assert.equal(await button.evaluate(el=>getComputedStyle(el).getPropertyValue('-webkit-app-region')),'no-drag');await page.evaluate(()=>{const button=document.querySelector<HTMLButtonElement>('[data-relocation-command="menu"]')!;button.click();button.click()});assert.deepEqual(await page.evaluate(()=>(window as any).f.commands),['menu']);assert.equal(await button.isDisabled(),true);await page.evaluate(()=>(window as any).f.resolve('menu'));assert.equal(await button.isDisabled(),false);await emit(page,{revision:2,platform:'darwin'});assert.equal(await page.getByRole('button',{name:'应用菜单',exact:true}).count(),0)
 }))
 
-const blockedRecovery:RootRelocationState={...initial,revision:2,phase:'blocked',notice:'pointer-invalid',sourcePath:null,canChoose:false,canCancel:false,canRestart:false,canReset:true,defaultPath:'C:\Users\作者\.xaanink'}
+const blockedRecovery:RootRelocationState={...initial,revision:2,phase:'blocked',notice:'pointer-invalid',sourcePath:null,canChoose:false,canCancel:false,canRestart:false,canReset:true,defaultPath:'C:\Users\作者\.shakeink'}
 const resetConfirm=(revision:number,overrides:Partial<RootRelocationState>={}):Partial<RootRelocationState>&{revision:number}=>({...blockedRecovery,...overrides,revision,phase:'reset-confirm',notice:null,canChoose:false,canCancel:false,canReset:false,canRestart:false})
 test('SR-B-01 blocked with reset capability shows the unrepairable dialog copy and exactly reset+quit',async()=>scenario(async page=>{
  await mount(page,blockedRecovery)
  await page.getByRole('heading',{name:'无法修复数据目录',exact:true}).waitFor()
  await page.getByText('数据目录中的文件丢失或损坏，无法自动修复。可以退出应用保留现状，或重置配置数据后重新开始。',{exact:true}).waitFor()
- await page.getByText('C:\Users\作者\.xaanink',{exact:true}).waitFor()
+ await page.getByText('C:\Users\作者\.shakeink',{exact:true}).waitFor()
  assert.deepEqual(await page.getByRole('button').allTextContents(),['重置配置数据','退出应用'])
 }))
 test('SR-B-02 blocked history-needs-recovery keeps the locate heading and old copy with the reset exit',async()=>scenario(async page=>{
@@ -119,7 +119,7 @@ test('SR-B-03 the reset command reaches the in-place second confirmation with th
  await page.evaluate(()=>(window as any).f.resolve('reset'))
  await emit(page,resetConfirm(3))
  await page.getByText('此操作不可撤销',{exact:true}).waitFor()
- await page.getByText(/重置会清空数据目录（C:\Users\作者\.xaanink）的全部内容，包括收件箱、设置与模型配置、作品索引和应用备份，此操作不可撤销。/,{exact:false}).waitFor()
+ await page.getByText(/重置会清空数据目录（C:\Users\作者\.shakeink）的全部内容，包括收件箱、设置与模型配置、作品索引和应用备份，此操作不可撤销。/,{exact:false}).waitFor()
  await page.getByText(/作品文件保存在各自的独立目录中，不会被删除，但重置后需要重新打开关联。/).waitFor()
  assert.deepEqual(await page.getByRole('button').allTextContents(),['确认清空并重置','返回'])
 }))
@@ -170,13 +170,13 @@ test('SR-B-08 a failed wipe shows the retry copy and the retry button resends re
  assert.deepEqual(await page.evaluate(()=>(window as any).f.commands),['reset','reset-confirm','reset-confirm'])
 }))
 test('SR-B-09 unavailable and cancelled keep the locate flow with a reset exit and a working back path',async()=>scenario(async page=>{
- await mount(page,{...initial,canReset:true,defaultPath:'C:\Users\作者\.xaanink'})
+ await mount(page,{...initial,canReset:true,defaultPath:'C:\Users\作者\.shakeink'})
  await page.getByText('若原目录已无法找回，可以重置配置数据，从默认目录重新开始。',{exact:true}).waitFor()
  assert.deepEqual(await page.getByRole('button').allTextContents(),['定位原数据目录','重置配置数据','退出应用'])
  await page.getByRole('button',{name:'重置配置数据',exact:true}).click();await page.evaluate(()=>(window as any).f.resolve('reset'))
  await emit(page,resetConfirm(3,{sourcePath:initial.sourcePath}))
  await page.getByRole('button',{name:'返回',exact:true}).click();await page.evaluate(()=>(window as any).f.resolve('reset-back'))
- await emit(page,{...initial,revision:4,phase:'cancelled',notice:null,canChoose:true,canCancel:false,canRestart:false,canReset:true,defaultPath:'C:\Users\作者\.xaanink'})
+ await emit(page,{...initial,revision:4,phase:'cancelled',notice:null,canChoose:true,canCancel:false,canRestart:false,canReset:true,defaultPath:'C:\Users\作者\.shakeink'})
  await page.getByRole('heading',{name:'定位原数据目录',exact:true}).waitFor()
  assert.deepEqual(await page.evaluate(()=>(window as any).f.commands),['reset','reset-back'])
  assert.deepEqual(await page.getByRole('button').allTextContents(),['定位原数据目录','重置配置数据','退出应用'])

@@ -6,16 +6,16 @@
 
 | 阶段 | 产物 |
 | --- | --- |
-| 调研文档 | [调研](D:/Projects/xaanink-desktop/design/sidebar-navigation/research.md) |
-| 产品设计文档 | [v8产品设计与SN-01–16](D:/Projects/xaanink-desktop/design/sidebar-navigation/product-design.md) |
-| HTML设计稿 | [用户已批准的设计](D:/Projects/xaanink-desktop/design/sidebar-navigation/index.html) |
-| 代码实现 | [正式实现及问题修正](D:/Projects/xaanink-desktop/docs/reviews/2026-10-13-sidebar-navigation-implementation.md)；[SidebarTree](D:/Projects/xaanink-desktop/src/components/layout/SidebarTree.tsx) |
-| 测试 | [完整验证记录](D:/Projects/xaanink-desktop/docs/reviews/2026-10-13-sidebar-navigation-verification.md)；[实际Windows结果](D:/Projects/xaanink-desktop/docs/evidence/sidebar-navigation/windows-development-11/verification.md) |
+| 调研文档 | [调研](D:/Projects/shakeink-desktop/design/sidebar-navigation/research.md) |
+| 产品设计文档 | [v8产品设计与SN-01–16](D:/Projects/shakeink-desktop/design/sidebar-navigation/product-design.md) |
+| HTML设计稿 | [用户已批准的设计](D:/Projects/shakeink-desktop/design/sidebar-navigation/index.html) |
+| 代码实现 | [正式实现及问题修正](D:/Projects/shakeink-desktop/docs/reviews/2026-10-13-sidebar-navigation-implementation.md)；[SidebarTree](D:/Projects/shakeink-desktop/src/components/layout/SidebarTree.tsx) |
+| 测试 | [完整验证记录](D:/Projects/shakeink-desktop/docs/reviews/2026-10-13-sidebar-navigation-verification.md)；[实际Windows结果](D:/Projects/shakeink-desktop/docs/evidence/sidebar-navigation/windows-development-11/verification.md) |
 | 总结 | 本文 |
 
 技术方案、用例、实现均按独立审核顺序推进。实际red、增量修正与当前源SHA记录在导航/抽屉code review、M06 resize plan-review及试验场事务审核中；Windows01–10失败与所有诊断均保留。
 
-[最终独立事实审核](D:/Projects/xaanink-desktop/docs/reviews/2026-10-14-sidebar-navigation-final-evidence-review.md)通过，blocking0，本次实际resize问题关闭；仓库整体failed与未执行范围保留。
+[最终独立事实审核](D:/Projects/shakeink-desktop/docs/reviews/2026-10-14-sidebar-navigation-final-evidence-review.md)通过，blocking0，本次实际resize问题关闭；仓库整体failed与未执行范围保留。
 
 ## 最终行为
 
@@ -43,4 +43,4 @@ Core并行一轮曾耗尽15分钟整轮预算、四个迁移/启动用例超时�
 
 实际Windows使用完整产品React、真实Workspaces/PGlite/IPC及隔离合成数据；CDP合成输入、实际HWND测原生区域。Renderer网络观察从firstWindow后开始，不扩大为全启动网络审计。当前UI不可达的cold-empty-fullscreen恢复、NSIS安装、macOS、物理鼠标拖窗、Windows IME及无关业务全组未执行；普通UI可达空Content自身caption和Chat恢复路径已通过。该目标为development Electron，`packaged=false`。
 
-[墨色角色界面](D:/Projects/xaanink-desktop/docs/evidence/sidebar-navigation/windows-development-11/ink-roles.png) · [纸本作品界面](D:/Projects/xaanink-desktop/docs/evidence/sidebar-navigation/windows-development-11/paper-works.png)。正式验证台账同步至requirements-traceability和migration-map，保留全仓验收false。
+[墨色角色界面](D:/Projects/shakeink-desktop/docs/evidence/sidebar-navigation/windows-development-11/ink-roles.png) · [纸本作品界面](D:/Projects/shakeink-desktop/docs/evidence/sidebar-navigation/windows-development-11/paper-works.png)。正式验证台账同步至requirements-traceability和migration-map，保留全仓验收false。

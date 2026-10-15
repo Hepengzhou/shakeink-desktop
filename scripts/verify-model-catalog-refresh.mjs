@@ -11,7 +11,7 @@ import {Workspaces} from '../desktop/service/workspaces.ts'
 
 assert.equal(process.platform,'win32')
 const label=process.argv[2]??'windows-final';assert.match(label,/^[a-z0-9-]+$/)
-const temp=await realpath(await mkdtemp(join(tmpdir(),'xaanink-catalog-native-'))),root=join(temp,'data'),parent=resolve('docs/evidence/model-catalog-fix'),evidence=join(parent,label)
+const temp=await realpath(await mkdtemp(join(tmpdir(),'shakeink-catalog-native-'))),root=join(temp,'data'),parent=resolve('docs/evidence/model-catalog-fix'),evidence=join(parent,label)
 await mkdir(parent,{recursive:true});await mkdir(evidence);await mkdir(root)
 const report={status:'running',scope:'Actual Windows development Electron, real compiled React/preload/main IPC and durable directory. Official GET /models responses are controlled protocol fixtures, never supplier or paid-call acceptance. Public fixture credentials only; isolated data. No HTTP service or outbound network.',startedAt:new Date().toISOString(),checks:[],errors:[],sourceHashes:{},bundleHashes:{}}
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex')
@@ -27,13 +27,13 @@ const scope={provider:'deepseek',kind:'TEXT',protocol:'openai',endpoint:'https:/
 async function check(id,work){await work();report.checks.push({id,status:'passed'})}
 async function close(){await app.close();app=page=undefined}
 async function launch(mode){
-  app=await _electron.launch({args:[harness],env:{...process.env,XAANINK_TEST_ROOT:root,XAANINK_CATALOG_FIXTURE_MODE:mode,XAANINK_CATALOG_NETWORK_REPORT:networkReport},timeout:60000})
+  app=await _electron.launch({args:[harness],env:{...process.env,SHAKEINK_TEST_ROOT:root,SHAKEINK_CATALOG_FIXTURE_MODE:mode,SHAKEINK_CATALOG_NETWORK_REPORT:networkReport},timeout:60000})
   page=await app.firstWindow({timeout:60000});page.setDefaultTimeout(12000)
   page.on('pageerror',error=>report.errors.push(redact(error.message)))
   page.on('request',request=>{if(/^https?:/i.test(request.url()))report.errors.push('Unexpected renderer HTTP request')})
   await page.context().setOffline(true)
   await app.evaluate(({BrowserWindow})=>BrowserWindow.getAllWindows()[0].setBounds({width:1280,height:900}))
-  await page.waitForURL('xaanink://app/',{timeout:45000})
+  await page.waitForURL('shakeink://app/',{timeout:45000})
   const boot=await page.evaluate(()=>window.desktop.bootstrap());assert.equal(boot.platform,'win32');assert.equal(boot.dataRoot,root)
   if(!boot.models.length)await page.getByRole('button',{name:'暂不配置',exact:true}).click({timeout:45000})
   await page.getByRole('button',{name:/^账号菜单/}).click();await page.getByRole('menuitem',{name:'设置',exact:true}).click();await page.getByRole('button',{name:'模型',exact:true}).click()
@@ -46,15 +46,15 @@ try{
   await writeFile(join(root,'state.json'),JSON.stringify({schemaVersion:1,revision:0,value:state}))
   await writeFile(guard,`
 const fs=require('node:fs'),net=require('node:net');
-const denied=()=>{fs.appendFileSync(process.env.XAANINK_CATALOG_NETWORK_REPORT,'network-denied\\n');throw Error('Catalog verification forbids external network');};
+const denied=()=>{fs.appendFileSync(process.env.SHAKEINK_CATALOG_NETWORK_REPORT,'network-denied\\n');throw Error('Catalog verification forbids external network');};
 globalThis.__catalogFixtureRows=[{id:'deepseek-v4-pro'}];globalThis.__catalogFixtureCalls=0;
 globalThis.fetch=async function(input){const url=typeof input==='string'||input instanceof URL?String(input):input?.url;
- if(url==='https://api.deepseek.com/models'&&process.env.XAANINK_CATALOG_FIXTURE_MODE==='fixture'){globalThis.__catalogFixtureCalls++;return Response.json({data:globalThis.__catalogFixtureRows});}
+ if(url==='https://api.deepseek.com/models'&&process.env.SHAKEINK_CATALOG_FIXTURE_MODE==='fixture'){globalThis.__catalogFixtureCalls++;return Response.json({data:globalThis.__catalogFixtureRows});}
  return denied();};
 for(const name of ['node:http','node:https']){const api=require(name);api.request=denied;api.get=denied;}
 for(const [prototype,name] of [[net.Server.prototype,'listen'],[net.Socket.prototype,'connect']]){const original=prototype[name];prototype[name]=function(...args){const normalized=Array.isArray(args[0])?args[0]:net._normalizeArgs(args);if(!normalized[0]?.path)return denied();return original.apply(this,args);};}
 `)
-  execFileSync(process.execPath,['--require',guard,'-e',`const net=require('node:net'),assert=require('node:assert/strict');assert.throws(()=>net.createServer().listen(0),/forbids/);assert.throws(()=>new net.Socket().connect(443,'example.invalid'),/forbids/);`],{env:{...process.env,XAANINK_CATALOG_NETWORK_REPORT:networkReport},timeout:10000})
+  execFileSync(process.execPath,['--require',guard,'-e',`const net=require('node:net'),assert=require('node:assert/strict');assert.throws(()=>net.createServer().listen(0),/forbids/);assert.throws(()=>new net.Socket().connect(443,'example.invalid'),/forbids/);`],{env:{...process.env,SHAKEINK_CATALOG_NETWORK_REPORT:networkReport},timeout:10000})
   assert.equal((await readFile(networkReport,'utf8')).trim().split('\n').length,2);await writeFile(networkReport,'')
   await writeFile(harness,`
 require(${JSON.stringify(guard)});
@@ -111,6 +111,6 @@ require(${JSON.stringify(resolve('dist/main/index.cjs'))});
   report.status='passed'
 }catch(error){report.status='failed';report.error=redact(error.stack??error);process.exitCode=1;if(page)await page.screenshot({path:join(evidence,'failure.png')}).catch(()=>{})}
 finally{
-  await app?.close().catch(()=>{});assert.equal(dirname(resolve(temp)),resolve(tmpdir()));assert.ok(basename(temp).startsWith('xaanink-catalog-native-'));await rm(temp,{recursive:true,force:true});report.cleanedIsolatedData=true;report.completedAt=new Date().toISOString()
+  await app?.close().catch(()=>{});assert.equal(dirname(resolve(temp)),resolve(tmpdir()));assert.ok(basename(temp).startsWith('shakeink-catalog-native-'));await rm(temp,{recursive:true,force:true});report.cleanedIsolatedData=true;report.completedAt=new Date().toISOString()
   await writeFile(join(evidence,'windows-electron.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({status:report.status,checks:report.checks.length,error:report.error}))
 }

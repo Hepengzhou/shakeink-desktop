@@ -8,7 +8,7 @@
 
 ## 产物及来源
 
-- 实际 `release/XaanInk-0.1.0-win-x64.exe` 为 **276569810 bytes**，SHA-256为 **8979151761cee41f95ea3965f4544c6ada20dc932a8ba310a2e413c507b836e2**，与验证记录、最终metadata完全一致。
+- 实际 `release/ShakeInk-0.1.0-win-x64.exe` 为 **276569810 bytes**，SHA-256为 **8979151761cee41f95ea3965f4544c6ada20dc932a8ba310a2e413c507b836e2**，与验证记录、最终metadata完全一致。
 - 实际 `dist/main/index.cjs` 与 `release/win-unpacked/resources/app/dist/main/index.cjs` 均为 **18ec36822fccddc79d3ec13273c2f01d5256df8d38969a431270a899323e9394**。同main哈希不能证明renderer相同；文档正确保留首次有Tab截图为失败基线，使用最终native有Tab样本证明追加修复。
 - build-final日志显示Next编译、TypeScript、静态页与desktop build完成；package-final显示Electron44.6.0/win-x64/NSIS产物、314项项目资源检查和PGlite正常关闭，publish=never/signing disabled。文档没有将资源检查说成NSIS安装或完整业务验收。
 - core-full的main、helper及两个cold模块source哈希仍与当前文件一致；其ContentTabs和empty-content-hide哈希与当前不同，符合“core完成后只追加renderer/浏览器用例，未重跑core”的明确说明。最终browser-full中这些文件哈希均与当前一致。两次运行的覆盖边界没有合并成一次全通过。

@@ -430,7 +430,7 @@ export function useAgentChat(userId: string) {
 
   useEffect(() => {
     if (typeof BroadcastChannel === "undefined") return
-    const channel = new BroadcastChannel("xaanink-chat-account")
+    const channel = new BroadcastChannel("shakeink-chat-account")
     channel.onmessage = event => {
       if (event.data?.type !== "logout" || event.data.userId !== userId || useChatStore.getState().accountId !== userId) return
       execution.cancel()

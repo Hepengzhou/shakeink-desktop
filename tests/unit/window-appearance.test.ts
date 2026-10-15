@@ -7,7 +7,7 @@ import { syncNativeThemeSource } from "../../desktop/main/window-appearance"
 
 type Theme = "paper" | "ink" | "system"
 const css = readFileSync("src/app/globals.css", "utf8")
-const mainSource = readFileSync(process.env.XAANINK_WINDOW_THEME_MAIN_SOURCE ?? "desktop/main/index.ts", "utf8")
+const mainSource = readFileSync(process.env.SHAKEINK_WINDOW_THEME_MAIN_SOURCE ?? "desktop/main/index.ts", "utf8")
 const main = ts.createSourceFile("main.ts", mainSource, ts.ScriptTarget.Latest, true)
 function palette(theme: "paper" | "ink") {
   const block = css.match(new RegExp(`\\.${theme} \\{([\\s\\S]*?)\\n\\}`))![1]

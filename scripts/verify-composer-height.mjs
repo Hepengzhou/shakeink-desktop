@@ -12,7 +12,7 @@ import {prisma} from '../src/lib/db.ts'
 assert.equal(process.platform,'win32','Actual Windows required')
 const tag=process.argv[2]??'v2-green'
 assert.ok(['v2-red','v2-green'].includes(tag),'Current revision writes isolated v2 evidence; both runs use the same assertions')
-const temporary=await mkdtemp(join(tmpdir(),'xaanink-composer-height-'))
+const temporary=await mkdtemp(join(tmpdir(),'shakeink-composer-height-'))
 const evidence=resolve('docs/evidence/composer-height',tag)
 await mkdir(evidence,{recursive:true})
 const report={status:'running',startedAt:new Date().toISOString(),scope:'Actual Windows development Electron, compiled original React composer, isolated real local inbox/database, no models. Playwright/CDP input; not physical IME, macOS or installed package acceptance.',checks:[],measurements:[],errors:[],rendererHttpRequests:0,runtime:[],sourceHashes:{},bundleHashes:{}}
@@ -91,7 +91,7 @@ async function launch(){
  const state=structuredClone(defaultState);state.settings.appearance.theme=theme
  state.onboarding={version:1,completed:true,step:'welcome',textModelId:null,imageModelId:null,receipt:null}
  await writeFile(join(root,'state.json'),JSON.stringify({schemaVersion:1,revision:0,value:state}))
- app=await _electron.launch({args:[resolve('.')],env:{...process.env,XAANINK_TEST_ROOT:root},timeout:60000})
+ app=await _electron.launch({args:[resolve('.')],env:{...process.env,SHAKEINK_TEST_ROOT:root},timeout:60000})
  page=await app.firstWindow({timeout:60000});page.setDefaultTimeout(12000)
  page.on('pageerror',error=>report.errors.push(redact(error.message)))
  page.on('request',request=>{if(/^https?:/i.test(request.url()))report.rendererHttpRequests++})
@@ -101,7 +101,7 @@ async function launch(){
  await expect(page.getByTestId('chat-empty-state')).toBeVisible()
  await expect(page.locator('.chatpane')).toHaveAttribute('aria-busy','false')
  await page.waitForFunction(theme=>document.documentElement.classList.contains(theme),theme)
- assert.equal(page.url(),'xaanink://app/')
+ assert.equal(page.url(),'shakeink://app/')
  const bootstrap=await page.evaluate(()=>window.desktop.bootstrap())
  assert.equal(bootstrap.platform,'win32');assert.equal(bootstrap.models.length,0);assert.equal(bootstrap.dataRoot,root)
  report.runtime.push({theme,...await app.evaluate(()=>({platform:process.platform,versions:process.versions,listeningServers:process._getActiveHandles().filter(handle=>handle.constructor.name==='Server'&&handle.listening).length}))})
@@ -154,7 +154,7 @@ try{
  process.exitCode=1
 }finally{
  await app?.close().catch(()=>{})
- assert.equal(dirname(resolve(temporary)),resolve(tmpdir()));assert.ok(basename(temporary).startsWith('xaanink-composer-height-'))
+ assert.equal(dirname(resolve(temporary)),resolve(tmpdir()));assert.ok(basename(temporary).startsWith('shakeink-composer-height-'))
  await rm(temporary,{recursive:true,force:true});report.cleanedIsolatedData=true
  report.completedAt=new Date().toISOString()
  await writeFile(join(evidence,'windows-electron.json'),JSON.stringify(report,null,2)+'\n')

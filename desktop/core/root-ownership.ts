@@ -6,7 +6,7 @@ import { z } from 'zod';
 import type { RootIdentity } from './data-root';
 import {BRAND_NAMES} from '../shared/brand-names';
 export const rootIdentitySchema = z.object({ path: z.string().min(1).max(4096), device: z.string().regex(/^\d+$/), inode: z.string().regex(/^\d+$/) }).strict();
-export const rootMarkerSchema = z.object({ schemaVersion: z.literal(1), app: z.enum(['Xuanxiangxiezuo-Desktop','XaanInk']), id: z.uuid(), phase: z.enum(['initializing', 'ready']), inboxReady: z.boolean() }).strict();
+export const rootMarkerSchema = z.object({ schemaVersion: z.literal(1), app: z.enum(['Xuanxiangxiezuo-Desktop','ShakeInk']), id: z.uuid(), phase: z.enum(['initializing', 'ready']), inboxReady: z.boolean() }).strict();
 export interface FileIdentity {
     device: string;
     inode: string;

@@ -9,10 +9,10 @@ import {DataRootManager} from '../desktop/core/data-root.ts'
 import {directoryIdentity} from '../desktop/core/root-ownership.ts'
 import {collectClosedRootFiles} from '../desktop/main/owned-root-files.ts'
 
-const temporary=await realpath(await mkdtemp(join(tmpdir(),'xaanink-root-native-'))),root=join(temporary,'data'),target=join(temporary,'moved-data'),evidence='docs/evidence/implementation-11',startedAt=new Date().toISOString()
+const temporary=await realpath(await mkdtemp(join(tmpdir(),'shakeink-root-native-'))),root=join(temporary,'data'),target=join(temporary,'moved-data'),evidence='docs/evidence/implementation-11',startedAt=new Date().toISOString()
 let app,page,closedProcess;const checks=[],errors=[]
 async function launch(){
- app=await electron.launch({args:[resolve('.')],env:{...process.env,XAANINK_TEST_ROOT:root},timeout:45000});page=await app.firstWindow({timeout:45000});page.on('pageerror',error=>errors.push(error.message));await page.getByRole('button',{name:'账号菜单'}).waitFor({timeout:45000})
+ app=await electron.launch({args:[resolve('.')],env:{...process.env,SHAKEINK_TEST_ROOT:root},timeout:45000});page=await app.firstWindow({timeout:45000});page.on('pageerror',error=>errors.push(error.message));await page.getByRole('button',{name:'账号菜单'}).waitFor({timeout:45000})
 }
 async function close(){closedProcess=app.process();await app.close();app=null;assert(closedProcess.exitCode!==null||closedProcess.signalCode!==null,'migration may run only after actual Electron process exit')}
 try{

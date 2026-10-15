@@ -11,7 +11,7 @@ import {join,resolve} from 'node:path'
 
 // Development-only, entirely isolated local model responses. The real original
 // composer, chat handler, tools, main RPC, worker, schema and filesystem run.
-const require=createRequire(import.meta.url),temporary=await realpath(await mkdtemp(join(tmpdir(),'xaanink-native-chat-transfer-'))),root=join(temporary,'data'),chosen=join(temporary,'chosen-work'),cancelled=join(temporary,'cancelled-work')
+const require=createRequire(import.meta.url),temporary=await realpath(await mkdtemp(join(tmpdir(),'shakeink-native-chat-transfer-'))),root=join(temporary,'data'),chosen=join(temporary,'chosen-work'),cancelled=join(temporary,'cancelled-work')
 const base='docs/evidence/implementation-34',evidence=await mkdtemp(join(base,'native-attempt-')),startedAt=new Date().toISOString(),checks=[],errors=[],nativeLog=[],requests=[]
 let app,page,passed=false,phase='cancel',step=0,port
 const text='原生目录验收结束，会话和规划数据已核对。'
@@ -49,7 +49,7 @@ const server=createServer(async(request,response)=>{
 })
 await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));port=server.address().port
 async function launch(){
- app=await electron.launch({executablePath:require('electron'),args:[resolve('.')],env:{...process.env,XAANINK_TEST_ROOT:root},timeout:60000})
+ app=await electron.launch({executablePath:require('electron'),args:[resolve('.')],env:{...process.env,SHAKEINK_TEST_ROOT:root},timeout:60000})
  app.process().stderr.on('data',chunk=>nativeLog.push(String(chunk)))
  page=await app.firstWindow();page.on('pageerror',error=>errors.push(error.message))
  await page.getByRole('button',{name:'账号菜单'}).waitFor({timeout:60000})
@@ -88,7 +88,7 @@ try{
  phase='create';step=0
  await page.getByRole('button',{name:'创建对话',exact:true}).click();await selectModel();await send('原生目录验收：已确认故事核心、主角和书名「原生目录验收作品」，请创建作品并核对规划。')
  const catalog=JSON.parse(await readFile(join(root,'catalog.json'),'utf8')).value,created=catalog.find(row=>row.path===chosen);assert.ok(created);assert.equal(catalog.length,before.value.length+1)
- const manifest=JSON.parse(await readFile(join(chosen,'xaanink-work.json'),'utf8'));assert.equal(manifest.phase,'ready');assert.equal(manifest.novelId,created.novelId)
+ const manifest=JSON.parse(await readFile(join(chosen,'shakeink-work.json'),'utf8'));assert.equal(manifest.phase,'ready');assert.equal(manifest.novelId,created.novelId)
  const conversations=await list(),moved=conversations.find(row=>row.novelId===created.novelId);assert.ok(moved);assert.ok(conversations.some(row=>row.id===cancelledConversation.id&&row.novelId===null))
  const detail=await page.evaluate(async id=>(await(await fetch(`/api/chat/conversations/${id}`)).json()),moved.id)
  assert.ok(detail.messages.some(message=>message.role==='USER'&&message.content.includes('原生目录验收作品')));assert.ok(detail.messages.some(message=>message.role==='ASSISTANT'&&message.content.includes(text)))

@@ -1,7 +1,7 @@
 {
   "scope": "UI design preview only; existing Windows Electron React workbench, empty isolated root, temporary DOM/CSS override, renderer offline. Screenshots omit native caption controls. No product implementation or acceptance claim.",
   "before": {
-    "url": "xaanink://app/",
+    "url": "shakeink://app/",
     "classes": "paper",
     "viewport": {
       "width": 1441,
@@ -30,7 +30,7 @@
     ]
   },
   "proposed": {
-    "url": "xaanink://app/",
+    "url": "shakeink://app/",
     "classes": "paper",
     "viewport": {
       "width": 1441,

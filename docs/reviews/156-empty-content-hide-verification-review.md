@@ -15,7 +15,7 @@
 
 1. 对verification.json列出的**1247项fingerprints逐项重新读取并计算SHA-256，缺失0项、不匹配0项**。它们关联当前源码、测试及构建文件；不是用文件名或旧运行结果推断当前验证。
 2. 当前原生报告的**7项sourceHashes全部匹配当前源文件**，包含产品布局、完整DesktopApp、Electron主进程、最新harness与seed helper。
-3. 当前成功原生报告位于独立证据目录 `docs/evidence/implementation-47/xaanink-empty-hide-HxoaaD/empty-content-hide-native.json`。重算SHA-256为 `40241c55a96740687a37a8fe3b275c82d41cdaeb69ffefae9728003efa5e4da7`，与verification.json的reportHash一致；根目录成功alias与该独立报告字节完全一致。
+3. 当前成功原生报告位于独立证据目录 `docs/evidence/implementation-47/shakeink-empty-hide-HxoaaD/empty-content-hide-native.json`。重算SHA-256为 `40241c55a96740687a37a8fe3b275c82d41cdaeb69ffefae9728003efa5e4da7`，与verification.json的reportHash一致；根目录成功alias与该独立报告字节完全一致。
 4. 当前报告引用的独立目录`default-empty-native.png`哈希匹配。本代理实际查看该图，空右区顶行右侧可见PanelRight图标，侧栏明确没有小说，原空态正文仍在；没有把renderer图当作原生截图。系统鼠标选择独立bundle和AX38点击由主代理执行，本审核按其CUA操作记录摘要、该原生图和随后harness卸载断言交叉核对，没有另行操作UI。
 5. 重新解析当前native报告，14条布局记录均满足按钮包含在右区/顶行、header y=0、零Tab、随rem字号变化的右距，以及header drag/button no-drag；7条收起记录均确认内容卸载且AI恢复入口可见。完整报告包含系统鼠标、Enter/Space、10组native zoom/font、重启后AI恢复和最后Tab自动收起后的空态恢复。window状态比较由真实Electron harness断言，源码没有以组件mock替代。
 

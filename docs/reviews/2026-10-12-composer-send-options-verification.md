@@ -36,7 +36,7 @@ Node 使用 Codex 捆绑 v24.19.0，符合项目 Node 24 要求。系统 Node 20
 
 执行 `<node24> --import tsx scripts/smoke-composer-send-options.mjs`，exit 0；2026-10-12 13:50（Asia/Shanghai），6/6 检查组通过。证据 `docs/evidence/composer-send-options/windows-electron.json`，菜单截图 `standard-menu.png`、`plan-menu.png`、`restart-menu.png`。主代理已查看实际菜单截图，只有标准/计划模式两项与当前勾选，未见发送方式标签/选项。
 
-- CSO-08：真实 Windows / `xaanink://app/` / 原 React workbench 菜单仅两项；两种模式均可切换。
+- CSO-08：真实 Windows / `shakeink://app/` / 原 React workbench 菜单仅两项；两种模式均可切换。
 - CSO-09a/b：Shift+Enter 在真实 contenteditable 插入换行且不发送；普通 Enter 触发实际“尚未配置模型”发送门控。
 - CSO-10a/b：合成 isComposing / keyCode229 Enter 不发送；真实关窗重启后旧 false 偏好不生效，默认提示/键盘保持，两项模型记忆保持且旧字段已从后续写入中移除。
 - 隔离目录通过真实 Workspaces 初始化；全程无配置模型，0 renderer HTTP 请求、0 main 监听服务、0 renderer error。测试结束清理本次 mkdtemp 目录。

@@ -15,7 +15,7 @@ test('实际 macOS app 内容、版本、入口、资源、架构与输入一致
   const result = await inspectPackagedApp(project, app)
   assert.equal(result.version, JSON.parse(await readFile(join(project, 'package.json'), 'utf8')).version)
   assert.equal(result.arch, 'arm64')
-  assert.equal(result.bundleId, 'ink.xaanink.desktop')
+  assert.equal(result.bundleId, 'ink.shakeink.desktop')
   assert.equal(result.productionModulesIncludeNextAndPrisma, true)
   assert(result.files.length > 500)
   assert(result.projectResources >= 200)
