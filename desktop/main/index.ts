@@ -4,9 +4,9 @@ import {randomUUID} from "node:crypto"
 import {DraftJournal,validateDraftSnapshot} from "./draft-journal"
 import {CloseCoordinator,type CloseIntent,type CloseOwner} from "./close-coordinator"
 import {RendererCloseChannel} from "./renderer-close-channel"
-import { homedir } from "node:os"
+import { homedir,tmpdir } from "node:os"
 import { join, resolve } from "node:path"
-import { lstat,readdir } from "node:fs/promises"
+import { lstat,mkdtemp,readdir } from "node:fs/promises"
 import { mkdirSync,realpathSync } from "node:fs"
 import { z } from "zod"
 import { ModelService } from "./model-service"
@@ -44,8 +44,9 @@ import {WorkLeaseHandoff} from "./work-lease-handoff"
 import {workLeaseRequestSchema} from "../shared/work-lease"
 import {ApplicationMetadataGate} from "./application-metadata-gate"
 import {rootRelocationPreflight} from "./root-relocation-preflight"
-import {launchRootRelocation,launchStartupRecovery} from "./root-relocation-window"
-import {classifyStartupRecovery,executeStartupRepair} from "./startup-recovery"
+import {launchRootRelocation} from "./root-relocation-window"
+import {classifyStartupRecovery,executeStartupRepair,executeStartupReset,samePath} from "./startup-recovery"
+import {offerConfigReset} from "./config-reset-offer"
 import {inboxLeaseRecoveryRequired,recoverInboxLeaseAutomatically} from "./inbox-lease-recovery"
 import {launchInboxLeaseRecovery} from "./inbox-lease-recovery-window"
 import {ConversationDirectoryAuthorizations} from "./conversation-directory-authorizations"
@@ -108,6 +109,7 @@ let draftJournal:DraftJournal
 let draftSession:{owner:number;id:string;ready:boolean;release:()=>void}|null=null
 let ordinaryWorkerExited=false
 let failedRootCode:string|null=null
+let failedRootPath:string|null=null
 let quitting = false
 let closingFlow:Promise<boolean>|null=null
 let closeCommitted=false
@@ -777,9 +779,35 @@ if(!startupPaths){
 else if (!app.requestSingleInstanceLock()) app.quit()
 else {
   const recoveryRootFor=(family:BrandStartupPaths["encryptionFamily"])=>isolatedRoot?resolve(isolatedRoot):join(homedir(),family==="legacy"?".xuanxiang":".shakeink")
-  const openStartupRecovery=(sourcePath:string|null)=>{
-    const family=startupPaths!.encryptionFamily
-    return launchStartupRecovery(bootstrapPath,{recoveryRoot:recoveryRootFor(family),sourcePath,notice:"pointer-invalid",home:homedir(),isolatedRoot,family})
+  // Unrepairable config roots degrade to a real workbench on a throwaway root
+  // plus a wipe-or-quit modal; the broken root stays untouched until the user
+  // chooses. launch() is only re-entered before its first protocol.handle /
+  // registerIpc (failedRootCode throws ahead of both), so a second call is safe.
+  const launchConfigResetOffer=(reason:string)=>{
+    const family=startupPaths!.encryptionFamily,recoveryRoot=recoveryRootFor(family)
+    const originalBootstrap=bootstrapPath
+    const assertLock=()=>{if(!app.hasSingleInstanceLock())throw Error("LOCK_REQUIRED")}
+    return offerConfigReset({reason,rootPath:recoveryRoot,host:{
+      launchDegradedWorkbench:async()=>{
+        assertLock()
+        const temporary=await mkdtemp(join(tmpdir(),'shakeink-reset-offer-'))
+        startupPaths={bootstrap:join(temporary,'bootstrap'),defaultRoot:join(temporary,'root'),encryptionFamily:family}
+        startupSelectionError=null
+        mkdirSync(startupPaths.bootstrap,{recursive:true})
+        bootstrapPath=realpathSync(startupPaths.bootstrap)
+        await launch()
+        if(!window||window.isDestroyed())throw Error("DEGRADED_WORKBENCH_UNAVAILABLE")
+        return window
+      },
+      confirm:async({rootPath,window:degraded})=>{
+        const answer=await dialog.showMessageBox(degraded as BrowserWindow,{type:'warning',title:'配置数据无法自动修复',message:'本地配置数据已损坏且无法自动修复',detail:`已尝试自动修复但无法恢复配置数据。\n\n选择「清空全部配置并重启」将删除以下目录中的全部文件（包括作品数据，不可撤销），随后自动重启应用并重建配置：\n${rootPath}\n\n选择「退出」将直接关闭应用，原文件保持原样。`,buttons:['退出','清空全部配置并重启'],defaultId:0,cancelId:0,noLink:true})
+        return answer.response===1
+      },
+      wipe:()=>executeStartupReset({bootstrap:originalBootstrap,recoveryRoot},{home:homedir(),isolatedRoot,family},{assertLock}),
+      relaunch(){app.relaunch();app.exit(0)},
+      quit(){app.exit(0)},
+      fatal(error){console.error(error);dialog.showErrorBox("玄印写作无法启动","本地数据未能安全打开。原文件已保留，请检查目录和权限。");app.exit(1)},
+    }})
   }
   const reselectStartupPaths=()=>{
     const selected=selectBrandStartupPaths({appData:app.getPath("appData"),home:homedir(),isolatedRoot})
@@ -792,7 +820,7 @@ else {
     assertNoLegacyBackupRecovery(bootstrapPath,assertLock)
     const family=startupPaths!.encryptionFamily,recoveryRoot=recoveryRootFor(family)
     const classification=classifyStartupRecovery({bootstrap:bootstrapPath,recoveryRoot},family)
-    if(classification.kind==="dialog")return openStartupRecovery(classification.sourcePath)
+    if(classification.kind==="dialog")return launchConfigResetOffer(classification.reason)
     if(classification.kind==="auto-init"||classification.kind==="repair"){
       try{
         await executeStartupRepair({bootstrap:bootstrapPath,recoveryRoot},classification.kind==="auto-init"?"pointer":classification.repair,family,{assertLock})
@@ -802,11 +830,11 @@ else {
         if(classification.kind==="repair"&&classification.repair==="resume-init")startupSelectionError=null
         else if(!reselectStartupPaths())throw Error("STARTUP_RECOVERY_FAMILY_CHANGED")
         if(rootRelocationPreflight(bootstrapPath).mode!=="none")throw Error("STARTUP_RECOVERY_STILL_BLOCKED")
-      }catch{return openStartupRecovery(null)}
+      }catch{return launchConfigResetOffer("repair-failed")}
     }
     else if(startupSelectionError){
       try{if(!reselectStartupPaths())throw Error("STARTUP_RECOVERY_FAMILY_CHANGED")}
-      catch{return openStartupRecovery(null)}
+      catch{return launchConfigResetOffer("paths-invalid")}
     }
     const relocation=rootRelocationPreflight(bootstrapPath)
     if(relocation.mode!=="none")return launchRootRelocation(bootstrapPath,relocation,{recoveryRoot,home:homedir(),isolatedRoot,family})
@@ -819,7 +847,7 @@ else {
     // A stale inbox lease is repaired inline (default attempt budget) before
     // any window exists; only repeated failures reach the repair dialog.
     if(inboxLeaseRecoveryRequired(relocation.pointer)&&!await recoverInboxLeaseAutomatically(bootstrapPath,{assertColdHost:assertInboxColdHost}))return launchInboxLeaseRecovery(bootstrapPath,assertInboxColdHost)
-    return launch()
+    try{return await launch()}catch(error){failedRootPath=relocation.pointer?.root.path??null;throw error}
   }
   const failed=async(error:unknown)=>{
     if (isolatedRoot) console.error(error)
@@ -830,7 +858,11 @@ else {
         if(worker&&!ordinaryWorkerExited){await worker.terminate();if(!ordinaryWorkerExited)throw Error("WORKER_EXIT_UNCONFIRMED")}
       }catch{dialog.showErrorBox("玄印写作无法启动","本地数据未能安全打开。原文件已保留，请检查目录和权限。");app.exit(1);return}
       failedRootCode=null
-      try{await openStartupRecovery(startupPaths!.defaultRoot);return}
+      // A failed custom (non-default) root is never wiped by the offer: that
+      // target is always the family default root, so keep the plain error box.
+      const brokenRoot=failedRootPath;failedRootPath=null
+      if(brokenRoot&&!samePath(brokenRoot,recoveryRootFor(startupPaths!.encryptionFamily))){dialog.showErrorBox("玄印写作无法启动","本地数据未能安全打开。原文件已保留，请检查目录和权限。");app.exit(1);return}
+      try{await launchConfigResetOffer("worker-startup-failed");return}
       catch{dialog.showErrorBox("玄印写作无法启动","本地数据未能安全打开。原文件已保留，请检查目录和权限。");app.exit(1);return}
     }
     const legacy=error instanceof Error&&error.message.startsWith("LEGACY_BACKUP_RECOVERY")

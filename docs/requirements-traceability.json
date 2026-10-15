@@ -4405,5 +4405,52 @@
     },
     "limits": "未跑全量（用户约束）；对话框路径本身未改动；系统 Node v20.12.2 不满足 engines，构建/集成/演示统一经 npx node@24；OS 级文件占用导致的隔离 rename 失败维持现有错误框路径；归属不明的 dialog 分类保留用户决策",
     "evidence": "docs/evidence/startup-auto-repair/（s1 强杀前后、s2a 标记重建、s2b 指针修复、s3 设置隔离 5 张真实窗口截图与 report.json）"
+  },
+  "configDeletionSelfHealRevision": {
+    "date": "2026-10-15",
+    "scope": "配置目录被任意删除/破坏后的启动自愈：归属明确时静默结构重建（inbox、inbox/database、catalog.json、inboxReady 翻转、并发指针/标记问题）；无法安全修复时进入真实主界面+模态对话框（清空全部配置并重启 / 退出），清空经 executeStartupReset 后自动重启重建",
+    "status": "implemented-and-scoped-verified",
+    "research": "docs/194-config-deletion-self-heal-research.md",
+    "product": "docs/195-config-deletion-self-heal-product.md",
+    "testCases": "docs/196-config-deletion-self-heal-cases.md",
+    "planReview": "docs/197-config-deletion-self-heal-review.md",
+    "codeReview": "docs/198-config-deletion-self-heal-code-review.md",
+    "verification": "docs/199-config-deletion-self-heal-verification.md",
+    "testIds": [
+      "SR-U-71",
+      "SR-U-71b",
+      "SR-U-72",
+      "SR-U-14",
+      "SR-U-64",
+      "IL42-16",
+      "IL116-S06",
+      "SR-U-104b",
+      "SR-U-105",
+      "SR-U-106",
+      "SR-U-106b",
+      "SR-U-108",
+      "SR-U-109",
+      "SR-U-110",
+      "CR-01",
+      "CR-02",
+      "CR-03",
+      "CR-04",
+      "SR-I-07",
+      "SR-I-08"
+    ],
+    "changes": {
+      "main": "classifyStartupRecovery/executeStartupRepair 新增 repair:content（重建 inbox/、inbox/database/，catalog 缺失写空/损坏隔离写空，inboxReady:true 且库缺失时隔离标记原子改写 false 并连带隔离有效指针防 relocation 阻塞，并发隔离不可解析指针/按语义重建标记）；catalogUsable 加解析校验；inbox-lease-recovery.ts 容忍 inbox 缺失；config-reset-offer.ts 新模块（host 注入纯 node 可测）；index.ts launchConfigResetOffer（临时根降级工作台+模态对话框+executeStartupReset+relaunch/退出/fatal，failedRootPath 自定义根保护）",
+      "service": "workspaces.ts run(inbox) 闸门放宽：容忍 inbox 内唯一条目为空 database 目录（content 修复产物），inboxReady:true 或其他内容仍拒绝自动重建",
+      "semantics": "安全红线：品牌冲突/根身份不符/symlink 根/无指针内容损坏 → dialog 进兜底；清空仅经用户 confirm=true；自定义根失败不进入清空提案"
+    },
+    "results": {
+      "scopedUnit": "83/83（Node 24）+ 影响面 143/144（唯一失败为 root-startup-main.test.ts win32 路径分隔符既有失败，HEAD 对照复现，与本改动无关）",
+      "scopedIntegration": "11/11（startup-recovery + inbox-lease，真实 PGlite worker，含 SR-I-07/SR-I-08）",
+      "typecheck": "passed",
+      "realElectronDemo": "13/13（scripts/demo-config-deletion.mjs：删 inbox+drafts/删 catalog/删 database 无感自愈，双品牌冲突主界面对话框清空重启全新重建，冲突退出进程退出原样保留，docs/evidence/config-deletion/ report.json passed:13 failed:0）",
+      "fullSuiteExecuted": false
+    },
+    "limits": "未跑全量（用户约束）；受限恢复窗口仍服务根迁移流程；行级 catalog 损坏（信封合法）由 worker 失败进兜底；临时根残留由 OS 清理",
+    "evidence": "docs/evidence/config-deletion/（d1/d2/d3 自愈后工作台、d4 兜底主界面、d4 清空重启后全新工作台 5 张真实窗口截图与 report.json）"
   }
 }

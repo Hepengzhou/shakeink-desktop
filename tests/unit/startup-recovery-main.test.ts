@@ -15,7 +15,7 @@ const loadSelection=source.statements.find(node=>node.getText(source).startsWith
 assert.ok(loadSelection)
 const branchCode=transformSync(branch.getText(source),{loader:'ts'}).code
 const loadCode=transformSync(loadSelection.getText(source),{loader:'ts'}).code
-interface RunResult{trace:string[];errors:string[];windows:{sourcePath:string|null;recoveryRoot:string}[];bindings:Record<string,any>}
+interface RunResult{trace:string[];errors:string[];windows:{reason:string;rootPath:string}[];bindings:Record<string,any>}
 function run(overrides:Record<string,unknown>|((bindings:Record<string,any>)=>Record<string,unknown>)={},load=false):RunResult{
  const trace:string[]=[],errors:string[]=[],windows:any[]=[]
  const bindings:Record<string,unknown>={
@@ -32,7 +32,8 @@ function run(overrides:Record<string,unknown>|((bindings:Record<string,any>)=>Re
   inboxLeaseRecoveryRequired:()=>{trace.push('inbox-preflight');return false},
   recoverInboxLeaseAutomatically:async()=>{trace.push('inbox-auto-repair');return true},
   launchInboxLeaseRecovery:async()=>{trace.push('inbox-window')},
-  launchStartupRecovery:async(_path:string,input:unknown)=>{const request=input as {sourcePath:string|null;recoveryRoot:string};trace.push('recovery-window');windows.push({sourcePath:request.sourcePath,recoveryRoot:request.recoveryRoot})},
+  samePath:(a:string,b:string)=>a===b,
+  offerConfigReset:async(input:unknown)=>{const request=input as {reason:string;rootPath:string};trace.push('reset-offer');windows.push({reason:request.reason,rootPath:request.rootPath})},
   launch:async()=>{trace.push('ordinary')},
   bootstrapPath:'/bootstrap',
   startupPaths:{bootstrap:'/bootstrap',defaultRoot:'/root',encryptionFamily:'current'},
@@ -63,37 +64,37 @@ test('SR-U-104 auto-init removes the dangling pointer, reselects matching paths 
  assert.equal(r.bindings.startupSelectionError,null)
  assert.deepEqual(r.windows,[])
 })
-test('SR-U-104b a failing auto-init/repair execution degrades to the recovery window without a partial launch',async()=>{
+test('SR-U-104b a failing auto-init/repair execution degrades to the reset offer without a partial launch',async()=>{
  for(const kind of[{kind:'auto-init'},{kind:'repair',repair:'marker'}]){
   const trace:string[]=[]
   const r=run({classifyStartupRecovery:()=>{trace.push('classify');return kind},executeStartupRepair:async()=>{throw Error('controlled repair failure')}})
   await tick()
-  assert.deepEqual(r.trace,['legacy','recovery-window']);assert.deepEqual(r.windows,[{sourcePath:null,recoveryRoot:'/home/.shakeink'}])
+  assert.deepEqual(r.trace,['legacy','reset-offer']);assert.deepEqual(r.windows,[{reason:'repair-failed',rootPath:'/home/.shakeink'}])
  }
 })
-test('SR-U-105 the dialog classification routes straight to the recovery window with its source path',async()=>{
+test('SR-U-105 the dialog classification routes straight to the reset offer with its reason',async()=>{
  const r=run({classifyStartupRecovery:()=>({kind:'dialog',reason:'content-damaged',sourcePath:'/root'})})
  await tick()
- assert.deepEqual(r.trace,['legacy','recovery-window'])
- assert.deepEqual(r.windows,[{sourcePath:'/root',recoveryRoot:'/home/.shakeink'}])
+ assert.deepEqual(r.trace,['legacy','reset-offer'])
+ assert.deepEqual(r.windows,[{reason:'content-damaged',rootPath:'/home/.shakeink'}])
 })
-test('SR-U-106 a startup barrier failure terminates the live worker before opening the recovery window',async()=>{
+test('SR-U-106 a startup barrier failure terminates the live worker before opening the reset offer',async()=>{
  const r=run(bindings=>({launch:async()=>{bindings.failedRootCode='ROOT_STARTUP_TIMEOUT';bindings.trace.push('ordinary');throw Error('ROOT_STARTUP_TIMEOUT')},worker:{terminate:async()=>{bindings.ordinaryWorkerExited=true;bindings.workerTerminated=true}}}))
  await tick()
- assert.deepEqual(r.trace,['legacy','classify','relocation-preflight','maintenance-preflight','inbox-preflight','ordinary','recovery-window'])
- assert.equal(r.bindings.workerTerminated,true,'worker terminated before the window')
+ assert.deepEqual(r.trace,['legacy','classify','relocation-preflight','maintenance-preflight','inbox-preflight','ordinary','reset-offer'])
+ assert.equal(r.bindings.workerTerminated,true,'worker terminated before the offer')
  assert.equal(r.bindings.failedRootCode,null)
- assert.deepEqual(r.windows,[{sourcePath:'/root',recoveryRoot:'/home/.shakeink'}])
+ assert.deepEqual(r.windows,[{reason:'worker-startup-failed',rootPath:'/home/.shakeink'}])
  assert.deepEqual(r.errors,[])
 })
-test('SR-U-106b worker already exited skips termination; terminate failure or window failure falls back to the error box',async()=>{
+test('SR-U-106b worker already exited skips termination; terminate failure or offer failure falls back to the error box',async()=>{
  const exited=run(bindings=>({launch:async()=>{bindings.failedRootCode='ROOT_STARTUP_TIMEOUT';throw Error('ROOT_STARTUP_TIMEOUT')},worker:{terminate:async()=>{throw Error('must not terminate an exited worker')}},ordinaryWorkerExited:true}))
  await tick()
- assert.deepEqual(exited.trace.slice(-1),['recovery-window']);assert.deepEqual(exited.errors,[])
+ assert.deepEqual(exited.trace.slice(-1),['reset-offer']);assert.deepEqual(exited.errors,[])
  const terminateFails=run(bindings=>({launch:async()=>{bindings.failedRootCode='ROOT_STARTUP_FAILED';throw Error('ROOT_STARTUP_FAILED')},worker:{terminate:async()=>{bindings.trace.push('terminate-failed');throw Error('EPERM')}}}))
  await tick()
  assert.deepEqual(terminateFails.trace.slice(-3),['terminate-failed','error-box','exit:1']);assert.deepEqual(terminateFails.windows,[])
- const windowFails=run(bindings=>({launch:async()=>{bindings.failedRootCode='ROOT_INITIALIZATION_FAILED';throw Error('ROOT_INITIALIZATION_FAILED')},worker:{terminate:async()=>{bindings.ordinaryWorkerExited=true}},launchStartupRecovery:async()=>{throw Error('window failed')}}))
+ const windowFails=run(bindings=>({launch:async()=>{bindings.failedRootCode='ROOT_INITIALIZATION_FAILED';throw Error('ROOT_INITIALIZATION_FAILED')},worker:{terminate:async()=>{bindings.ordinaryWorkerExited=true}},offerConfigReset:async()=>{throw Error('offer failed')}}))
  await tick()
  assert.deepEqual(windowFails.trace.slice(-2),['error-box','exit:1'])
 })
@@ -118,7 +119,7 @@ test('SR-U-108 a module-load BRAND_DEFAULT_INVALID carries family-aware recovery
  },true)
  await tick()
  assert.deepEqual(calls,[{paths:{bootstrap:'/bootstrap',recoveryRoot:'/home/.xuanxiang'},family:'legacy'}])
- assert.deepEqual(r.trace,['legacy','recovery-window']);assert.deepEqual(r.windows,[{sourcePath:null,recoveryRoot:'/home/.xuanxiang'}])
+ assert.deepEqual(r.trace,['legacy','reset-offer']);assert.deepEqual(r.windows,[{reason:'default-invalid',rootPath:'/home/.xuanxiang'}])
  assert.equal(r.bindings.startupPaths.encryptionFamily,'legacy')
 })
 test('SR-U-109 a reselection that would switch families is refused and never writes a pointer',async()=>{
@@ -128,19 +129,19 @@ test('SR-U-109 a reselection that would switch families is refused and never wri
   selectBrandStartupPaths:()=>({bootstrap:'/bootstrap',defaultRoot:'/home/.shakeink',encryptionFamily:'current'}),
  })
  await tick()
- assert.deepEqual(r.trace,['legacy','repair:pointer','recovery-window'])
- assert.deepEqual(r.windows,[{sourcePath:null,recoveryRoot:'/home/.xuanxiang'}])
+ assert.deepEqual(r.trace,['legacy','repair:pointer','reset-offer'])
+ assert.deepEqual(r.windows,[{reason:'repair-failed',rootPath:'/home/.xuanxiang'}])
  assert.equal(r.bindings.startupPaths.encryptionFamily,'legacy','original family selection retained')
 })
-test('SR-U-110 a none classification with a retained selection error reselects once, else opens the recovery window',async()=>{
+test('SR-U-110 a none classification with a retained selection error reselects once, else opens the reset offer',async()=>{
  const healed=run({startupSelectionError:new BrandStartupPathError('BRAND_DEFAULT_INVALID',{bootstrap:'/bootstrap',defaultRoot:'/root',encryptionFamily:'current'})})
  await tick()
  assert.deepEqual(healed.trace,['legacy','classify','reselect','relocation-preflight','maintenance-preflight','inbox-preflight','ordinary'])
  assert.equal(healed.bindings.startupSelectionError,null)
  const stillBroken=run({startupSelectionError:new BrandStartupPathError('BRAND_DEFAULT_INVALID',{bootstrap:'/bootstrap',defaultRoot:'/root',encryptionFamily:'current'}),selectBrandStartupPaths:()=>{throw Error('still invalid')}})
  await tick()
- assert.deepEqual(stillBroken.trace,['legacy','classify','recovery-window'])
- assert.deepEqual(stillBroken.windows,[{sourcePath:null,recoveryRoot:'/home/.shakeink'}])
+ assert.deepEqual(stillBroken.trace,['legacy','classify','reset-offer'])
+ assert.deepEqual(stillBroken.windows,[{reason:'paths-invalid',rootPath:'/home/.shakeink'}])
 })
 test('SR-U-111 a stale inbox lease is auto-repaired inline and startup continues to ordinary launch',async()=>{
  const r=run(bindings=>({

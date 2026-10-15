@@ -1,7 +1,7 @@
 import assert from "node:assert/strict"
 import { test } from "node:test"
 import { randomUUID } from "node:crypto"
-import { mkdtemp, mkdir, readdir, readFile, readlink, realpath, rm, symlink, writeFile } from "node:fs/promises"
+import { mkdtemp, mkdir, readdir, readFile, readlink, realpath, rm, symlink, writeFile, lstat } from "node:fs/promises"
 import { mkdirSync, renameSync, writeFileSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
@@ -150,30 +150,30 @@ test("SR-U-12/13/13b a missing or unparseable marker with complete content is re
   }
 })
 
-test("SR-U-14/14b/15/15b marker loss with damaged catalog or inbox is a content-damaged dialog", async () => {
+test("SR-U-14/14b/15/15b marker loss with damaged catalog or inbox self-heals as content repair", async () => {
   await fixture(async f => {
     await mkdir(join(f.root, "inbox", "database"), { recursive: true }); await writePointer(f.bootstrap, await pointerFor(f.root))
-    assert.deepEqual(classifyStartupRecovery(f.paths, "current"), { kind: "dialog", reason: "content-damaged", sourcePath: f.root })
+    assert.deepEqual(classifyStartupRecovery(f.paths, "current"), { kind: "repair", repair: "content" })
   })
   await fixture(async f => {
     await mkdir(join(f.root, "inbox", "database"), { recursive: true }); await mkdir(join(f.root, "catalog.json"))
     await writePointer(f.bootstrap, await pointerFor(f.root))
-    assert.deepEqual(classifyStartupRecovery(f.paths, "current"), { kind: "dialog", reason: "content-damaged", sourcePath: f.root })
+    assert.deepEqual(classifyStartupRecovery(f.paths, "current"), { kind: "repair", repair: "content" })
   })
   await fixture(async f => {
     await mkdir(join(f.root, "inbox", "database"), { recursive: true }); await writeFile(join(f.base, "catalog-real"), "{}"); await symlink(join(f.base, "catalog-real"), join(f.root, "catalog.json"))
     await writePointer(f.bootstrap, await pointerFor(f.root))
-    assert.deepEqual(classifyStartupRecovery(f.paths, "current"), { kind: "dialog", reason: "content-damaged", sourcePath: f.root })
+    assert.deepEqual(classifyStartupRecovery(f.paths, "current"), { kind: "repair", repair: "content" })
   })
   await fixture(async f => {
     await mkdir(join(f.root, "inbox"), { recursive: true }); await writeFile(join(f.root, "catalog.json"), "{}")
     await writePointer(f.bootstrap, await pointerFor(f.root))
-    assert.deepEqual(classifyStartupRecovery(f.paths, "current"), { kind: "dialog", reason: "content-damaged", sourcePath: f.root })
+    assert.deepEqual(classifyStartupRecovery(f.paths, "current"), { kind: "repair", repair: "content" })
   })
   await fixture(async f => {
     await mkdir(f.root); await mkdir(join(f.base, "inbox-real", "database"), { recursive: true }); await symlink(join(f.base, "inbox-real"), join(f.root, "inbox"), "dir"); await writeFile(join(f.root, "catalog.json"), "{}")
     await writePointer(f.bootstrap, await pointerFor(f.root))
-    assert.deepEqual(classifyStartupRecovery(f.paths, "current"), { kind: "dialog", reason: "content-damaged", sourcePath: f.root })
+    assert.deepEqual(classifyStartupRecovery(f.paths, "current"), { kind: "repair", repair: "content" })
   })
 })
 
@@ -461,7 +461,7 @@ test("SR-U-63 a relative, symlinked or unexpected recovery root is refused befor
   })
 })
 
-test("SR-U-64 a crash after the validity flags leaves a dialog-classified residue and a retry converges", async () => {
+test("SR-U-64 a crash after the validity flags self-heals to a consistent empty structure and a retry still converges", async () => {
   await resetFixture(async f => {
     const id = await healthyRoot(f.root, "current"); await writeFile(join(f.root, "state.json"), "{}")
     const pointer = await pointerFor(f.root, id); await writePointer(f.bootstrap, pointer)
@@ -470,7 +470,8 @@ test("SR-U-64 a crash after the validity flags leaves a dialog-classified residu
     assert.equal(calls, 4)
     assert.equal((await readdir(f.root)).includes("shakeink-app.json"), false)
     assert.equal((await readdir(f.root)).includes("catalog.json"), false)
-    assert.deepEqual(classifyStartupRecovery(f.paths, "current"), { kind: "dialog", reason: "content-damaged", sourcePath: f.root })
+    // 195 R1（197 审核 P0-2 决策）：半清空根按「能修则修」自愈为一致空结构，取代旧的 dialog 归类。
+    assert.deepEqual(classifyStartupRecovery(f.paths, "current"), { kind: "repair", repair: "content" })
     await reset(f.paths, f.root)
     assert.deepEqual(await readdir(f.root), [])
     assert.deepEqual(await readdir(f.bootstrap), [])
@@ -541,5 +542,127 @@ test("SR-U-70 a live custom pointer target is never touched while the default ro
     assert.deepEqual(await readdir(f.bootstrap), [])
     assert.equal(await readFile(join(custom, "author.txt"), "utf8"), "自定义目录原字节")
     assert.equal(readApplicationBrandImmediately(brandRootIdentity(custom)).value.id, id)
+  })
+})
+
+test("SR-U-71 a valid marker/pointer with damaged content structure classifies as content repair", async () => {
+  await fixture(async f => {
+    const id = await healthyRoot(f.root, "current"); await rm(join(f.root, "inbox"), { recursive: true, force: true })
+    await writePointer(f.bootstrap, await pointerFor(f.root, id))
+    assert.deepEqual(classifyStartupRecovery(f.paths, "current"), { kind: "repair", repair: "content" })
+  })
+  await fixture(async f => {
+    const id = await healthyRoot(f.root, "current"); await rm(join(f.root, "inbox", "database"), { recursive: true, force: true })
+    await writePointer(f.bootstrap, await pointerFor(f.root, id))
+    assert.deepEqual(classifyStartupRecovery(f.paths, "current"), { kind: "repair", repair: "content" })
+  })
+  await fixture(async f => {
+    const id = await healthyRoot(f.root, "current"); await rm(join(f.root, "catalog.json"), { force: true })
+    await writePointer(f.bootstrap, await pointerFor(f.root, id))
+    assert.deepEqual(classifyStartupRecovery(f.paths, "current"), { kind: "repair", repair: "content" })
+  })
+  await fixture(async f => {
+    const id = await healthyRoot(f.root, "current"); await rm(join(f.root, "inbox"), { recursive: true, force: true }); await rm(join(f.root, "catalog.json"), { force: true })
+    await writePointer(f.bootstrap, await pointerFor(f.root, id))
+    assert.deepEqual(classifyStartupRecovery(f.paths, "current"), { kind: "repair", repair: "content" })
+  })
+  await fixture(async f => {
+    const id = await healthyRoot(f.root, "current"); await writeFile(join(f.root, "catalog.json"), "{损坏目录")
+    await writePointer(f.bootstrap, await pointerFor(f.root, id))
+    assert.deepEqual(classifyStartupRecovery(f.paths, "current"), { kind: "repair", repair: "content" })
+  })
+  // An unparseable pointer with a still-valid marker and damaged content is one content repair.
+  await fixture(async f => {
+    await healthyRoot(f.root, "current"); await rm(join(f.root, "inbox"), { recursive: true, force: true })
+    await writeFile(join(f.bootstrap, "data-root.json"), "{损坏指针")
+    assert.deepEqual(classifyStartupRecovery(f.paths, "current"), { kind: "repair", repair: "content" })
+  })
+  // A valid marker without any pointer still owns its id: damaged content self-heals too.
+  await fixture(async f => {
+    await healthyRoot(f.root, "current"); await rm(join(f.root, "catalog.json"), { force: true })
+    assert.deepEqual(classifyStartupRecovery(f.paths, "current"), { kind: "repair", repair: "content" })
+  })
+})
+
+test("SR-U-71b content repair never fires for ambiguous ownership", async () => {
+  // No pointer and no marker: no id source, never mint one over unknown content.
+  await fixture(async f => {
+    await mkdir(join(f.root, "inbox", "database"), { recursive: true })
+    assert.deepEqual(classifyStartupRecovery(f.paths, "current"), { kind: "dialog", reason: "default-invalid", sourcePath: null })
+  })
+  // An unparseable pointer plus a missing/rebuildable marker has no identity proof.
+  await fixture(async f => {
+    await mkdir(join(f.root, "inbox", "database"), { recursive: true }); await writeFile(join(f.bootstrap, "data-root.json"), "{损坏指针")
+    assert.deepEqual(classifyStartupRecovery(f.paths, "current"), { kind: "dialog", reason: "pointer-invalid", sourcePath: null })
+  })
+  // Brand conflict stays a dialog.
+  await fixture(async f => {
+    await healthyRoot(f.root, "current"); await writeFile(join(f.root, "xuanxiang-app.json"), markerText("legacy", randomUUID()))
+    await writePointer(f.bootstrap, await pointerFor(f.root))
+    const result = classifyStartupRecovery(f.paths, "current")
+    assert.equal(result.kind, "dialog")
+  })
+})
+
+test("SR-U-72 content repair rebuilds structure, preserves bytes and flips inboxReady only when the database is gone", async () => {
+  // Case A: catalog-only damage leaves the marker byte-identical and flips nothing.
+  await fixture(async f => {
+    const id = await healthyRoot(f.root, "current"), markerBytes = markerText("current", id)
+    await rm(join(f.root, "catalog.json"), { force: true })
+    const pointer = await pointerFor(f.root, id); await writePointer(f.bootstrap, pointer)
+    await repair(f.paths, "content")
+    assert.equal(await readFile(join(f.root, "shakeink-app.json"), "utf8"), markerBytes)
+    assert.deepEqual(JSON.parse(await readFile(join(f.root, "catalog.json"), "utf8")), { schemaVersion: 1, revision: 0, value: [] })
+    assert.deepEqual((await readdir(f.root)).filter(name => name.includes("corrupt")), [])
+    assert.deepEqual(classifyStartupRecovery(f.paths, "current"), { kind: "none" })
+  })
+  // Case B: missing inbox flips inboxReady with the same id and quarantines the original marker byte-for-byte.
+  await fixture(async f => {
+    const id = randomUUID()
+    await mkdir(join(f.root, "inbox", "database"), { recursive: true })
+    await writeFile(join(f.root, "shakeink-app.json"), markerText("current", id, "ready", true))
+    await writeFile(join(f.root, "catalog.json"), JSON.stringify({ schemaVersion: 1, revision: 0, value: [] }))
+    const pointer = await pointerFor(f.root, id); await writePointer(f.bootstrap, pointer)
+    await rm(join(f.root, "inbox"), { recursive: true, force: true })
+    await repair(f.paths, "content")
+    const inbox = await lstat(join(f.root, "inbox")), database = await lstat(join(f.root, "inbox", "database"))
+    assert.equal(inbox.isDirectory() && !inbox.isSymbolicLink(), true); assert.equal(database.isDirectory() && !database.isSymbolicLink(), true)
+    assert.deepEqual(await readdir(join(f.root, "inbox", "database")), [])
+    const brand = readApplicationBrandImmediately(brandRootIdentity(f.root))
+    assert.deepEqual(brand.value, { schemaVersion: 1, app: "ShakeInk", id, phase: "ready", inboxReady: false })
+    const entries = await readdir(f.root), quarantined = entries.filter(name => /^shakeink-app\.json\.corrupt-.+\.json$/.test(name))
+    assert.equal(quarantined.length, 1)
+    assert.equal(await readFile(join(f.root, quarantined[0]), "utf8"), markerText("current", id, "ready", true))
+    // inboxReady flipped false: the still-valid pointer is quarantined too
+    // (repair:pointer semantics) so the relocation preflight cannot block.
+    const bootEntries = await readdir(f.bootstrap), pointerQuarantine = bootEntries.filter(name => /^data-root\.corrupt-.+\.json$/.test(name))
+    assert.equal(pointerQuarantine.length, 1)
+    assert.equal(JSON.parse(await readFile(join(f.bootstrap, pointerQuarantine[0]), "utf8")).rootId, id)
+    assert.equal(bootEntries.includes("data-root.json"), false)
+    // Idempotent: a second run changes nothing and does not throw.
+    await repair(f.paths, "content")
+    assert.deepEqual((await readdir(f.root)).filter(name => /^shakeink-app\.json\.corrupt-.+\.json$/.test(name)).length, 1)
+  })
+  // Case C: unparseable pointer + corrupt catalog + missing inbox/database is one idempotent repair pass.
+  await fixture(async f => {
+    const id = await healthyRoot(f.root, "current")
+    await rm(join(f.root, "inbox", "database"), { recursive: true, force: true })
+    await writeFile(join(f.root, "catalog.json"), "{损坏目录"); await writeFile(join(f.bootstrap, "data-root.json"), "{损坏指针")
+    await repair(f.paths, "content")
+    const bootEntries = await readdir(f.bootstrap), pointerQuarantine = bootEntries.filter(name => /^data-root\.corrupt-.+\.json$/.test(name))
+    assert.equal(pointerQuarantine.length, 1); assert.equal(await readFile(join(f.bootstrap, pointerQuarantine[0]), "utf8"), "{损坏指针")
+    const rootEntries = await readdir(f.root), catalogQuarantine = rootEntries.filter(name => /^catalog\.corrupt-.+\.json$/.test(name))
+    assert.equal(catalogQuarantine.length, 1); assert.equal(await readFile(join(f.root, catalogQuarantine[0]), "utf8"), "{损坏目录")
+    assert.deepEqual(JSON.parse(await readFile(join(f.root, "catalog.json"), "utf8")), { schemaVersion: 1, revision: 0, value: [] })
+    assert.equal(readApplicationBrandImmediately(brandRootIdentity(f.root)).value.inboxReady, false)
+    const database = await lstat(join(f.root, "inbox", "database")); assert.equal(database.isDirectory(), true)
+  })
+  // Guards: a failing lock assertion rejects before any write.
+  await fixture(async f => {
+    const id = await healthyRoot(f.root, "current"); await rm(join(f.root, "inbox"), { recursive: true, force: true })
+    await writePointer(f.bootstrap, await pointerFor(f.root, id))
+    const before = await snapshot(f.base)
+    await assert.rejects(repair(f.paths, "content", "current", { assertLock() { throw Error("LOCK_REQUIRED") } }))
+    assert.deepEqual(await snapshot(f.base), before)
   })
 })

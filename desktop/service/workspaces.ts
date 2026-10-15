@@ -317,7 +317,14 @@ export class Workspaces {
           let markerObservation=await this.rootBrand()
           const marker = markerObservation.value,assertRegistration=()=>markerObservation.assertCurrent()
           try { await this.validateDatabase(path) } catch {
-            if (marker.inboxReady || (await readdir(path)).length) throw new Error("全局收件箱数据库缺失，不能自动重建")
+            // A content-repaired inbox holds at most one empty "database"
+            // directory; that is rebuildable. A ready marker or any other
+            // content means real data was expected and is never rebuilt.
+            const entries = await readdir(path).catch(() => [] as string[])
+            const rebuildable = entries.length === 0 || (entries.length === 1 && entries[0] === "database" &&
+              await lstat(join(path, "database")).then(info => info.isDirectory() && !info.isSymbolicLink(), () => false) &&
+              !(await readdir(join(path, "database"))).length)
+            if (marker.inboxReady || !rebuildable) throw new Error("全局收件箱数据库缺失，不能自动重建")
             create = true
           }
           assertRegistration()

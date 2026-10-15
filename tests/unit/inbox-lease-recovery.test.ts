@@ -94,3 +94,10 @@ test('IL42-15 a live owner is never repaired and exhausts the budget untouched',
   assert.equal(await readFile(f.ownerPath,'utf8'),bytes);await assert.rejects(lstat(join(f.inbox,'.xuanxiang-lease-recovery.json')),{code:'ENOENT'})
  }finally{await f.cleanup()}
 })
+test('IL42-16 a missing inbox is not a lease matter',async()=>{
+ const f=await fixture();try{
+  await rm(f.inbox,{recursive:true,force:true})
+  assert.equal(inboxLeaseRecoveryRequired(f.pointer),false)
+  await assert.rejects(prepareInboxLeaseRecovery(f.boot,f.options))
+ }finally{await f.cleanup()}
+})

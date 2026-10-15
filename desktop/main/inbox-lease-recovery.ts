@@ -16,7 +16,10 @@ export function inboxLeaseRecoveryRequired(value:RootPointer|null):boolean {
  if(!value)return false
  const pointer=DataRootManager.parsePointer(value)
  const names=applicationNames(pointer.root),marker=assertCurrentApplicationMarker(pointer)
- const inbox=directoryImmediately(join(pointer.root.path,'inbox'))
+ // A missing or structurally broken inbox is content damage owned by startup
+ // classification/repair, never a lease matter.
+ let inbox:RootIdentity
+ try{inbox=directoryImmediately(join(pointer.root.path,'inbox'))}catch{return false}
  assertBrandControls(inbox,names);const audit=observeWorkLeaseAudit(inbox,names)
  let lockPresent=false
  try{lstatSync(join(inbox.path,names.lock));lockPresent=true}catch(error){if((error as NodeJS.ErrnoException).code!=='ENOENT')throw error}

@@ -178,17 +178,44 @@ test("SR-I-06 a reset root cold-starts into a completely fresh initialization", 
   } finally { await f.close() }
 })
 
-test("SR-I-07 catalog damage beyond repair scope fails the worker with a routed startup code", { timeout: 180_000 }, async () => {
+test("SR-I-07 a damaged catalog self-heals via content repair and the real worker starts", { timeout: 180_000 }, async () => {
   const f = await fixture()
   try {
     await initialized(f)
     await writeFile(join(f.root, "catalog.json"), "{损坏目录索引")
-    assert.deepEqual(classifyStartupRecovery(f.paths(), "current"), { kind: "none" }, "marker and pointer stay intact, so classification leaves it to the worker barrier")
+    assert.deepEqual(classifyStartupRecovery(f.paths(), "current"), { kind: "repair", repair: "content" }, "unparseable catalog classifies as content repair (196 C01)")
+    await executeStartupRepair(f.paths(), "content", "current", noopGuards)
+    const quarantined = (await readdir(f.root)).filter(name => /^catalog\.corrupt-.+\.json$/.test(name))
+    assert.equal(quarantined.length, 1)
+    assert.equal(await readFile(join(f.root, quarantined[0]), "utf8"), "{损坏目录索引")
     const running = await launch(f.root, f.bootstrap)
     try {
-      const result = running.result()
-      assert.equal(result.status, "failed")
-      assert.ok(["ROOT_STARTUP_FAILED", "ROOT_INITIALIZATION_FAILED"].includes(result.status === "failed" ? result.code : ""), "the failure code routes to the recovery dialog in main")
+      assert.deepEqual(running.result(), { version: 1, status: "ready", root: f.root })
+      await running.rpc.call("ready")
+      assert.deepEqual(JSON.parse(await readFile(join(f.root, "catalog.json"), "utf8")).value, [])
+    } finally { await running.close() }
+  } finally { await f.close() }
+})
+
+test("SR-I-08 a deleted inbox/database self-heals via content repair and the real worker rebuilds it with the same identity", { timeout: 180_000 }, async () => {
+  const f = await fixture()
+  try {
+    const original = await initialized(f)
+    await rm(join(f.root, "inbox", "database"), { recursive: true, force: true })
+    assert.deepEqual(classifyStartupRecovery(f.paths(), "current"), { kind: "repair", repair: "content" })
+    await executeStartupRepair(f.paths(), "content", "current", noopGuards)
+    const marker = await readMarker(f.root)
+    assert.equal(marker.id, original.id); assert.equal(marker.inboxReady, false, "repair flips inboxReady for the worker create path")
+    const quarantinedPointer = (await readdir(f.bootstrap)).filter(name => /^data-root\.corrupt-.+\.json$/.test(name))
+    assert.equal(quarantinedPointer.length, 1, "the still-valid pointer is quarantined so the relocation preflight cannot block")
+    const running = await launch(f.root, f.bootstrap)
+    try {
+      assert.deepEqual(running.result(), { version: 1, status: "ready", root: f.root })
+      await running.rpc.call("ready")
+      const reopened = await readMarker(f.root)
+      assert.equal(reopened.id, original.id); assert.equal(reopened.inboxReady, true, "worker rebuilds the database and flips back")
+      assert.ok(await exists(join(f.root, "inbox", "database", "PG_VERSION")))
+      assert.equal((await readPointer(f.bootstrap)).rootId, original.id, "pointer is rewritten with the same root id")
     } finally { await running.close() }
   } finally { await f.close() }
 })
