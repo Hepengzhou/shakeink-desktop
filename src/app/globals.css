@@ -671,10 +671,17 @@
   }
 
   /* composer 引用 chip（contenteditable 输入框内的 @[类型/名称]）：无气泡，图标/头像 + 高亮名称；删除靠 Backspace/Delete */
-  .chat-composer-editable:empty::before {
+  /* 占位文案必须脱离文档流：Chromium 会把空 contenteditable 的光标绘制在
+     行内 ::before 之后；absolute（不指定偏移，保持静态位置）让光标回到行首 */
+  .chat-composer-editable {
+    position: relative;
+  }
+  .chat-composer-editable:empty::before,
+  .chat-composer-editable[data-desktop-empty="true"]::before {
     content: attr(data-placeholder);
     color: color-mix(in oklab, var(--muted-foreground) 70%, transparent);
     pointer-events: none;
+    position: absolute;
   }
   .composer-chip {
     display: inline-flex;

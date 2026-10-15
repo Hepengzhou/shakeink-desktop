@@ -2123,7 +2123,6 @@ export function ChatPanel({
             }}
             className={cn(
               "chat-composer-editable max-h-[420px] w-full overflow-y-auto bg-transparent px-3.5 pt-3 pb-1 text-[13.5px] leading-[1.6] wrap-break-word whitespace-pre-wrap text-foreground outline-none",
-              "data-[desktop-empty=true]:before:content-[attr(data-placeholder)] data-[desktop-empty=true]:before:text-muted-foreground/70 data-[desktop-empty=true]:before:pointer-events-none",
               showWelcome ? "min-h-[48px]" : "min-h-[52px]"
             )}
           />
