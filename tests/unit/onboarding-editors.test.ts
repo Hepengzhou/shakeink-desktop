@@ -4,7 +4,7 @@ import { test } from "node:test"
 import { transformSync } from "esbuild"
 import { defaultState, settingsSchema, parseContextWindow, type PublicModel } from "../../desktop/core/settings"
 import { PROVIDER_PRESETS, presetsFor } from "../../desktop/shared/model-catalog"
-import { modelChoices, excludedBuiltinModel } from "../../desktop/shared/builtin-model-catalog"
+import { modelChoices, excludedBuiltinModel, offlineCatalog } from "../../desktop/shared/builtin-model-catalog"
 import { onboardingDialogGuard } from "../../src/lib/desktop/onboarding-flow"
 
 // Executes the real editors with isolated hook instances and controlled IPC.
@@ -42,7 +42,7 @@ function editor(file: "ProfileSettings" | "ModelConfigurationDialog", exportName
     if (name === "./ModelChoiceSelect") return primitives(["ModelChoiceSelect"])
     if (name === "@desktop/core/settings") return { settingsSchema, parseContextWindow }
     if (name === "@desktop/shared/model-catalog") return { PROVIDER_PRESETS, presetsFor }
-    if (name === "@desktop/shared/builtin-model-catalog") return { modelChoices, excludedBuiltinModel }
+    if (name === "@desktop/shared/builtin-model-catalog") return { modelChoices, excludedBuiltinModel, offlineCatalog }
     if (name === "@/lib/desktop/onboarding-flow") return { onboardingDialogGuard }
     if (name === "@/stores/desktop") return { useDesktopStore: (select: (value: unknown) => unknown) => select({ bootstrap: state }), saveDesktopModel: async (draft: any) => { saves.push(draft) }, saveDesktopProfile: async (...args: any[]) => { saves.push(args) } }
     throw new Error(`Unexpected editor dependency: ${name}`)
@@ -189,6 +189,20 @@ test("ONB editor: suspension cancels discovery and a late catalog cannot repopul
   const ui = editor("ModelConfigurationDialog", "ModelConfigurationDialog", { kind: "TEXT", model: textModel, open: true, onClose() {}, onboarding: { onSubmit: async () => {}, onSelectExisting: async () => {} } }, { models: [textModel], discover: () => pending.promise })
   try {
     ui.fill("API Key", "public-onboarding-fixture-key"); ui.openChoice("可用模型"); assert.equal(ui.discoveries.length, 1); ui.setProps({ open: false }); assert.ok(ui.canceled.includes(ui.discoveries[0])); pending.resolve({ ok: true, complete: true, models: [], warnings: ["late-catalog-fixture"], checkedAt: new Date().toISOString() }); await ui.settle(); ui.setProps({ open: true }); assert.equal(ui.find("API Key").element.props.value, "public-onboarding-fixture-key"); assert.equal(ui.all().some(surface => surface.name.includes("late-catalog-fixture")), false)
+  } finally { ui.finish() }
+})
+test("ONB editor: key input auto-refreshes and a removed selection is replaced with the next available model", async () => {
+  let changed = 0
+  const ui = editor("ModelConfigurationDialog", "ModelConfigurationDialog", { kind: "TEXT", onClose() {}, onboarding: { onSubmit: async () => {}, onSelectExisting: async () => {}, onDraftChanged: () => changed++ } }, { discover: async () => ({ ok: true, provider: "deepseek", kind: "TEXT", models: [{ id: "deepseek-v4-pro", name: "deepseek-v4-pro", kind: "TEXT", contextWindow: 128000, permission: "listed-unverified", source: "fixture" }], authoritative: true, complete: true, unknownCapabilityIds: [], permission: "listed-unverified", sources: [], checkedAt: new Date().toISOString(), warnings: [] }) })
+  try {
+    ui.select("可用模型", "deepseek-flash")
+    ui.fill("API Key", "public-onboarding-fixture-key"); await ui.settle()
+    assert.equal(ui.discoveries.length, 0); const afterFill = changed
+    await new Promise(resolve => setTimeout(resolve, 650)); await ui.settle()
+    assert.equal(ui.discoveries.length, 1)
+    assert.equal(ui.find("可用模型").element.props.value, "deepseek-v4-pro")
+    assert.ok(changed > afterFill)
+    assert.ok(ui.all().some(surface => surface.element.props.role === "status" && surface.name.includes("已替换为下一个可用模型")))
   } finally { ui.finish() }
 })
 test("ONB editor: failed Back keeps the same avatar session and a suspended chooser cannot apply a late preview", async () => {

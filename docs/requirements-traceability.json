@@ -34,6 +34,26 @@
     "results": {"scopedTests": "29/29", "independentDirectoryTests": "12/12", "actualWindowsElectronChecks": "5/5", "typecheck": "passed", "build": "passed", "fullSuiteExecuted": false},
     "limits": "Windows development Electron with real IPC/disk/restart; official responses are public protocol fixtures. No real Key, paid call, macOS or installed-package claim. Does not change repository-wide acceptance."
   },
+  "modelKeyAutoRefreshRevision": {
+    "date": "2026-10-15",
+    "scope": "配置模型对话框：填入/更新 API Key 防抖 500ms 自动刷新模型目录；刷新后已选型号失效时自动替换为下一个可用型号（无替代才清空；缓存读取路径不变）",
+    "status": "implemented-and-scoped-verified",
+    "product": "docs/model-key-auto-refresh/02-product.md",
+    "testCases": "docs/model-key-auto-refresh/03-test-cases.md",
+    "planReview": "独立子代理方案+用例审核（会话内进行）：3 阻塞项（挂载守卫、empty-refresh 等待信号、手动入口取消挂起定时器）已全部落实",
+    "codeReview": "独立子代理 diff 审核（会话内进行）：无阻塞；KR-03 顺序补强、onOpen 入口用例、基线 04 注记等建议已落实",
+    "verification": "docs/model-key-auto-refresh/07-verification.md",
+    "supersedes": "修订 docs/model-catalog-fix/02-product.md 规则 2 与 03-test-cases.md MC-09/MC-12 期望（02/03/04 已加 2026-10-15 注记）",
+    "testIds": ["KR-01", "KR-02", "KR-03", "KR-04", "KR-05", "KR-06", "KR-07", "MC-09", "MC-12"],
+    "changes": {
+      "renderer": "ModelConfigurationDialog：keyRefresh 计数 effect 防抖调度 discover()（挂载/重开不触发；edit/changeMode/navigate/close/open=false/discover 入口取消挂起定时器；confirming ref 复查防过期闭包；presetsFor 成员判定拦截 legacy 供应商）；reconcileSelection(entries, replace) 刷新路径自动替换下一个可用且未重复添加的型号并提示，缓存读取路径保持清空语义；目录说明文案更新为自动刷新",
+      "tests": "model-settings.test.ts 新增 KR-01..KR-05 并改写 MC-09/KR-04；onboarding-editors.test.ts 新增引导侧自动刷新+替换用例并补 offlineCatalog mock",
+      "e2e": "verify-model-catalog-refresh.mjs 两个 MC-12 检查改为填 Key 后以夹具调用计数轮询等待自动刷新，断言自动替换与提示文案"
+    },
+    "results": {"scopedUnitAndIntegration": "73/76（3 个失败为 HEAD 既有，stash 比对复现，与本轮无关）", "scopedBrowser": "5/6（系统 Chrome；IP-05 legacy google 为 HEAD 既有失败）", "typecheck": "passed", "build": "build:ui+build:desktop passed（prisma generate 在 Node 20 下 ERR_REQUIRE_ESM，schema 未变沿用既有产物）", "realElectronAcceptance": "5/5（scripts/verify-model-catalog-refresh.mjs windows-key-auto-refresh）", "fullSuiteExecuted": "false（用户指示禁止全量）"},
+    "evidence": "docs/evidence/model-catalog-fix/windows-key-auto-refresh/（report JSON 与 live-replaced/empty-updated 等截图）",
+    "limits": "官方接口为受控夹具，无真实 Key/付费调用；未跑全量；macOS 与安装包不在本轮范围；浏览器层以系统 Chrome 代替 Electron Chromium。"
+  },
   "alphaReleaseRevision": {
     "date": "2026-10-14",
     "version": "0.1.0-alpha",

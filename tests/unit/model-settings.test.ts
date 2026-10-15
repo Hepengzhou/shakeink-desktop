@@ -182,14 +182,82 @@ test("MC-09: saved retired selection is absent and cannot bypass blank-Key save 
 
 const mcCatalog=(models:catalog.CatalogEntry[],extra:Partial<catalog.CatalogResult>={}):catalog.CatalogResult=>({ok:true,provider:"deepseek",kind:"TEXT",models,authoritative:true,complete:true,unknownCapabilityIds:[],permission:"listed-unverified",sources:[],checkedAt:"2026-10-15T00:00:00Z",warnings:[],...extra})
 const mcEntry=(id:string):catalog.CatalogEntry=>({id,name:id,kind:"TEXT",permission:"listed-unverified",source:"https://fixture.invalid/models",contextWindow:16000})
-test("MC-09: live replacement clears missing draft selection and blocks save/test without writing model",async()=>{
+test("MC-09/KR-04: live replacement auto-selects the next available model and saves it",async()=>{
   const ui=configuration({discover:async()=>mcCatalog([mcEntry("deepseek-v4-pro")])})
   try{
     ui.choose("可用模型","deepseek-flash");ui.fill("API Key","public-catalog-ui-fixture");ui.click("刷新模型列表");await ui.settle()
-    assert.equal(ui.find("可用模型").element.props.value,"")
+    assert.equal(ui.find("可用模型").element.props.value,"deepseek-v4-pro")
     assert.deepEqual((ui.find("可用模型").element.props.options as Array<{id:string}>).map(row=>row.id),["deepseek-v4-pro"])
+    assert.ok(ui.all().some(row=>row.element.props.role==="status"&&row.name.includes("已替换为下一个可用模型")))
+    ui.click("保存模型");await ui.settle();assert.equal(ui.writes.length,1);assert.equal((ui.writes[0] as {modelId:string}).modelId,"deepseek-v4-pro")
+  }finally{ui.finish()}
+})
+test("KR-04: automatic replacement skips models already added in the same scope",async()=>{
+  const existing=sample({id:"00000000-0000-4000-8000-000000000009",provider:"deepseek",endpoint:"https://api.deepseek.com",modelId:"deepseek-v4-pro"})
+  const ui=configuration({models:[existing],discover:async()=>mcCatalog([mcEntry("deepseek-v4-pro"),{...mcEntry("deepseek-v5"),contextWindow:32000}])})
+  try{
+    ui.choose("可用模型","deepseek-flash");ui.fill("API Key","public-catalog-ui-fixture");ui.click("刷新模型列表");await ui.settle()
+    assert.equal(ui.find("可用模型").element.props.value,"deepseek-v5")
+    ui.click("保存模型");await ui.settle();assert.equal((ui.writes[0] as {modelId:string;contextWindow:number}).modelId,"deepseek-v5")
+    assert.equal((ui.writes[0] as {modelId:string;contextWindow:number}).contextWindow,32000)
+  }finally{ui.finish()}
+})
+test("KR-04: opening the model list triggers the same refresh-and-replace without a duplicate request",async()=>{
+  const ui=configuration({discover:async()=>mcCatalog([mcEntry("deepseek-v4-pro")])})
+  try{
+    ui.choose("可用模型","deepseek-flash");ui.fill("API Key","public-catalog-ui-fixture");ui.open("可用模型");await ui.settle()
+    assert.equal(ui.discovered.length,1)
+    assert.equal(ui.find("可用模型").element.props.value,"deepseek-v4-pro")
+    assert.ok(ui.all().some(row=>row.element.props.role==="status"&&row.name.includes("已替换为下一个可用模型")))
+  }finally{ui.finish()}
+})
+test("KR-05: refresh without any available replacement clears the selection and blocks save/test",async()=>{
+  const ui=configuration({discover:async()=>mcCatalog([])})
+  try{
+    ui.choose("可用模型","deepseek-flash");ui.fill("API Key","public-catalog-ui-fixture");ui.click("刷新模型列表");await ui.settle()
+    assert.equal(ui.find("可用模型").element.props.value,"")
+    assert.deepEqual(ui.find("可用模型").element.props.options,[])
+    assert.ok(ui.all().some(row=>row.element.props.role==="status"&&row.name.includes("请重新选择可用模型")))
     ui.click("保存模型");ui.click("测试连接");await ui.settle();assert.equal(ui.writes.length,0);assert.equal(ui.tested.length,0)
-    ui.choose("可用模型","deepseek-v4-pro");ui.click("保存模型");await ui.settle();assert.equal(ui.writes.length,1);assert.equal((ui.writes[0] as {modelId:string}).modelId,"deepseek-v4-pro")
+  }finally{ui.finish()}
+})
+test("KR-01: typing an API Key auto-refreshes the catalog once with the latest key",async()=>{
+  const ui=configuration({discover:async()=>mcCatalog([mcEntry("deepseek-v4-pro")])})
+  try{
+    ui.fill("API Key","public-key-a");ui.fill("API Key","public-key-ab");ui.fill("API Key","public-key-abc")
+    assert.equal(ui.discovered.length,0)
+    await new Promise(resolve=>setTimeout(resolve,650));await ui.settle()
+    assert.equal(ui.discovered.length,1);assert.equal(ui.discovered[0].apiKey,"public-key-abc")
+    assert.deepEqual((ui.find("可用模型").element.props.options as Array<{id:string}>).map(row=>row.id),["deepseek-v4-pro"])
+  }finally{ui.finish()}
+})
+test("KR-02: custom provider, blank key, mount and reveal-on-open never auto-refresh",async()=>{
+  const idle=configuration()
+  try{await new Promise(resolve=>setTimeout(resolve,650));await idle.settle();assert.equal(idle.discovered.length,0)}finally{idle.finish()}
+  const custom=configuration()
+  try{
+    custom.choose("供应商","custom");custom.fill("供应商名称","公开夹具");custom.choose("协议","openai");custom.fill("API Key","public-custom-fixture")
+    await new Promise(resolve=>setTimeout(resolve,650));await custom.settle();assert.equal(custom.discovered.length,0)
+  }finally{custom.finish()}
+  const revealed=configuration({model:sample(),reveal:async()=>"saved-key-fixture"})
+  try{
+    await revealed.settle();assert.equal(revealed.find("API Key").element.props.value,"saved-key-fixture")
+    await new Promise(resolve=>setTimeout(resolve,650));await revealed.settle();assert.equal(revealed.discovered.length,0)
+  }finally{revealed.finish()}
+})
+test("KR-03: provider switch cancels a pending key auto-refresh; plain model selection does not",async()=>{
+  const ui=configuration({discover:async()=>mcCatalog([mcEntry("deepseek-flash")])})
+  try{
+    ui.fill("API Key","public-key-fixture");ui.choose("供应商","openai")
+    await new Promise(resolve=>setTimeout(resolve,650));await ui.settle();assert.equal(ui.discovered.length,0)
+    ui.choose("供应商","deepseek");ui.choose("可用模型","deepseek-flash");ui.fill("API Key","public-key-fixture")
+    await new Promise(resolve=>setTimeout(resolve,650));await ui.settle()
+    assert.equal(ui.discovered.length,1);assert.equal(ui.discovered[0].apiKey,"public-key-fixture");assert.equal(ui.discovered[0].provider,"deepseek")
+    assert.equal(ui.find("可用模型").element.props.value,"deepseek-flash")
+    ui.fill("API Key","public-key-second");ui.choose("可用模型","deepseek-flash")
+    await new Promise(resolve=>setTimeout(resolve,650));await ui.settle()
+    assert.equal(ui.discovered.length,2);assert.equal(ui.discovered[1].apiKey,"public-key-second")
+    assert.equal(ui.find("可用模型").element.props.value,"deepseek-flash")
   }finally{ui.finish()}
 })
 test("MC-10: pending cache hides old seeds; persisted snapshot without a Key clears missing saved model",async()=>{

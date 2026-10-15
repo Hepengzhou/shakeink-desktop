@@ -42,9 +42,11 @@ export function ModelConfigurationDialog({ kind, model, onClose, finalFocus, ope
   const [result,setResult] = useState<ConnectionTestResult | ConfigurationFailure | null>(null)
   const [tested,setTested] = useState<{ provider:string; endpoint:string; modelId:string } | null>(null)
   const [showKey,setShowKey] = useState(false)
+  const [keyRefresh,setKeyRefresh] = useState(0)
   const operation = useRef<string | null>(null), discovery = useRef<string | null>(null), alive = useRef(true), locking = useRef(false), visible = useRef(open), blocked = useRef(!!onboarding?.blocked)
   const revealedKey = useRef<string | null>(null)
-  visible.current = open; blocked.current = !!onboarding?.blocked
+  const autoRefresh = useRef<ReturnType<typeof setTimeout> | null>(null), confirming = useRef(!!onboarding?.confirmationPending)
+  visible.current = open; blocked.current = !!onboarding?.blocked; confirming.current = !!onboarding?.confirmationPending
   const testButton = useRef<HTMLButtonElement>(null)
   const custom = draft.provider === "custom"
   const scopeMatches = !!model && model.provider === draft.provider && model.protocol === draft.protocol && model.endpoint === draft.endpoint && model.kind === draft.kind
@@ -56,7 +58,8 @@ export function ModelConfigurationDialog({ kind, model, onClose, finalFocus, ope
   function cancelRequests() {
     for (const ref of [operation,discovery]) { const id = ref.current; ref.current = null; if (id) void window.desktop?.cancelModelConfiguration(id).catch(() => {}) }
   }
-  useEffect(() => { alive.current = true; return () => { alive.current = false; cancelRequests() } }, [])
+  function cancelAutoRefresh() { if (autoRefresh.current !== null) { clearTimeout(autoRefresh.current); autoRefresh.current = null } }
+  useEffect(() => { alive.current = true; return () => { alive.current = false; cancelRequests(); cancelAutoRefresh() } }, [])
   useEffect(() => {
     const id = model?.id
     const reveal = typeof window === "undefined" ? undefined : window.desktop?.revealModelKey
@@ -74,7 +77,7 @@ export function ModelConfigurationDialog({ kind, model, onClose, finalFocus, ope
   }, [open, model])
   useEffect(() => {
     if (open) return
-    cancelRequests(); setDiscovering(false); setResult(null); setCatalog(null); setCacheChecking(true)
+    cancelRequests(); cancelAutoRefresh(); setDiscovering(false); setResult(null); setCatalog(null); setCacheChecking(true)
     if (busy === "test") setBusy("")
   }, [open])
   useEffect(() => {
@@ -95,30 +98,49 @@ export function ModelConfigurationDialog({ kind, model, onClose, finalFocus, ope
     })
     return () => { current = false }
   }, [open,directoryScope])
-  function reconcileSelection(entries: ReturnType<typeof modelChoices>) {
+  useEffect(() => {
+    if (!keyRefresh) return
+    cancelAutoRefresh()
+    autoRefresh.current = setTimeout(() => {
+      autoRefresh.current = null
+      if (confirming.current || !presetsFor(kind).some(preset => preset.id === draft.provider)) return
+      void discover()
+    }, 500)
+    return cancelAutoRefresh
+  }, [keyRefresh])
+  function reconcileSelection(entries: ReturnType<typeof modelChoices>, replace = false) {
     setDraft(before => {
       if (!before.modelId) return before
       const entry = entries.find(item => item.id === before.modelId)
-      if (!entry) { setCatalogError("原选型号已不在当前目录中，请重新选择可用模型。"); setContext(""); return {...before,modelId:"",name:"",contextWindow:0,thinkingLevels:[],defaultThinking:"default"} }
-      return {...before,contextWindow:entry.contextWindow??0,thinkingLevels:entry.thinkingLevels??[],defaultThinking:entry.defaultThinking??"default"}
+      if (entry) return {...before,contextWindow:entry.contextWindow??0,thinkingLevels:entry.thinkingLevels??[],defaultThinking:entry.defaultThinking??"default"}
+      const next = replace ? entries.find(item => item.available !== false && !models.some(existing => existing.id !== before.id && existing.provider === before.provider && existing.kind === before.kind && existing.endpoint === before.endpoint && existing.modelId === item.id)) : undefined
+      if (!next) { setCatalogError("原选型号已不在当前目录中，请重新选择可用模型。"); setContext(""); return {...before,modelId:"",name:"",contextWindow:0,thinkingLevels:[],defaultThinking:"default"} }
+      setCatalogError("原选型号已不在当前目录中，已替换为下一个可用模型。"); setContext(""); setResult(null); onboarding?.onDraftChanged?.()
+      return {...before,modelId:next.id,name:next.name,contextWindow:next.contextWindow??0,thinkingLevels:next.thinkingLevels??[],defaultThinking:next.defaultThinking??"default"}
     })
   }
   function unavailable() { return !visible.current || blocked.current || locking.current || !!operation.current }
-  function close() { if (!visible.current || blocked.current || locking.current) return; alive.current = false; cancelRequests(); onClose() }
+  function close() { if (!visible.current || blocked.current || locking.current) return; alive.current = false; cancelRequests(); cancelAutoRefresh(); onClose() }
   function navigate(action?: () => void) {
     if (!visible.current || blocked.current || locking.current || onboarding?.confirmationPending) return
-    cancelRequests(); setDiscovering(false); setBusy(""); setResult(null); action?.()
+    cancelRequests(); cancelAutoRefresh(); setDiscovering(false); setBusy(""); setResult(null); action?.()
   }
   function changeMode(existing: boolean) {
     if (unavailable() || onboarding?.confirmationPending) return
-    cancelRequests(); setDiscovering(false); setCatalog(null); setCatalogError(""); setResult(null); setError(""); setUseExisting(existing); setExistingId(null); setDraft(before => ({ ...before, apiKey: "" })); onboarding?.onDraftChanged?.()
+    cancelRequests(); cancelAutoRefresh(); setDiscovering(false); setCatalog(null); setCatalogError(""); setResult(null); setError(""); setUseExisting(existing); setExistingId(null); setDraft(before => ({ ...before, apiKey: "" })); onboarding?.onDraftChanged?.()
   }
   function edit(change: Partial<Draft>, clearScope = false) {
     if (unavailable() || onboarding?.confirmationPending) return
+    if (clearScope || "apiKey" in change || "provider" in change || "protocol" in change || "endpoint" in change) cancelAutoRefresh()
     if (discovery.current) { void window.desktop?.cancelModelConfiguration(discovery.current).catch(() => {}); discovery.current = null }
     setDiscovering(false); setCatalog(null); setCatalogError(""); setError(""); setResult(null)
     setDraft(before => ({...before,...change,...(clearScope ? {apiKey:"",thinkingLevels:[],defaultThinking:"default"} : {})}))
     onboarding?.onDraftChanged?.()
+  }
+  function editKey(value: string) {
+    if (unavailable() || onboarding?.confirmationPending) return
+    edit({ apiKey: value })
+    setKeyRefresh(before => before + 1)
   }
   function invalid(message: string, field: string): never {
     if (typeof document !== "undefined") document.querySelector<HTMLElement>(`[aria-label="${field}"]`)?.focus()
@@ -140,6 +162,7 @@ export function ModelConfigurationDialog({ kind, model, onClose, finalFocus, ope
     return { ...draft, apiKey:config.apiKey, protocol:config.protocol, contextWindow:custom ? context.trim() ? parseContextWindow(context) : 0 : draft.contextWindow }
   }
   async function discover() {
+    cancelAutoRefresh()
     if (unavailable() || onboarding?.confirmationPending || useExisting || discovery.current || custom || !hasKey || !window.desktop) return
     const id = crypto.randomUUID(); discovery.current = id; setDiscovering(true); setCatalogError("")
     try {
@@ -150,7 +173,7 @@ export function ModelConfigurationDialog({ kind, model, onClose, finalFocus, ope
         if (response.authoritative === true || response.complete) {
           setCacheChecking(false)
           setCatalog(response); setCached({scope:directoryScope,value:offlineCatalog(response)})
-          reconcileSelection(modelChoices(draft.provider as ConfigurationProviderId,kind,response))
+          reconcileSelection(modelChoices(draft.provider as ConfigurationProviderId,kind,response),true)
         }
         if (!response.complete) setCatalogError(response.authoritative ? "目录已更新；部分型号能力尚未确认，仅显示已确认类别的型号。" : "目录尚不完整，已保留原目录，请重新刷新。")
       }
@@ -208,8 +231,8 @@ export function ModelConfigurationDialog({ kind, model, onClose, finalFocus, ope
         {onboarding && useExisting ? <Field title={`已配置${kind === "TEXT" ? "文本" : "文生图"}模型`}><ModelChoiceSelect label="已配置模型" value={existingId} options={existingOptions} disabled={fieldsDisabled} placeholder="请选择已配置模型" onChange={id => { if (unavailable() || onboarding?.confirmationPending) return; setExistingId(id); setError(""); onboarding.onDraftChanged?.() }} /><small>只选用已启用的{kind === "TEXT" ? "文本" : "文生图"}模型；保留原凭据，不重新添加。</small></Field> : <>
           <Field title="供应商"><ModelChoiceSelect label="供应商" value={draft.provider} provider disabled={fieldsDisabled} selectedOption={{id:draft.provider,label:draft.providerName || PROVIDER_PRESETS.find(preset => preset.id === draft.provider)?.name || draft.provider,provider:draft.provider}} options={presetsFor(kind).map(preset => ({id:preset.id,label:preset.name,provider:preset.id}))} onChange={id => { const preset=presetsFor(kind).find(item => item.id === id)!; setContext(""); edit({provider:id,providerName:"",protocol:preset.protocol ?? "",endpoint:(kind === "TEXT" ? preset.textEndpoint : preset.imageEndpoint) ?? "",modelId:"",name:"",contextWindow:0},true) }} /></Field>
           {custom && <><Field title="供应商名称"><Input aria-label="供应商名称" value={draft.providerName ?? ""} onChange={event => edit({providerName:event.target.value})} /></Field><Field title="协议"><select aria-label="协议" value={draft.protocol} onChange={event => edit({protocol:event.target.value as Draft["protocol"]},true)}><option value="" disabled>请选择协议</option><option value="openai">OpenAI</option><option value="anthropic">Anthropic</option></select></Field><Field title="展示名称"><Input aria-label="展示名称" value={draft.name} onChange={event => edit({name:event.target.value})} /></Field><Field title="Base URL"><Input aria-label="Base URL" value={draft.endpoint} placeholder="https://…" onChange={event => edit({endpoint:event.target.value},true)} /></Field><Field title="模型 ID"><Input aria-label="模型 ID" value={draft.modelId} onChange={event => edit({modelId:event.target.value})} /></Field></>}
-          <Field title="API Key"><div className="relative"><Input aria-label="API Key" type={showKey ? "text" : "password"} data-desktop-clipboard="api-key" autoComplete="off" spellCheck={false} className="pr-9" value={draft.apiKey} placeholder={scopeMatches ? "已配置，留空保留原密钥" : "请输入 API Key"} onChange={event => edit({apiKey:event.target.value})} /><Button type="button" variant="ghost" size="icon-sm" className="absolute top-0.5 right-1 text-muted-foreground transition-none active:not-aria-[haspopup]:translate-y-0" aria-label={showKey ? "隐藏 API Key" : "显示 API Key"} aria-pressed={showKey} onClick={() => setShowKey(value => !value)}>{showKey ? <Eye size={16} /> : <EyeOff size={16} />}</Button></div></Field>
-          {custom ? <details><summary className="cursor-pointer text-sm text-muted-foreground">高级配置</summary><Field title="上下文上限（可选）"><Input aria-label="上下文上限" value={context} placeholder="例如 128K 或 1M" onChange={event => { if (unavailable() || onboarding?.confirmationPending) return; setContext(event.target.value); setError(""); onboarding?.onDraftChanged?.() }} /><small>未配置时采用 16K 输入预算，不表示模型实际容量。</small></Field></details> : <Field title="可用模型"><div className="flex gap-2"><ModelChoiceSelect label="可用模型" value={draft.modelId} options={catalogOptions} disabled={fieldsDisabled} placeholder={discovering || loadingCatalog ? "正在读取模型列表…" : "请选择可用模型"} onOpen={() => { if (!catalog) void discover() }} onChange={id => { if (unavailable() || onboarding?.confirmationPending) return; const entry=choices.find(item => item.id === id); if (entry && entry.available !== false) { setDraft(before => ({...before,modelId:id,name:entry.name,contextWindow:entry.contextWindow ?? 0,thinkingLevels:entry.thinkingLevels ?? [],defaultThinking:entry.defaultThinking ?? "default"})); setError(""); onboarding?.onDraftChanged?.() } }} /><Button variant="outline" size="icon" aria-label="刷新模型列表" disabled={fieldsDisabled || discovering || !hasKey} onClick={() => { void discover() }}>{discovering ? <LoaderCircle className="size-4 animate-spin" /> : <RefreshCw size={16} />}</Button></div><small>显示已核对的内置目录或上次刷新的官方目录；填写 API Key 后可刷新。调用权限取决于当前 Key。</small>{catalogError && <small role="status">{catalogError}</small>}{catalog?.warnings.map(warning => <small key={warning} role="status">{warning}</small>)}{shownCatalog && <small>目录获取于 {new Date(shownCatalog.checkedAt).toLocaleString()}；列出不代表当前 Key 有调用权限。</small>}</Field>}
+          <Field title="API Key"><div className="relative"><Input aria-label="API Key" type={showKey ? "text" : "password"} data-desktop-clipboard="api-key" autoComplete="off" spellCheck={false} className="pr-9" value={draft.apiKey} placeholder={scopeMatches ? "已配置，留空保留原密钥" : "请输入 API Key"} onChange={event => editKey(event.target.value)} /><Button type="button" variant="ghost" size="icon-sm" className="absolute top-0.5 right-1 text-muted-foreground transition-none active:not-aria-[haspopup]:translate-y-0" aria-label={showKey ? "隐藏 API Key" : "显示 API Key"} aria-pressed={showKey} onClick={() => setShowKey(value => !value)}>{showKey ? <Eye size={16} /> : <EyeOff size={16} />}</Button></div></Field>
+          {custom ? <details><summary className="cursor-pointer text-sm text-muted-foreground">高级配置</summary><Field title="上下文上限（可选）"><Input aria-label="上下文上限" value={context} placeholder="例如 128K 或 1M" onChange={event => { if (unavailable() || onboarding?.confirmationPending) return; setContext(event.target.value); setError(""); onboarding?.onDraftChanged?.() }} /><small>未配置时采用 16K 输入预算，不表示模型实际容量。</small></Field></details> : <Field title="可用模型"><div className="flex gap-2"><ModelChoiceSelect label="可用模型" value={draft.modelId} options={catalogOptions} disabled={fieldsDisabled} placeholder={discovering || loadingCatalog ? "正在读取模型列表…" : "请选择可用模型"} onOpen={() => { if (!catalog) void discover() }} onChange={id => { if (unavailable() || onboarding?.confirmationPending) return; const entry=choices.find(item => item.id === id); if (entry && entry.available !== false) { setDraft(before => ({...before,modelId:id,name:entry.name,contextWindow:entry.contextWindow ?? 0,thinkingLevels:entry.thinkingLevels ?? [],defaultThinking:entry.defaultThinking ?? "default"})); setError(""); onboarding?.onDraftChanged?.() } }} /><Button variant="outline" size="icon" aria-label="刷新模型列表" disabled={fieldsDisabled || discovering || !hasKey} onClick={() => { void discover() }}>{discovering ? <LoaderCircle className="size-4 animate-spin" /> : <RefreshCw size={16} />}</Button></div><small>显示已核对的内置目录或上次刷新的官方目录；填写或更新 API Key 后自动刷新。调用权限取决于当前 Key。</small>{catalogError && <small role="status">{catalogError}</small>}{catalog?.warnings.map(warning => <small key={warning} role="status">{warning}</small>)}{shownCatalog && <small>目录获取于 {new Date(shownCatalog.checkedAt).toLocaleString()}；列出不代表当前 Key 有调用权限。</small>}</Field>}
         </>}
       </fieldset>
       {onboarding?.confirmationPending && <p role="status" className="desktop-onboarding-form-hint">上次提交已保存，请先点击继续确认写入后再修改。</p>}
