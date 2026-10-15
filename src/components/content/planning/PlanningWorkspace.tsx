@@ -241,6 +241,30 @@ function PlanningWorkspace({
       document.removeEventListener("click", click, true);
     };
   }, []);
+  // 卡片「…」菜单（data-card-menu 的 details）：点击菜单外或 Escape 时关闭；
+  // 菜单项点击由 details 自身 onClick 在按钮回调之后冒泡关闭。
+  useEffect(() => {
+    const menus = () =>
+      document.querySelectorAll<HTMLElement>("details[data-card-menu][open]");
+    const down = (e: PointerEvent) => {
+      for (const menu of menus())
+        if (!menu.contains(e.target as Node)) menu.removeAttribute("open");
+    };
+    const key = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      for (const menu of menus()) {
+        menu.removeAttribute("open");
+        if (menu.contains(document.activeElement))
+          menu.querySelector<HTMLElement>("summary")?.focus();
+      }
+    };
+    document.addEventListener("pointerdown", down, true);
+    document.addEventListener("keydown", key, true);
+    return () => {
+      document.removeEventListener("pointerdown", down, true);
+      document.removeEventListener("keydown", key, true);
+    };
+  }, []);
   useEffect(() => {
     const tabId = buildTabId(
       mode === "world"
@@ -735,7 +759,13 @@ function PlanningWorkspace({
             {data.chapters.find((ch) => ch.id === cardChapter(data, c))
               ?.title || "未分章"}
           </span>
-          <details>
+          <details
+            data-card-menu=""
+            onClick={(e) => {
+              if ((e.target as Element).closest("button"))
+                e.currentTarget.open = false;
+            }}
+          >
             <summary aria-label={`${c.title}更多操作`}>
               <MoreHorizontal size={18} />
             </summary>
@@ -1935,7 +1965,13 @@ function PlanningWorkspace({
           >
             {e.title}
           </h3>
-          <details>
+          <details
+            data-card-menu=""
+            onClick={(e) => {
+              if ((e.target as Element).closest("button"))
+                e.currentTarget.open = false;
+            }}
+          >
             <summary aria-label={`${e.title}更多操作`}>
               <MoreHorizontal size={18} />
             </summary>
