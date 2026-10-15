@@ -1,5 +1,29 @@
 {
   "version": "1.0",
+  "modelResolveHealingRevision": {
+    "date": "2026-10-15",
+    "scope": "已配置可用模型却弹「当前任务没有可用模型/审核模型已不存在」：任务持有的失效模型记录 UUID（冻结快照/显式选择）在解析期自愈到当前配置的对应角色默认模型",
+    "status": "implemented-and-scoped-verified",
+    "research": "docs/model-resolve-healing/01-research.md",
+    "product": "docs/model-resolve-healing/02-technical-plan.md",
+    "testCases": "docs/model-resolve-healing/03-test-cases.md",
+    "implementation": "docs/model-resolve-healing/04-implementation.md",
+    "reviews": "docs/model-resolve-healing/05-reviews.md",
+    "verification": "docs/model-resolve-healing/06-verification.md",
+    "summary": "docs/model-resolve-healing/07-summary.md",
+    "testIds": ["HEAL-01", "HEAL-02", "HEAL-03", "HEAL-04", "HEAL-05", "HEAL-06", "HEAL-07", "HEAL-08", "DEFAULT-04", "DEFAULT-27"],
+    "changes": {
+      "main": "ModelService.resolve() 显式 id 失效且 intent!==\"selection\" 时回退 settings.agent 对应角色当前默认再查一次；其余校验与错误码不变；无 IPC/schema/前端改动",
+      "semantics": "保留：显式 null 阻断、审核不落回文本、不挑未配置的剩余记录、selection 严格校验；网络边界由 gateway.begin(旧 UUID)→MODEL_UNAVAILABLE 兜底"
+    },
+    "results": {
+      "tddRed": "HEAL-01/02①/06/08 + DEFAULT-27 前半修复前如预期失败",
+      "scopedTests": "46/46（03 §5 的 7 个目标文件，Electron 内嵌 Node v24）",
+      "typecheck": "passed",
+      "fullSuiteExecuted": false
+    },
+    "limits": "按用户约束未跑全量；未做安装包与真实供应商验证。系统 Node v20 下 5 个既有用例因 Promise.withResolvers 失败，修复前后集合相同，与本次无关。"
+  },
   "apiKeyRevealRevision": {
     "date": "2026-10-15",
     "scope": "配置模型对话框回填已保存 API Key（默认密文）、眼睛图标切换明文/密文、密文不可复制且右键菜单【复制】禁用、明文可复制",

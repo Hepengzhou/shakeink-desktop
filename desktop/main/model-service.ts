@@ -32,9 +32,15 @@ export class ModelService {
     const selection = selectionSchema.parse(value)
     const state = await this.repository.read()
     const kind = selection.role === "image" ? "IMAGE" : "TEXT"
-    const id = selection.id === undefined ? state.settings.agent[selection.role === "image" ? "imageModelId" : selection.role === "review" ? "reviewModelId" : "textModelId"] : selection.id
+    const roleKey = selection.role === "image" ? "imageModelId" : selection.role === "review" ? "reviewModelId" : "textModelId"
+    const id = selection.id === undefined ? state.settings.agent[roleKey] : selection.id
     if (!id) throw new ModelAuthorizationError(state.models.some(model => model.kind === kind) ? "MODEL_NOT_SELECTED" : "MODEL_NOT_CONFIGURED")
-    const model = state.models.find(model => model.id === id)
+    let model = state.models.find(model => model.id === id)
+    if (!model && selection.intent !== "selection") {
+      // Stale frozen references recover only to the role's currently configured default.
+      const fallback = state.settings.agent[roleKey]
+      if (fallback && fallback !== id) model = state.models.find(model => model.id === fallback)
+    }
     if (!model) throw new ModelAuthorizationError("MODEL_NOT_FOUND")
     if (!model.enabled) throw new ModelAuthorizationError("MODEL_DISABLED")
     if (model.kind !== kind) throw new ModelAuthorizationError("MODEL_KIND_MISMATCH")

@@ -44,8 +44,9 @@ test("DEFAULT-03: main emits only committed keyless defaults and old snapshots s
   assert.equal(next.textModelId, f.state.settings.agent.textModelId); assert.equal(next.revision, 8)
   assert.equal(JSON.stringify(before).includes("main-private-fixture-key"), false); assert.equal(f.requests(), 0)
 })
-test("DEFAULT-04: absent and disabled explicit records are accurately blocked instead of falling back", async () => {
+test("DEFAULT-04: absent and disabled explicit records are accurately blocked when no configured default remains", async () => {
   const f = fixture()
+  f.state.settings.agent.textModelId = null
   await assert.rejects(f.service.resolve({ role: "text", id: randomUUID() }), /MODEL_NOT_FOUND/)
   f.state.models[0].enabled = false
   await assert.rejects(f.service.resolve({ role: "text", id: f.text }), /MODEL_DISABLED/)
