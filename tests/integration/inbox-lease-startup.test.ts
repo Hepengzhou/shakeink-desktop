@@ -11,7 +11,7 @@ import {build} from 'esbuild'
 import {RpcPeer} from '../../desktop/service/rpc'
 import {DataRootManager} from '../../desktop/core/data-root'
 import {readRootStartup,createRootStartupBuffer} from '../../desktop/shared/root-startup'
-import {inboxLeaseRecoveryRequired,prepareInboxLeaseRecovery} from '../../desktop/main/inbox-lease-recovery'
+import {inboxLeaseRecoveryRequired,prepareInboxLeaseRecovery,recoverInboxLeaseAutomatically} from '../../desktop/main/inbox-lease-recovery'
 import {defaultState} from '../../desktop/core/settings'
 import {freezeTaskDefaults} from '../../desktop/shared/task-defaults'
 
@@ -61,6 +61,14 @@ test('IL42-PG02 explicit inbox lease repair changes no database bytes; actual PG
  const f=await fixture();try{
   const before=await f.databaseHashes(),session=await prepareInboxLeaseRecovery(f.bootstrap,f.options)
   assert.equal((await session.recover(true)).status,'recovered');session.assertRecovered();assert.deepEqual(await f.databaseHashes(),before);assert.equal(inboxLeaseRecoveryRequired(f.pointer),false)
+  const running=await f.launch();try{assert.deepEqual(running.result(),{version:1,status:'ready',root:f.root});const reply=await f.request(running.rpc,'/api/admin/prompts');assert.equal(reply.status,200);assert(reply.data.prompts.some((row:{key:string;content:string})=>row.key==='inbox42-original'&&row.content==='原有中文数据必须保留'))}finally{await running.close()}
+  await assert.rejects(lstat(join(f.root,'inbox/.shakeink-lock')),{code:'ENOENT'});assert.equal(inboxLeaseRecoveryRequired(f.pointer),false)
+ }finally{await f.cleanup()}
+})
+test('IL42-PG03 automatic repair recovers the stale lease with the default budget and the real built worker starts retained data intact', {timeout:90000},async()=>{
+ const f=await fixture();try{
+  const before=await f.databaseHashes(),repaired=await recoverInboxLeaseAutomatically(f.bootstrap,{...f.options,wait:async()=>{}})
+  assert.equal(repaired,true);assert.equal(inboxLeaseRecoveryRequired(f.pointer),false);assert.deepEqual(await f.databaseHashes(),before)
   const running=await f.launch();try{assert.deepEqual(running.result(),{version:1,status:'ready',root:f.root});const reply=await f.request(running.rpc,'/api/admin/prompts');assert.equal(reply.status,200);assert(reply.data.prompts.some((row:{key:string;content:string})=>row.key==='inbox42-original'&&row.content==='原有中文数据必须保留'))}finally{await running.close()}
   await assert.rejects(lstat(join(f.root,'inbox/.shakeink-lock')),{code:'ENOENT'});assert.equal(inboxLeaseRecoveryRequired(f.pointer),false)
  }finally{await f.cleanup()}

@@ -6,14 +6,29 @@
     "status": "implemented-and-scoped-verified",
     "research": "docs/api-key-reveal/01-research.md",
     "product": "docs/api-key-reveal/02-product.md",
-    "testIds": ["K01", "K02", "K03", "K04", "K05", "K06", "K07", "K09"],
+    "testIds": [
+      "K01",
+      "K02",
+      "K03",
+      "K04",
+      "K05",
+      "K06",
+      "K07",
+      "K09"
+    ],
     "changes": {
       "main": "ModelRepository.revealKey(id) 解密已存凭据（含停用模型）；desktop:model-reveal-key IPC（trusted+businessGate+z.uuid）",
       "preload": "revealModelKey 桥接；DesktopBridge 类型",
       "renderer": "ModelConfigurationDialog 异步回填（竞态/范围守卫）、Eye/EyeOff 切换 type=password/text、未修改的回填 Key 映射为空串保持留空保留原密钥与不提升 authRevision；input-commands/native-text-edits/text-context-selection 移除掩码态复制例外，按 data-desktop-clipboard 属性继续禁止引用外发",
       "semantics": "密文态复制/剪切三层禁用（命令 enabled、剪贴板 available、菜单能力布尔）；明文态回到普通文本框原生行为"
     },
-    "results": {"scopedUnitAndIntegration": "166/169（3 个失败为工作树内进行中 model-catalog 工作所致，已用改动前对话框复现确认与本功能无关）", "scopedBrowser": "4/4（系统 Chrome，SHAKEINK_TEST_CHROMIUM）", "typecheck": "passed", "realElectronAcceptance": "15/15（隔离数据根 + 真实保存 IPC 落 Key + 真实原生菜单/系统剪贴板 + 眼睛按钮无动画计算样式与按压几何断言，scripts/verify-api-key-reveal.mjs）", "fullSuiteExecuted": false},
+    "results": {
+      "scopedUnitAndIntegration": "166/169（3 个失败为工作树内进行中 model-catalog 工作所致，已用改动前对话框复现确认与本功能无关）",
+      "scopedBrowser": "4/4（系统 Chrome，SHAKEINK_TEST_CHROMIUM）",
+      "typecheck": "passed",
+      "realElectronAcceptance": "15/15（隔离数据根 + 真实保存 IPC 落 Key + 真实原生菜单/系统剪贴板 + 眼睛按钮无动画计算样式与按压几何断言，scripts/verify-api-key-reveal.mjs）",
+      "fullSuiteExecuted": false
+    },
     "evidence": "docs/evidence/api-key-reveal/（密文回填、明文、回切密文三张截图与 report.json 菜单能力记录）",
     "limits": "未跑全量；未做真实 macOS 验证；浏览器用例用系统 Chrome 代替 Electron Chromium。密钥仅经新 IPC 进入渲染进程输入框，不进日志/事件/对话引用；演示使用隔离数据根与公开假 Key，已清理测试剪贴板与临时目录。"
   },
@@ -30,8 +45,29 @@
     "codeReview": "docs/model-catalog-fix/06-code-review.md",
     "verification": "docs/model-catalog-fix/07-verification.md",
     "summary": "docs/model-catalog-fix/08-summary.md",
-    "testIds": ["MC-01", "MC-02", "MC-03", "MC-04", "MC-05", "MC-06", "MC-07", "MC-08", "MC-09", "MC-10", "MC-11", "MC-12", "MC-13"],
-    "results": {"scopedTests": "29/29", "independentDirectoryTests": "12/12", "actualWindowsElectronChecks": "5/5", "typecheck": "passed", "build": "passed", "fullSuiteExecuted": false},
+    "testIds": [
+      "MC-01",
+      "MC-02",
+      "MC-03",
+      "MC-04",
+      "MC-05",
+      "MC-06",
+      "MC-07",
+      "MC-08",
+      "MC-09",
+      "MC-10",
+      "MC-11",
+      "MC-12",
+      "MC-13"
+    ],
+    "results": {
+      "scopedTests": "29/29",
+      "independentDirectoryTests": "12/12",
+      "actualWindowsElectronChecks": "5/5",
+      "typecheck": "passed",
+      "build": "passed",
+      "fullSuiteExecuted": false
+    },
     "limits": "Windows development Electron with real IPC/disk/restart; official responses are public protocol fixtures. No real Key, paid call, macOS or installed-package claim. Does not change repository-wide acceptance."
   },
   "modelKeyAutoRefreshRevision": {
@@ -44,13 +80,30 @@
     "codeReview": "独立子代理 diff 审核（会话内进行）：无阻塞；KR-03 顺序补强、onOpen 入口用例、基线 04 注记等建议已落实",
     "verification": "docs/model-key-auto-refresh/07-verification.md",
     "supersedes": "修订 docs/model-catalog-fix/02-product.md 规则 2 与 03-test-cases.md MC-09/MC-12 期望（02/03/04 已加 2026-10-15 注记）",
-    "testIds": ["KR-01", "KR-02", "KR-03", "KR-04", "KR-05", "KR-06", "KR-07", "MC-09", "MC-12"],
+    "testIds": [
+      "KR-01",
+      "KR-02",
+      "KR-03",
+      "KR-04",
+      "KR-05",
+      "KR-06",
+      "KR-07",
+      "MC-09",
+      "MC-12"
+    ],
     "changes": {
       "renderer": "ModelConfigurationDialog：keyRefresh 计数 effect 防抖调度 discover()（挂载/重开不触发；edit/changeMode/navigate/close/open=false/discover 入口取消挂起定时器；confirming ref 复查防过期闭包；presetsFor 成员判定拦截 legacy 供应商）；reconcileSelection(entries, replace) 刷新路径自动替换下一个可用且未重复添加的型号并提示，缓存读取路径保持清空语义；目录说明文案更新为自动刷新",
       "tests": "model-settings.test.ts 新增 KR-01..KR-05 并改写 MC-09/KR-04；onboarding-editors.test.ts 新增引导侧自动刷新+替换用例并补 offlineCatalog mock",
       "e2e": "verify-model-catalog-refresh.mjs 两个 MC-12 检查改为填 Key 后以夹具调用计数轮询等待自动刷新，断言自动替换与提示文案"
     },
-    "results": {"scopedUnitAndIntegration": "73/76（3 个失败为 HEAD 既有，stash 比对复现，与本轮无关）", "scopedBrowser": "5/6（系统 Chrome；IP-05 legacy google 为 HEAD 既有失败）", "typecheck": "passed", "build": "build:ui+build:desktop passed（prisma generate 在 Node 20 下 ERR_REQUIRE_ESM，schema 未变沿用既有产物）", "realElectronAcceptance": "5/5（scripts/verify-model-catalog-refresh.mjs windows-key-auto-refresh）", "fullSuiteExecuted": "false（用户指示禁止全量）"},
+    "results": {
+      "scopedUnitAndIntegration": "73/76（3 个失败为 HEAD 既有，stash 比对复现，与本轮无关）",
+      "scopedBrowser": "5/6（系统 Chrome；IP-05 legacy google 为 HEAD 既有失败）",
+      "typecheck": "passed",
+      "build": "build:ui+build:desktop passed（prisma generate 在 Node 20 下 ERR_REQUIRE_ESM，schema 未变沿用既有产物）",
+      "realElectronAcceptance": "5/5（scripts/verify-model-catalog-refresh.mjs windows-key-auto-refresh）",
+      "fullSuiteExecuted": "false（用户指示禁止全量）"
+    },
     "evidence": "docs/evidence/model-catalog-fix/windows-key-auto-refresh/（report JSON 与 live-replaced/empty-updated 等截图）",
     "limits": "官方接口为受控夹具，无真实 Key/付费调用；未跑全量；macOS 与安装包不在本轮范围；浏览器层以系统 Chrome 代替 Electron Chromium。"
   },
@@ -64,8 +117,45 @@
     "plan": "docs/reviews/2026-10-14-alpha-release-plan.md",
     "review": "docs/reviews/2026-10-14-alpha-release-review.md",
     "verification": "docs/reviews/2026-10-14-alpha-release-verification.md",
-    "results": {"versionTests": "5/5", "build": "passed", "packagingReview": "4/4", "packagedWindowsChecks": "22/22", "core": {"tests": 2069, "pass": 2028, "fail": 38, "cancelled": 1, "skipped": 2}, "browserInitial": {"tests": 550, "pass": 545, "fail": 5}, "browserAffectedFilesSerialRecheck": {"files": 4, "tests": 63, "pass": 63, "fail": 0, "stableSources": true}},
-    "localInstallation": {"date": "2026-10-14", "path": "C:/Program Files/xaanink", "renameNote": "2026-10-15 品牌改名 ShakeInk；该 path 为改名前 0.1.0-alpha 真实安装位置的事实记录，故意保留原名。新安装使用 shakeink 目录。", "previousVersion": "0.1.0", "version": "0.1.0-alpha", "installerExitCode": 0, "installedExecutableMatchesRelease": true, "projectResources": 340, "packagedFiles": 26763, "evidence": "docs/evidence/alpha-release/local-installation.json", "resourceEvidence": "docs/evidence/alpha-release/local-installation-resources.json", "scope": "User-authorized reinstall into existing per-machine location; registry, executable and installed project resources verified. No user data read or full business acceptance."},
+    "results": {
+      "versionTests": "5/5",
+      "build": "passed",
+      "packagingReview": "4/4",
+      "packagedWindowsChecks": "22/22",
+      "core": {
+        "tests": 2069,
+        "pass": 2028,
+        "fail": 38,
+        "cancelled": 1,
+        "skipped": 2
+      },
+      "browserInitial": {
+        "tests": 550,
+        "pass": 545,
+        "fail": 5
+      },
+      "browserAffectedFilesSerialRecheck": {
+        "files": 4,
+        "tests": 63,
+        "pass": 63,
+        "fail": 0,
+        "stableSources": true
+      }
+    },
+    "localInstallation": {
+      "date": "2026-10-14",
+      "path": "C:/Program Files/xaanink",
+      "renameNote": "2026-10-15 品牌改名 ShakeInk；该 path 为改名前 0.1.0-alpha 真实安装位置的事实记录，故意保留原名。新安装使用 shakeink 目录。",
+      "previousVersion": "0.1.0",
+      "version": "0.1.0-alpha",
+      "installerExitCode": 0,
+      "installedExecutableMatchesRelease": true,
+      "projectResources": 340,
+      "packagedFiles": 26763,
+      "evidence": "docs/evidence/alpha-release/local-installation.json",
+      "resourceEvidence": "docs/evidence/alpha-release/local-installation-resources.json",
+      "scope": "User-authorized reinstall into existing per-machine location; registry, executable and installed project resources verified. No user data read or full business acceptance."
+    },
     "boundaries": "Isolated packaged app checks use no models/keys. Narrow navigation fallback only; wide focus not accepted. Local NSIS reinstall verified separately; macOS not executed. Full repository acceptance remains incomplete."
   },
   "promptLibraryExpansionRevision": {
@@ -78,15 +168,54 @@
     "planReview": "docs/prompt-library-expansion/04-plan-review.md",
     "testCases": "docs/prompt-library-expansion/03-test-cases.md",
     "testReview": "docs/prompt-library-expansion/05-test-review.md",
-    "expected": {"focused": 74, "added": 70, "plot": 160, "wizard": 471, "servicePrompts": 29, "combined": 500},
-    "testIds": ["PLX01", "PLX02", "PLX03", "PLX04", "PLX05", "PLX06", "PLX07", "PLX08", "PLX09", "PLX10"],
-    "redEvidence": ["docs/evidence/plot-template-library/red.log", "docs/evidence/plot-template-library/red-browser.log"],
+    "expected": {
+      "focused": 74,
+      "added": 70,
+      "plot": 160,
+      "wizard": 471,
+      "servicePrompts": 29,
+      "combined": 500
+    },
+    "testIds": [
+      "PLX01",
+      "PLX02",
+      "PLX03",
+      "PLX04",
+      "PLX05",
+      "PLX06",
+      "PLX07",
+      "PLX08",
+      "PLX09",
+      "PLX10"
+    ],
+    "redEvidence": [
+      "docs/evidence/plot-template-library/red.log",
+      "docs/evidence/plot-template-library/red-browser.log"
+    ],
     "implementation": "docs/prompt-library-expansion/06-implementation.md",
     "codeReview": "docs/prompt-library-expansion/06-code-review.md",
     "contentReview": "docs/prompt-library-expansion/06-content-review.md",
     "verification": "docs/prompt-library-expansion/07-verification.md",
     "summary": "docs/prompt-library-expansion/08-summary.md",
-    "results": {"related": {"files": 9, "tests": 141, "passed": 141, "failed": 0, "skipped": 0, "evidence": "docs/evidence/plot-template-library/run.json"}, "build": {"status": "passed", "evidence": "docs/evidence/plot-template-library/build.log"}, "windowsElectron": {"checks": 8, "passed": 8, "evidence": "docs/evidence/plot-template-library/windows/report.json"}},
+    "results": {
+      "related": {
+        "files": 9,
+        "tests": 141,
+        "passed": 141,
+        "failed": 0,
+        "skipped": 0,
+        "evidence": "docs/evidence/plot-template-library/run.json"
+      },
+      "build": {
+        "status": "passed",
+        "evidence": "docs/evidence/plot-template-library/build.log"
+      },
+      "windowsElectron": {
+        "checks": 8,
+        "passed": 8,
+        "evidence": "docs/evidence/plot-template-library/windows/report.json"
+      }
+    },
     "supplierGeneration": "not-run-no-configured-model-or-credentials",
     "macOSAndInstaller": "not-run",
     "scopeGoalAcceptancePassed": true,
@@ -96,8 +225,16 @@
     "date": "2026-10-14",
     "requirement": "右侧内容收放时任何文字和布局保持完整形态，像左导航抽屉一样向右进出，不挤压或因收放重新换行",
     "status": "completed-user-accepted",
-    "closeout": {"date": "2026-10-14", "userStatement": "此任务目前已满足要求，可以直接收尾了", "additionalValidationStopped": true, "basis": "Explicit user acceptance of the current task; does not reclassify failed or unexecuted automated checks"},
-    "uiApproval": {"date": "2026-10-13", "userStatement": "UI 交互审核通过，可以继续"},
+    "closeout": {
+      "date": "2026-10-14",
+      "userStatement": "此任务目前已满足要求，可以直接收尾了",
+      "additionalValidationStopped": true,
+      "basis": "Explicit user acceptance of the current task; does not reclassify failed or unexecuted automated checks"
+    },
+    "uiApproval": {
+      "date": "2026-10-13",
+      "userStatement": "UI 交互审核通过，可以继续"
+    },
     "research": "design/content-drawer/research.md",
     "ui": "design/content-drawer/index.html",
     "productDesign": "design/content-drawer/product-design.md",
@@ -106,31 +243,137 @@
     "designEvidence": "design/content-drawer/preview-checks.json",
     "designVerification": "design/content-drawer/design-verification.md",
     "independentDesignReviewStatus": "passed-for-user-ui-review-only",
-    "designResults": {"status": "passed-design-only", "motionCases": 16, "sampledFrames": 514},
-    "testIds": ["CD-01", "CD-02", "CD-03", "CD-04", "CD-05", "CD-06", "CD-07"],
+    "designResults": {
+      "status": "passed-design-only",
+      "motionCases": 16,
+      "sampledFrames": 514
+    },
+    "testIds": [
+      "CD-01",
+      "CD-02",
+      "CD-03",
+      "CD-04",
+      "CD-05",
+      "CD-06",
+      "CD-07"
+    ],
     "formalPlan": "docs/reviews/2026-10-13-content-drawer-plan.md",
     "formalPlanReview": "docs/reviews/2026-10-13-content-drawer-plan-review.md",
     "formalTestCases": "docs/reviews/2026-10-13-content-drawer-test-cases.md",
     "formalTestReview": "docs/reviews/2026-10-13-content-drawer-test-review.md",
     "nativeCases": "docs/reviews/2026-10-13-content-drawer-native-cases.md",
     "nativeReview": "docs/reviews/2026-10-14-content-drawer-native-review.md",
-    "formalReviews": {"plan": "passed-for-test-case-review", "tests": "passed-for-visible-red-and-tdd", "nativeHarness": "passed-for-execution-after-code-review-and-build"},
+    "formalReviews": {
+      "plan": "passed-for-test-case-review",
+      "tests": "passed-for-visible-red-and-tdd",
+      "nativeHarness": "passed-for-execution-after-code-review-and-build"
+    },
     "baselineEvidence": "docs/evidence/content-drawer/baseline-core-01/core.json",
     "redEvidence": "docs/evidence/content-drawer/red-02/root-cause.tap",
-    "rootCauseRed": {"tests": 2, "passed": 0, "failed": 2, "reason": "Visible inner layout shrinks to V=7.421875/26.125px instead of complete 436.40625px", "pageErrors": 0},
-    "baselineCore": {"tests": 1977, "passed": 1935, "failed": 39, "cancelled": 1, "skipped": 2},
+    "rootCauseRed": {
+      "tests": 2,
+      "passed": 0,
+      "failed": 2,
+      "reason": "Visible inner layout shrinks to V=7.421875/26.125px instead of complete 436.40625px",
+      "pageErrors": 0
+    },
+    "baselineCore": {
+      "tests": 1977,
+      "passed": 1935,
+      "failed": 39,
+      "cancelled": 1,
+      "skipped": 2
+    },
     "implementationStatus": "implemented-reviewed-user-accepted",
     "implementation": "docs/reviews/2026-10-14-content-drawer-implementation.md",
     "codeReview": "docs/reviews/2026-10-14-content-drawer-code-review.md",
     "verification": "docs/reviews/2026-10-14-content-drawer-verification.md",
     "summary": "docs/reviews/2026-10-14-content-drawer-summary.md",
-    "productionChangesThisStage": ["src/components/layout/useSidebarDrawer.ts", "src/components/layout/DashboardShell.tsx", "src/components/layout/ContentTabs.tsx", "src/components/layout/ChatPanel.tsx", "src/components/layout/useContentTabStrip.ts", "src/app/desktop.css", "src/lib/desktop/content-drawer-context.tsx", "src/components/ui/dropdown-menu.tsx", "src/components/ui/select.tsx", "src/components/ui/tooltip.tsx", "src/components/ui/dialog.tsx", "src/components/content/ItemLevelPicker.tsx", "src/lib/desktop/use-command-target.ts", "src/lib/desktop/command-runtime.ts"],
-    "generatedCatalog": {"path": "desktop/shared/command-catalogs.generated.json", "change": "command-runtime source hash only; Windows 401 and Darwin 417 command contents unchanged"},
+    "productionChangesThisStage": [
+      "src/components/layout/useSidebarDrawer.ts",
+      "src/components/layout/DashboardShell.tsx",
+      "src/components/layout/ContentTabs.tsx",
+      "src/components/layout/ChatPanel.tsx",
+      "src/components/layout/useContentTabStrip.ts",
+      "src/app/desktop.css",
+      "src/lib/desktop/content-drawer-context.tsx",
+      "src/components/ui/dropdown-menu.tsx",
+      "src/components/ui/select.tsx",
+      "src/components/ui/tooltip.tsx",
+      "src/components/ui/dialog.tsx",
+      "src/components/content/ItemLevelPicker.tsx",
+      "src/lib/desktop/use-command-target.ts",
+      "src/lib/desktop/command-runtime.ts"
+    ],
+    "generatedCatalog": {
+      "path": "desktop/shared/command-catalogs.generated.json",
+      "change": "command-runtime source hash only; Windows 401 and Darwin 417 command contents unchanged"
+    },
     "productTests": "62/62 related and 559/559 full browser passed; actual Windows matrix partial, stopped after explicit user acceptance",
-    "results": {"related": {"tests": 62, "passed": 62, "failed": 0, "evidence": "docs/evidence/content-drawer/green-05/run.json"}, "browser": {"files": 53, "tests": 559, "passed": 559, "failed": 0, "evidence": "docs/evidence/content-drawer/regression-browser-02/browser.json"}, "build": {"status": "passed", "evidence": "docs/evidence/content-drawer/build-02/build.json"}, "finalTypecheck": {"status": "passed-typecheck-only", "evidence": "docs/evidence/content-drawer/final-typecheck-01/build.json"}, "fullCore": {"tests": 1977, "passed": 1932, "failed": 39, "cancelled": 4, "skipped": 2, "evidence": "docs/evidence/content-drawer/regression-core-01/core.json"}, "coreTimeoutRecheck": {"tests": 23, "passed": 23, "newResidualFailureTitles": 0, "comparison": "docs/evidence/content-drawer/core-comparison.json"}, "directoryPackage": {"status": "directory-stage-and-340-resource-checks-passed", "wholeOriginalPackagingSuite": {"tests": 13, "passed": 8, "failed": 5}, "evidence": "docs/evidence/content-drawer/package-01/package.json"}},
+    "results": {
+      "related": {
+        "tests": 62,
+        "passed": 62,
+        "failed": 0,
+        "evidence": "docs/evidence/content-drawer/green-05/run.json"
+      },
+      "browser": {
+        "files": 53,
+        "tests": 559,
+        "passed": 559,
+        "failed": 0,
+        "evidence": "docs/evidence/content-drawer/regression-browser-02/browser.json"
+      },
+      "build": {
+        "status": "passed",
+        "evidence": "docs/evidence/content-drawer/build-02/build.json"
+      },
+      "finalTypecheck": {
+        "status": "passed-typecheck-only",
+        "evidence": "docs/evidence/content-drawer/final-typecheck-01/build.json"
+      },
+      "fullCore": {
+        "tests": 1977,
+        "passed": 1932,
+        "failed": 39,
+        "cancelled": 4,
+        "skipped": 2,
+        "evidence": "docs/evidence/content-drawer/regression-core-01/core.json"
+      },
+      "coreTimeoutRecheck": {
+        "tests": 23,
+        "passed": 23,
+        "newResidualFailureTitles": 0,
+        "comparison": "docs/evidence/content-drawer/core-comparison.json"
+      },
+      "directoryPackage": {
+        "status": "directory-stage-and-340-resource-checks-passed",
+        "wholeOriginalPackagingSuite": {
+          "tests": 13,
+          "passed": 8,
+          "failed": 5
+        },
+        "evidence": "docs/evidence/content-drawer/package-01/package.json"
+      }
+    },
     "nativeAcceptance": "development-partial-not-all-passed; directory-package-animation-not-run; stopped-per-user-acceptance",
     "nativePartialEvidence": "docs/evidence/content-drawer/windows-development-22/report.json",
-    "nativePartialResults": {"development21": {"status": "failed-overall", "passedCaptures": 44, "passedChecks": 80, "evidence": "docs/evidence/content-drawer/windows-development-21/report.json"}, "development22": {"status": "failed-overall-live-zoom-late", "passedCaptures": 31, "passedChecks": 60}, "coldBodyRecoveryRevision": "reviewed-not-executed", "remainingEmptyCaption": "not-run", "directoryPackageAnimation": "not-run"},
+    "nativePartialResults": {
+      "development21": {
+        "status": "failed-overall",
+        "passedCaptures": 44,
+        "passedChecks": 80,
+        "evidence": "docs/evidence/content-drawer/windows-development-21/report.json"
+      },
+      "development22": {
+        "status": "failed-overall-live-zoom-late",
+        "passedCaptures": 31,
+        "passedChecks": 60
+      },
+      "coldBodyRecoveryRevision": "reviewed-not-executed",
+      "remainingEmptyCaption": "not-run",
+      "directoryPackageAnimation": "not-run"
+    },
     "scopeGoalAcceptancePassed": true,
     "scopeAcceptanceBasis": "Explicit user confirmation on 2026-10-14; automated native matrix completion is not claimed",
     "allRepositoryAcceptancePassed": false,
@@ -141,7 +384,11 @@
     "displayVersion": "0.10-alpha",
     "packageVersion": "0.10.0-alpha",
     "repository": "https://github.com/mySingleLive/shakeink-desktop",
-    "entries": ["settings-about-last-highlighted-row", "onboarding-completed-welcome", "standalone-about"],
+    "entries": [
+      "settings-about-last-highlighted-row",
+      "onboarding-completed-welcome",
+      "standalone-about"
+    ],
     "status": "implemented-scoped-verified-full-core-not-all-green",
     "research": "design/version-star/01-research.md",
     "product": "design/version-star/02-product.md",
@@ -152,24 +399,105 @@
     "codeReview": "design/version-star/08-code-review.md",
     "implementation": "design/version-star/09-implementation.md",
     "verification": "design/version-star/10-verification.md",
-    "testIds": ["VS-01", "VS-02", "VS-03", "VS-04", "VS-05", "VS-06", "VS-07", "VS-08", "VS-09", "VS-10", "VS-11"],
-    "sources": ["desktop/shared/project-info.ts", "desktop/main/project-about.ts", "desktop/main/index.ts", "desktop/preload/index.ts", "desktop/shared/ipc.ts", "src/components/desktop/ProjectStarPrompt.tsx", "src/components/desktop/SettingsDialog.tsx", "src/components/desktop/OnboardingController.tsx", "src/app/desktop.css", "build/Credits.html", "electron-builder.config.cjs"],
-    "tests": ["tests/unit/version-star.test.ts", "tests/browser/version-star.test.ts", "scripts/verify-version-star.mjs"],
-    "results": {"scoped": {"passed": 9, "failed": 0}, "browser": {"files": 45, "passed": 461, "failed": 0}, "windowsElectron": {"passedGroups": 22}, "windowsDirectoryPackage": {"passedGroups": 22}, "typecheck": "passed", "build": "passed", "fullCore": {"tests": 1966, "passed": 1925, "failed": 38, "cancelled": 1, "skipped": 2, "newResidualFailureTitles": 0}},
+    "testIds": [
+      "VS-01",
+      "VS-02",
+      "VS-03",
+      "VS-04",
+      "VS-05",
+      "VS-06",
+      "VS-07",
+      "VS-08",
+      "VS-09",
+      "VS-10",
+      "VS-11"
+    ],
+    "sources": [
+      "desktop/shared/project-info.ts",
+      "desktop/main/project-about.ts",
+      "desktop/main/index.ts",
+      "desktop/preload/index.ts",
+      "desktop/shared/ipc.ts",
+      "src/components/desktop/ProjectStarPrompt.tsx",
+      "src/components/desktop/SettingsDialog.tsx",
+      "src/components/desktop/OnboardingController.tsx",
+      "src/app/desktop.css",
+      "build/Credits.html",
+      "electron-builder.config.cjs"
+    ],
+    "tests": [
+      "tests/unit/version-star.test.ts",
+      "tests/browser/version-star.test.ts",
+      "scripts/verify-version-star.mjs"
+    ],
+    "results": {
+      "scoped": {
+        "passed": 9,
+        "failed": 0
+      },
+      "browser": {
+        "files": 45,
+        "passed": 461,
+        "failed": 0
+      },
+      "windowsElectron": {
+        "passedGroups": 22
+      },
+      "windowsDirectoryPackage": {
+        "passedGroups": 22
+      },
+      "typecheck": "passed",
+      "build": "passed",
+      "fullCore": {
+        "tests": 1966,
+        "passed": 1925,
+        "failed": 38,
+        "cancelled": 1,
+        "skipped": 2,
+        "newResidualFailureTitles": 0
+      }
+    },
     "macOSNativeAcceptance": "not-run",
     "allAcceptancePassed": false
   },
   "sidebarSurfaceFixRevision": {
     "date": "2026-10-14",
-    "requirements": ["导航滚动条复用应用全局主题样式", "条目悬停卡完整显示在AI对话区域上方"],
+    "requirements": [
+      "导航滚动条复用应用全局主题样式",
+      "条目悬停卡完整显示在AI对话区域上方"
+    ],
     "status": "implemented-scoped-and-Windows-verified",
-    "production": ["src/app/desktop.css", "src/components/layout/SidebarHoverCard.tsx"],
+    "production": [
+      "src/app/desktop.css",
+      "src/components/layout/SidebarHoverCard.tsx"
+    ],
     "plan": "docs/reviews/2026-10-14-sidebar-surface-fix-plan.md",
     "testCases": "docs/reviews/2026-10-14-sidebar-surface-fix-test-cases.md",
     "codeReview": "docs/reviews/2026-10-14-sidebar-surface-fix-code-review.md",
     "verification": "docs/reviews/2026-10-14-sidebar-surface-fix-verification.md",
     "evidence": "docs/evidence/sidebar-surface-fix/",
-    "results": {"unit": {"tests": 55, "passed": 55}, "browser": {"tests": 86, "passed": 86}, "typecheck": "passed", "build": "passed", "Windows": {"checks": 16, "passed": 16, "nativePoints": 6, "themes": ["ink", "paper"], "evidence": "docs/evidence/sidebar-surface-fix/windows-03/report.json"}},
+    "results": {
+      "unit": {
+        "tests": 55,
+        "passed": 55
+      },
+      "browser": {
+        "tests": 86,
+        "passed": 86
+      },
+      "typecheck": "passed",
+      "build": "passed",
+      "Windows": {
+        "checks": 16,
+        "passed": 16,
+        "nativePoints": 6,
+        "themes": [
+          "ink",
+          "paper"
+        ],
+        "evidence": "docs/evidence/sidebar-surface-fix/windows-03/report.json"
+      }
+    },
     "finalReview": "docs/reviews/2026-10-14-sidebar-surface-fix-final-review.md",
     "summary": "docs/reviews/2026-10-14-sidebar-surface-fix-summary.md",
     "allRevisionAcceptancePassed": true,
@@ -179,21 +507,115 @@
     "date": "2026-10-13",
     "uiRevision": "v8",
     "latestRefinement": "四过滤分类所有作品（含不可用）支持独立fold，正文菜单收起仍可达；创建作品上方真实双主题Logo+玄印写作（30px图形/17-24px衬线标题/16px盒间距），原caption/创建/底栏与固定抽屉保持。",
-    "creationGeometryPx": {"rowHeight": 32, "rowGap": 4, "fontSize": 14, "lineHeight": 20, "iconSize": 18},
+    "creationGeometryPx": {
+      "rowHeight": 32,
+      "rowGap": 4,
+      "fontSize": 14,
+      "lineHeight": 20,
+      "iconSize": 18
+    },
     "previousUiArchive": "design/sidebar-navigation/archive-v7/",
-    "brandGeometryPx": {"logo": 30, "titleFontSize": 17, "titleLineHeight": 24, "fontWeight": 600, "letterSpacingEm": 0.06, "rowHeight": 44, "marginTop": 4, "marginBottom": 8, "iconTextGap": 10, "boxToCreationGap": 16, "assets": ["public/brand/seal-mark-paper.svg", "public/brand/seal-mark-ink.svg"]},
-    "filteredWorkGroups": {"collapsible": true, "defaultExpanded": true, "scope": "view + novelId (unavailable uses workId)", "bodyRetention": "hidden + inert", "manuscriptMenuOutsideBody": true, "unavailableRetainsErrorsAndRepair": true, "scrollClampPreservesPendingPosition": true},
-    "tabAppearance": {"groupBackground": "transparent", "groupBorder": "none", "unselectedBackgroundIncludingHover": "transparent", "selectedBackground": "content-tab-selected-bg", "selectedText": "foreground", "selectedBorder": "content-tab-selected-border", "selectedBorderPx": 1, "selectedRadiusPx": 6},
-    "navigationIconDesign": {"workDefault": ["FolderClosed", "FolderOpen"], "workColors": {"paper": "#657077", "ink": "#a6b0b8"}, "goldenFinger": "Pointer", "themeTokens": 24, "roleColors": ["protagonist", "supporting", "antagonist", "foreshadow-role"], "roleGlyphBadgeSameColor": true, "keepCoverPhotoAndStatusIcons": true, "minPrototypeSampledIconContrast": 3.591, "minPrototypeBadgeContrast": 4.648},
-    "settingsAdditionalEntries": ["物品", "情景试验场", "场景", "世界线", "叙事线", "大纲"],
-    "tabGroupMarginPx": {"top": 16, "bottom": 12},
+    "brandGeometryPx": {
+      "logo": 30,
+      "titleFontSize": 17,
+      "titleLineHeight": 24,
+      "fontWeight": 600,
+      "letterSpacingEm": 0.06,
+      "rowHeight": 44,
+      "marginTop": 4,
+      "marginBottom": 8,
+      "iconTextGap": 10,
+      "boxToCreationGap": 16,
+      "assets": [
+        "public/brand/seal-mark-paper.svg",
+        "public/brand/seal-mark-ink.svg"
+      ]
+    },
+    "filteredWorkGroups": {
+      "collapsible": true,
+      "defaultExpanded": true,
+      "scope": "view + novelId (unavailable uses workId)",
+      "bodyRetention": "hidden + inert",
+      "manuscriptMenuOutsideBody": true,
+      "unavailableRetainsErrorsAndRepair": true,
+      "scrollClampPreservesPendingPosition": true
+    },
+    "tabAppearance": {
+      "groupBackground": "transparent",
+      "groupBorder": "none",
+      "unselectedBackgroundIncludingHover": "transparent",
+      "selectedBackground": "content-tab-selected-bg",
+      "selectedText": "foreground",
+      "selectedBorder": "content-tab-selected-border",
+      "selectedBorderPx": 1,
+      "selectedRadiusPx": 6
+    },
+    "navigationIconDesign": {
+      "workDefault": [
+        "FolderClosed",
+        "FolderOpen"
+      ],
+      "workColors": {
+        "paper": "#657077",
+        "ink": "#a6b0b8"
+      },
+      "goldenFinger": "Pointer",
+      "themeTokens": 24,
+      "roleColors": [
+        "protagonist",
+        "supporting",
+        "antagonist",
+        "foreshadow-role"
+      ],
+      "roleGlyphBadgeSameColor": true,
+      "keepCoverPhotoAndStatusIcons": true,
+      "minPrototypeSampledIconContrast": 3.591,
+      "minPrototypeBadgeContrast": 4.648
+    },
+    "settingsAdditionalEntries": [
+      "物品",
+      "情景试验场",
+      "场景",
+      "世界线",
+      "叙事线",
+      "大纲"
+    ],
+    "tabGroupMarginPx": {
+      "top": 16,
+      "bottom": 12
+    },
     "roleBadgeGapPx": 6,
-    "drawerDesign": {"fixedInnerWidth": true, "translation": "visibleWidth - fullWidth", "closeMs": 420, "openMs": 560, "noReflowDuringMotion": true, "evidence": "design/sidebar-navigation/drawer-frames.json", "frameCases": 17, "sampledFrames": 787, "geometryTolerancePx": 0.05, "maxObservedGeometryDeltaPx": 0.001},
-    "navigationViews": ["作品", "设定", "角色", "正文", "对话"],
-    "conversationEntry": {"label": "新对话", "icon": "MessageCirclePlus", "selectedHighlight": false},
+    "drawerDesign": {
+      "fixedInnerWidth": true,
+      "translation": "visibleWidth - fullWidth",
+      "closeMs": 420,
+      "openMs": 560,
+      "noReflowDuringMotion": true,
+      "evidence": "design/sidebar-navigation/drawer-frames.json",
+      "frameCases": 17,
+      "sampledFrames": 787,
+      "geometryTolerancePx": 0.05,
+      "maxObservedGeometryDeltaPx": 0.001
+    },
+    "navigationViews": [
+      "作品",
+      "设定",
+      "角色",
+      "正文",
+      "对话"
+    ],
+    "conversationEntry": {
+      "label": "新对话",
+      "icon": "MessageCirclePlus",
+      "selectedHighlight": false
+    },
     "requirement": "左导航创建作品/对话入口加高换图标、用户区加高、去掉属性项、所有名称采用Tabs式条件渐隐、情景试验场不显示树内展开内容",
     "status": "implemented-scoped-and-reachable-Windows-verified-full-repository-not-green",
-    "uiApproval": {"date": "2026-10-13", "userStatement": "UI 设计审核通过，可以继续", "revision": "v8"},
+    "uiApproval": {
+      "date": "2026-10-13",
+      "userStatement": "UI 设计审核通过，可以继续",
+      "revision": "v8"
+    },
     "research": "design/sidebar-navigation/research.md",
     "productDesign": "design/sidebar-navigation/product-design.md",
     "ui": "design/sidebar-navigation/index.html",
@@ -202,18 +624,74 @@
     "independentReviewStatus": "passed-for-user-ui-review-only",
     "designVerification": "design/sidebar-navigation/design-verification.md",
     "designEvidence": "design/sidebar-navigation/preview-checks.json",
-    "testIds": ["SN-01", "SN-02", "SN-03", "SN-04", "SN-05", "SN-06", "SN-07", "SN-08", "SN-09", "SN-10", "SN-11", "SN-12", "SN-13", "SN-14", "SN-15", "SN-16"],
+    "testIds": [
+      "SN-01",
+      "SN-02",
+      "SN-03",
+      "SN-04",
+      "SN-05",
+      "SN-06",
+      "SN-07",
+      "SN-08",
+      "SN-09",
+      "SN-10",
+      "SN-11",
+      "SN-12",
+      "SN-13",
+      "SN-14",
+      "SN-15",
+      "SN-16"
+    ],
     "designChecksPassed": 53,
-    "productionChangesThisStage": ["src/components/layout/SidebarTree.tsx", "src/components/layout/NavigationLabel.tsx", "src/components/layout/sidebar-navigation-state.tsx", "src/components/layout/ScenarioLibraryDialog.tsx", "src/components/layout/ScenarioCreateDialog.tsx", "src/components/layout/OutlineTreeMenu.tsx", "src/components/layout/SidebarHoverCard.tsx", "src/components/desktop/UnavailableWorks.tsx", "src/stores/tabs.ts", "src/components/layout/DashboardShell.tsx", "src/components/layout/useSidebarDrawer.ts", "src/lib/desktop/sidebar-layout.ts", "src/components/layout/ChatPanel.tsx:caption-only", "src/components/layout/ContentTabs.tsx:caption-only", "src/app/desktop.css", "src/lib/services/scenario-lab.ts"],
+    "productionChangesThisStage": [
+      "src/components/layout/SidebarTree.tsx",
+      "src/components/layout/NavigationLabel.tsx",
+      "src/components/layout/sidebar-navigation-state.tsx",
+      "src/components/layout/ScenarioLibraryDialog.tsx",
+      "src/components/layout/ScenarioCreateDialog.tsx",
+      "src/components/layout/OutlineTreeMenu.tsx",
+      "src/components/layout/SidebarHoverCard.tsx",
+      "src/components/desktop/UnavailableWorks.tsx",
+      "src/stores/tabs.ts",
+      "src/components/layout/DashboardShell.tsx",
+      "src/components/layout/useSidebarDrawer.ts",
+      "src/lib/desktop/sidebar-layout.ts",
+      "src/components/layout/ChatPanel.tsx:caption-only",
+      "src/components/layout/ContentTabs.tsx:caption-only",
+      "src/app/desktop.css",
+      "src/lib/services/scenario-lab.ts"
+    ],
     "implementationStatus": "implemented-original-React-scoped-and-reachable-target-verified",
     "implementationDocument": "docs/reviews/2026-10-13-sidebar-navigation-implementation.md",
     "formalPlanReview": "docs/reviews/2026-10-13-sidebar-navigation-plan-review.md",
     "formalTestCases": "docs/reviews/2026-10-13-sidebar-navigation-test-cases.md",
     "formalTestReview": "docs/reviews/2026-10-13-sidebar-navigation-test-review.md",
-    "formalReviews": {"plan": "passed-for-test-case-review", "testCases": "passed-for-red-and-tdd", "code": "passed-including-M06-resize-fix", "drawerLatestIntent": "passed-independent-5-of-5", "nativeHarness": "passed-for-actual-target-execution", "finalEvidence": "passed-blocking-0-reachable-Windows-resize-P1-closed"},
-    "codeReviews": ["docs/reviews/2026-10-13-sidebar-navigation-code-review.md", "docs/reviews/2026-10-13-sidebar-drawer-code-review.md", "docs/reviews/2026-10-13-sidebar-scenario-transaction-review.md"],
-    "runtimeServiceFix": {"source": "src/lib/services/scenario-lab.ts:359", "change": "Use current transaction for existing scenario read", "red": "docs/evidence/sidebar-navigation/red/scenario-transaction.tap", "green": "docs/evidence/sidebar-navigation/green/scenario-transaction.tap", "integrationPassed": 19},
-    "resizeIncrement": {"plan": "docs/reviews/2026-10-14-sidebar-drawer-resize-plan.md", "planReview": "docs/reviews/2026-10-14-sidebar-drawer-resize-plan-review.md", "status": "code-reviewed-39-of-39-scoped-regression-and-real-Windows-11-passed", "failedNativeEvidence": "docs/evidence/sidebar-navigation/windows-development-10/report.json"},
+    "formalReviews": {
+      "plan": "passed-for-test-case-review",
+      "testCases": "passed-for-red-and-tdd",
+      "code": "passed-including-M06-resize-fix",
+      "drawerLatestIntent": "passed-independent-5-of-5",
+      "nativeHarness": "passed-for-actual-target-execution",
+      "finalEvidence": "passed-blocking-0-reachable-Windows-resize-P1-closed"
+    },
+    "codeReviews": [
+      "docs/reviews/2026-10-13-sidebar-navigation-code-review.md",
+      "docs/reviews/2026-10-13-sidebar-drawer-code-review.md",
+      "docs/reviews/2026-10-13-sidebar-scenario-transaction-review.md"
+    ],
+    "runtimeServiceFix": {
+      "source": "src/lib/services/scenario-lab.ts:359",
+      "change": "Use current transaction for existing scenario read",
+      "red": "docs/evidence/sidebar-navigation/red/scenario-transaction.tap",
+      "green": "docs/evidence/sidebar-navigation/green/scenario-transaction.tap",
+      "integrationPassed": 19
+    },
+    "resizeIncrement": {
+      "plan": "docs/reviews/2026-10-14-sidebar-drawer-resize-plan.md",
+      "planReview": "docs/reviews/2026-10-14-sidebar-drawer-resize-plan-review.md",
+      "status": "code-reviewed-39-of-39-scoped-regression-and-real-Windows-11-passed",
+      "failedNativeEvidence": "docs/evidence/sidebar-navigation/windows-development-10/report.json"
+    },
     "verificationDocument": "docs/reviews/2026-10-13-sidebar-navigation-verification.md",
     "nativeHarnessReview": "docs/reviews/2026-10-13-sidebar-native-harness-review.md",
     "baselineEvidence": "docs/evidence/sidebar-navigation/baseline/summary.json",
@@ -223,8 +701,57 @@
     "verificationDate": "2026-10-14",
     "summaryDocument": "docs/reviews/2026-10-13-sidebar-navigation-summary.md",
     "finalEvidenceReview": "docs/reviews/2026-10-14-sidebar-navigation-final-evidence-review.md",
-    "finalResults": {"browserScope": {"files": 50, "pass": 516, "fail": 0, "cancelled": 0, "skipped": 0, "stableInputs": 1068, "evidence": "docs/evidence/sidebar-navigation/regression/sidebar-scope-browser.json"}, "core": {"files": 274, "tests": 1977, "pass": 1936, "fail": 38, "cancelled": 1, "skipped": 2, "newResidualFailureTitles": [], "stableInputs": 1358, "evidence": "docs/evidence/sidebar-navigation/regression/core.json"}, "fullBrowser": {"files": 52, "tests": 535, "pass": 516, "fail": 19, "evidence": "docs/evidence/sidebar-navigation/regression/browser.json"}, "build": "docs/evidence/sidebar-navigation/green/build-navigation-resize-final.json", "windows": {"checksPassed": 87, "captures": 28, "allRafSamples": 1107, "movingSamples": 856, "geometryComparedMovingSamples": 832, "zeroVisibleSetupSamplesRetained": 24, "nativeHitTestsPassed": 33, "inconclusiveNotCountedAsPass": 2, "sourceFilesStable": 31, "bundleFilesStable": 351, "packaged": false, "evidence": "docs/evidence/sidebar-navigation/windows-development-11/report.json"}},
-    "unexecuted": ["NSIS installation", "macOS", "physical mouse window drag", "Windows IME", "UI-unreachable cold-empty-fullscreen restore; browser API branch only"],
+    "finalResults": {
+      "browserScope": {
+        "files": 50,
+        "pass": 516,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "stableInputs": 1068,
+        "evidence": "docs/evidence/sidebar-navigation/regression/sidebar-scope-browser.json"
+      },
+      "core": {
+        "files": 274,
+        "tests": 1977,
+        "pass": 1936,
+        "fail": 38,
+        "cancelled": 1,
+        "skipped": 2,
+        "newResidualFailureTitles": [],
+        "stableInputs": 1358,
+        "evidence": "docs/evidence/sidebar-navigation/regression/core.json"
+      },
+      "fullBrowser": {
+        "files": 52,
+        "tests": 535,
+        "pass": 516,
+        "fail": 19,
+        "evidence": "docs/evidence/sidebar-navigation/regression/browser.json"
+      },
+      "build": "docs/evidence/sidebar-navigation/green/build-navigation-resize-final.json",
+      "windows": {
+        "checksPassed": 87,
+        "captures": 28,
+        "allRafSamples": 1107,
+        "movingSamples": 856,
+        "geometryComparedMovingSamples": 832,
+        "zeroVisibleSetupSamplesRetained": 24,
+        "nativeHitTestsPassed": 33,
+        "inconclusiveNotCountedAsPass": 2,
+        "sourceFilesStable": 31,
+        "bundleFilesStable": 351,
+        "packaged": false,
+        "evidence": "docs/evidence/sidebar-navigation/windows-development-11/report.json"
+      }
+    },
+    "unexecuted": [
+      "NSIS installation",
+      "macOS",
+      "physical mouse window drag",
+      "Windows IME",
+      "UI-unreachable cold-empty-fullscreen restore; browser API branch only"
+    ],
     "allAcceptancePassed": false
   },
   "imageProviderMenuUpdate": {
@@ -232,15 +759,72 @@
     "requirement": "供应商字节跳动更名为火山引擎并替换供应商Logo；文生图供应商菜单仅留火山引擎和OpenAI",
     "status": "implemented-scoped-verified-core-not-all-green",
     "scope": "设置和首次引导共享真实React配置弹窗；保留bytedance内部ID、端点协议和旧模型记录；TEXT范围保持",
-    "providers": ["bytedance", "openai"],
-    "sources": ["desktop/shared/model-catalog.ts", "src/components/chat/provider-logos.tsx", "src/components/desktop/ModelConfigurationDialog.tsx", "src/components/desktop/ModelChoiceSelect.tsx", "public/brands/providers/volcengine.svg"],
-    "tests": ["tests/unit/image-provider-menu.test.ts", "tests/unit/onboarding-editors.test.ts", "tests/unit/model-settings.test.ts", "tests/unit/onboarding-retry-integration.test.ts", "tests/browser/image-provider-menu.test.ts", "scripts/verify-image-providers.mjs"],
-    "reviews": ["docs/reviews/2026-10-13-image-provider-plan-review.md", "docs/reviews/2026-10-13-image-provider-test-review.md", "docs/reviews/2026-10-13-image-provider-code-review.md"],
+    "providers": [
+      "bytedance",
+      "openai"
+    ],
+    "sources": [
+      "desktop/shared/model-catalog.ts",
+      "src/components/chat/provider-logos.tsx",
+      "src/components/desktop/ModelConfigurationDialog.tsx",
+      "src/components/desktop/ModelChoiceSelect.tsx",
+      "public/brands/providers/volcengine.svg"
+    ],
+    "tests": [
+      "tests/unit/image-provider-menu.test.ts",
+      "tests/unit/onboarding-editors.test.ts",
+      "tests/unit/model-settings.test.ts",
+      "tests/unit/onboarding-retry-integration.test.ts",
+      "tests/browser/image-provider-menu.test.ts",
+      "scripts/verify-image-providers.mjs"
+    ],
+    "reviews": [
+      "docs/reviews/2026-10-13-image-provider-plan-review.md",
+      "docs/reviews/2026-10-13-image-provider-test-review.md",
+      "docs/reviews/2026-10-13-image-provider-code-review.md"
+    ],
     "verification": "docs/reviews/2026-10-13-image-provider-verification.md",
     "evidence": "docs/evidence/image-providers/green/windows-electron.json",
-    "results": {"build": "passed", "typecheck": "passed", "browser": {"tests": 431, "passed": 431}, "windows": {"status": "passed-scoped", "passedChecks": 12, "observedMenus": 4}, "core": {"status": "not-all-green", "original": {"tests": 1951, "passed": 1877, "failed": 67, "cancelled": 5, "skipped": 2}, "backendRerun": {"tests": 76, "passed": 76}, "migrationTimeoutRerun": {"tests": 3, "passed": 3}, "newResidualFailureTitles": 0, "comparison": "docs/evidence/image-providers/core-comparison.json"}},
+    "results": {
+      "build": "passed",
+      "typecheck": "passed",
+      "browser": {
+        "tests": 431,
+        "passed": 431
+      },
+      "windows": {
+        "status": "passed-scoped",
+        "passedChecks": 12,
+        "observedMenus": 4
+      },
+      "core": {
+        "status": "not-all-green",
+        "original": {
+          "tests": 1951,
+          "passed": 1877,
+          "failed": 67,
+          "cancelled": 5,
+          "skipped": 2
+        },
+        "backendRerun": {
+          "tests": 76,
+          "passed": 76
+        },
+        "migrationTimeoutRerun": {
+          "tests": 3,
+          "passed": 3
+        },
+        "newResidualFailureTitles": 0,
+        "comparison": "docs/evidence/image-providers/core-comparison.json"
+      }
+    },
     "allAcceptancePassed": false,
-    "limits": ["开发Electron和生产静态UI；macOS及安装包未验收", "旧配置测试仅用隔离目录的OS加密公开合成凭据；未调用供应商", "renderer网络观测从firstWindow后开始并覆盖离线reload；不是启动全程网络审计", "核心回归既有失败不计通过"]
+    "limits": [
+      "开发Electron和生产静态UI；macOS及安装包未验收",
+      "旧配置测试仅用隔离目录的OS加密公开合成凭据；未调用供应商",
+      "renderer网络观测从firstWindow后开始并覆盖离线reload；不是启动全程网络审计",
+      "核心回归既有失败不计通过"
+    ]
   },
   "textContextMenuRevision": {
     "date": "2026-10-13",
@@ -271,8 +855,14 @@
     "date": "2026-10-13",
     "requirement": "Increase the previously doubled AI composer maximum height by another 50%, retaining natural growth and internal scrolling.",
     "status": "implemented-scoped-validated",
-    "implementation": ["src/components/layout/ChatPanel.tsx", "src/components/chat/chat-empty-dock.css"],
-    "maximumHeightPx": {"normal": 420, "shortWindowWelcome": 288},
+    "implementation": [
+      "src/components/layout/ChatPanel.tsx",
+      "src/components/chat/chat-empty-dock.css"
+    ],
+    "maximumHeightPx": {
+      "normal": 420,
+      "shortWindowWelcome": 288
+    },
     "previousVerification": "docs/reviews/2026-10-13-composer-height-verification.md",
     "plan": "docs/reviews/2026-10-13-composer-height-plan.md",
     "planReview": "docs/reviews/2026-10-13-composer-height-plan-review.md",
@@ -280,8 +870,19 @@
     "testReview": "docs/reviews/2026-10-13-composer-height-test-review.md",
     "codeReview": "docs/reviews/2026-10-13-composer-height-code-review.md",
     "verification": "docs/reviews/2026-10-13-composer-height-v2-verification.md",
-    "tests": ["scripts/verify-composer-height.mjs"],
-    "testIds": ["CH-01", "CH-02", "CH-03", "CH-04", "CH-05", "CH-06", "CH-07", "CH-08"],
+    "tests": [
+      "scripts/verify-composer-height.mjs"
+    ],
+    "testIds": [
+      "CH-01",
+      "CH-02",
+      "CH-03",
+      "CH-04",
+      "CH-05",
+      "CH-06",
+      "CH-07",
+      "CH-08"
+    ],
     "validation": {
       "tdd": "v2 actual Windows red: inline/computed/rectangle 280px vs required 420px. v2 green: 15 groups passed; normal 420px, short welcome 288px, 14-line natural 318px, 48/52px minimum; dual themes, real local conversation, wheel/shrink/toolbar.",
       "build": "UI production export and integrated TypeScript, Electron main/preload/service builds passed with Node 24.19.0.",
@@ -301,9 +902,26 @@
     "testCases": "docs/reviews/2026-10-13-creation-context-test-cases.md",
     "testReview": "docs/reviews/2026-10-13-creation-context-test-review.md",
     "codeReview": "docs/reviews/2026-10-13-creation-context-code-review.md",
-    "implementation": ["desktop/shared/provider-capabilities.ts", "desktop/service/models.ts"],
-    "tests": ["tests/unit/creation-context.test.ts", "scripts/verify-creation-context.mjs"],
-    "testIds": ["CC01", "CC02", "CC03", "CC04", "CC05", "CC06", "CC07", "CC08", "CC09", "CC10"],
+    "implementation": [
+      "desktop/shared/provider-capabilities.ts",
+      "desktop/service/models.ts"
+    ],
+    "tests": [
+      "tests/unit/creation-context.test.ts",
+      "scripts/verify-creation-context.mjs"
+    ],
+    "testIds": [
+      "CC01",
+      "CC02",
+      "CC03",
+      "CC04",
+      "CC05",
+      "CC06",
+      "CC07",
+      "CC08",
+      "CC09",
+      "CC10"
+    ],
     "validation": {
       "tdd": "Before fix: 1 pass / 4 fail, including CONTEXT_SAFETY_BUDGET. After fix: 25 scoped regression checks passed; independent 5/5 passed.",
       "typecheck": "passed with Node 24.19.0",
@@ -327,14 +945,41 @@
     "planReview": "docs/reviews/2026-10-12-chat-empty-state-plan-review.md",
     "testCases": "docs/reviews/2026-10-12-chat-empty-state-test-cases.md",
     "testReview": "docs/reviews/2026-10-12-chat-empty-state-test-review.md",
-    "testIds": ["CES-01", "CES-02", "CES-03", "CES-04", "CES-05", "CES-06", "CES-07", "CES-08", "CES-09", "CES-10", "CES-11"],
-    "implementation": ["src/components/layout/ChatPanel.tsx", "src/components/chat/ChatEmptyState.tsx", "src/components/chat/use-chat-empty-motion.ts", "src/components/layout/CreateNovelDialog.tsx", "src/components/chat/use-chat-models.ts", "src/components/chat/use-agent-chat.ts", "src/components/chat/CandidateActionPanel.tsx", "public/brand/chat-empty/manifest.json"],
+    "testIds": [
+      "CES-01",
+      "CES-02",
+      "CES-03",
+      "CES-04",
+      "CES-05",
+      "CES-06",
+      "CES-07",
+      "CES-08",
+      "CES-09",
+      "CES-10",
+      "CES-11"
+    ],
+    "implementation": [
+      "src/components/layout/ChatPanel.tsx",
+      "src/components/chat/ChatEmptyState.tsx",
+      "src/components/chat/use-chat-empty-motion.ts",
+      "src/components/layout/CreateNovelDialog.tsx",
+      "src/components/chat/use-chat-models.ts",
+      "src/components/chat/use-agent-chat.ts",
+      "src/components/chat/CandidateActionPanel.tsx",
+      "public/brand/chat-empty/manifest.json"
+    ],
     "codeReview": "docs/reviews/2026-10-12-chat-empty-state-code-review.md",
     "verification": "docs/reviews/2026-10-12-chat-empty-state-verification.md",
     "validation": {
       "componentBrowser": "20/20 passed within final 60/60 component, navigation and motion checks; final-scoped-budgeted.tap",
       "windowsElectron": "20 observed-scope checks passed after final build; actual dual theme/offline API/blur/native hide",
-      "unverified": ["true document.hidden visibilitychange branch under automation", "physical IME", "macOS", "supplier endpoint", "installed package"],
+      "unverified": [
+        "true document.hidden visibilitychange branch under automation",
+        "physical IME",
+        "macOS",
+        "supplier endpoint",
+        "installed package"
+      ],
       "fullBrowser": "38 current files / 360 passed; latest complete evidence per file, not a single monolithic run; browser-final-file-coverage.json; earlier 359/1 and incomplete runs retained",
       "fullRegression": "final core 1946: 1903 pass/40 fail/1 cancel/2 skip; 39 fail and 1 cancel match earlier baseline; DR65 inode precision fixture corrected and 9/9 scoped checks passed; no new all-green full-core claim; original full failure evidence retained"
     },
@@ -351,18 +996,56 @@
     "design": "design/toast-style/index.html",
     "designReview": "docs/reviews/2026-10-12-toast-style-design-review.md",
     "previewEvidence": "design/toast-style/preview-checks.json",
-    "previewChecks": {"status": "passed", "checks": 28, "scope": "Local HTML design artifact only; not product tests"},
+    "previewChecks": {
+      "status": "passed",
+      "checks": 28,
+      "scope": "Local HTML design artifact only; not product tests"
+    },
     "plan": "docs/reviews/2026-10-12-toast-style-plan.md",
     "planReview": "docs/reviews/2026-10-12-toast-style-plan-review.md",
     "testCases": "docs/reviews/2026-10-12-toast-style-test-cases.md",
     "testReview": "docs/reviews/2026-10-12-toast-style-test-review.md",
-    "implementation": ["src/components/ui/sonner.tsx", "src/app/desktop.css"],
+    "implementation": [
+      "src/components/ui/sonner.tsx",
+      "src/app/desktop.css"
+    ],
     "codeReview": "docs/reviews/2026-10-12-toast-style-code-review.md",
     "verification": "docs/reviews/2026-10-12-toast-style-verification.md",
-    "scopedTests": {"passed": 47, "failed": 0, "skipped": 0, "cancelled": 0, "evidence": "docs/evidence/toast-style/green.tap", "scope": "Named real-component browser file, with Providers richColors configuration"},
-    "build": {"status": "passed", "scope": "UI and build-integrated TypeScript only", "evidence": "docs/evidence/toast-style/build-ui.txt"},
-    "windowsElectron": {"status": "passed", "scenes": 14, "interactionChecks": 14, "themes": ["paper", "ink"], "platform": "win32", "electron": "44.6.0", "rendererErrors": 0, "rendererHttpRequests": 0, "evidence": "docs/evidence/toast-style/windows-electron.json", "scope": "Development Electron; real info/success paths, four native zooms and existing-toast theme changes; renderer network observation after firstWindow only"},
-    "clipboardIncident": {"originalClipboardRestored": false, "historyEnabled": false, "subsequentRunsRestored": true, "evidence": "docs/evidence/toast-style/windows-clipboard-incident.txt", "note": "First copy replaced system clipboard; direct write of read-only ClipboardItems failed and original contents were not recovered. Corrected writable-copy/preflight/finally flow restored only the successful reruns' starting clipboard state."},
+    "scopedTests": {
+      "passed": 47,
+      "failed": 0,
+      "skipped": 0,
+      "cancelled": 0,
+      "evidence": "docs/evidence/toast-style/green.tap",
+      "scope": "Named real-component browser file, with Providers richColors configuration"
+    },
+    "build": {
+      "status": "passed",
+      "scope": "UI and build-integrated TypeScript only",
+      "evidence": "docs/evidence/toast-style/build-ui.txt"
+    },
+    "windowsElectron": {
+      "status": "passed",
+      "scenes": 14,
+      "interactionChecks": 14,
+      "themes": [
+        "paper",
+        "ink"
+      ],
+      "platform": "win32",
+      "electron": "44.6.0",
+      "rendererErrors": 0,
+      "rendererHttpRequests": 0,
+      "evidence": "docs/evidence/toast-style/windows-electron.json",
+      "scope": "Development Electron; real info/success paths, four native zooms and existing-toast theme changes; renderer network observation after firstWindow only"
+    },
+    "clipboardIncident": {
+      "originalClipboardRestored": false,
+      "historyEnabled": false,
+      "subsequentRunsRestored": true,
+      "evidence": "docs/evidence/toast-style/windows-clipboard-incident.txt",
+      "note": "First copy replaced system clipboard; direct write of read-only ClipboardItems failed and original contents were not recovered. Corrected writable-copy/preflight/finally flow restored only the successful reruns' starting clipboard state."
+    },
     "productTestsExecuted": true,
     "fullRegressionRequested": false,
     "note": "Approved v1 implemented after independent plan/case review and TDD; independent code review passed for product and scoped evidence. Preview remains frozen design evidence. Only 47 named browser cases, UI build and scoped actual Windows checks; no full suite, installed package, macOS or physical-input acceptance. Native warning/loading/normal business paths not executed. Clipboard incident remains unresolved for first-run original contents. Providers/business callbacks/upstream and all other requirement statuses preserved."
@@ -370,7 +1053,7 @@
   "dialogAppearanceRevision": {
     "date": "2026-10-12",
     "designRevision": "v2",
-    "overlayOpacity": 0.10,
+    "overlayOpacity": 0.1,
     "latestFeedback": "Slightly darken dialog background: raise overlay from 8% to 10%; retain no blur and existing light shadow. User approved v2 and authorized implementation.",
     "requirement": "All application-rendered modal dialogs: 10% black backdrop, no background blur and light surrounding shadow; anchored popups excluded. Approved native system dialog boundary retains system rendering.",
     "status": "implemented-scoped-validated",
@@ -379,20 +1062,73 @@
     "planReview": "docs/reviews/2026-10-12-dialog-style-plan-review.md",
     "testCases": "docs/reviews/2026-10-12-dialog-style-test-cases.md",
     "testReview": "docs/reviews/2026-10-12-dialog-style-test-review.md",
-    "implementation": ["src/app/desktop.css", "src/components/ui/dialog.tsx", "src/components/content/planning/planning.module.css", "src/components/layout/CreateNovelDialog.tsx", "src/components/content/scenario/ScenarioPanel.tsx"],
+    "implementation": [
+      "src/app/desktop.css",
+      "src/components/ui/dialog.tsx",
+      "src/components/content/planning/planning.module.css",
+      "src/components/layout/CreateNovelDialog.tsx",
+      "src/components/content/scenario/ScenarioPanel.tsx"
+    ],
     "codeReview": "docs/reviews/2026-10-12-dialog-style-code-review.md",
     "verification": "docs/reviews/2026-10-12-dialog-style-verification.md",
-    "scopedTests": {"passed": 32, "failed": 0, "skipped": 0, "cancelled": 0, "evidence": ["docs/evidence/dialog-style/green.tap", "docs/evidence/dialog-style/modal-commands-green.tap"]},
-    "build": {"status": "passed", "scope": "UI and build-integrated TypeScript only", "evidence": "docs/evidence/dialog-style/build-ui.txt"},
-    "windowsElectron": {"status": "passed", "scenes": 24, "interactionChecks": 18, "themes": ["paper", "ink"], "rendererErrors": 0, "rendererConsoleErrors": 0, "rendererHttpRequests": 0, "evidence": "docs/evidence/dialog-style/windows-electron.json"},
-    "planningCoverage": {"cssModuleProbes": "Four named branches passed in both themes", "windowsExecuted": ["generic form", "period-detail", "event-detail"], "frozenCenteredDetail": "Not executed through real UI: no normal reachable trigger; source and actual CSS coverage only"},
+    "scopedTests": {
+      "passed": 32,
+      "failed": 0,
+      "skipped": 0,
+      "cancelled": 0,
+      "evidence": [
+        "docs/evidence/dialog-style/green.tap",
+        "docs/evidence/dialog-style/modal-commands-green.tap"
+      ]
+    },
+    "build": {
+      "status": "passed",
+      "scope": "UI and build-integrated TypeScript only",
+      "evidence": "docs/evidence/dialog-style/build-ui.txt"
+    },
+    "windowsElectron": {
+      "status": "passed",
+      "scenes": 24,
+      "interactionChecks": 18,
+      "themes": [
+        "paper",
+        "ink"
+      ],
+      "rendererErrors": 0,
+      "rendererConsoleErrors": 0,
+      "rendererHttpRequests": 0,
+      "evidence": "docs/evidence/dialog-style/windows-electron.json"
+    },
+    "planningCoverage": {
+      "cssModuleProbes": "Four named branches passed in both themes",
+      "windowsExecuted": [
+        "generic form",
+        "period-detail",
+        "event-detail"
+      ],
+      "frozenCenteredDetail": "Not executed through real UI: no normal reachable trigger; source and actual CSS coverage only"
+    },
     "sourceInventory": "docs/evidence/dialog-style/dialog-content-inventory.txt",
-    "testIds": ["DIA-01", "DIA-02", "DIA-03", "DIA-04", "DIA-05", "DIA-06", "DIA-07", "DIA-08", "DIA-09", "DIA-10"],
+    "testIds": [
+      "DIA-01",
+      "DIA-02",
+      "DIA-03",
+      "DIA-04",
+      "DIA-05",
+      "DIA-06",
+      "DIA-07",
+      "DIA-08",
+      "DIA-09",
+      "DIA-10"
+    ],
     "research": "docs/reviews/2026-10-12-dialog-style-research.md",
     "scopeReview": "docs/reviews/2026-10-12-dialog-style-scope-review.md",
     "design": "design/dialog-style/index.html",
     "designReview": "docs/reviews/2026-10-12-dialog-style-design-review.md",
-    "previewEvidence": ["design/dialog-style/preview-observations.json", "design/dialog-style/html-checks.json"],
+    "previewEvidence": [
+      "design/dialog-style/preview-observations.json",
+      "design/dialog-style/html-checks.json"
+    ],
     "fullRegressionRequested": false,
     "productTestsExecuted": true,
     "note": "Approved v2 implemented after independent plan/case review and valid style red lights (18 of original 21 failures; 3 fixture assertions corrected). Only 25 new+7 related browser cases and scoped Windows development Electron; no full suite. CSS probes/data fixtures are distinct from real local DB/native UI. Frozen centered detail real UI, macOS, installed package, physical input and native system dialogs not executed. Existing composer changes and all other requirement statuses preserved."
@@ -401,14 +1137,44 @@
     "date": "2026-10-12",
     "requirement": "AI composer mode menu contains only standard/plan modes, with no send-method choices; defaults to Enter send and Shift+Enter newline",
     "status": "implemented-scoped-validated",
-    "implementation": ["src/components/layout/ChatPanel.tsx", "src/lib/desktop/composer-shortcuts.ts", "src/stores/chat.ts"],
+    "implementation": [
+      "src/components/layout/ChatPanel.tsx",
+      "src/lib/desktop/composer-shortcuts.ts",
+      "src/stores/chat.ts"
+    ],
     "plan": "docs/reviews/2026-10-12-composer-send-options-plan.md",
     "testDesign": "docs/reviews/2026-10-12-composer-send-options-tests.md",
     "independentReview": "docs/reviews/2026-10-12-composer-send-options-review.md",
     "verification": "docs/reviews/2026-10-12-composer-send-options-verification.md",
-    "testIds": ["CSO-01", "CSO-02", "CSO-03", "CSO-04", "CSO-05", "CSO-06", "CSO-07", "CSO-08", "CSO-09", "CSO-10"],
-    "scopedTests": {"passed": 16, "failed": 0, "skipped": 0, "evidence": ["docs/evidence/composer-send-options/green.tap", "docs/evidence/composer-send-options/dispatcher-green.tap"]},
-    "windowsElectron": {"checkGroups": 6, "passed": 6, "rendererErrors": 0, "rendererHttpRequests": 0, "listeningServers": 0, "evidence": "docs/evidence/composer-send-options/windows-electron.json"},
+    "testIds": [
+      "CSO-01",
+      "CSO-02",
+      "CSO-03",
+      "CSO-04",
+      "CSO-05",
+      "CSO-06",
+      "CSO-07",
+      "CSO-08",
+      "CSO-09",
+      "CSO-10"
+    ],
+    "scopedTests": {
+      "passed": 16,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": [
+        "docs/evidence/composer-send-options/green.tap",
+        "docs/evidence/composer-send-options/dispatcher-green.tap"
+      ]
+    },
+    "windowsElectron": {
+      "checkGroups": 6,
+      "passed": 6,
+      "rendererErrors": 0,
+      "rendererHttpRequests": 0,
+      "listeningServers": 0,
+      "evidence": "docs/evidence/composer-send-options/windows-electron.json"
+    },
     "fullRegressionRequested": false,
     "note": "Latest user explicitly prohibits full tests for this change. Keep committed custom/multiple shortcut bindings in complete settings; retire menu-only presets and old enterToSend preference while preserving model memories. Windows development Electron only; no provider call, physical IME, package or macOS acceptance. Other requirement statuses unchanged."
   },
@@ -429,8 +1195,29 @@
     "previousDesignReview": "docs/reviews/2026-10-11-onboarding-v2-design-review.md",
     "firstDesignReview": "docs/reviews/2026-10-11-onboarding-design-review.md",
     "previousPreview": "design/onboarding/archive-v1/preview-checks.json",
-    "plannedTestIds": ["ONB-01", "ONB-02", "ONB-03", "ONB-04", "ONB-05", "ONB-06", "ONB-07", "ONB-08", "ONB-09", "ONB-10", "ONB-11"],
-    "previewOnly": { "uiVersion": "v2", "scope": "Historical preview before later refinements; v3 has not been rendered", "checks": 16, "passed": 16, "captures": 11, "pageErrors": 0, "httpRequests": 0, "evidence": "design/onboarding/preview-checks.json" },
+    "plannedTestIds": [
+      "ONB-01",
+      "ONB-02",
+      "ONB-03",
+      "ONB-04",
+      "ONB-05",
+      "ONB-06",
+      "ONB-07",
+      "ONB-08",
+      "ONB-09",
+      "ONB-10",
+      "ONB-11"
+    ],
+    "previewOnly": {
+      "uiVersion": "v2",
+      "scope": "Historical preview before later refinements; v3 has not been rendered",
+      "checks": 16,
+      "passed": 16,
+      "captures": 11,
+      "pageErrors": 0,
+      "httpRequests": 0,
+      "evidence": "design/onboarding/preview-checks.json"
+    },
     "uiApproved": true,
     "implementationStarted": true,
     "technicalDesign": "docs/reviews/2026-10-11-onboarding-technical-design.md",
@@ -442,13 +1229,59 @@
     "codeReview": "docs/reviews/2026-10-11-onboarding-code-review.md",
     "validation": "docs/reviews/2026-10-11-onboarding-validation.md",
     "summary": "docs/reviews/2026-10-11-onboarding-summary.md",
-    "scopedTests": { "files": 20, "passed": 189, "failed": 0, "skipped": 0, "evidence": "docs/evidence/onboarding/scoped-tests.json" },
-    "windowsCompiled": { "scenarioGroups": 8, "passed": 8, "rendererErrors": 0, "evidence": "docs/evidence/onboarding/windows-electron.json" },
-    "windowsPackage": { "scenarioGroups": 8, "passed": 8, "resourcesVerified": 317, "rendererErrors": 0, "evidence": "docs/evidence/onboarding/windows-package.json", "installed": false, "published": false },
-    "validationLimits": ["Physical IME", "System DPI/multimonitor", "Native avatar picker manual operation", "macOS", "NSIS installation", "Package startup/service worker network guard not injected; strict pre-entry main/worker guard applies to matching compiled app"],
+    "scopedTests": {
+      "files": 20,
+      "passed": 189,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": "docs/evidence/onboarding/scoped-tests.json"
+    },
+    "windowsCompiled": {
+      "scenarioGroups": 8,
+      "passed": 8,
+      "rendererErrors": 0,
+      "evidence": "docs/evidence/onboarding/windows-electron.json"
+    },
+    "windowsPackage": {
+      "scenarioGroups": 8,
+      "passed": 8,
+      "resourcesVerified": 317,
+      "rendererErrors": 0,
+      "evidence": "docs/evidence/onboarding/windows-package.json",
+      "installed": false,
+      "published": false
+    },
+    "validationLimits": [
+      "Physical IME",
+      "System DPI/multimonitor",
+      "Native avatar picker manual operation",
+      "macOS",
+      "NSIS installation",
+      "Package startup/service worker network guard not injected; strict pre-entry main/worker guard applies to matching compiled app"
+    ],
     "fullRegressionRequested": false,
     "note": "User approved the final HTML UI 2026-10-11 and requested only related tests; this overrides prior automatic UI progression/full-regression instructions for this feature. Preview checks are not product acceptance.",
-    "revisions": [{ "date": "2026-10-12", "change": "Onboarding dialogs are non-closable modal dialogs: no close button; Escape and outside press vetoed via onboardingDialogGuard + disablePointerDismissal; exit only via explicit forward/back/complete actions; nested connection-test result dialog included; ordinary settings editors unchanged", "supersedes": "v3 暂时退出 affordance (close button + Escape); 2026-10-11 docs annotated in place", "research": "docs/reviews/2026-10-12-onboarding-modal-research.md", "plan": "docs/reviews/2026-10-12-onboarding-modal-plan.md", "planReview": "Independent subagent review; blocking items fixed (test rig mocks, doc sync list)", "testCases": "docs/reviews/2026-10-12-onboarding-modal-test-cases.md", "plannedTestIds": ["ONB-12"], "codeReview": "Independent subagent review passed; 3 minors fixed (test id dedup, smoke check labels)", "validation": "docs/reviews/2026-10-12-onboarding-modal-verification.md", "status": "implemented-validated", "evidence": { "scopedTests": "Node 24.21.0 full unit+integration: 1861 pass / 41 fail, failure set strict subset of pre-change baseline (42 fail, Windows/环境预置项), zero new failures; affected onboarding/editor files 84/84 minus 2 pre-existing rig failures", "windowsElectron": "docs/evidence/onboarding/windows-electron.json (12 check groups incl. ONB-12k/12l/12m/12n/12o, 0 renderer errors, 0 network requests)" } }]
+    "revisions": [
+      {
+        "date": "2026-10-12",
+        "change": "Onboarding dialogs are non-closable modal dialogs: no close button; Escape and outside press vetoed via onboardingDialogGuard + disablePointerDismissal; exit only via explicit forward/back/complete actions; nested connection-test result dialog included; ordinary settings editors unchanged",
+        "supersedes": "v3 暂时退出 affordance (close button + Escape); 2026-10-11 docs annotated in place",
+        "research": "docs/reviews/2026-10-12-onboarding-modal-research.md",
+        "plan": "docs/reviews/2026-10-12-onboarding-modal-plan.md",
+        "planReview": "Independent subagent review; blocking items fixed (test rig mocks, doc sync list)",
+        "testCases": "docs/reviews/2026-10-12-onboarding-modal-test-cases.md",
+        "plannedTestIds": [
+          "ONB-12"
+        ],
+        "codeReview": "Independent subagent review passed; 3 minors fixed (test id dedup, smoke check labels)",
+        "validation": "docs/reviews/2026-10-12-onboarding-modal-verification.md",
+        "status": "implemented-validated",
+        "evidence": {
+          "scopedTests": "Node 24.21.0 full unit+integration: 1861 pass / 41 fail, failure set strict subset of pre-change baseline (42 fail, Windows/环境预置项), zero new failures; affected onboarding/editor files 84/84 minus 2 pre-existing rig failures",
+          "windowsElectron": "docs/evidence/onboarding/windows-electron.json (12 check groups incl. ONB-12k/12l/12m/12n/12o, 0 renderer errors, 0 network requests)"
+        }
+      }
+    ]
   },
   "aiCaptionDragFix": {
     "date": "2026-10-10",
@@ -3364,11 +4197,41 @@
     ],
     "verification": {
       "typecheck": "passed",
-      "coreSuite": {"tests": 1904, "pass": 1857, "fail": 41, "regressionsIntroduced": 0, "note": "41 失败与 HEAD 基线逐名一致（Windows 平台/环境问题）；另 3 个满载超时用例单独复跑全绿", "evidence": "docs/evidence/implementation-01/core-latest.tap"},
-      "featureTests": {"unit": "SR-U 系列 48+36 全绿", "integration": "SR-I-01~07 真实 worker 冷启动全绿", "browser": "SR-B-01~12 在内 25/25 通过"},
-      "designPreview": {"checks": 9, "passed": 9, "evidence": "design/startup-recovery/preview-checks.json"},
-      "nativeWindows": {"scenarios": ["SR-R-01", "SR-R-02", "SR-R-03", "SR-R-04", "SR-R-05"], "passed": 5, "rendererErrors": 0, "evidence": "docs/evidence/startup-recovery/startup-recovery.json"},
-      "windowsPackage": {"stage": "win-unpacked 重新打包 + 隔离根真实启动进引导", "passed": true, "evidence": "docs/evidence/startup-recovery/packaged-fresh.json"},
+      "coreSuite": {
+        "tests": 1904,
+        "pass": 1857,
+        "fail": 41,
+        "regressionsIntroduced": 0,
+        "note": "41 失败与 HEAD 基线逐名一致（Windows 平台/环境问题）；另 3 个满载超时用例单独复跑全绿",
+        "evidence": "docs/evidence/implementation-01/core-latest.tap"
+      },
+      "featureTests": {
+        "unit": "SR-U 系列 48+36 全绿",
+        "integration": "SR-I-01~07 真实 worker 冷启动全绿",
+        "browser": "SR-B-01~12 在内 25/25 通过"
+      },
+      "designPreview": {
+        "checks": 9,
+        "passed": 9,
+        "evidence": "design/startup-recovery/preview-checks.json"
+      },
+      "nativeWindows": {
+        "scenarios": [
+          "SR-R-01",
+          "SR-R-02",
+          "SR-R-03",
+          "SR-R-04",
+          "SR-R-05"
+        ],
+        "passed": 5,
+        "rendererErrors": 0,
+        "evidence": "docs/evidence/startup-recovery/startup-recovery.json"
+      },
+      "windowsPackage": {
+        "stage": "win-unpacked 重新打包 + 隔离根真实启动进引导",
+        "passed": true,
+        "evidence": "docs/evidence/startup-recovery/packaged-fresh.json"
+      },
       "build": "passed"
     },
     "validationLimits": [
@@ -3502,5 +4365,45 @@
       },
       "allAcceptancePassed": false
     }
+  },
+  "startupAutoRepairRevision": {
+    "date": "2026-10-15",
+    "scope": "启动遇上次未正常关闭/写入锁时自动修复写入锁并重试启动（默认最多3次，全失败才弹修复对话框）；损坏 state.json 隔离保留并以默认设置启动；不可解析 data-root.json 指针放行交分类层自动隔离重建（真实演示抓出的追加缺陷修复）",
+    "status": "implemented-and-scoped-verified",
+    "research": "docs/187-startup-auto-repair-research.md",
+    "product": "docs/188-startup-auto-repair-product.md",
+    "testCases": "docs/189-startup-auto-repair-cases.md",
+    "planReview": "docs/190-startup-auto-repair-plan-review.md",
+    "codeReview": "docs/191-startup-auto-repair-code-review.md",
+    "verification": "docs/192-startup-auto-repair-verification.md",
+    "testIds": [
+      "IL42-11",
+      "IL42-12",
+      "IL42-13",
+      "IL42-14",
+      "IL42-15",
+      "SR-U-111",
+      "SR-U-112",
+      "SR-U-113",
+      "IL116-S02",
+      "IL116-S05",
+      "DESK-G04",
+      "IL42-PG03"
+    ],
+    "changes": {
+      "main": "index.ts 启动分支：inbox 锁先经 recoverInboxLeaseAutomatically 自动修复（共用冷态断言），false 才走 launchInboxLeaseRecovery 对话框，成功同进程 launch()；ModelRepository.initialize() 起始调用 quarantineInvalidStore()；legacy-recovery-preflight.ts 对不可解析 data-root.json 与缺失同语义放行，交回 classifyStartupRecovery repair:pointer 自动隔离重建（合法指针遗留恢复检查不变）",
+      "core": "VersionedStore.quarantineInvalidStore()（缺失/有效不动，损坏 rename 为 state.corrupt-<时间戳>.json 隔离保留）；inbox-lease-recovery.ts 新增 recoverInboxLeaseAutomatically（attempts 默认3、wait 默认500ms 可注入）",
+      "semantics": "自动修复复用 WorkLeaseRecovery 全部安全闸（活锁/异机锁/不明内容/篡改审计一律拒绝）；归属不明的根冲突、根迁移、根维护仍保留用户决策窗口"
+    },
+    "results": {
+      "scopedUnit": "96/96（npx node@24 v24.21.0；首跑 53/53 亦在系统 Node 20 通过）",
+      "scopedIntegration": "3/3（IL42-PG01~03，node@24，真实 PGlite worker，数据库哈希逐项一致）",
+      "typecheck": "passed",
+      "realElectronDemo": "16/16（scripts/demo-startup-auto-repair.mjs：taskkill 强杀/删标记/毁指针/毁设置四场景全自愈直进工作台，docs/evidence/startup-auto-repair/ 截图+report.json）",
+      "build": "passed（npm run build 全量，Node 24）",
+      "fullSuiteExecuted": false
+    },
+    "limits": "未跑全量（用户约束）；对话框路径本身未改动；系统 Node v20.12.2 不满足 engines，构建/集成/演示统一经 npx node@24；OS 级文件占用导致的隔离 rename 失败维持现有错误框路径；归属不明的 dialog 分类保留用户决策",
+    "evidence": "docs/evidence/startup-auto-repair/（s1 强杀前后、s2a 标记重建、s2b 指针修复、s3 设置隔离 5 张真实窗口截图与 report.json）"
   }
 }

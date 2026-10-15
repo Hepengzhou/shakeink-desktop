@@ -25,6 +25,28 @@ export function inboxLeaseRecoveryRequired(value:RootPointer|null):boolean {
  return lockPresent||audit.phase==='observed'
 }
 export interface InboxLeaseRecoveryOptions {assertColdHost():void;hook?:WorkLeaseRecoveryOptions['hook']}
+export interface InboxLeaseAutoRepairOptions extends InboxLeaseRecoveryOptions {
+ /** Repair attempt budget; defaults to 3. */
+ attempts?:number
+ /** Invoked between failed attempts (with the failed attempt number); defaults to a short timer. */
+ wait?(failedAttempt:number):Promise<void>
+}
+/** Startup auto-repair equivalent to the dialog's confirmed repair, retried
+ * within the attempt budget; false means the caller must degrade to the dialog. */
+export async function recoverInboxLeaseAutomatically(bootstrap:string,options:InboxLeaseAutoRepairOptions):Promise<boolean>{
+ const attempts=Math.max(1,options.attempts??3),wait=options.wait??(()=>new Promise<void>(resolve=>setTimeout(resolve,500)))
+ for(let attempt=1;;attempt++){
+  try{
+   const session=await prepareInboxLeaseRecovery(bootstrap,options)
+   try{
+    const result=await session.recover(true)
+    if(result.status==='recovered'){session.assertRecovered();return true}
+   }finally{session.cancel()}
+  }catch{/* A failed attempt (a still-exiting owner, interrupted cleanup or a changed inbox) may converge on retry. */}
+  if(attempt>=attempts)return false
+  await wait(attempt)
+ }
+}
 export interface InboxLeaseRecoverySession {
  preview:WorkLeaseRecoveryPreview
  recover(confirmed:boolean):Promise<WorkLeaseRecoveryResult>

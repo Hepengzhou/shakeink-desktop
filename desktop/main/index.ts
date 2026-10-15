@@ -46,7 +46,7 @@ import {ApplicationMetadataGate} from "./application-metadata-gate"
 import {rootRelocationPreflight} from "./root-relocation-preflight"
 import {launchRootRelocation,launchStartupRecovery} from "./root-relocation-window"
 import {classifyStartupRecovery,executeStartupRepair} from "./startup-recovery"
-import {inboxLeaseRecoveryRequired} from "./inbox-lease-recovery"
+import {inboxLeaseRecoveryRequired,recoverInboxLeaseAutomatically} from "./inbox-lease-recovery"
 import {launchInboxLeaseRecovery} from "./inbox-lease-recovery-window"
 import {ConversationDirectoryAuthorizations} from "./conversation-directory-authorizations"
 import type {ConversationRequestOrigin} from "../shared/conversation-task"
@@ -811,11 +811,14 @@ else {
     const relocation=rootRelocationPreflight(bootstrapPath)
     if(relocation.mode!=="none")return launchRootRelocation(bootstrapPath,relocation,{recoveryRoot,home:homedir(),isolatedRoot,family})
     if(rootMaintenanceRequired(bootstrapPath))return launchRootMaintenance(bootstrapPath,startupPaths!.defaultRoot)
-    if(inboxLeaseRecoveryRequired(relocation.pointer))return launchInboxLeaseRecovery(bootstrapPath,()=>{
+    const assertInboxColdHost=()=>{
       if(worker||window||repository||modelService||BrowserWindow.getAllWindows().length)throw Error("ORDINARY_HOST_ALREADY_STARTED")
       assertNoLegacyBackupRecovery(bootstrapPath,assertLock)
       if(rootRelocationPreflight(bootstrapPath).mode!=="none"||rootMaintenanceRequired(bootstrapPath))throw Error("ROOT_MAINTENANCE_REQUIRED")
-    })
+    }
+    // A stale inbox lease is repaired inline (default attempt budget) before
+    // any window exists; only repeated failures reach the repair dialog.
+    if(inboxLeaseRecoveryRequired(relocation.pointer)&&!await recoverInboxLeaseAutomatically(bootstrapPath,{assertColdHost:assertInboxColdHost}))return launchInboxLeaseRecovery(bootstrapPath,assertInboxColdHost)
     return launch()
   }
   const failed=async(error:unknown)=>{

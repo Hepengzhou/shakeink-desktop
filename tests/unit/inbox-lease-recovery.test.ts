@@ -8,7 +8,7 @@ import {mkdtemp,mkdir,realpath,writeFile,readFile,rm,lstat,readdir,rename,symlin
 import {join} from 'node:path'
 import {DataRootManager} from '../../desktop/core/data-root'
 import {directoryIdentity} from '../../desktop/core/root-ownership'
-import {inboxLeaseRecoveryRequired,prepareInboxLeaseRecovery} from '../../desktop/main/inbox-lease-recovery'
+import {inboxLeaseRecoveryRequired,prepareInboxLeaseRecovery,recoverInboxLeaseAutomatically} from '../../desktop/main/inbox-lease-recovery'
 
 const deadPid=(async()=>{const child=spawn(process.execPath,['-e','process.exit(0)'],{stdio:'ignore'});await once(child,'exit');assert.ok(child.pid);assert.throws(()=>process.kill(child.pid!,0),{code:'ESRCH'});return child.pid!})()
 async function fixture(){
@@ -53,4 +53,44 @@ test('IL42-09 a copied audit cannot confer authority over a different inbox dire
 })
 test('IL42-10 result/exit assertion and cached replay never remove a newly arrived live lock',async()=>{
  const f=await fixture();try{const session=await prepareInboxLeaseRecovery(f.boot,f.options);assert.equal((await session.recover(true)).status,'recovered');session.assertRecovered();await mkdir(f.lock);const bytes=JSON.stringify({...f.owner,pid:process.pid,token:randomUUID()});await writeFile(f.ownerPath,bytes);assert.throws(()=>session.assertRecovered());await assert.rejects(session.recover(true));assert.equal(await readFile(f.ownerPath,'utf8'),bytes)}finally{await f.cleanup()}
+})
+test('IL42-11 automatic startup repair recovers a dead lease on the first attempt',async()=>{
+ const f=await fixture();try{
+  const before=await f.preserved(),phases:string[]=[],waits:number[]=[]
+  const repaired=await recoverInboxLeaseAutomatically(f.boot,{assertColdHost:f.options.assertColdHost,hook:phase=>{phases.push(phase)},wait:async()=>{waits.push(1)}})
+  assert.equal(repaired,true);assert.deepEqual(waits,[]);assert.equal(phases.filter(phase=>phase==='before-owner-unlink').length,1)
+  await assert.rejects(lstat(f.lock),{code:'ENOENT'});assert.deepEqual(await f.preserved(),before);assert.equal(inboxLeaseRecoveryRequired(f.pointer),false)
+ }finally{await f.cleanup()}
+})
+test('IL42-12 transient failures retry until recovery succeeds within the attempt budget',async()=>{
+ const f=await fixture();try{
+  const before=await f.preserved();let attempts=0;const waits:number[]=[]
+  const repaired=await recoverInboxLeaseAutomatically(f.boot,{assertColdHost:f.options.assertColdHost,hook:phase=>{if(phase==='before-owner-unlink'&&++attempts<3)throw Error('simulated transient failure')},wait:async()=>{waits.push(attempts)}})
+  assert.equal(repaired,true);assert.equal(attempts,3);assert.deepEqual(waits,[1,2])
+  await assert.rejects(lstat(f.lock),{code:'ENOENT'});assert.deepEqual(await f.preserved(),before);assert.equal(inboxLeaseRecoveryRequired(f.pointer),false)
+ }finally{await f.cleanup()}
+})
+test('IL42-13 persistent failure stops after the configured attempts and preserves the observed lease',async()=>{
+ for(const attempts of [undefined,1]){const f=await fixture();try{
+  let calls=0;const waits:number[]=[]
+  const repaired=await recoverInboxLeaseAutomatically(f.boot,{assertColdHost:f.options.assertColdHost,...(attempts?{attempts}:{}),hook:phase=>{if(phase==='before-owner-unlink'){calls++;throw Error('simulated persistent failure')}},wait:async()=>{waits.push(calls)}})
+  assert.equal(repaired,false);assert.equal(calls,attempts??3);assert.deepEqual(waits,attempts===1?[]:[1,2])
+  assert.equal(await readFile(f.ownerPath,'utf8'),f.bytes);assert.equal(inboxLeaseRecoveryRequired(f.pointer),true)
+ }finally{await f.cleanup()}}
+})
+test('IL42-14 an interrupted cleanup converges on a later automatic attempt',async()=>{
+ const f=await fixture();try{
+  const before=await f.preserved();let interrupted=false;const waits:number[]=[]
+  const repaired=await recoverInboxLeaseAutomatically(f.boot,{assertColdHost:f.options.assertColdHost,hook:phase=>{if(phase==='after-owner-unlink'&&!interrupted){interrupted=true;throw Error('simulated interruption')}},wait:async()=>{waits.push(1)}})
+  assert.equal(repaired,true);assert.deepEqual(waits,[1])
+  await assert.rejects(lstat(f.lock),{code:'ENOENT'});assert.deepEqual(await f.preserved(),before);assert.equal(inboxLeaseRecoveryRequired(f.pointer),false)
+ }finally{await f.cleanup()}
+})
+test('IL42-15 a live owner is never repaired and exhausts the budget untouched',async()=>{
+ const f=await fixture();try{
+  const bytes=JSON.stringify({...f.owner,pid:process.pid});await writeFile(f.ownerPath,bytes);const waits:number[]=[]
+  const repaired=await recoverInboxLeaseAutomatically(f.boot,{assertColdHost:f.options.assertColdHost,wait:async()=>{waits.push(1)}})
+  assert.equal(repaired,false);assert.deepEqual(waits,[1,1])
+  assert.equal(await readFile(f.ownerPath,'utf8'),bytes);await assert.rejects(lstat(join(f.inbox,'.xuanxiang-lease-recovery.json')),{code:'ENOENT'})
+ }finally{await f.cleanup()}
 })

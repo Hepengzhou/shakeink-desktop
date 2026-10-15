@@ -2,7 +2,7 @@ import assert from "node:assert/strict"
 import { mock, test } from "node:test"
 import crypto from "node:crypto"
 import { syncBuiltinESMExports } from "node:module"
-import { mkdtemp, readFile, rm, writeFile, readdir } from "node:fs/promises"
+import { mkdtemp, readFile, rm, writeFile, readdir, lstat } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { z } from "zod"
@@ -57,6 +57,32 @@ test("DESK-G03: corrupt/unknown schema data never silently becomes default setti
     await assert.rejects(new VersionedStore(path, defaults, schema.parse).read())
     assert.equal(await readFile(path, "utf8"), text)
   }
+}))
+
+test("DESK-G04: quarantineInvalidStore moves a corrupt file aside byte-identical and reads defaults", () => fixture(async path => {
+  for (const text of ["{broken", JSON.stringify({ schemaVersion: 99, revision: 3, value: defaults }), JSON.stringify({ schemaVersion: 1, revision: 0, value: { penName: "", theme: "paper" } })]) {
+    await writeFile(path, text)
+    const store = new VersionedStore(path, defaults, schema.parse)
+    assert.equal(await store.quarantineInvalidStore(), true)
+    await assert.rejects(lstat(path), { code: "ENOENT" })
+    const quarantined = (await readdir(join(path, ".."))).filter(name => /^settings\.corrupt-.+\.json$/.test(name))
+    assert.equal(quarantined.length, 1)
+    assert.equal(await readFile(join(path, "..", quarantined[0]), "utf8"), text)
+    assert.deepEqual(await store.read(), { revision: 0, value: defaults })
+    await rm(join(path, "..", quarantined[0]))
+  }
+}))
+
+test("DESK-G04: quarantineInvalidStore never touches a valid or missing store", () => fixture(async path => {
+  const store = new VersionedStore(path, defaults, schema.parse)
+  assert.equal(await store.quarantineInvalidStore(), false)
+  assert.deepEqual(await readdir(join(path, "..")), [])
+  const saved = await store.update(0, { penName: "保留", theme: "ink" })
+  const before = await readFile(path, "utf8")
+  assert.equal(await store.quarantineInvalidStore(), false)
+  assert.equal(await readFile(path, "utf8"), before)
+  assert.deepEqual(await store.read(), saved)
+  assert.deepEqual(await readdir(join(path, "..")), ["settings.json"])
 }))
 
 test("DESK-S08: invalid draft is rejected without modifying stored values", () => fixture(async path => {

@@ -47,3 +47,11 @@ test('ordinary migration triage retains authority over its own pending or invali
  assert.doesNotThrow(()=>assertNoLegacyBackupRecovery(f.boot,()=>{}))
  assert.deepEqual(readFileSync(path),before)
 })
+test('an unparseable root pointer defers to startup classification instead of blocking startup',async()=>{
+ for(const text of ['{broken pointer',JSON.stringify({schemaVersion:1,revision:1})+'\n']){
+  const f=await fixture(),path=join(f.boot,'data-root.json')
+  writeFileSync(path,text);const before=readFileSync(path)
+  assert.doesNotThrow(()=>assertNoLegacyBackupRecovery(f.boot,()=>{}))
+  assert.deepEqual(readFileSync(path),before)
+ }
+})

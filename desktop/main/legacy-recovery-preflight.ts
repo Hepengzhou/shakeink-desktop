@@ -44,7 +44,11 @@ export function assertNoLegacyBackupRecovery(path:string,assertLock:()=>void):vo
   if(controls.length)checkApplication()
   const pointerFile=observeRootAuthority(bootstrap,'data-root.json',16384,true)
   if(!pointerFile){guard();return}
-  const pointer=DataRootManager.parsePointer(JSON.parse(pointerFile.text)),root=pointer.root
+  // An unparseable pointer defers to startup classification: its repair or
+  // dialog triage owns the file from there (same as an absent pointer above).
+  let pointer:ReturnType<typeof DataRootManager.parsePointer>
+  try{pointer=DataRootManager.parsePointer(JSON.parse(pointerFile.text))}catch{guard();return}
+  const root=pointer.root
   let physical:ReturnType<typeof lstatSync>
   try{physical=lstatSync(root.path,{bigint:true})}catch(cause){
    if(!['ENOENT','ENOTDIR'].includes((cause as NodeJS.ErrnoException).code??''))throw cause

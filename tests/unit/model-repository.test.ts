@@ -1,6 +1,6 @@
 import assert from "node:assert/strict"
 import { test } from "node:test"
-import { mkdtemp, rm, readFile, writeFile } from "node:fs/promises"
+import { mkdtemp, rm, readFile, writeFile, readdir, lstat } from "node:fs/promises"
 import { readFileSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
@@ -17,6 +17,26 @@ test("model configuration preserves unknown context size instead of inventing a 
   const saved = await repo.saveModel(0, { ...draft, contextWindow: 0 })
   assert.equal(saved.models[0].contextWindow, 0)
   await assert.rejects(repo.saveModel(saved.revision, { ...draft, id:saved.models[0].id, contextWindow: 999 }))
+}))
+
+test("startup initialize quarantines a corrupt state file and opens default settings; valid state is never quarantined", () => fixture(async path => {
+  await writeFile(path, "{broken state")
+  const repaired = new ModelRepository(path, protection, { replace() {}, remove() {} })
+  const opened = await repaired.initialize()
+  assert.equal(opened.revision, 0)
+  assert.equal(opened.models.length, 0)
+  await assert.rejects(lstat(path), { code: "ENOENT" })
+  const quarantined = (await readdir(join(path, ".."))).filter(name => /^state\.corrupt-.+\.json$/.test(name))
+  assert.equal(quarantined.length, 1)
+  assert.equal(await readFile(join(path, "..", quarantined[0]), "utf8"), "{broken state")
+  await rm(join(path, "..", quarantined[0]))
+  const saved = await repaired.saveModel(0, draft)
+  const before = await readFile(path, "utf8")
+  const reopened = await new ModelRepository(path, protection, { replace() {}, remove() {} }).initialize()
+  assert.equal(reopened.revision, saved.revision)
+  assert.equal(reopened.models[0].name, draft.name)
+  assert.equal(await readFile(path, "utf8"), before)
+  assert.deepEqual((await readdir(join(path, ".."))).filter(name => name.includes("corrupt")), [])
 }))
 
 test("default model disable retains its ID but resets thinking to model default even when high remains supported", () => fixture(async path => {

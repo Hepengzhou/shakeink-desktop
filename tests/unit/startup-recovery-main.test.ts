@@ -30,6 +30,7 @@ function run(overrides:Record<string,unknown>|((bindings:Record<string,any>)=>Re
   rootMaintenanceRequired:()=>{trace.push('maintenance-preflight');return false},
   launchRootMaintenance:async()=>{trace.push('maintenance-window')},
   inboxLeaseRecoveryRequired:()=>{trace.push('inbox-preflight');return false},
+  recoverInboxLeaseAutomatically:async()=>{trace.push('inbox-auto-repair');return true},
   launchInboxLeaseRecovery:async()=>{trace.push('inbox-window')},
   launchStartupRecovery:async(_path:string,input:unknown)=>{const request=input as {sourcePath:string|null;recoveryRoot:string};trace.push('recovery-window');windows.push({sourcePath:request.sourcePath,recoveryRoot:request.recoveryRoot})},
   launch:async()=>{trace.push('ordinary')},
@@ -140,4 +141,37 @@ test('SR-U-110 a none classification with a retained selection error reselects o
  await tick()
  assert.deepEqual(stillBroken.trace,['legacy','classify','recovery-window'])
  assert.deepEqual(stillBroken.windows,[{sourcePath:null,recoveryRoot:'/home/.shakeink'}])
+})
+test('SR-U-111 a stale inbox lease is auto-repaired inline and startup continues to ordinary launch',async()=>{
+ const r=run(bindings=>({
+  inboxLeaseRecoveryRequired:()=>{bindings.trace.push('inbox-preflight');return true},
+  recoverInboxLeaseAutomatically:async(path:string,options:unknown)=>{bindings.trace.push('inbox-auto-repair');assert.equal(path,'/bootstrap');assert.equal(typeof (options as {assertColdHost?:unknown}).assertColdHost,'function');return true},
+ }))
+ await tick()
+ assert.deepEqual(r.trace,['legacy','classify','relocation-preflight','maintenance-preflight','inbox-preflight','inbox-auto-repair','ordinary'])
+ assert.deepEqual(r.windows,[]);assert.deepEqual(r.errors,[])
+})
+test('SR-U-112 three failed automatic attempts degrade to the repair dialog',async()=>{
+ const r=run(bindings=>({
+  inboxLeaseRecoveryRequired:()=>{bindings.trace.push('inbox-preflight');return true},
+  recoverInboxLeaseAutomatically:async()=>{bindings.trace.push('inbox-auto-repair');return false},
+ }))
+ await tick()
+ assert.deepEqual(r.trace,['legacy','classify','relocation-preflight','maintenance-preflight','inbox-preflight','inbox-auto-repair','inbox-window'])
+ assert.deepEqual(r.errors,[])
+})
+test('SR-U-113 the shared inbox cold-host assertion rejects an already-started ordinary host',async()=>{
+ const blocked=run(bindings=>({
+  worker:{terminate:async()=>{bindings.ordinaryWorkerExited=true}},
+  inboxLeaseRecoveryRequired:()=>{bindings.trace.push('inbox-preflight');return true},
+  recoverInboxLeaseAutomatically:async(_path:string,options:{assertColdHost():void})=>{try{options.assertColdHost()}catch(error){bindings.trace.push((error as Error).message);return false}bindings.trace.push('unexpected-pass');return true},
+ }))
+ await tick()
+ assert.deepEqual(blocked.trace,['legacy','classify','relocation-preflight','maintenance-preflight','inbox-preflight','ORDINARY_HOST_ALREADY_STARTED','inbox-window'])
+ const allowed=run(bindings=>({
+  inboxLeaseRecoveryRequired:()=>{bindings.trace.push('inbox-preflight');return true},
+  recoverInboxLeaseAutomatically:async(_path:string,options:{assertColdHost():void})=>{options.assertColdHost();bindings.trace.push('inbox-auto-repair');return true},
+ }))
+ await tick()
+ assert.deepEqual(allowed.trace,['legacy','classify','relocation-preflight','maintenance-preflight','inbox-preflight','legacy','relocation-preflight','maintenance-preflight','inbox-auto-repair','ordinary'])
 })

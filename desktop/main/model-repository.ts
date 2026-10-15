@@ -38,6 +38,8 @@ export class ModelRepository {
   }
   async initialize(assertCurrent:()=>void=()=>{}) {
     assertCurrent()
+    await this.store.quarantineInvalidStore()
+    assertCurrent()
     const state = await this.store.read()
     assertCurrent()
     this.publish(state.value)

@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto"
 import { open, readFile, rename, unlink } from "node:fs/promises"
-import { dirname, join } from "node:path"
+import { basename, dirname, join } from "node:path"
 
 export interface Snapshot<T> { revision: number; value: T }
 export class RevisionConflict extends Error { constructor() { super("设置已变更，请重新读取后保存"); this.name = "RevisionConflict" } }
@@ -66,6 +66,26 @@ export class VersionedStore<T> {
     return { revision: row.revision as number, value: this.validate(row.value) }
   }
   async read(): Promise<Snapshot<T>> { return this.enqueue(() => this.readDisk()) }
+  /** Startup preflight: a present but unparsable/invalid file is moved aside
+   * byte-identical so startup can continue from defaults; valid or missing
+   * files are never touched. */
+  async quarantineInvalidStore(): Promise<boolean> {
+    return this.enqueue(async () => {
+      let text: string
+      try { text = await readFile(this.path, "utf8") }
+      catch (error) { if ((error as NodeJS.ErrnoException).code === "ENOENT") return false; throw error }
+      try {
+        const row: unknown = JSON.parse(text)
+        if (!row || typeof row !== "object" || !("schemaVersion" in row) || row.schemaVersion !== 1 ||
+          !("revision" in row) || !Number.isSafeInteger(row.revision) || (row.revision as number) < 0 || !("value" in row)) throw new Error("invalid")
+        this.validate((row as { value: unknown }).value)
+        return false
+      } catch {
+        await rename(this.path, join(dirname(this.path), `${basename(this.path).replace(/\.json$/, "")}.corrupt-${new Date().toISOString().replace(/[:.]/g, "-")}.json`))
+        return true
+      }
+    })
+  }
   async update(revision: number, value: T, beforeCommit?: () => void): Promise<Snapshot<T>> {
     const validated = structuredClone(this.validate(value))
     return this.enqueue(async () => {
