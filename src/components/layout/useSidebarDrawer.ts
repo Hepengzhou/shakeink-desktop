@@ -46,7 +46,7 @@ export function useSidebarDrawer() {
     contentOpeningPercentage: null as number | null,
     captionPreparation: null as (() => boolean) | null,
     contentFocus: null as HTMLElement | null, contentHeldFocus: null as HTMLElement | null,
-    contentFocusOwned: false, contentClosingFocus: false, contentRestoreFocus: false,
+    contentFocusOwned: false, contentClosingFocus: false, contentRestoreFocus: false, contentSettleFocus: false,
     sidebarCrossOpen: null as boolean | null,
   })
   const listeners = useRef(new Set<() => void>())
@@ -353,6 +353,10 @@ export function useSidebarDrawer() {
         // Geometry unlocks in the layout effect of this settled React commit,
         // never while the DOM still advertises an in-flight phase.
         update({ contentAnimating: false, contentPhase: r.contentGoal ? "open" : "closed", contentCaptionZoom: null })
+        // The closed-phase restore control mounts with this commit; the layout
+        // effect moves any held closing focus onto it (wide mode has no visible
+        // restore control during the motion itself).
+        if (!r.contentGoal) r.contentSettleFocus = true
         announce()
       }
     }
@@ -524,6 +528,17 @@ export function useSidebarDrawer() {
       if (!document.activeElement?.closest('[data-slot="dialog-content"]')) destination?.focus({ preventScroll: true })
     }
     const r = runtime.current
+    if (r.contentSettleFocus && view.contentPhase === "closed") {
+      // Wide mode mounts the caption restore control only at this settled
+      // commit. Move the held closing focus onto it unless the user already
+      // moved focus elsewhere during the motion.
+      r.contentSettleFocus = false
+      if (r.contentClosingFocus) {
+        r.contentClosingFocus = false
+        const active = document.activeElement as HTMLElement | null
+        if (!active || active === document.body || !!contentInnerRef.current?.contains(active)) focusContentRestore()
+      }
+    }
     if (r.contentRestoreFocus && view.contentPhase === "open") {
       r.contentRestoreFocus = false
       const owned = r.contentFocusOwned && (document.activeElement === r.contentHeldFocus || !r.contentHeldFocus?.isConnected && document.activeElement === document.body)
@@ -600,7 +615,7 @@ export function useSidebarDrawer() {
         r.raf = null; r.generation++; r.sidebar = null; r.sidebarGoal = null; r.openingPercentage = null; r.secondary = null; r.needsWrite = false
         r.contentMotion = null; r.contentFrozen = false; r.contentOpening = false; r.contentOpeningPercentage = null; r.contentPreparing = false; r.contentPrepared = true; r.contentSettling = false; r.sidebarCrossOpen = null
         r.focus = null; r.restoreFocus = false; r.closingFocus = false
-        r.contentFocus = null; r.contentHeldFocus = null; r.contentFocusOwned = false; r.contentClosingFocus = false; r.contentRestoreFocus = false
+        r.contentFocus = null; r.contentHeldFocus = null; r.contentFocusOwned = false; r.contentClosingFocus = false; r.contentRestoreFocus = false; r.contentSettleFocus = false
         r.keepSidebarDivider = false; r.keepContentDivider = false
         r.registrationRepin = false
         r.restorePin = null
@@ -621,6 +636,6 @@ export function useSidebarDrawer() {
   const underlayInert = view.mode === "narrow" && view.phase !== "closed"
   return { ...view, initialLayout, registrationLayout, sidebarDividerVisible: view.sidebarVisible && view.chatVisible || motion && runtime.current.keepSidebarDivider, contentDividerVisible: view.contentMounted && (view.contentVisible && view.chatVisible || motion && runtime.current.keepContentDivider), groupRef, groupElementRef, sidebarElementRef, innerRef, contentElementRef, contentInnerRef, rootRef, registerCaptionPreparation, toggleSidebar, showSidebar: () => startSidebar(true), hideSidebar: () => startSidebar(false), showContent, hideContent, toggleContent, toggleFullscreen, showChat, selectPane, onLayoutChanged,
     sidebarHidden: view.phase !== "open", interactionPaused: view.phase !== "open", underlayInert,
-    contentHidden: view.contentPhase !== "open", contentInteractionPaused: view.contentPhase !== "open" || underlayInert,
+    contentHidden: view.contentPhase === "closed", contentInteractionPaused: view.contentPhase !== "open" || underlayInert,
     chatInert: underlayInert || !view.chatVisible || view.mode === "narrow" && view.contentPhase !== "closed" }
 }

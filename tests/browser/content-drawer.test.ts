@@ -10,15 +10,6 @@ const restore = '.workspace-chat [data-content-restore]'
 const command = (page: Page, name: "toggle" | "sidebar" | "fullscreen" | "hide" | "activate") => page.evaluate(name => (window as any).contentFixture[name](), name)
 const read = (page: Page) => page.evaluate(() => (window as any).contentFixture.read())
 const near = (actual: number, expected: number) => assert(Math.abs(actual - expected) < .05, `${actual} should equal ${expected}`)
-async function clickMovingRestore(page: Page) {
-  const control = page.locator(restore)
-  assert.equal(await control.isVisible(), true, "Moving restore is actually visible")
-  assert.equal(await control.evaluate(el => !!el.closest("[inert]")), false, "Moving restore is interactive")
-  assert.equal(await control.evaluate(el => { const r = el.getBoundingClientRect(), hit = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2); return !!hit && el.contains(hit) }), true, "Actual hit at its current center reaches the restore control")
-  // Playwright's stable-element wait would intentionally postpone a click on a
-  // translating caption. Send the real pointer event after the actual hit check.
-  await control.click({ force: true })
-}
 
 async function initialAppRegion(page: Page) {
   const value = await page.evaluate(() => {
@@ -70,51 +61,88 @@ for (const theme of ["ink", "paper"] as const) test(`CD-01 ${theme} first open a
   assertFixedFrames(reopening, await sampleContent(page), `${theme} reopen`)
 }))
 
-test("CD-01 repeated close/open reversal follows the visible restore control and fixed geometry", () => withContentDrawer(browser, {}, async page => {
+test("CD-01 repeated command reversal keeps fixed geometry and never exposes the restore control in motion", () => withContentDrawer(browser, {}, async page => {
   await openContent(page)
   const complete = await sampleContent(page), instance = await page.locator('[data-content-instance]').getAttribute('data-content-instance')
+  // 2026-10-15: the caption restore control exists only at the settled closed
+  // phase. Mid-flight reversal stays available through the real command path.
   const samples = await framesDuring(page, async () => {
     await command(page, "hide"); await page.waitForTimeout(110)
-    await clickMovingRestore(page); await page.waitForTimeout(100)
-    await clickMovingRestore(page)
+    await command(page, "toggle"); await page.waitForTimeout(100)
+    await command(page, "toggle")
   }, 900)
   assertFixedFrames(samples, complete, "repeated reversal")
-  assert(samples.some(frame => frame.phase === "opening") && samples.some(frame => frame.phase === "closing"))
-  assert.equal((await sampleContent(page)).phase, "closed")
+  const moving = samples.filter(frame => frame.phase === "opening" || frame.phase === "closing")
+  assert(moving.some(frame => frame.phase === "opening") && moving.some(frame => frame.phase === "closing"))
+  assert(moving.every(frame => !frame.restore), "No opening/closing frame exposes the restore control")
+  const firstRestore = samples.find(frame => frame.restore)
+  assert(firstRestore, "Restore control reappears after the final settle")
+  assert.equal(firstRestore.phase, "closed", "Restore control reappears only at the settled closed phase")
   assert.equal(await page.locator('[data-content-instance]').getAttribute('data-content-instance'), instance)
   const shown = await framesDuring(page, () => page.locator(restore).press("Enter"))
   assertFixedFrames(shown, complete, "keyboard re-open")
+  assert(shown.filter(frame => frame.phase === "opening").every(frame => !frame.restore), "Keyboard re-open hides the control before the opening motion")
   assert.equal((await sampleContent(page)).phase, "open")
 }))
 
-test("CD-01 held actual pointer recovery survives the restore button moving beneath it", () => withContentDrawer(browser, {}, async page => {
-  await openContent(page)
-  const complete = await sampleContent(page)
-  await page.evaluate(() => {
-    ;(window as any).recoveryPointer = []
-    for (const type of ["pointerdown", "pointerup", "click"]) document.addEventListener(type, event => {
-      const control = document.querySelector('.workspace-chat [data-content-restore]'), native = event as globalThis.PointerEvent
-      const hit = document.elementFromPoint(native.clientX, native.clientY)
-      ;(window as any).recoveryPointer.push({ type, trusted: event.isTrusted, label: (event.target as Element)?.closest("button")?.getAttribute("aria-label"), x: native.clientX, y: native.clientY, rect: control?.getBoundingClientRect().toJSON(), hit: !!hit && !!control?.contains(hit), inert: !!control?.closest('[inert]'), phase: document.querySelector<HTMLElement>('.dashboard-shell')?.dataset.contentPhase })
-    }, true)
+test("CD-08 restore click hides the control before the opening animation's first frame", () => withContentDrawer(browser, {}, async page => {
+  assert.equal(await page.locator(restore).count(), 1, "Closed drawer exposes the restore control")
+  const immediate = await page.evaluate(async () => {
+    document.querySelector<HTMLElement>('.workspace-chat [data-content-restore]')!.click()
+    await Promise.resolve() // The click commits the new phase by the next microtask, before any paint.
+    const shell = document.querySelector<HTMLElement>('.dashboard-shell')!, viewport = document.querySelector<HTMLElement>('.content-drawer-viewport') ?? document.querySelector<HTMLElement>('#content')
+    return { phase: shell.dataset.contentPhase, restore: !!document.querySelector('.workspace-chat [data-content-restore]'), visible: viewport?.getBoundingClientRect().width ?? 0 }
   })
-  const samples = await framesDuring(page, async () => {
-    await command(page, "hide"); await page.waitForTimeout(210)
-    // The real driver samples a fresh center and sends pointerdown/up with an
-    // 80ms hold; skipping its stable wait keeps this inside the actual motion.
-    await page.locator(restore).click({ force: true, delay: 80 })
-    const down = await page.evaluate(() => (window as any).recoveryPointer.find((event: any) => event.type === "pointerdown"))
-    assert.equal(down?.trusted, true); assert.equal(down?.label, "显示内容面板", "Real pointerdown reaches the moving recovery button")
-    assert.equal(down.phase, "closing"); assert.equal(down.inert, false); assert.equal(down.hit, true)
-    const up = await page.evaluate(() => (window as any).recoveryPointer.find((event: any) => event.type === "pointerup"))
-    assert.equal(up?.x, down.x); assert.equal(up?.y, down.y, "Pointer remains at the original client point")
-    assert(Math.abs(up.rect.x - down.rect.x) > down.rect.width / 2, "Button really moves out from beneath the unchanged client point while held")
-    assert.equal(up?.trusted, true); assert.equal(up?.label, "显示内容面板", "The initiated recovery gesture remains owned by its moving button")
-    const click = await page.evaluate(() => (window as any).recoveryPointer.find((event: any) => event.type === "click"))
-    assert.equal(click?.trusted, true); assert.equal(click?.label, "显示内容面板")
-  }, 1100)
-  assertFixedFrames(samples, complete, "held pointer recovery")
-  assert.equal((await sampleContent(page)).phase, "open", "Actual completed recovery gesture reverses the drawer")
+  assert.equal(immediate.phase, "opening", "Click commits the opening phase before the first paint")
+  assert.equal(immediate.restore, false, "Restore control is removed before any animation frame paints")
+  assert(immediate.visible < 1, `Opening animation has not played yet, visible=${immediate.visible}`)
+  const frames = await framesDuring(page, () => page.waitForTimeout(700), 700)
+  const moving = frames.filter(frame => frame.phase === "opening")
+  assert(moving.length >= 8, `Opening motion is actually sampled, got ${moving.length} frames`)
+  assert(moving.every(frame => !frame.restore), "No opening frame contains the restore control")
+  assert.equal((await sampleContent(page)).phase, "open")
+  assert.equal(await page.locator(restore).count(), 0, "Open drawer keeps the restore control hidden")
+}))
+
+test("CD-08 restore control appears only after the closing animation completes", () => withContentDrawer(browser, {}, async page => {
+  await openContent(page)
+  const immediate = await page.evaluate(async () => {
+    document.querySelector<HTMLElement>('button[aria-label="显示 / 隐藏内容面板"]')!.click()
+    await Promise.resolve() // The click commits the new phase by the next microtask, before any paint.
+    const shell = document.querySelector<HTMLElement>('.dashboard-shell')!
+    return { phase: shell.dataset.contentPhase, restore: !!document.querySelector('.workspace-chat [data-content-restore]') }
+  })
+  assert.equal(immediate.phase, "closing", "Hide click commits the closing phase before the first paint")
+  assert.equal(immediate.restore, false, "Restore control does not appear when the closing animation starts")
+  const frames = await framesDuring(page, () => page.waitForTimeout(700), 700)
+  const moving = frames.filter(frame => frame.phase === "closing")
+  assert(moving.length >= 8, `Closing motion is actually sampled, got ${moving.length} frames`)
+  assert(moving.every(frame => !frame.restore), "No closing frame contains the restore control")
+  const firstRestore = frames.find(frame => frame.restore)
+  assert(firstRestore, "Restore control reappears")
+  assert.equal(firstRestore.phase, "closed", "Restore control appears only after the closing animation completes")
+  assert(firstRestore.visible < 1, `Restore control reappears at the fully closed width, visible=${firstRestore.visible}`)
+  const hidden = await sampleContent(page)
+  assert.equal(hidden.phase, "closed")
+  const control = page.locator(restore)
+  assert.equal(await control.count(), 1, "Restore control is mounted after the settle")
+  assert.equal(await control.evaluate(el => !!el.closest("[inert]")), false, "Settled restore control is interactive")
+}))
+
+test("CD-08 focus moved during closing is not stolen by the settled restore focus", () => withContentDrawer(browser, {}, async page => {
+  await openContent(page)
+  await page.getByRole("textbox", { name: "隔离正文草稿" }).focus()
+  const external = page.getByRole("button", { name: "外部焦点", exact: true })
+  const frames = await framesDuring(page, async () => {
+    await command(page, "hide"); await page.waitForTimeout(120)
+    await external.focus()
+  }, 700)
+  assert(frames.some(frame => frame.phase === "closing"), "Focus transfer happens inside the closing motion")
+  assert(frames.filter(frame => frame.phase === "closing").every(frame => !frame.restore), "No closing frame contains the restore control")
+  await page.waitForTimeout(200)
+  assert.equal(await external.evaluate(el => el === document.activeElement), true, "User focus moved during the motion is not stolen at the settle")
+  assert.equal((await sampleContent(page)).phase, "closed")
+  assert.equal(await page.locator(restore).count(), 1, "Restore control still appears after the closing animation completes")
 }))
 
 test("CD-02 simultaneous left/right movement and fullscreen replacement retain the original shape to latest terminal intent", () => withContentDrawer(browser, {}, async page => {

@@ -110,7 +110,7 @@ export async function withContentDrawer(browser: Browser, options: { width?: num
 }
 
 export type ContentSample = {
-  time: number; phase?: string; sidebarPhase?: string; mode?: string; pane?: string; exists: boolean;
+  time: number; phase?: string; sidebarPhase?: string; mode?: string; pane?: string; exists: boolean; restore: boolean;
   width: number; height: number; visible: number; x: number; viewportRight: number; innerRight: number; translate: number; scaleX: number; scaleY: number; skewX: number; skewY: number; translateY: number; inert: boolean;
   geometry: Record<string, number[]>; controls: Record<string, number[]>; controlRegions: Record<string, string>; lines: Record<string, number[][]>; caption: number[]; captionPadding: string; captionScale: string; region: string;
 }
@@ -119,7 +119,8 @@ export type ContentSample = {
 // ContentTabs instead, so RED is a measured width/line failure, not a missing hook.
 function captureSample(): ContentSample {
   const root = document.querySelector<HTMLElement>(".dashboard-shell")!, viewport = document.querySelector<HTMLElement>(".content-drawer-viewport") ?? document.querySelector<HTMLElement>("#content"), inner = document.querySelector<HTMLElement>(".content-drawer-inner") ?? document.querySelector<HTMLElement>(".content-tabs")
-  const empty = { time: performance.now(), phase: root.dataset.contentPhase, sidebarPhase: root.dataset.sidebarPhase, mode: root.dataset.drawerMode, pane: root.dataset.narrowPane, exists: false, width: 0, height: 0, visible: 0, x: 0, viewportRight: 0, innerRight: 0, translate: 0, scaleX: 1, scaleY: 1, skewX: 0, skewY: 0, translateY: 0, inert: false, geometry: {}, controls: {}, controlRegions: {}, lines: {}, caption: [], captionPadding: "", captionScale: "", region: "" }
+  const restore = !!document.querySelector(".workspace-chat [data-content-restore]")
+  const empty = { time: performance.now(), phase: root.dataset.contentPhase, sidebarPhase: root.dataset.sidebarPhase, mode: root.dataset.drawerMode, pane: root.dataset.narrowPane, exists: false, restore, width: 0, height: 0, visible: 0, x: 0, viewportRight: 0, innerRight: 0, translate: 0, scaleX: 1, scaleY: 1, skewX: 0, skewY: 0, translateY: 0, inert: false, geometry: {}, controls: {}, controlRegions: {}, lines: {}, caption: [], captionPadding: "", captionScale: "", region: "" }
   if (!inner || !viewport) return empty
   const i = inner.getBoundingClientRect(), v = viewport.getBoundingClientRect(), geometry: Record<string, number[]> = {}, controls: Record<string, number[]> = {}, controlRegions: Record<string, string> = {}, lines: Record<string, number[][]> = {}
   const rect = (b: DOMRect) => [b.x - i.x, b.y - i.y, b.width, b.height]
