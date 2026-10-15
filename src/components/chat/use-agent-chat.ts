@@ -24,6 +24,7 @@ import { chatTaskOverrides, newChatChoices, restoreChatChoices } from "@/lib/des
 import { registerDesktopChatNavigation } from "@/lib/desktop/navigation-runtime"
 import { useStagedChangesStore } from "@/stores/staged-changes"
 import { applySceneCommitReceipt } from "./scene-receipts"
+import { conversationTitleRequester } from "./conversation-title"
 import { stagedMessageSummary } from "@/lib/staged-save"
 import { useTabsStore, buildTabId } from "@/stores/tabs"
 import { useStoryActivityStore } from "@/stores/story-activity"
@@ -515,6 +516,10 @@ export function useAgentChat(userId: string) {
       useChatStore.setState({ isGenerating: false, pendingQuestion, pendingPlan,
         suspendedExecution: state.status === "interrupted" && (code !== "USER_STOPPED" || state.writeStarted || !!serverTurnId),
         queuePaused: state.status === "failed" || (state.status === "interrupted" && (state.writeStarted || code !== "USER_STOPPED" || !!serverTurnId)) || !!pendingQuestion || !!pendingPlan })
+      // 后台总结会话短标题：fire-and-forget，不阻塞 UI；服务端幂等（仅默认标题才替换）
+      if ((status === "succeeded" || status === "waiting_user") && conversationId) {
+        conversationTitleRequester.request(conversationId, () => queryClient.invalidateQueries({ queryKey: ["chat-conversations"] }))
+      }
     }
     stopRef.current = () => {
       finish("interrupted", serverTurnId ? "已停止跟随，正在确认服务端取消结果" : state.writeStarted ? "已停止跟随；工具可能已写入，请先查看已保存的改动" : "已停止生成，部分输出已保留", "USER_STOPPED")

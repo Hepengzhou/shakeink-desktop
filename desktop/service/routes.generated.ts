@@ -11,6 +11,7 @@ export const routes: Route[] = [
   { scope: "global", path: "/api/admin/usage", methods: ["GET"], load: () => import("../handlers/admin/usage/route") },
   { scope: "conversation", path: "/api/chat/conversations/[id]", methods: ["GET","PATCH","DELETE"], load: () => import("../handlers/chat/conversations/[id]/route") },
   { scope: "conversation", path: "/api/chat/conversations/[id]/sop-plan", methods: ["GET"], load: () => import("../handlers/chat/conversations/[id]/sop-plan/route") },
+  { scope: "conversation", path: "/api/chat/conversations/[id]/title", methods: ["POST"], load: () => import("../handlers/chat/conversations/[id]/title/route") },
   { scope: "conversations", path: "/api/chat/conversations", methods: ["GET"], load: () => import("../handlers/chat/conversations/route") },
   { scope: "chat", path: "/api/chat", methods: ["POST"], load: () => import("../handlers/chat/route") },
   { scope: "turn", path: "/api/chat/turns/[turnId]/cancel", methods: ["POST"], load: () => import("../handlers/chat/turns/[turnId]/cancel/route") },

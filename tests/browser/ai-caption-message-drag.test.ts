@@ -45,6 +45,7 @@ const stylesheet = postcss([tailwindcss()]).process(readFileSync(cssPath, "utf8"
 const bundle = build({ stdin: { loader: "tsx", resolveDir: process.cwd(), contents: `
 import React,{useState,useEffect,useRef} from 'react';import {createRoot} from 'react-dom/client';import {flushSync} from 'react-dom';
 import {Brain,ChevronDown,ChevronRight,MessageSquare,PanelLeft,PanelRight} from 'lucide-react';
+import {NavigationLabel} from './src/components/layout/NavigationLabel';
 import {Collapse} from './src/components/chat/Collapse';import {formatDuration} from './src/lib/duration';import {cn} from './src/lib/utils';
 import {MentionPopup} from './src/components/chat/MentionPopup';
 ${timer}

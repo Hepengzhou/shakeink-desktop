@@ -68,6 +68,7 @@ import { drawResultOf } from "@/lib/draw-redraw"
 import { fallbackTitle } from "@/lib/creation-wizard/fallback-title"
 import { useChatStore } from "@/stores/chat"
 import { useTabsStore } from "@/stores/tabs"
+import { NavigationLabel } from "./NavigationLabel"
 import { AskUserPanel, MARKERS } from "@/components/chat/AskUserPanel"
 import { CandidateActionPanel } from "@/components/chat/CandidateActionPanel"
 import { useCardSelection } from "@/components/chat/use-card-selection"
@@ -1710,11 +1711,12 @@ export function ChatPanel({
         )}
         {/* 顶栏：AI 对话图标 + 当前会话标题（2026-09 简化：去掉会话切换下拉、
             「创作参谋」文字与关联小说下拉；切换会话走侧栏树「对话」节点。
-            空会话引导页不显示图标与标题（有对话内容才出现）；flex-1 占位 span 常驻，保住右侧恢复钮位置） */}
+            空会话引导页不显示图标与标题（有对话内容才出现）；占位 span 常驻，保住右侧恢复钮位置。
+            标题用侧栏同款 NavigationLabel：过长时尾部渐变淡出而非省略号） */}
         {messages.length > 0 && <MessageSquare className="size-3.5 shrink-0 text-primary" />}
-        <span className="min-w-0 flex-1 truncate text-[13px] font-medium">
+        <NavigationLabel className="flex-1 text-[13px] font-medium">
           {messages.length > 0 ? (currentConversation?.title ?? "新会话") : ""}
-        </span>
+        </NavigationLabel>
 
         {/* contentHidden 仅在内容面板完全收起（contentPhase "closed"）后为 true：
             点击即随 "opening" 提交隐藏，收起动画收尾置 "closed" 才重新挂载。 */}

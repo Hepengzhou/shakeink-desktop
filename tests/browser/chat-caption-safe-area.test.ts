@@ -25,6 +25,7 @@ const stylesheet = postcss([tailwindcss()]).process(readFileSync(cssPath, "utf8"
 const bundle = build({ stdin: { loader: "tsx", resolveDir: process.cwd(), contents: `
 import React,{useState} from 'react';import {createRoot} from 'react-dom/client';import {flushSync} from 'react-dom';
 import {PanelLeft,PanelRight,MessageSquare} from 'lucide-react';import {useDesktopStore} from './src/stores/desktop';
+import {NavigationLabel} from './src/components/layout/NavigationLabel';
 import {WindowsMenuControl} from './src/components/desktop/WindowControls';
 window.mountTitle=(platform,zoom,font,sidebarHidden)=>{
  const calls=[];window.desktop={command:id=>{calls.push(id);return Promise.resolve()}};

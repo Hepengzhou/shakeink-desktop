@@ -4476,5 +4476,34 @@
     },
     "limits": "未跑全量（用户约束）；受限恢复窗口仍服务根迁移流程；行级 catalog 损坏（信封合法）由 worker 失败进兜底；临时根残留由 OS 清理",
     "evidence": "docs/evidence/config-deletion/（d1/d2/d3 自愈后工作台、d4 兜底主界面、d4 清空重启后全新工作台 5 张真实窗口截图与 report.json）"
+  },
+  "chatTitleRevision": {
+    "date": "2026-10-16",
+    "scope": "AI 对话顶栏标题截断改为与侧栏一致的渐变淡出（复用 NavigationLabel/nav-label，无新 CSS）；回合成功收口后后台大模型总结 ≤15 汉字（英文 ≤8 词）短标题并幂等替换正式标题（仅默认截断标题可被替换，无模型/失败静默不弹窗，顶栏与侧栏经共享缓存同步）",
+    "status": "implemented-and-scoped-verified",
+    "research": "docs/209-chat-title-research.md",
+    "product": "docs/210-chat-title-product.md",
+    "plan": "docs/211-chat-title-plan.md",
+    "planReview": "docs/212-chat-title-plan-review.md",
+    "testCases": "docs/213-chat-title-cases.md",
+    "casesReview": "docs/214-chat-title-cases-review.md",
+    "codeReview": "docs/215-chat-title-code-review.md",
+    "verification": "docs/216-chat-title-verification.md",
+    "summary": "docs/217-chat-title-summary.md",
+    "testIds": ["CT-01", "CT-02", "CT-03", "CT-04", "CT-10", "CT-11", "CT-12", "CT-20", "CT-21", "CT-22", "CT-30", "CT-31", "CT-32", "CT-33", "CT-34", "CT-35", "CT-36", "CT-36b", "CT-37", "CT-38", "CT-40", "CT-41", "CT-42", "CT-50", "CT-51", "CT-52"],
+    "changes": {
+      "renderer": "ChatPanel.tsx 顶栏标题换用 NavigationLabel（import + 1 处 JSX + 注释）；use-agent-chat.ts finish 收口 succeeded/waiting_user 时经 conversationTitleRequester fire-and-forget 请求并失效 [\"chat-conversations\"]；conversation-title.ts 新模块（每会话守卫 + 重试语义 + fetch 延迟解析）",
+      "service": "src/lib/services/conversation-title.ts 新模块：defaultConversationTitle（与 chat-turn.ts:194 逐字一致）/sanitizeGeneratedTitle（成对包裹去壳、30 码点上限）/buildTitlePrompt/summarizeConversationTitle（catalog 预检 + selection intent 解析 + generateText 注入 resolvedModel + abortSignal 透传 + updateMany CAS）",
+      "handler": "desktop/handlers/chat/conversations/[id]/title/route.ts（POST，401/404/透传 request.signal）；migration-map.json 登记 + routes.generated.ts 重新生成（scope conversation）",
+      "semantics": "幂等永不覆盖非默认标题；无默认文本模型连 model.resolve 都不发起（不弹窗）；失败仅记错误类型名（防 APICallError 携带请求体入日志）；并发 CAS 至多一次生效"
+    },
+    "results": {
+      "scopedUnit": "19/19（CT-10~12/20~22/30~38/50~52，Node 20）",
+      "scopedIntegration": "3/3（CT-40~42，ELECTRON_RUN_AS_NODE 内嵌 Node v24.21.0，真实 Workspaces+PGlite+真实 ModelService/Gateway 打桩 HTTP）",
+      "scopedBrowser": "4/4（CT-01~04 真实头部 JSX+真实 CSS）；code review P0 修复后连同 ai-caption-message-drag、chat-caption-safe-area 回归 13/13",
+      "typecheck": "passed",
+      "fullSuiteExecuted": false
+    },
+    "limits": "未跑全量（用户约束）；reconcile/follow 路径完成的回合当轮不触发标题请求（下一成功回合自愈）；CT-60 真机拖拽区 tooltip 未验（无模型环境，退路已批准：不出现则与现状持平）；系统 Node 20 缺 Promise.withResolvers，集成测试经 Electron 内嵌 Node 24 运行"
   }
 }

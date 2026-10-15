@@ -2624,6 +2624,28 @@
       "status": "planned"
     },
     {
+      "path": "src/app/api/chat/conversations/[id]/title/route.ts",
+      "methods": [
+        "POST"
+      ],
+      "disposition": "migrate-handler",
+      "reason": "桌面新增：后台大模型总结会话短标题（无上游 Web 对应）",
+      "local": "desktop/handlers/chat/conversations/[id]/title/route.ts",
+      "testIds": [
+        "CT-30",
+        "CT-31",
+        "CT-32",
+        "CT-33",
+        "CT-34",
+        "CT-35",
+        "CT-36",
+        "CT-36b",
+        "CT-37",
+        "CT-38"
+      ],
+      "status": "planned"
+    },
+    {
       "path": "src/app/api/chat/conversations/route.ts",
       "methods": [
         "GET"
