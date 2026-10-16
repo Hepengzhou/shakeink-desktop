@@ -249,6 +249,13 @@ export async function refreshStoryNavigation(userId: string, turnId: string, id:
   const current = await readStoryArtifacts(scope)
   const keys = previous.targets.map(t => t.key).filter(key => key === "phase:brainstorm" || current.artifacts.some(a => a.key === key))
   if (!keys.length) keys.push("phase:brainstorm")
+  // 与 prepareStoryTask 的 review 循环同款：快速资料结构检查廉价、无 AI、幂等；
+  // 刷新前按当前内容重检，避免过期检查点把 ready 误判为 false、菜单塌缩成 autoProceed 后刷新自弃。
+  const kindByKey = new Map(current.artifacts.map(a => [a.key, a.kind]))
+  for (const key of keys) {
+    const kind = kindByKey.get(key)
+    if (kind && FAST_MATERIAL_KINDS.has(kind)) await checkStoryMaterialStructure(scope, key)
+  }
   const prepared = await prepareStoryTask(scope, keys, false)
   // 只剩唯一轻量下一步时已无问答面板（autoProceed）：旧问题不能再刷新，提示作者侧直接继续
   if (!prepared.question) throw new ContentError("INTERACTION_STALE", "当前已有唯一下一步，请直接继续", 409)
