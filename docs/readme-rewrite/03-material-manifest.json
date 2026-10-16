@@ -1,0 +1,247 @@
+{
+  "version": 1,
+  "date": "2026-10-15",
+  "status": "passed-independent-review",
+  "scope": "macOS arm64 development Electron; original fictional work data; model-use provenance recorded per AI image; no Windows or package acceptance",
+  "capture": "screencapture -x -o -l <owned-window>; original pixels",
+  "contentSha256": "b5456e85c0d68d1a876566e7b8008702ee1c030bb15421b4bdb8a16f7c44d42f",
+  "screenshots": [
+    {
+      "file": "workspace-paper.png",
+      "title": "创作工作台",
+      "theme": "paper",
+      "book": "照夜渡",
+      "width": 2880,
+      "height": 1778,
+      "bytes": 5556586,
+      "sha256": "833883b8f4648bab83b803c8cce8dccd04f9f9610f87ceb5704b7cb5792814f0",
+      "configuredModelCount": 2,
+      "nativeControlColorPixels": {
+        "red": 646,
+        "yellow": 713,
+        "green": 596
+      },
+      "sharingIndicatorPixels": 0,
+      "nativeControlsVisualReview": "passed",
+      "visualReview": "passed"
+    },
+    {
+      "file": "characters-paper.png",
+      "title": "人物心理",
+      "theme": "paper",
+      "book": "照夜渡",
+      "width": 2880,
+      "height": 1778,
+      "bytes": 5096929,
+      "sha256": "398d5b4d54a1a98fb9c5e3ab05551f4d8e1dabe56860712919c7ae2d3cb3cc13",
+      "configuredModelCount": 2,
+      "nativeControlColorPixels": {
+        "red": 646,
+        "yellow": 713,
+        "green": 596
+      },
+      "sharingIndicatorPixels": 0,
+      "nativeControlsVisualReview": "passed",
+      "visualReview": "passed"
+    },
+    {
+      "file": "world-paper.png",
+      "title": "世界设定",
+      "theme": "paper",
+      "book": "照夜渡",
+      "width": 2880,
+      "height": 1778,
+      "bytes": 5510046,
+      "sha256": "3cab44a0cf4844f112cdd61444dd0e82a7f59c3dad6e3b0c4ea1bdea18cc6b75",
+      "configuredModelCount": 2,
+      "nativeControlColorPixels": {
+        "red": 646,
+        "yellow": 713,
+        "green": 596
+      },
+      "sharingIndicatorPixels": 0,
+      "nativeControlsVisualReview": "passed",
+      "visualReview": "passed"
+    },
+    {
+      "file": "planning-ink.png",
+      "title": "世界线规划",
+      "theme": "ink",
+      "book": "照夜渡",
+      "width": 2880,
+      "height": 1778,
+      "bytes": 3445822,
+      "sha256": "e754da47c0ee8d59dbddf52c25089f5ba61c25bfa289edc7b7dad2231e54efef",
+      "configuredModelCount": 2,
+      "nativeControlColorPixels": {
+        "red": 581,
+        "yellow": 614,
+        "green": 610
+      },
+      "sharingIndicatorPixels": 0,
+      "nativeControlsVisualReview": "passed",
+      "visualReview": "passed"
+    },
+    {
+      "file": "foreshadows-paper.png",
+      "title": "伏笔与触点",
+      "theme": "paper",
+      "book": "照夜渡",
+      "width": 2880,
+      "height": 1778,
+      "bytes": 6085009,
+      "sha256": "daf07ef170fe2fd9bd12156390a623963d80bed6e8d0064b55e97fe20ab7caf9",
+      "configuredModelCount": 2,
+      "nativeControlColorPixels": {
+        "red": 646,
+        "yellow": 713,
+        "green": 596
+      },
+      "sharingIndicatorPixels": 0,
+      "nativeControlsVisualReview": "passed",
+      "visualReview": "passed"
+    },
+    {
+      "file": "manuscript-ink.png",
+      "title": "历史穿越正文预览",
+      "theme": "ink",
+      "book": "汴河来信",
+      "width": 2880,
+      "height": 1778,
+      "bytes": 2632905,
+      "sha256": "97673a3a8544d3585dcd1eac4c9245e18a524ef551600e66025dd56e5a644dd0",
+      "configuredModelCount": 2,
+      "nativeControlColorPixels": {
+        "red": 581,
+        "yellow": 614,
+        "green": 784
+      },
+      "sharingIndicatorPixels": 0,
+      "nativeControlsVisualReview": "passed",
+      "visualReview": "passed"
+    },
+    {
+      "file": "appearance-paper.png",
+      "title": "首次运行主题选择",
+      "theme": "paper",
+      "book": null,
+      "width": 2880,
+      "height": 1780,
+      "bytes": 7153860,
+      "sha256": "a5e266ce46194cb3b3c96da9f1d8661864a3f80d3e3bfa4e8c19135634f23225",
+      "configuredModelCount": 0,
+      "nativeControlColorPixels": {
+        "red": 650,
+        "yellow": 748,
+        "green": 606
+      },
+      "sharingIndicatorPixels": 0,
+      "nativeControlsVisualReview": "passed",
+      "visualReview": "passed"
+    },
+    {
+      "file": "ai-workspace-paper.png",
+      "title": "AI 对话与正文同屏",
+      "theme": "paper",
+      "book": null,
+      "width": 2880,
+      "height": 1778,
+      "bytes": 6198874,
+      "sha256": "315a026007cbeea4a8c86373b2db233e5559f03d9129cdd262fb82481ea2682c",
+      "configuredModelCount": 2,
+      "conversationSource": {
+        "source": "model-reply-observed-in-UI",
+        "sentUserMessagesThisRevision": 2,
+        "usableReplies": 1,
+        "novelAssociated": false
+      },
+      "nativeControlColorPixels": {
+        "red": 642,
+        "yellow": 702,
+        "green": 593
+      },
+      "sharingIndicatorPixels": 0,
+      "nativeControlsVisualReview": "passed",
+      "visualReview": "passed",
+      "review": "reviews/12-ai-material-review.md"
+    },
+    {
+      "file": "narrative-ink.png",
+      "title": "叙事线规划",
+      "theme": "ink",
+      "book": "照夜渡",
+      "width": 2880,
+      "height": 1778,
+      "bytes": 2604978,
+      "sha256": "1886c7634ac7a258b22a9b4708c1e2bea3137ba9f5a5fbbb78b9b682a4f0a6eb",
+      "configuredModelCount": 2,
+      "nativeControlColorPixels": {
+        "red": 582,
+        "yellow": 614,
+        "green": 764
+      },
+      "sharingIndicatorPixels": 0,
+      "nativeControlsVisualReview": "passed",
+      "visualReview": "passed",
+      "conversationSource": {
+        "source": "model-reply-observed-in-UI",
+        "replySourceUserMessages": 2,
+        "usableReplies": 1,
+        "novelAssociated": false
+      },
+      "newUserMessagesThisRevision": 0,
+      "conversationTitlesPrepared": true,
+      "originalMessagesUnchanged": true,
+      "sourceCommit": "452f9f3b3efa5c9dd6ca99d0e2300dcca06e1cb0",
+      "sourceRecord": "09-layout-revision.md",
+      "review": "reviews/16-three-column-narrative-material-review.md"
+    },
+    {
+      "file": "ai-workspace-three-column-paper.png",
+      "title": "导航、AI 对话与正文三栏",
+      "theme": "paper",
+      "book": null,
+      "width": 2880,
+      "height": 1778,
+      "bytes": 7452569,
+      "sha256": "952f7427197478e88a908274f9c0b2f34080f5bd1a6decee5362cc66108bb0e4",
+      "configuredModelCount": 2,
+      "conversationSource": {
+        "source": "model-reply-observed-in-UI",
+        "replySourceUserMessages": 2,
+        "usableReplies": 1,
+        "novelAssociated": false
+      },
+      "nativeControlColorPixels": {
+        "red": 646,
+        "yellow": 713,
+        "green": 597
+      },
+      "sharingIndicatorPixels": 0,
+      "nativeControlsVisualReview": "passed",
+      "visualReview": "passed",
+      "newUserMessagesThisRevision": 0,
+      "conversationTitlesPrepared": true,
+      "originalMessagesUnchanged": true,
+      "sourceCommit": "452f9f3b3efa5c9dd6ca99d0e2300dcca06e1cb0",
+      "sourceRecord": "09-layout-revision.md",
+      "review": "reviews/16-three-column-narrative-material-review.md"
+    }
+  ],
+  "previousReviews": [
+    "reviews/06-final-material-review.md",
+    "reviews/12-ai-material-review.md"
+  ],
+  "updatedAt": "2026-10-15T20:22:25.790Z",
+  "readmeSelection": {
+    "section": "视觉展示",
+    "files": [
+      "ai-workspace-three-column-paper.png",
+      "characters-paper.png",
+      "planning-ink.png",
+      "narrative-ink.png",
+      "foreshadows-paper.png"
+    ]
+  },
+  "review": "reviews/16-three-column-narrative-material-review.md"
+}
