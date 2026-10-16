@@ -5,7 +5,8 @@
  * 待答问答 > 本面板 > 输入框）。四大分区——采用 / 改进 / 修复（仅有问题时）/ 其他，
  * 行视觉与 AskUserPanel 一致（序号圆 + 行内输入）。纯客户端交互：采用走
  * candidate-accept 共享链路（普通/调档/换用），改进/修复/其他经 chat:send-message
- * 统一发送入口发固定文案（排队语义由 ChatPanel 既有处理接管）。
+ * 统一发送入口发固定文案（待答问答由发送入口先退出再立即执行；生成中等忙碌态仍排队，
+ * 排队语义由 ChatPanel 既有处理接管）。
  */
 import { useEffect, useMemo, useState } from "react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
@@ -117,7 +118,7 @@ export function CandidateActionPanel({ novelId, conversationId }: { novelId: str
 
   const baseMatchesCurrent = detail && chapter ? detail.baseVersion === chapter.version : true
 
-  /** 发消息类动作：入队（生成中/待答问答等）时面板保留；立即发送则关闭面板回输入框 */
+  /** 发消息类动作：入队（生成中等忙碌态）时面板保留；待答问答由发送入口先退出再立即执行，立即发送则关闭面板回输入框 */
   const sendMessage = (text: string) => {
     dispatchChatSendMessage(text, novelId)
     // The real ChatPanel closes selection only after accepting an immediate

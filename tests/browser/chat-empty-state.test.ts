@@ -43,7 +43,7 @@ globalThis.mountChatEmpty=(options={})=>{
   newConversationRequested:false,newConversationPayload:null,draft:'',draftNovelId:null,pendingNovelTitle:null,pendingNovelPosition:null,novelCreationRequestId:null,
   creatingNovel:false,isGenerating:false,suspendedExecution:false,pendingQuestion:null,pendingPlan:null,pendingRequest:null,queuedMessages:[],queuePaused:false,
   modelChoice:{modelId:null,effort:null},modelChoiceExplicit:false,mode:'standard',modeExplicit:false});
- const calls=[],loads=new Map(),gates=new Map();let models=options.models===false?[]:[model],defaultModelId=options.responseDefault?model.id:null,wizardError=false,storageWriteFails=false;
+ const calls=[],loads=new Map(),gates=new Map();let models=options.models===false?[]:[model],defaultModelId=options.responseDefault?model.id:null,wizardError=false,storageWriteFails=false,lastLoaded=null;
  const nativeStorageSet=Storage.prototype.setItem;
  Storage.prototype.setItem=function(key,value){if(storageWriteFails&&key===chatSessionKey('fixture-author'))throw Error('controlled fixture storage failure');return nativeStorageSet.call(this,key,value)};
  const client=new QueryClient({defaultOptions:{queries:{retry:false,staleTime:0},mutations:{retry:false}}});
@@ -63,9 +63,17 @@ globalThis.mountChatEmpty=(options={})=>{
   const chat=/^\\/api\\/chat\\/conversations\\/([^/]+)$/.exec(path);
   if(chat&&method==='GET'){
    const id=chat[1],gate=gates.get(id);if(gate)await gate.promise;
-   const value=loads.get(id);if(value?.reject)throw Error(value.reject);return json(value?.body??detail(id),value?.status??200);
+   const value=loads.get(id);if(value?.reject)throw Error(value.reject);lastLoaded=id;return json(value?.body??detail(id),value?.status??200);
   }
   if(chat&&method==='PATCH')return json({conversation:{id:chat[1],...body}});
+  // CES-11：回合成功收尾的后台标题请求（fire-and-forget）与 skipQuestion 的跳过端点；
+  // lastLoaded 供 interaction 存根回读当前会话 id（applyTurnState 守卫要求 conversationId 匹配）
+  if(/^\\/api\\/chat\\/conversations\\/[^/]+\\/title$/.test(path)&&method==='POST')return json({changed:false,reason:'not-default'});
+  const turnInteraction=/^\\/api\\/chat\\/turns\\/([^/]+)\\/interaction$/.exec(path);
+  if(turnInteraction&&method==='POST'){
+   if(turnInteraction[1]==='ces11-turn-fail')return json({error:'合成跳过失败'},500);
+   return json({turn:{id:turnInteraction[1],conversationId:lastLoaded,latestAttemptId:'fixture-attempt',status:'succeeded',interaction:null},attempts:[],messages:[],recovery:{latest:true,canRetry:false,canResume:false,hasEffects:false,unknownExternal:false}});
+  }
   if(/^\\/api\\/chat\\/conversations\\/[^/]+\\/sop-plan$/.test(path))return json({active:null,recent:[]});
   const novel=/^\\/api\\/novels\\/([^/]+)(?:\\/(.*))?$/.exec(path);
   if(novel&&method==='GET'){
@@ -515,4 +523,131 @@ test("CES-10c switching to another card in the group keeps the group fully visib
   await page.waitForFunction(() => (window as any).f.client.getQueryData(["content-candidates", "detail", "chapter", "candidate-c"]) != null)
   await frames(page)
   ces10ExpectVisible(await ces10Geometry(page), "after switching to card C and its options loading")
+}))
+
+
+// --- CES-11: 问答/选卡面板选项必须立即处理（panel-answer-queue 2026-10-16） ---
+// 修复前：选卡操作面板「继续改进这张」等选项在待答问答下被 handleSendCardMessage
+// 入队，queuePaused+pendingQuestion 双闸门锁死永不发送。修复后：先 skipQuestion
+// 退出待答问答再立即 sendText，不入队。布点要求见
+// docs/reviews/2026-10-16-panel-answer-queue-test-cases.md。
+async function ces11Load(page: Page, messages: unknown[]) {
+  await page.evaluate(msgs => {
+    const f = (window as any).f
+    f.response("fixture-scroll-conv", 200, { conversation: { id: "fixture-scroll-conv", novelId: "fixture-work", modelId: null, title: "合成会话" }, messages: msgs })
+    f.request("fixture-scroll-conv")
+  }, messages as any)
+}
+/** 带服务端 interaction 的待答问答布点；drawRedraw=true 时为同章选稿问答（触发槽位覆盖） */
+function ces11Question(turnId: string, drawRedraw: boolean) {
+  return {
+    queuePaused: true,
+    pendingQuestion: {
+      markerStyle: "letters",
+      questions: [{ question: "合成选稿问答：如何处理本章候选？", options: ["采用合成角度甲", "直接换一批"] }],
+      interaction: { turnId, id: "ces11-ia", revision: 1, action: "answer" },
+      ...(drawRedraw ? { drawRedraw: { drawId: "ces10-draw", chapterId: "chapter", chapterTitle: "合成章" } } : {}),
+    },
+  }
+}
+async function ces11Posts(page: Page) { return page.evaluate(() => (window as any).f.calls.filter((call: any) => call.method === "POST")) }
+const ces11ChatDone = () => (window as any).f.calls.some((call: any) => call.path === "/api/chat" && call.method === "POST") && !(window as any).f.state().isGenerating
+
+test("CES-11a pending draw question + card improve skips the question and sends immediately, never queued", () => scenario({}, async page => {
+  await ces11Load(page, [ces10Filler("ces11-m1", 8), ces10DrawMessage])
+  await page.getByTestId("candidate-card-alpha").waitFor()
+  await page.evaluate(patch => { const f = (window as any).f; f.choose(); f.patch(patch) }, ces11Question("ces11-turn", true))
+  await page.getByTestId("candidate-card-alpha").click()
+  await page.getByTestId("cap-option-improve").waitFor(); await frames(page)
+  assert.equal(await page.getByTestId("candidate-action-panel").isVisible(), true, "selected card takes over the composer slot")
+  assert.equal(await page.getByTestId("ask-user-panel").count(), 0, "ask panel yields to the card panel but the question stays pending")
+  await page.getByTestId("cap-option-improve").click()
+  await frames(page)
+  assert.equal(await page.evaluate(() => (window as any).f.state().queuedMessages.length), 0, "panel answer must never enter the queue")
+  await page.waitForFunction(ces11ChatDone)
+  const posts = await ces11Posts(page)
+  const skip = posts.find((call: any) => call.path === "/api/chat/turns/ces11-turn/interaction")
+  const chat = posts.find((call: any) => call.path === "/api/chat")
+  assert.ok(skip, "the pending question must be skipped before executing")
+  assert.ok(chat, "the improve message must be sent immediately")
+  assert.ok(posts.indexOf(skip) < posts.indexOf(chat), "skip must happen before the send")
+  assert.deepEqual(skip.body, { id: "ces11-ia", revision: 1, action: "skip" })
+  assert.match(chat.body.message, /chapterId: chapter，candidateId: candidate/)
+  assert.match(chat.body.message, /为基础改进，再抽 3 份候选/)
+  assert.equal(chat.body.interaction, undefined, "a skipped question must not ride along as an answer interaction")
+  const state = await page.evaluate(() => (window as any).f.state())
+  assert.equal(state.pendingQuestion, null, "question panel closes")
+  assert.equal(state.selection, null, "card action panel closes")
+  await frames(page)
+  assert.equal(await page.getByTestId("candidate-action-panel").count(), 0)
+  assert.equal(await page.getByTestId("ask-user-panel").count(), 0)
+  assert.equal(await page.getByText("排队消息等待确认", { exact: false }).count(), 0)
+}))
+
+test("CES-11b external panel message with an unrelated pending question also skips and sends immediately", () => scenario({}, async page => {
+  await ces11Load(page, [])
+  await page.evaluate(patch => { const f = (window as any).f; f.choose(); f.patch(patch) }, ces11Question("ces11-turn", false))
+  await page.getByTestId("ask-user-panel").waitFor()
+  const text = "以《合成章》候选稿 合成角度甲（chapterId: chapter，candidateId: candidate）为基础改进，再抽 3 份候选。我的意见：（无具体意见，按三个改进方向各自判断）"
+  await page.evaluate(t => (window as any).f.external(t, "fixture-work"), text)
+  await frames(page)
+  assert.equal(await page.evaluate(() => (window as any).f.state().queuedMessages.length), 0, "panel-originated message must never enter the queue")
+  await page.waitForFunction(ces11ChatDone)
+  const posts = await ces11Posts(page)
+  const skip = posts.find((call: any) => call.path === "/api/chat/turns/ces11-turn/interaction")
+  const chat = posts.find((call: any) => call.path === "/api/chat")
+  assert.ok(skip && chat, "skip then immediate send")
+  assert.ok(posts.indexOf(skip) < posts.indexOf(chat), "skip must happen before the send")
+  assert.equal(chat.body.message, text)
+  assert.equal(chat.body.interaction, undefined)
+  assert.equal(await page.evaluate(() => (window as any).f.state().pendingQuestion), null)
+  await frames(page)
+  assert.equal(await page.getByTestId("ask-user-panel").count(), 0)
+}))
+
+test("CES-11c AskUserPanel answers keep the direct answer channel with interaction attached, no skip", () => scenario({}, async page => {
+  await page.evaluate(() => { const f = (window as any).f; f.choose(); f.patch({ pendingQuestion: { markerStyle: "letters", questions: [{ question: "合成待答问题", options: ["合成选择"] }], interaction: { turnId: "ces11-turn-c", id: "ces11-ia-c", revision: 1, action: "answer" } } }) })
+  await page.getByTestId("ask-user-panel").waitFor()
+  await page.getByTestId("ask-option-0-0").click()
+  await page.waitForFunction(ces11ChatDone)
+  const posts = await ces11Posts(page)
+  const chat = posts.find((call: any) => call.path === "/api/chat")
+  assert.ok(chat, "answer must be sent immediately")
+  assert.deepEqual(chat.body.interaction, { turnId: "ces11-turn-c", id: "ces11-ia-c", revision: 1, action: "answer" })
+  assert.match(chat.body.message, /^【回答问题】合成待答问题\n我的回答：合成选择$/)
+  assert.equal(posts.some((call: any) => /\/interaction$/.test(call.path)), false, "answers must not skip the question")
+  assert.equal(await page.evaluate(() => (window as any).f.state().queuedMessages.length), 0)
+  assert.equal(await page.evaluate(() => (window as any).f.state().pendingQuestion), null)
+}))
+
+test("CES-11d card options clicked while generating still queue (approved §2.5 boundary)", () => scenario({}, async page => {
+  await ces11Load(page, [ces10Filler("ces11-m1", 8), ces10DrawMessage])
+  await page.getByTestId("candidate-card-alpha").waitFor()
+  await page.evaluate(() => (window as any).f.choose())
+  await page.getByTestId("candidate-card-alpha").click()
+  await page.getByTestId("cap-option-improve").waitFor()
+  await page.evaluate(() => (window as any).f.patch({ isGenerating: true }))
+  await page.getByTestId("cap-option-improve").click(); await frames(page)
+  const state = await page.evaluate(() => (window as any).f.state())
+  assert.equal(state.queuedMessages.length, 1)
+  assert.match(state.queuedMessages[0].text, /为基础改进，再抽 3 份候选/)
+  assert.equal(await page.evaluate(() => (window as any).f.calls.some((call: any) => call.path === "/api/chat" && call.method === "POST")), false)
+  assert.equal(await page.getByTestId("candidate-action-panel").isVisible(), true, "queued actions keep the source card selected")
+}))
+
+test("CES-11e a failed skip falls back to the queue with the question and intent preserved", () => scenario({}, async page => {
+  await ces11Load(page, [ces10Filler("ces11-m1", 8), ces10DrawMessage])
+  await page.getByTestId("candidate-card-alpha").waitFor()
+  await page.evaluate(patch => { const f = (window as any).f; f.choose(); f.patch(patch) }, ces11Question("ces11-turn-fail", true))
+  await page.getByTestId("candidate-card-alpha").click()
+  await page.getByTestId("cap-option-improve").waitFor()
+  await page.getByTestId("cap-option-improve").click(); await frames(page)
+  await page.waitForFunction(() => (window as any).f.calls.some((call: any) => call.path === "/api/chat/turns/ces11-turn-fail/interaction" && call.method === "POST"))
+  await frames(page)
+  assert.equal(await page.evaluate(() => (window as any).f.calls.some((call: any) => call.path === "/api/chat" && call.method === "POST")), false, "a failed skip must not send")
+  const state = await page.evaluate(() => (window as any).f.state())
+  assert.equal(state.queuedMessages.length, 1, "the intent falls back to the queue, never silently dropped")
+  assert.match(state.queuedMessages[0].text, /为基础改进，再抽 3 份候选/)
+  assert.ok(state.pendingQuestion, "the unanswered question survives a failed skip")
+  assert.equal(await page.getByTestId("candidate-action-panel").isVisible(), true)
 }))

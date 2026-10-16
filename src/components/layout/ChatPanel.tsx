@@ -1401,11 +1401,11 @@ export function ChatPanel({
   }
 
   /** 内容面板发来的用户消息（chat:send-message）：走统一发送入口；生成中/恢复未就绪时进队列（同手动发送的排队语义）。
-      有待答问题时普通消息也进队列：问答退去后自动按序发出——send 会把 pendingQuestion.interaction
-      附给下一条直接发送的消息，普通通知直发会意外「答掉」不相关的待答问题。
-      带 action 的消息（正文改进对话框）：当前有待答问答时先退出问答（等同面板 Esc 取消的 skipQuestion），
-      再立即执行，不让改进任务排队等待旧问题；直发前置 draftAction 随请求上行（发送被收下后由 send 清掉，
-      未被收下此处兜底清），其余忙碌态仍随队列项落存、出队时置回。
+      有待答问答时先退出问答（等同面板 Esc 取消的 skipQuestion）再立即执行：问答/选卡面板的选项消息
+      即用户对该问答的处置（改进/修复/换一批/采用推进等），不得排队等待旧问题——入队会被
+      queuePaused+pendingQuestion 双闸门锁死（队列自动发送与「确认后继续」都等问答退去）。skip 失败
+      （状态已变化/网络异常）时消息回落入队，不静默丢失。直发前置 draftAction 随请求上行（发送被收下后
+      由 send 清掉，未被收下此处兜底清），其余忙碌态仍随队列项落存、出队时置回。
       任何消息一旦立即发送（任务开始执行），关闭选卡操作面板回输入框——与面板自身
       「选项即点即执行则关闭、入队保留」语义一致（入队时选中态保留）。 */
   const handleSendCardMessage = useCallback(async (text: string, action?: ChatAction) => {
@@ -1416,8 +1416,8 @@ export function ChatPanel({
       toast.info("未选择可用模型，内容已保留在待确认队列")
       return
     }
-    if (action && state.pendingQuestion) {
-      await skipQuestion()
+    if (state.pendingQuestion) {
+      try { await skipQuestion() } catch { /* skip 网络异常：与 skip 失败同语义，回落入队分支 */ }
       state = useChatStore.getState()
     }
     if (state.pendingQuestion || state.pendingPlan || state.isGenerating || state.recoveryStatus !== "ready" || state.creatingNovel) {

@@ -4481,6 +4481,53 @@
       "CES-05b/05c/06b 基线失败位于队列/首发/会话自动标题链路，留待独立排查，未计入本修复通过范围，未转记为已修复"
     ]
   },
+  "panelAnswerImmediateQueue": {
+    "date": "2026-10-16",
+    "requirement": "正文抽卡选卡后点击「继续改进这张」等选项不得入队等待：任何问答工具面板的有效选项被选中时，立刻关闭该问答面板并立刻处理回答，任何情况下不放入消息队列",
+    "status": "implemented-scoped-validated",
+    "research": "docs/reviews/2026-10-16-panel-answer-queue-research.md",
+    "plan": "docs/reviews/2026-10-16-panel-answer-queue-plan.md",
+    "cases": "docs/reviews/2026-10-16-panel-answer-queue-test-cases.md",
+    "implementation": [
+      "src/components/layout/ChatPanel.tsx",
+      "src/components/chat/CandidateActionPanel.tsx",
+      "src/components/chat/CandidateDrawCard.tsx"
+    ],
+    "testIds": [
+      "CES-11a",
+      "CES-11b",
+      "CES-11c",
+      "CES-11d",
+      "CES-11e"
+    ],
+    "tests": [
+      "tests/browser/chat-empty-state.test.ts"
+    ],
+    "reviews": "方案独立审核通过（0 P1；3 项 P2 已落实：措辞援引既有先例、生成中边界说明、skip 网络异常 try/catch 回落）；用例独立审核 1 项 P1（漏布会话标题 POST 存根致假红）+ 4 项 P2 已落实；code review 通过（0 P1；2 项 P2 记录：baseline-probe 追加 06b 转绿复核、11e 红探针 waitForFunction 偏差知情接受）",
+    "evidence": [
+      "docs/evidence/panel-answer-queue/ces11-red.tap",
+      "docs/evidence/panel-answer-queue/ces11-green.tap",
+      "docs/evidence/card-panel-scroll/baseline-probe.txt（追加 06b 转绿复核）"
+    ],
+    "behaviorChange": "handleSendCardMessage 对全部 chat:send-message 非 answer 消息（选卡面板改进/修复/其他、内容区候选面板改进/推进、采用后推进/换用过渡检查、评分卡按意见改进、换一批未命中分支）统一改为：有待答问答先 skipQuestion 退出再立即 sendText（既有 action 路径先例的推广），不再入队；skip 失败/网络异常回落入队不丢消息；模型检查仍在最前；生成中/待批准计划/恢复未就绪维持既有入队语义",
+    "verification": {
+      "targetedBrowser": {
+        "tests": 28,
+        "pass": 26,
+        "fail": 2,
+        "newCases": "CES-11a/11b/11e 红灯（旧代码入队卡死/不尝试 skip）修复后转绿；CES-11c/11d 护栏新旧均绿（answer 通道与生成中入队边界不被误改）",
+        "baselineFailures": "CES-05b/05c 为树内既有基线失败，签名与 card-panel-scroll 两轮 stash 基线探测逐字一致；CES-06b 因本次 fixture 补 title 存根转绿（已追加 baseline-probe.txt 复核记录）",
+        "environment": "系统 Node v20.12.2，SHAKEINK_TEST_CHROMIUM 真实 Chrome，完整真实 ChatPanel fixture，隔离合成数据",
+        "typecheck": "tsc --noEmit 全量通过（0 error）",
+        "evidence": "docs/evidence/panel-answer-queue/ces11-green.tap"
+      }
+    },
+    "limits": [
+      "按用户约束仅跑本修复相关套件（chat-empty-state 全文件），未跑其他套件、构建及真实 Electron 验证",
+      "生成中点选面板选项仍入队（§2.5 已批准排队设计豁免，回合正常收尾自动排空；收尾挂新问答时待用户处置后排空，非静默死锁）",
+      "CES-05b/05c 既有基线失败未计入本次通过范围，仍待独立排查"
+    ]
+  },
   "startupAutoRepairRevision": {
     "date": "2026-10-15",
     "scope": "启动遇上次未正常关闭/写入锁时自动修复写入锁并重试启动（默认最多3次，全失败才弹修复对话框）；损坏 state.json 隔离保留并以默认设置启动；不可解析 data-root.json 指针放行交分类层自动隔离重建（真实演示抓出的追加缺陷修复）",
