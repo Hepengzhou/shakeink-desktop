@@ -25,6 +25,7 @@ import{CharactersPanel}from'./src/components/content/CharactersPanel';
 import{ItemsPanel}from'./src/components/content/ItemsPanel';
 import{LevelSystemEditor}from'./src/components/content/LevelSystemEditor';
 import{useTabsStore}from'./src/stores/tabs';import{useChatStore}from'./src/stores/chat';
+import{useCardSelection}from'./src/components/chat/use-card-selection';
 import{useSceneUiStore}from'./src/stores/scene-ui';
 import{installTextPreviewSelection}from'./src/lib/desktop/text-selection';
 import{Button}from'./src/components/ui/button';
@@ -56,7 +57,7 @@ window.mountCards=(kind,theme,empty=false)=>{
  </div>}</QueryClientProvider></SelectionLifecycle>));
  render();
  const events=[];document.addEventListener('dragstart',event=>{queueMicrotask(()=>events.push({target:event.target instanceof Element?event.target.tagName:'',prevented:event.defaultPrevented,types:[...(event.dataTransfer?.types??[])],chip:event.dataTransfer?.getData('application/x-shakeink-chip')??'',plain:event.dataTransfer?.getData('text/plain')??''}))});
- window.cardsFixture={events,actions,active:()=>useTabsStore.getState().activeTabId,tabs:()=>useTabsStore.getState().tabs,reference:()=>useSceneUiStore.getState().reference,stopSelection:()=>stopSelection(),addFutureCard:()=>{future=true;render()},addNestedControls:()=>{controls=true;render()},addRegressionBoundaries:()=>{boundaries=true;render()},dispose:()=>{root.unmount();query.clear()}};
+ window.cardsFixture={events,actions,active:()=>useTabsStore.getState().activeTabId,tabs:()=>useTabsStore.getState().tabs,selection:()=>useCardSelection.getState().selection,reference:()=>useSceneUiStore.getState().reference,stopSelection:()=>stopSelection(),addFutureCard:()=>{future=true;render()},addNestedControls:()=>{controls=true;render()},addRegressionBoundaries:()=>{boundaries=true;render()},dispose:()=>{root.unmount();query.clear()}};
 };` },
   bundle: true, write: false, outfile: "isolated-selection-cards.js", platform: "browser", format: "iife",
   tsconfig: "tsconfig.json", define: { "process.env.NODE_ENV": '"production"' },
@@ -148,6 +149,19 @@ async function doubleClickText(page: Page, selector: string) {
   return page.evaluate(() => ({ text: window.getSelection()?.toString() ?? "", active: (window as any).cardsFixture.active() }))
 }
 
+// A bubble-phase click counter on the card itself. Clicks stopped by the
+// document-capture selection guard never reach it, so the count equals the
+// number of clicks that were allowed to run the card's real action.
+async function countCardClicks(page: Page, selector: string) {
+  await page.evaluate(sel => {
+    ;(window as any).__cardClicks = 0
+    document.querySelector(sel)!.addEventListener("click", () => (window as any).__cardClicks++)
+  }, selector)
+}
+async function cardClicks(page: Page) {
+  return page.evaluate(() => (window as any).__cardClicks as number)
+}
+
 for (const theme of ["paper", "ink"]) {
   for (const kind of Object.keys(selectors) as CardKind[]) {
     test(`TS-06/07 cards ${theme} actual ${kind} preview drag preserves selected original and card state`, () => scenario(kind, theme, false, async page => {
@@ -160,12 +174,42 @@ for (const theme of ["paper", "ink"]) {
       assert.equal(result.drags.filter(event => !event.prevented).length, 0, "selecting original text must not start an entity reference drag")
     }))
 
-    test(`TS-06/07 cards ${theme} actual ${kind} double click selects original words without opening editor`, () => scenario(kind, theme, false, async page => {
+    test(`CC-N1 cards ${theme} actual ${kind} plain click on preview fires the card action once`, () => scenario(kind, theme, false, async page => {
+      const { content, card } = selectors[kind]
+      await countCardClicks(page, card)
+      await clearSelection(page)
+      const box = await firstTextLine(page, content)
+      await page.mouse.click(box.x + Math.min(16, box.width / 2), box.y + box.height / 2)
+      assert.equal(await cardClicks(page), 1, "plain click on preview words must run the card action exactly once")
+      assert.equal(await page.evaluate(() => window.getSelection()?.toString() ?? ""), "", "plain click must not create a text selection")
+      if (kind === "level") assert.equal(await page.locator(card).count(), 0, "plain click retains opening level details")
+      else assert.ok(await page.evaluate(() => (window as any).cardsFixture.active()), "plain click retains opening the real content tab")
+      if (kind === "candidate") {
+        const state = await page.evaluate(() => ({ active: (window as any).cardsFixture.active(), selection: (window as any).cardsFixture.selection() }))
+        assert.ok(state.active?.includes("chapter-candidate"), "candidate click opens the candidate full-text tab")
+        assert.equal(state.selection?.candidateId, "isolated-candidate", "candidate click selects the card immediately")
+        assert.equal(state.selection?.chapterId, "isolated-chapter")
+        await page.waitForFunction(sel => document.querySelector(sel)?.getAttribute("aria-pressed") === "true", card)
+      }
+    }))
+
+    test(`CC-R1 cards ${theme} actual ${kind} double click on preview fires the card action exactly once`, () => scenario(kind, theme, false, async page => {
       const { content, card, word } = selectors[kind]
+      await countCardClicks(page, card)
       const result = await doubleClickText(page, content)
-      assert.match(result.text, new RegExp(word))
-      assert.equal(result.active, null, "double clicking preview words must not open a tab")
-      assert.equal(await page.locator(card).count(), 1, "double clicking preview must leave its DOM text mounted")
+      assert.equal(await cardClicks(page), 1, "the first click of a double click acts once; the second click and the dblclick event stay isolated")
+      if (kind === "level") assert.equal(await page.locator(card).count(), 0, "the first click retains opening level details")
+      else assert.ok(result.active, "the first click retains opening the real content tab")
+      if (kind === "candidate") {
+        // Real-product behavior: the chat card stays visible after the click, so
+        // the native double-click word selection on its excerpt still works.
+        assert.match(result.text, new RegExp(word), "double click keeps the original word selection on the always-visible chat card")
+        assert.equal(await page.locator(card).count(), 1, "double clicking preview leaves the chat card mounted")
+      }
+      // scene/character/item: in the real product the first click switches the
+      // active tab and hides the card, so double-click word selection cannot
+      // establish there. This fixture mounts panels directly without tab hiding
+      // and only locks the adapter mechanism (exactly one activation).
     }))
 
     test(`TS-01/07 cards ${theme} actual ${kind} name/badge stays unselectable and original card action works`, () => scenario(kind, theme, false, async page => {
@@ -219,11 +263,17 @@ async function holdPreview(page: Page, kind: CardKind) {
 }
 
 for (const kind of ["scene", "character", "item", "level"] as CardKind[]) {
-  test(`TS-07 helper actual ${kind} preview press suspends draggable and mouseup restores it`, () => scenario(kind, "paper", false, async page => {
+  test(`TS-07 helper actual ${kind} preview press suspends draggable and a no-move release acts as a plain click`, () => scenario(kind, "paper", false, async page => {
     await holdPreview(page, kind)
     await page.mouse.up()
-    await page.waitForFunction(selector => document.querySelector(selector)?.getAttribute("draggable") === "true", selectors[kind].card)
-    assert.equal(await page.evaluate(() => (window as any).cardsFixture.active()), null, "mouseup click on original text must not open the card")
+    if (kind === "level") {
+      // The release click opens level details and unmounts the card; the deferred
+      // draggable restore then lands on a detached node and must not be awaited.
+      assert.equal(await page.locator(selectors[kind].card).count(), 0, "a no-move release click retains opening level details")
+    } else {
+      await page.waitForFunction(selector => document.querySelector(selector)?.getAttribute("draggable") === "true", selectors[kind].card)
+      assert.ok(await page.evaluate(() => (window as any).cardsFixture.active()), "a no-move release is a plain click and opens the real content tab")
+    }
   }))
 
   test(`TS-07 helper actual ${kind} window blur event restores a held preview card`, () => scenario(kind, "paper", false, async page => {
@@ -275,47 +325,116 @@ test("TS-07 helper covers later-mounted actual cards while retaining their UI re
   assert.ok(reference.drags.some(event => !event.prevented && event.types.includes("application/x-shakeink-chip")))
 }))
 
-test("TS-06 helper no-role draggable planning article keeps both preview clicks suppressed while drag is suspended", () => scenario("candidate", "paper", false, async page => {
+test("TS-06 helper no-role draggable planning article fires once per plain click while selection gestures stay isolated", () => scenario("candidate", "paper", false, async page => {
   await page.evaluate(() => (window as any).cardsFixture.addRegressionBoundaries())
   await clearSelection(page)
   const box = await firstTextLine(page, "#planning-regression-preview")
   await page.mouse.move(box.x + 2, box.y + box.height / 2); await page.mouse.down()
   assert.equal(await page.locator("#planning-regression-card").getAttribute("draggable"), "false")
   await page.mouse.up()
-  assert.equal(await page.evaluate(() => (window as any).cardsFixture.actions.planning), 0, "mouseup-generated click must be intercepted while draggable is temporarily false")
+  assert.equal(await page.evaluate(() => (window as any).cardsFixture.actions.planning), 1, "a no-move release is a plain click and fires once while draggable is temporarily false")
   const selected = await doubleClickText(page, "#planning-regression-preview")
   assert.match(selected.text, /Planning/)
-  assert.equal(await page.evaluate(() => (window as any).cardsFixture.actions.planning), 0, "neither click of the native double click may open planning details")
+  // The dblclick edit action of the real Planning card stays unreachable under both
+  // rules (the old rule swallowed everything, the new rule swallows detail>=2 and
+  // the dblclick event); "exactly one" here is about plain-click counting only.
+  assert.equal(await page.evaluate(() => (window as any).cardsFixture.actions.planning), 2, "a double click nets exactly one card activation")
   await page.locator("#planning-real-control").click()
   assert.equal(await page.evaluate(() => (window as any).cardsFixture.actions.planningControl), 1, "actual inner Button handler must still run")
-  assert.equal(await page.evaluate(() => (window as any).cardsFixture.actions.planning), 0)
+  assert.equal(await page.evaluate(() => (window as any).cardsFixture.actions.planning), 2)
   await page.locator("#planning-regression-chrome").click()
-  assert.equal(await page.evaluate(() => (window as any).cardsFixture.actions.planning), 1, "planning UI chrome retains its action")
+  assert.equal(await page.evaluate(() => (window as any).cardsFixture.actions.planning), 3, "planning UI chrome retains its action")
 }))
 
-test("TS-06 helper checkbox-card preview selection does not toggle the outer checkbox action", () => scenario("candidate", "paper", false, async page => {
+test("TS-06 helper checkbox-card preview drag stays isolated while plain and double clicks toggle once each", () => scenario("candidate", "paper", false, async page => {
   await page.evaluate(() => (window as any).cardsFixture.addRegressionBoundaries())
   assert.match((await dragText(page, "#checkbox-regression-preview")).text, /Checkbox/)
+  assert.equal(await page.evaluate(() => (window as any).cardsFixture.actions.checkbox), 0, "preview drag must not toggle the outer role=checkbox")
   assert.match((await doubleClickText(page, "#checkbox-regression-preview")).text, /Checkbox/)
-  assert.equal(await page.evaluate(() => (window as any).cardsFixture.actions.checkbox), 0, "preview drag and double click must not toggle the outer role=checkbox")
+  assert.equal(await page.evaluate(() => (window as any).cardsFixture.actions.checkbox), 1, "a double click nets exactly one toggle of the outer role=checkbox")
   await page.locator("#checkbox-real-control").click()
   assert.equal(await page.evaluate(() => (window as any).cardsFixture.actions.checkboxControl), 1, "actual inner Button is an independent control")
-  assert.equal(await page.evaluate(() => (window as any).cardsFixture.actions.checkbox), 0)
+  assert.equal(await page.evaluate(() => (window as any).cardsFixture.actions.checkbox), 1)
   await page.locator("#checkbox-regression-chrome").click()
-  assert.equal(await page.evaluate(() => (window as any).cardsFixture.actions.checkbox), 1, "UI checkbox chrome still toggles once")
+  assert.equal(await page.evaluate(() => (window as any).cardsFixture.actions.checkbox), 2, "UI checkbox chrome still toggles once")
 }))
 
-test("TS-06 helper label preview prevents native associated-input activation but preserves real controls", () => scenario("candidate", "paper", false, async page => {
+test("TS-06 helper label preview drag stays isolated while plain and double clicks activate the associated input once each", () => scenario("candidate", "paper", false, async page => {
   await page.evaluate(() => (window as any).cardsFixture.addRegressionBoundaries())
   const checkbox = page.locator("#label-real-control")
   assert.match((await dragText(page, "#label-regression-preview")).text, /Label/)
+  assert.equal(await checkbox.isChecked(), false)
+  assert.equal(await page.evaluate(() => (window as any).cardsFixture.actions.label), 0, "preview drag stays isolated from the label's native associated-input activation")
   assert.match((await doubleClickText(page, "#label-regression-preview")).text, /Label/)
-  assert.equal(await checkbox.isChecked(), false)
-  assert.equal(await page.evaluate(() => (window as any).cardsFixture.actions.label), 0, "preview clicks must prevent label's default checkbox activation")
+  assert.equal(await checkbox.isChecked(), true, "the first click of a double click runs the label's native associated-input activation")
+  assert.equal(await page.evaluate(() => (window as any).cardsFixture.actions.label), 1, "the suppressed second click prevents a second native activation")
   await checkbox.click()
-  assert.equal(await checkbox.isChecked(), true)
-  assert.equal(await page.evaluate(() => (window as any).cardsFixture.actions.label), 1, "the real input control retains its native change event")
-  await page.locator("#label-regression-chrome").click()
   assert.equal(await checkbox.isChecked(), false)
-  assert.equal(await page.evaluate(() => (window as any).cardsFixture.actions.label), 2, "UI label chrome retains native associated-input activation")
+  assert.equal(await page.evaluate(() => (window as any).cardsFixture.actions.label), 2, "the real input control retains its native change event")
+  await page.locator("#label-regression-chrome").click()
+  assert.equal(await checkbox.isChecked(), true)
+  assert.equal(await page.evaluate(() => (window as any).cardsFixture.actions.label), 3, "UI label chrome retains native associated-input activation")
+}))
+
+test("CC-N2 candidate shift click on preview stays isolated and keeps the range-selection gesture", () => scenario("candidate", "paper", false, async page => {
+  const { content, card } = selectors.candidate
+  await countCardClicks(page, card)
+  const dragged = await dragText(page, content)
+  assert.match(dragged.text, /Candidate/)
+  assert.equal(dragged.active, null)
+  assert.equal(await cardClicks(page), 0)
+  const box = await firstTextLine(page, content)
+  await page.keyboard.down("Shift")
+  // Land away from the drag anchor (line start) so the extended selection
+  // cannot collapse onto it.
+  await page.mouse.click(box.x + Math.min(60, box.width / 2), box.y + box.height / 2)
+  await page.keyboard.up("Shift")
+  assert.equal(await cardClicks(page), 0, "shift click is a range-selection gesture and must not fire the card")
+  assert.equal(await page.evaluate(() => (window as any).cardsFixture.active()), null)
+  assert.match(await page.evaluate(() => window.getSelection()?.toString() ?? ""), /Candidate/, "shift click extends the drag selection from its anchor")
+}))
+
+test("CC-N3 candidate plain click with sub-threshold jiggle still fires the card action", () => scenario("candidate", "paper", false, async page => {
+  const { content, card } = selectors.candidate
+  await countCardClicks(page, card)
+  await clearSelection(page)
+  const box = await firstTextLine(page, content)
+  const x = box.x + Math.min(16, box.width / 2), y = box.y + box.height / 2
+  await page.mouse.move(x, y)
+  await page.mouse.down()
+  await page.mouse.move(x + 3, y + 2, { steps: 2 })
+  await page.mouse.up()
+  assert.equal(await cardClicks(page), 1, "movement within the drag threshold stays a plain click")
+  const jiggleText = await page.evaluate(() => window.getSelection()?.toString() ?? "")
+  assert.ok(jiggleText.length <= 1, `sub-threshold jiggle selects at most one native glyph (harmless, collapsed by the next click), got ${JSON.stringify(jiggleText)}`)
+  const state = await page.evaluate(() => ({ active: (window as any).cardsFixture.active(), selection: (window as any).cardsFixture.selection() }))
+  assert.ok(state.active?.includes("chapter-candidate"))
+  assert.equal(state.selection?.candidateId, "isolated-candidate")
+}))
+
+test("CC-N4 candidate drag release stays isolated and an immediate plain click then fires", () => scenario("candidate", "paper", false, async page => {
+  const { content, card } = selectors.candidate
+  await countCardClicks(page, card)
+  const dragged = await dragText(page, content)
+  assert.match(dragged.text, /Candidate/)
+  assert.equal(dragged.active, null)
+  assert.equal(await cardClicks(page), 0, "drag release click stays isolated")
+  const box = await firstTextLine(page, content)
+  await page.mouse.click(box.x + Math.min(16, box.width / 2), box.y + box.height / 2)
+  assert.equal(await cardClicks(page), 1, "the next plain click is a fresh gesture and fires")
+  const state = await page.evaluate(() => ({ active: (window as any).cardsFixture.active(), selection: (window as any).cardsFixture.selection(), text: window.getSelection()?.toString() ?? "" }))
+  assert.ok(state.active?.includes("chapter-candidate"))
+  assert.equal(state.selection?.candidateId, "isolated-candidate")
+  assert.equal(state.text, "", "plain click collapses the drag selection")
+}))
+
+test("CC-N5 candidate programmatic detail-0 click on the preview is always allowed", () => scenario("candidate", "paper", false, async page => {
+  const { content, card } = selectors.candidate
+  await countCardClicks(page, card)
+  await clearSelection(page)
+  await page.locator(content).evaluate(element => (element as HTMLElement).click())
+  assert.equal(await cardClicks(page), 1, "synthetic clicks must not be swallowed by stale press coordinates")
+  const state = await page.evaluate(() => ({ active: (window as any).cardsFixture.active(), selection: (window as any).cardsFixture.selection() }))
+  assert.ok(state.active?.includes("chapter-candidate"))
+  assert.equal(state.selection?.candidateId, "isolated-candidate")
 }))
