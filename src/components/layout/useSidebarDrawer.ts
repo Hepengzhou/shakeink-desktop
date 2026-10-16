@@ -585,12 +585,19 @@ export function useSidebarDrawer() {
       }
       if (r.sidebar || r.secondary || r.contentMotion || r.contentFrozen) { repinCurrent(); geometry(); return }
       const measured = groupWidth()
-      if (state.current.mode === (window.innerWidth < 900 ? "narrow" : "wide") && Math.abs(measured - r.width) < .1) { geometry(); return }
-      const mode = window.innerWidth < 900 ? "narrow" : "wide"
+      const mode = window.innerWidth < 900 ? "narrow" : "wide", previousMode = state.current.mode
+      if (previousMode === mode && Math.abs(measured - r.width) < .1) { geometry(); return }
       const contentOpen = state.current.contentVisible && (mode === "wide" || state.current.narrowPane === "content" || state.current.narrowPane === "sidebar" && state.current.underlay === "content")
       r.contentGoal = contentOpen
       update({ mode, phase: (mode === "narrow" ? state.current.narrowPane === "sidebar" : state.current.sidebarVisible) ? "open" : "closed", contentPhase: contentOpen ? "open" : "closed" })
-      if (mode === "wide") { r.current = target(); r.needsWrite = true; kick() }
+      if (mode === "wide") {
+        if (measured >= 900) r.width = measured
+        // A settled wide resize is redistributed proportionally by the Group's own
+        // observer from the requested anchor; rewriting the layout here would pin
+        // stale percentages and drift the chat:content ratio. Only mode crossings
+        // still project a fresh layout.
+        if (previousMode !== "wide") { r.current = target(); r.needsWrite = true; kick() }
+      }
       geometry()
     }
     const observer = new ResizeObserver(resized)

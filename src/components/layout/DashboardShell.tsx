@@ -41,7 +41,7 @@ export function DashboardShell({ user }: { user: { id: string; name: string; ema
           </div>
         </Panel>
         {drawer.sidebarDividerVisible && <ResizeHandle />}
-        <Panel id="chat" defaultSize={560} minSize={drawer.chatVisible && !drawer.chatAnimating && !drawer.contentAnimating && !drawer.sidebarAnimating && drawer.mode === "wide" ? 420 : 0} groupResizeBehavior="preserve-pixel-size" className="workspace-chat h-full" inert={drawer.chatInert} aria-hidden={drawer.chatInert || undefined}>
+        <Panel id="chat" defaultSize={560} minSize={drawer.chatVisible && !drawer.chatAnimating && !drawer.contentAnimating && !drawer.sidebarAnimating && drawer.mode === "wide" ? 420 : 0} groupResizeBehavior="preserve-relative-size" className="workspace-chat h-full" inert={drawer.chatInert} aria-hidden={drawer.chatInert || undefined}>
           <ChatPanel key={user.id} userId={user.id} contentHidden={drawer.contentHidden} onShowContent={drawer.toggleContent} sidebarHidden={drawer.sidebarHidden} onShowSidebar={drawer.toggleSidebar} />
         </Panel>
         {drawer.contentMounted && <>
