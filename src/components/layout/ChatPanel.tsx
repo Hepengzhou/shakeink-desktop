@@ -965,6 +965,45 @@ export function ChatPanel({
     cardSelection.conversationId === conversationId &&
     cardSelection.novelId === entityNovelId
 
+  // 选卡操作面板比 composer 高且分阶段异步增高，底部槽位（dock）变高会抬升消息视口底缘、
+  // 遮住刚选中的抽卡组卡：选中/换卡提交内（绘制前）把组卡最小位移滚回视口（已可见不动），
+  // 其后 dock 每段增高按增量补偿 scrollTop 保持底缘锚定（上翻阅读时不补偿）。
+  const revealSelectedCard = useCallback(() => {
+    const list = scrollRef.current
+    const thumb = list?.querySelector<HTMLElement>('[data-testid^="candidate-card-"][aria-pressed="true"]')
+    if (!list || !thumb) return
+    const group = thumb.closest<HTMLElement>('[data-testid="candidate-draw-card"]')
+    const target = group && group.offsetHeight <= list.clientHeight ? group : thumb
+    const margin = 8
+    const lr = list.getBoundingClientRect()
+    const tr = target.getBoundingClientRect()
+    if (tr.height >= lr.height - margin * 2) {
+      if (tr.top > lr.top + margin) list.scrollTop += tr.top - (lr.top + margin)
+    } else if (tr.bottom > lr.bottom - margin) {
+      list.scrollTop += tr.bottom - (lr.bottom - margin)
+    } else if (tr.top < lr.top + margin) {
+      list.scrollTop -= (lr.top + margin) - tr.top
+    }
+  }, [])
+  useLayoutEffect(() => {
+    if (showCardPanel) revealSelectedCard()
+  }, [showCardPanel, cardSelection?.candidateId, revealSelectedCard])
+  useEffect(() => {
+    if (!showCardPanel) return
+    const dock = dockRef.current
+    const list = scrollRef.current
+    if (!dock || !list) return
+    let lastHeight = dock.offsetHeight
+    const observer = new ResizeObserver(() => {
+      const next = dock.offsetHeight
+      const delta = next - lastHeight
+      lastHeight = next
+      if (delta > 0 && nearBottomRef.current) list.scrollTop += delta
+    })
+    observer.observe(dock)
+    return () => observer.disconnect()
+  }, [showCardPanel])
+
   // 进程面板（2026-08 zcode 式进程框，取代原内联清单卡）：任务清单取最近一轮推断结果 +
   // 智能体区列最近子代理；浮于消息区右上角——chatpane ≥1720px 时右侧边距天然容纳、不占位
   // （消息保持 960 原宽居中）；800~1720px 滚动区右侧预留等宽水槽（消息按比例让宽不被遮挡、
@@ -1053,6 +1092,7 @@ export function ChatPanel({
   // 滚动：用户位于底部附近时新消息保持吸底，远离底部时显示「回到底部」悬浮钮
   const scrollRef = useRef<HTMLDivElement>(null)
   const bottomRef = useRef<HTMLDivElement>(null)
+  const dockRef = useRef<HTMLDivElement>(null)
   const nearBottomRef = useRef(true)
   const [showScrollBottom, setShowScrollBottom] = useState(false)
   /** 离开底部期间有新内容流入 → 回到底部钮带 primary 未读点 */
@@ -1852,6 +1892,7 @@ export function ChatPanel({
           与消息区之间不设分割线、不放建议气泡，视觉一体化。水平内边距与消息滚动区一致（px-4 +
           同一进程面板水槽），保证 composer 与 960 消息列宽度、位置完全对齐 */}
       <div
+        ref={dockRef}
         className={cn(
           "shrink-0 px-4 pt-2 pb-3.5",
           showWelcome && "chat-empty-dock",

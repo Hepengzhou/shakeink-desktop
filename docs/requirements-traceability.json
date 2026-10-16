@@ -11,7 +11,18 @@
     "reviews": "docs/model-resolve-healing/05-reviews.md",
     "verification": "docs/model-resolve-healing/06-verification.md",
     "summary": "docs/model-resolve-healing/07-summary.md",
-    "testIds": ["HEAL-01", "HEAL-02", "HEAL-03", "HEAL-04", "HEAL-05", "HEAL-06", "HEAL-07", "HEAL-08", "DEFAULT-04", "DEFAULT-27"],
+    "testIds": [
+      "HEAL-01",
+      "HEAL-02",
+      "HEAL-03",
+      "HEAL-04",
+      "HEAL-05",
+      "HEAL-06",
+      "HEAL-07",
+      "HEAL-08",
+      "DEFAULT-04",
+      "DEFAULT-27"
+    ],
     "changes": {
       "main": "ModelService.resolve() 显式 id 失效且 intent!==\"selection\" 时回退 settings.agent 对应角色当前默认再查一次；其余校验与错误码不变；无 IPC/schema/前端改动",
       "semantics": "保留：显式 null 阻断、审核不落回文本、不挑未配置的剩余记录、selection 严格校验；网络边界由 gateway.begin(旧 UUID)→MODEL_UNAVAILABLE 兜底"
@@ -4390,6 +4401,86 @@
       "allAcceptancePassed": false
     }
   },
+  "candidateCardPreviewClick": {
+    "date": "2026-10-16",
+    "requirement": "鼠标点击正文抽卡卡片中任何位置时，此卡片应立刻变为被选中状态，不应有任何延迟（修复点击经常无效，尤其卡片中间区域）",
+    "status": "implemented-scoped-validated",
+    "research": "docs/reviews/2026-10-16-candidate-card-click-research.md",
+    "plan": "docs/reviews/2026-10-16-candidate-card-click-plan.md",
+    "cases": "docs/reviews/2026-10-16-candidate-card-click-test-cases.md",
+    "implementation": [
+      "src/lib/desktop/text-selection.ts"
+    ],
+    "testIds": [
+      "CC-N1~N5",
+      "CC-R1~R5"
+    ],
+    "tests": [
+      "tests/browser/text-selection-cards.test.ts"
+    ],
+    "reviews": "方案/用例/代码三轮独立审核：方案与用例首轮均为需修改，P1/P2 逐项修订后通过；代码审核通过（无 P0/P1）。结论与修订记录已并入上述三份文档",
+    "evidence": [
+      "docs/evidence/text-selection/candidate-card-click-2026-10-16-red.tap",
+      "docs/evidence/text-selection/candidate-card-click-2026-10-16-green.tap"
+    ],
+    "behaviorChange": "installTextPreviewSelection 由「无条件吞掉卡片内 preview 的全部 click/dblclick」改为「仅隔离选取手势（拖选释放位移>4px、双击/三击 detail>=2 后续击、Shift+单击）；普通单击立即触发卡片自然动作」。旧规则「双击 preview 不开 Tab/不切换」断言按 2026-10-16 用户新约束（点击任何位置立即选中、无延迟）作废并改写；真实产品中 scene/character/item/level 卡的双击词选能力随之丧失（点击即切换/卸载卡片），拖选建立选区不受影响；对话区抽卡卡片保持可见，双击词选区仍可用",
+    "verification": {
+      "targetedBrowser": {
+        "tests": 70,
+        "pass": 70,
+        "fail": 0,
+        "redBefore": "同一测试文件对修复前代码 70 例 40 过 30 红，30 红全部为新行为断言；证据文件未含代码版本戳，红=旧代码的采信依据为失败签名（无条件吞点击特征）与绿运行同断言翻转",
+        "environment": "Node v24.21.0（npx 缓存 node@24），SHAKEINK_TEST_CHROMIUM 真实 Chrome，隔离合成数据，网络路由全 abort",
+        "evidence": "docs/evidence/text-selection/candidate-card-click-2026-10-16-green.tap"
+      }
+    },
+    "limits": [
+      "按用户 2026-10-16 明确指令「禁止全量测试，仅针对本次修复的问题进行测试」，本轮未跑全量单元/集成/浏览器套件、typecheck、构建及真实 Electron 验证",
+      "tests/browser/text-selection.test.ts 未加载 installTextPreviewSelection（bundle stdin 核实），不受本修复影响，未执行",
+      "scene/character/item 卡双击词选区在真实产品不可建立（点击即切换 tab 隐藏卡片），其 fixture 断言仅锁适配器机制，未冒充真实产品行为"
+    ]
+  },
+  "cardPanelScrollAnchor": {
+    "date": "2026-10-16",
+    "requirement": "选择抽卡卡片后，底部选卡操作面板高度变化不得遮住刚选中的抽卡组卡；AI 对话滚动位置应相应调整",
+    "status": "implemented-scoped-validated",
+    "research": "docs/reviews/2026-10-16-card-panel-scroll-research.md",
+    "plan": "docs/reviews/2026-10-16-card-panel-scroll-plan.md",
+    "cases": "docs/reviews/2026-10-16-card-panel-scroll-test-cases.md",
+    "implementation": [
+      "src/components/layout/ChatPanel.tsx"
+    ],
+    "testIds": [
+      "CES-10a",
+      "CES-10b",
+      "CES-10c"
+    ],
+    "tests": [
+      "tests/browser/chat-empty-state.test.ts"
+    ],
+    "reviews": "方案审核通过（6 项 P2 已落实）；用例审核需修改（1 项 P1 放宽路由 variant 规格 + 3 项 P2 已落实）；代码审核实现本体通过，其 P1（红灯证据为返工前陈旧运行）已按最终测试文件 stash 产品修复重跑补齐、P2（基线探测落盘/10c 定性）已落实",
+    "evidence": [
+      "docs/evidence/card-panel-scroll/ces10-red.tap",
+      "docs/evidence/card-panel-scroll/ces10-green.tap",
+      "docs/evidence/card-panel-scroll/baseline-probe.txt"
+    ],
+    "behaviorChange": "选中/换卡提交内（useLayoutEffect，绘制前）把选中卡所在组卡 nearest 最小位移滚回消息视口（已完全可见不动）；showCardPanel 期间 ResizeObserver 观察底部槽位，增高且 nearBottom 时按增量补偿 scrollTop 保持视口底缘锚定，收缩交由浏览器钳制；上翻阅读不补偿，选中来自内容区候选面板（无对话区组卡 DOM）时静默跳过",
+    "verification": {
+      "targetedBrowser": {
+        "tests": 23,
+        "pass": 20,
+        "fail": 3,
+        "newCases": "CES-10a/10b/10c 全过；红灯（最终测试文件对 stash 产品修复后的代码）：CES-10a 阶段一检查点失败（组卡 bottom 819.23 超视口底缘 535.38，遮约 284px），CES-10b 护栏通过，CES-10c 绿侧流程覆盖（fixture 存根返回快，换卡 shrink/regrow 不产生新增可观测遮罩）",
+        "baselineFailures": "CES-05b/05c/06b 共 3 例为树内既有基线失败：两轮 stash 基线探测（移除本修复改动、再移除 story-task 未提交改动）均同样失败，与本修复无关，证据 docs/evidence/card-panel-scroll/baseline-probe.txt",
+        "environment": "Node v24.21.0，SHAKEINK_TEST_CHROMIUM 真实 Chrome，完整真实 ChatPanel fixture，隔离合成数据",
+        "evidence": "docs/evidence/card-panel-scroll/ces10-green.tap"
+      }
+    },
+    "limits": [
+      "按用户既定指令仅跑本修复相关套件（chat-empty-state 全文件，含既有用例回归），未跑其他套件、typecheck、构建及真实 Electron 验证",
+      "CES-05b/05c/06b 基线失败位于队列/首发/会话自动标题链路，留待独立排查，未计入本修复通过范围，未转记为已修复"
+    ]
+  },
   "startupAutoRepairRevision": {
     "date": "2026-10-15",
     "scope": "启动遇上次未正常关闭/写入锁时自动修复写入锁并重试启动（默认最多3次，全失败才弹修复对话框）；损坏 state.json 隔离保留并以默认设置启动；不可解析 data-root.json 指针放行交分类层自动隔离重建（真实演示抓出的追加缺陷修复）",
@@ -4490,7 +4581,34 @@
     "codeReview": "docs/215-chat-title-code-review.md",
     "verification": "docs/216-chat-title-verification.md",
     "summary": "docs/217-chat-title-summary.md",
-    "testIds": ["CT-01", "CT-02", "CT-03", "CT-04", "CT-10", "CT-11", "CT-12", "CT-20", "CT-21", "CT-22", "CT-30", "CT-31", "CT-32", "CT-33", "CT-34", "CT-35", "CT-36", "CT-36b", "CT-37", "CT-38", "CT-40", "CT-41", "CT-42", "CT-50", "CT-51", "CT-52"],
+    "testIds": [
+      "CT-01",
+      "CT-02",
+      "CT-03",
+      "CT-04",
+      "CT-10",
+      "CT-11",
+      "CT-12",
+      "CT-20",
+      "CT-21",
+      "CT-22",
+      "CT-30",
+      "CT-31",
+      "CT-32",
+      "CT-33",
+      "CT-34",
+      "CT-35",
+      "CT-36",
+      "CT-36b",
+      "CT-37",
+      "CT-38",
+      "CT-40",
+      "CT-41",
+      "CT-42",
+      "CT-50",
+      "CT-51",
+      "CT-52"
+    ],
     "changes": {
       "renderer": "ChatPanel.tsx 顶栏标题换用 NavigationLabel（import + 1 处 JSX + 注释）；use-agent-chat.ts finish 收口 succeeded/waiting_user 时经 conversationTitleRequester fire-and-forget 请求并失效 [\"chat-conversations\"]；conversation-title.ts 新模块（每会话守卫 + 重试语义 + fetch 延迟解析）",
       "service": "src/lib/services/conversation-title.ts 新模块：defaultConversationTitle（与 chat-turn.ts:194 逐字一致）/sanitizeGeneratedTitle（成对包裹去壳、30 码点上限）/buildTitlePrompt/summarizeConversationTitle（catalog 预检 + selection intent 解析 + generateText 注入 resolvedModel + abortSignal 透传 + updateMany CAS）",
@@ -4505,5 +4623,37 @@
       "fullSuiteExecuted": false
     },
     "limits": "未跑全量（用户约束）；reconcile/follow 路径完成的回合当轮不触发标题请求（下一成功回合自愈）；CT-60 真机拖拽区 tooltip 未验（无模型环境，退路已批准：不出现则与现状持平）；系统 Node 20 缺 Promise.withResolvers，集成测试经 Electron 内嵌 Node 24 运行"
+  },
+  "storyNavigationRefreshHealingRevision": {
+    "date": "2026-10-16",
+    "scope": "问答面板挂起期间面板目标中的快速资料（item/scene/world/setting/foreshadow）被编辑后，回答面板必现「创作进度已变化」死路：refreshStoryNavigation 以 review=false 准备新面板、不对快速资料做结构重检，过期检查点使 ready=false，选项塌缩为唯一 autoProceed，刷新自弃后原始 VERSION_CONFLICT 穿透给用户；修复为刷新前对快速资料目标串行重检 checkStoryMaterialStructure",
+    "status": "implemented-and-scoped-verified",
+    "research": "docs/story-navigation-refresh-healing/01-research.md",
+    "product": "docs/story-navigation-refresh-healing/02-technical-plan.md",
+    "testCases": "docs/story-navigation-refresh-healing/03-test-cases.md",
+    "implementation": "docs/story-navigation-refresh-healing/04-implementation.md",
+    "reviews": "docs/story-navigation-refresh-healing/05-reviews.md",
+    "verification": "docs/story-navigation-refresh-healing/06-verification.md",
+    "summary": "docs/story-navigation-refresh-healing/07-summary.md",
+    "testIds": [
+      "STALE-01",
+      "STALE-02",
+      "STALE-03",
+      "STALE-04",
+      "STALE-05",
+      "STALE-06"
+    ],
+    "changes": {
+      "main": "refreshStoryNavigation 在 keys 归集后、prepareStoryTask 前，对 keys 中属 FAST_MATERIAL_KINDS 的目标串行 await checkStoryMaterialStructure（+7 行，src/lib/services/story-task.ts:252-258）；无新增 import，无其他源码改动",
+      "semantics": "保留：consumeStoryTask 的 contextHash 闸门与选项校验、autoProceed 设计、非快速资料不走 AI 重评、内容清空（passed=false）时刷新仍诚实失败"
+    },
+    "results": {
+      "tddRed": "STALE-01 修复前抛 INTERACTION_STALE、STALE-02/05 修复前抛 VERSION_CONFLICT，STALE-03/04/06 修复前通过",
+      "scopedTests": "6/6（tests/integration/story-navigation-refresh.test.ts，系统 Node v20 + PGlite 真实迁移）",
+      "mutation": "注释重检循环后 STALE-01/02/05 复败、STALE-06 仍过；已恢复",
+      "typecheck": "not-run（tsx 运行期编译通过）",
+      "fullSuiteExecuted": false
+    },
+    "limits": "按用户约束仅跑目标测试文件，禁止全量测试；未做安装包验证。非快速资料目标编辑后的菜单塌缩场景划出本次范围；transient 集合的图像字段缺口与本次无关，另立议题。"
   }
 }

@@ -71,7 +71,7 @@ globalThis.mountChatEmpty=(options={})=>{
   if(novel&&method==='GET'){
    const [,id,part]=novel;if(!part)return json({novel:{id,title:'合成关联作品',characters:[],settings:[],volumes:[]}});
    if(part==='story-workflow')return json({workflow:null});if(part==='scenes/factions')return json({factions:[]});if(part==='attributes')return json({definitions:[]});
-   if(part==='chapters/chapter/candidates/candidate')return json({candidate:{id:'candidate',chapterId:'chapter',status:'ready',content:'合成候选正文',contentHash:'a'.repeat(64),baseVersion:1,wordCount:6,variant:'immersive',checks:[]}});
+   const candPrefix='chapters/chapter/candidates/';if(part.startsWith(candPrefix))return json({candidate:{id:part.slice(candPrefix.length),chapterId:'chapter',status:'ready',content:'合成候选正文',contentHash:'a'.repeat(64),baseVersion:1,wordCount:6,checks:[]}});
    if(part==='chapters/chapter')return json({chapter:{id:'chapter',title:'合成章',index:1,version:1,content:'合成正文',wordCount:4,status:'DRAFT'}});
    if(['worlds','characters','items','scenes','settings'].includes(part))return json({[part]:[]});
   }
@@ -418,4 +418,101 @@ for (const theme of ["paper", "ink"] as const) test(`CES-09 ${theme} uses real T
     assert.ok(await editor(page).isVisible())
   }
   assert.deepEqual(await posts(page), [])
+}))
+
+// --- CES-10: a selected draw card must stay visible while the taller action
+// panel takes over the composer dock (card-panel-scroll 2026-10-16). ---
+function ces10Filler(id: string, lines: number) {
+  // Paragraph-separated content: single \n soft-wraps in markdown and would not
+  // create real scroll height (blank-line paragraphs do).
+  return { id, role: "ASSISTANT", content: Array.from({ length: lines }, (_, i) => `合成填充正文段落 ${i + 1}，用于撑开消息列表滚动高度。`).join("\n\n"), toolCalls: [], interaction: null, parts: null }
+}
+const ces10DrawMessage = {
+  id: "ces10-m-draw", role: "ASSISTANT", content: "合成抽卡结果。", toolCalls: [{
+    toolCallId: "ces10-tc-draw", toolName: "drawChapterCandidates", input: null,
+    output: { ok: true, draw: { drawId: "ces10-draw", chapterId: "chapter", chapterTitle: "合成章", wordMin: 0, wordBudget: 0, failures: [], candidates: [
+      { id: "candidate", variant: "alpha", label: "合成角度甲", status: "ready", hardChecks: [], wordCount: 6, excerpt: "合成候选甲摘录正文，用于点击选中与遮挡检验。" },
+      { id: "candidate-b", variant: "beta", label: "合成角度乙", status: "ready", hardChecks: [], wordCount: 6, excerpt: "合成候选乙摘录正文，用于点击选中与遮挡检验。" },
+      { id: "candidate-c", variant: "gamma", label: "合成角度丙", status: "ready", hardChecks: [], wordCount: 6, excerpt: "合成候选丙摘录正文，用于换卡后的遮挡检验。" },
+    ] } },
+  }], interaction: null, parts: null,
+}
+async function ces10Load(page: Page, messages: unknown[]) {
+  await page.evaluate(msgs => {
+    const f = (window as any).f
+    f.response("fixture-scroll-conv", 200, { conversation: { id: "fixture-scroll-conv", novelId: "fixture-work", modelId: null, title: "合成会话" }, messages: msgs })
+    f.request("fixture-scroll-conv")
+  }, messages as any)
+  await page.getByTestId("candidate-card-alpha").waitFor()
+  // Wait until the message scroller actually overflows and the app's
+  // scroll-to-bottom-on-load has settled; under machine load layout/font
+  // metrics resolve later than the card's DOM attachment, and without this the
+  // geometry helper can read a degenerate not-yet-scrollable state.
+  await page.waitForFunction(() => {
+    const group = document.querySelector('[data-testid="candidate-draw-card"]')
+    if (!group) return false
+    let s = group.parentElement as HTMLElement | null
+    while (s && s.scrollHeight - s.clientHeight < 1) s = s.parentElement
+    return !!s && s !== document.body && s !== document.documentElement && s.scrollHeight - s.clientHeight > 1 && s.scrollHeight - s.scrollTop - s.clientHeight < 40
+  })
+  await frames(page)
+}
+async function ces10Geometry(page: Page) {
+  return page.evaluate(() => {
+    const group = document.querySelector('[data-testid="candidate-draw-card"]')!
+    let scroller = group.parentElement as HTMLElement | null
+    while (scroller && scroller.scrollHeight - scroller.clientHeight < 1) scroller = scroller.parentElement
+    const lr = scroller!.getBoundingClientRect(), tr = group.getBoundingClientRect()
+    return { listTop: lr.top, listBottom: lr.bottom, groupTop: tr.top, groupBottom: tr.bottom, scrollTop: scroller!.scrollTop }
+  })
+}
+type Ces10Geometry = { listTop: number; listBottom: number; groupTop: number; groupBottom: number; scrollTop: number }
+function ces10ExpectVisible(g: Ces10Geometry, note: string) {
+  assert.ok(g.groupTop >= g.listTop - 1 && g.groupBottom <= g.listBottom + 1, `${note}: group must be fully inside the message viewport: ${JSON.stringify(g)}`)
+}
+
+test("CES-10a selecting a bottom draw card keeps its group fully visible above the growing action panel", () => scenario({}, async page => {
+  await ces10Load(page, [ces10Filler("ces10-m1", 40), ces10Filler("ces10-m2", 40), ces10Filler("ces10-m3", 40), ces10DrawMessage])
+  ces10ExpectVisible(await ces10Geometry(page), "group visible at the bottom before selection")
+  await page.getByTestId("candidate-card-alpha").click()
+  await page.getByTestId("candidate-action-panel").waitFor()
+  ces10ExpectVisible(await ces10Geometry(page), "stage-1 panel swap")
+  await page.getByTestId("cap-option-improve").waitFor()
+  await frames(page)
+  ces10ExpectVisible(await ces10Geometry(page), "stage-2 panel options loaded")
+}))
+
+test("CES-10b selecting a mid-viewport history draw card does not move the scroller", () => scenario({}, async page => {
+  await ces10Load(page, [ces10Filler("ces10-m1", 40), ces10DrawMessage, ces10Filler("ces10-m2", 40), ces10Filler("ces10-m3", 40), ces10Filler("ces10-m4", 40)])
+  await page.evaluate(() => {
+    const group = document.querySelector('[data-testid="candidate-draw-card"]') as HTMLElement
+    let scroller = group.parentElement as HTMLElement | null
+    while (scroller && scroller.scrollHeight - scroller.clientHeight < 1) scroller = scroller.parentElement
+    group.scrollIntoView({ block: "start" })
+    scroller!.scrollTop -= 40
+  })
+  await frames(page)
+  const before = await ces10Geometry(page)
+  assert.ok(before.groupTop - before.listTop > 8 && before.listBottom - before.groupBottom > 8, `precheck: group fully visible with >8px margins on every side: ${JSON.stringify(before)}`)
+  assert.ok(before.listBottom - before.groupBottom > 320, `precheck: bottom margin must exceed the panel's full growth so the guard cannot fail for coverage reasons: ${JSON.stringify(before)}`)
+  await page.getByTestId("candidate-card-alpha").click()
+  await page.getByTestId("cap-option-improve").waitFor()
+  await frames(page)
+  const after = await ces10Geometry(page)
+  assert.ok(Math.abs(after.scrollTop - before.scrollTop) <= 2, `scroller must not move when the selected card is already fully visible: ${before.scrollTop} -> ${after.scrollTop}`)
+  ces10ExpectVisible(after, "mid-viewport group stays visible")
+}))
+
+test("CES-10c switching to another card in the group keeps the group fully visible", () => scenario({}, async page => {
+  await ces10Load(page, [ces10Filler("ces10-m1", 40), ces10Filler("ces10-m2", 40), ces10Filler("ces10-m3", 40), ces10DrawMessage])
+  await page.getByTestId("candidate-card-alpha").click()
+  await page.getByTestId("cap-option-improve").waitFor()
+  await frames(page)
+  await page.getByTestId("candidate-card-gamma").click()
+  // Deterministic stage-2 wait for the C card: its detail lands in the query
+  // cache (groups unmount/remount around it; a plain option waitFor could hit
+  // the stale row, and Playwright's pre-click auto-scroll must not mask it).
+  await page.waitForFunction(() => (window as any).f.client.getQueryData(["content-candidates", "detail", "chapter", "candidate-c"]) != null)
+  await frames(page)
+  ces10ExpectVisible(await ces10Geometry(page), "after switching to card C and its options loading")
 }))
