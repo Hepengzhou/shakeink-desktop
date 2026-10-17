@@ -196,6 +196,8 @@ export interface PanelFocus {
   targetType?: import("@/lib/foreshadow-reference").ReferenceTargetType
   targetId?: string
   view?: "trunk" | "timeline" | "prose"
+  /** 「查看批注」定位：章正文面板滚动到首个行内批注锚点 */
+  firstComment?: boolean
 }
 
 interface TabsState {
@@ -233,7 +235,7 @@ interface TabsState {
   /** 情景试验场重命名后同步 scenario tab 标题 */
   renameScenarioTab: (scenarioId: string, title: string) => void
   /** 请求某个 tab 的面板选中指定设定；concept 为设定内的子概念名（可选） */
-  requestPanelFocus: (tabId: string, settingId: string, concept?: string, foreshadowId?: string, reference?: Pick<PanelFocus, "touchId" | "referenceId" | "targetType" | "targetId" | "view">) => void
+  requestPanelFocus: (tabId: string, settingId: string, concept?: string, foreshadowId?: string, reference?: Pick<PanelFocus, "touchId" | "referenceId" | "targetType" | "targetId" | "view" | "firstComment">) => void
   /** 面板消费聚焦请求：tabId 匹配则返回聚焦目标并清除，否则返回 null */
   consumePanelFocus: (tabId: string) => Omit<PanelFocus, "tabId"> | null
 }

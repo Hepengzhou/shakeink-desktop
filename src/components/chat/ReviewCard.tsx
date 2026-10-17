@@ -9,6 +9,7 @@
 import { ClipboardCheck } from "lucide-react"
 
 import { useChatStore } from "@/stores/chat"
+import { buildTabId, useTabsStore } from "@/stores/tabs"
 
 import { openEntityRef } from "./entity-refs"
 import { summarizeOutput, type ToolCallView } from "./types"
@@ -107,12 +108,20 @@ export function ReviewCards({
             {e.chapterId && (
               <button
                 type="button"
-                onClick={() =>
+                onClick={() => {
                   openEntityRef(
                     { kind: "chapter", id: e.chapterId!, name: e.objectName },
                     novelId
                   )
-                }
+                  /* 打开正文面板后滚动到首个行内批注（锚点按文档顺序取最前者） */
+                  useTabsStore.getState().requestPanelFocus(
+                    buildTabId("chapter-content", novelId, { refId: e.chapterId! }),
+                    "",
+                    undefined,
+                    undefined,
+                    { firstComment: true }
+                  )
+                }}
                 className="rounded-inner bg-primary px-3 py-[5px] text-xs text-primary-foreground transition-colors hover:bg-primary/90"
               >
                 查看批注 ›

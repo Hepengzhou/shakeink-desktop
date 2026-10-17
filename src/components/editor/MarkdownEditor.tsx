@@ -168,6 +168,16 @@ export function MarkdownEditor({
     }
   }, [activeReferenceFocus, references.data, resolvedReferences])
 
+  /*
+   * 「查看批注」定位：滚动到首个行内批注（按锚点文档顺序取最前）。
+   * 评论异步加载/预览 mark 在子组件 effect 里生成，定位失败保留请求待下次依赖变化重试；
+   * 成功即清除，避免后续评论缓存刷新把用户反复拉回首条。
+   */
+  const commentFocusRef = useRef<PanelFocus | null>(null)
+  useEffect(() => {
+    commentFocusRef.current = activeReferenceFocus?.firstComment ? activeReferenceFocus : null
+  }, [activeReferenceFocus])
+
   /* 行内评论数据层（commentsTarget 缺省时查询不启用，编辑器零评论 UI） */
   const {
     threads,
@@ -191,6 +201,29 @@ export function MarkdownEditor({
     () => threads.map((t) => ({ thread: t, anchor: resolveAnchor(value, t) })),
     [threads, value]
   )
+
+  /* 「查看批注」滚动定位（声明在 resolvedThreads 之后，依赖数组需在初始化后求值） */
+  useEffect(() => {
+    if (!commentFocusRef.current) return
+    const first = resolvedThreads
+      .filter((rt) => rt.anchor)
+      .sort((a, b) => a.anchor!.start - b.anchor!.start)[0]
+    if (!first?.anchor) return
+    /* 评审视图没有行内批注锚点，先切回预览再滚动（下一轮 effect 完成定位） */
+    if (effectiveMode === "review") { setMode("preview"); return }
+    if (effectiveMode === "preview" || effectiveMode === "split") {
+      const mark = rootRef.current?.querySelector<HTMLElement>(
+        `mark.text-comment-anchor[data-thread-id="${CSS.escape(first.thread.id)}"]`
+      )
+      if (!mark) return
+      mark.scrollIntoView({ block: "center" })
+    } else {
+      const model = editorInstance?.getModel()
+      if (!model) return
+      editorInstance!.revealPositionInCenterIfOutsideViewport(model.getPositionAt(first.anchor.start))
+    }
+    commentFocusRef.current = null
+  }, [resolvedThreads, effectiveMode, editorInstance, setMode])
 
   /* useTextComments 的 isExpanded 以 thread 为入参；Monaco/预览侧按 threadId 查询 */
   const isExpandedById = useCallback((id: string) => expandedIds.has(id), [expandedIds])
