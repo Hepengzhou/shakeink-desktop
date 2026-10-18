@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import {test} from 'node:test'
+import {test,after} from 'node:test'
 import {Worker} from 'node:worker_threads'
 import {randomUUID} from 'node:crypto'
 import {mkdtemp,rm} from 'node:fs/promises'
@@ -11,11 +11,15 @@ import {conversationClaimSchema} from '../../desktop/shared/conversation-task'
 import {defaultState} from '../../desktop/core/settings'
 import {freezeTaskDefaults} from '../../desktop/shared/task-defaults'
 import type {LocalResponse} from '../../desktop/shared/ipc'
+import {buildServiceWorker} from '../fixtures/build-service-worker'
+
+const workerBuild=buildServiceWorker()
+after(async()=>{await(await workerBuild).close()})
 
 test('CHAT34-I04: built worker forwards a private origin only to the real post-begin task and retains it through final settlement',{timeout:600_000},async()=>{
- await import('../../scripts/build-desktop.mjs')
+ const {entry}=await workerBuild
  const root=await mkdtemp(join(tmpdir(),'xuanxiang-conversation-worker-')),releaseEntered=Promise.withResolvers<void>(),releaseAck=Promise.withResolvers<void>()
- const worker=new Worker(join(process.cwd(),'dist/service/index.cjs'),{workerData:{root:join(root,'app'),migrations:join(process.cwd(),'prisma/migrations')}})
+ const worker=new Worker(entry,{workerData:{root:join(root,'app'),migrations:join(process.cwd(),'prisma/migrations')}})
  const privateCalls:{method:string;input:unknown}[]=[],requestId=randomUUID()
  const registry=new ConversationDirectoryAuthorizations({choose:async()=>{throw Error('No picker expected without a selected model')},revoke(){}})
  const origin=registry.begin(requestId,'original-worker-fixture',()=>{})

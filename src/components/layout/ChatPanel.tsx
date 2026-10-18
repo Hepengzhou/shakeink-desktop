@@ -985,24 +985,38 @@ export function ChatPanel({
       list.scrollTop -= (lr.top + margin) - tr.top
     }
   }, [])
+  const cardDockHeightRef = useRef<{ dock: HTMLElement; height: number } | null>(null)
+  const compensateCardDockGrowth = useCallback(() => {
+    const dock = dockRef.current, list = scrollRef.current
+    if (!dock || !list) return
+    const previous = cardDockHeightRef.current, height = dock.offsetHeight
+    // Child query commits and ResizeObserver share one consumed height. The
+    // layout notification handles growth before paint; the observer also covers
+    // font/viewport changes without replaying the same delta.
+    cardDockHeightRef.current = { dock, height }
+    if (previous?.dock === dock) {
+      const delta = height - previous.height
+      if (delta > 0 && nearBottomRef.current) list.scrollTop += delta
+    }
+  }, [])
   useLayoutEffect(() => {
-    if (showCardPanel) revealSelectedCard()
+    if (showCardPanel) {
+      revealSelectedCard()
+      const dock = dockRef.current
+      if (dock) cardDockHeightRef.current = { dock, height: dock.offsetHeight }
+    } else cardDockHeightRef.current = null
   }, [showCardPanel, cardSelection?.candidateId, revealSelectedCard])
   useEffect(() => {
     if (!showCardPanel) return
     const dock = dockRef.current
-    const list = scrollRef.current
-    if (!dock || !list) return
-    let lastHeight = dock.offsetHeight
+    if (!dock) return
+    let observing = true
     const observer = new ResizeObserver(() => {
-      const next = dock.offsetHeight
-      const delta = next - lastHeight
-      lastHeight = next
-      if (delta > 0 && nearBottomRef.current) list.scrollTop += delta
+      if (observing && cardDockHeightRef.current?.dock === dock) compensateCardDockGrowth()
     })
     observer.observe(dock)
-    return () => observer.disconnect()
-  }, [showCardPanel])
+    return () => { observing = false; observer.disconnect() }
+  }, [showCardPanel, compensateCardDockGrowth])
 
   // 进程面板（2026-08 zcode 式进程框，取代原内联清单卡）：任务清单取最近一轮推断结果 +
   // 智能体区列最近子代理；浮于消息区右上角——chatpane ≥1720px 时右侧边距天然容纳、不占位
@@ -1998,7 +2012,7 @@ export function ChatPanel({
             onCancel={() => void skipQuestion()}
           />
         ) : showCardPanel && entityNovelId ? (
-          <CandidateActionPanel novelId={entityNovelId} conversationId={conversationId} />
+          <CandidateActionPanel novelId={entityNovelId} conversationId={conversationId} onLayout={compensateCardDockGrowth} />
         ) : (
         <div
           className={cn(

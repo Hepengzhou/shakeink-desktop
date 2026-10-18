@@ -1,6 +1,6 @@
 {
   "name": "shakeink",
-  "version": "0.1.0-alpha",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "test": "node --import tsx --test tests/unit/*.test.ts tests/integration/*.test.ts",

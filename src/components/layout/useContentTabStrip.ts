@@ -133,11 +133,15 @@ export function useContentTabStrip(tabs: Tab[], activeId: string | null, moveTab
     // Capacity comes from the caption, not this intrinsic-width viewport: using
     // its previous narrow width here would prevent a single tab expanding again.
     const capacity = Math.max(0, available - tools.getBoundingClientRect().width - captionGap)
+    const previousCapacity = viewport.style.getPropertyValue("--content-tabs-viewport-width")
     viewport.style.setProperty("--content-tabs-viewport-width", `${capacity}px`)
+    // Committed tools can still change capacity in this call. Keep preparation
+    // hidden until the same applied CSSOM value survives another measurement.
+    const capacityReady = previousCapacity === viewport.style.getPropertyValue("--content-tabs-viewport-width")
     track.querySelectorAll<HTMLElement>(".content-tab-title").forEach(el => { el.dataset.overflow = String(el.scrollWidth > el.clientWidth + 1) })
     if (drag.current?.started) updateDrag()
     else reveal(document.activeElement?.closest<HTMLElement>(".content-tab")?.closest(".content-tabs-track") === track ? document.activeElement.closest<HTMLElement>(".content-tab")! : track.querySelector<HTMLElement>('[aria-selected="true"]') ?? undefined)
-    return ready
+    return ready && capacityReady
   }
   const latestMeasure = useRef(measure); latestMeasure.current = measure
   const prepare = useCallback(() => {

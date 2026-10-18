@@ -19,6 +19,7 @@ import { publishRootStartup, readRootStartup, ROOT_STARTUP_BYTES, RootStartupErr
 import {parseConversationWorkerRequest} from './conversation-request'
 import {configureConversationTransfers,recoverConversationTransfers} from './conversation-runtime'
 import {getDatabaseContext,runInDatabaseContext} from './context'
+import {loadDatabaseSeed} from './database/seed'
 
 if (!parentPort) throw new Error("Desktop service requires an isolated worker")
 // Any retained Web path attempting a direct network call fails closed. SDKs use
@@ -37,9 +38,12 @@ const ready = (async () => {
   try {
     if (workerData.bootstrap === undefined && workerData.startup instanceof SharedArrayBuffer && workerData.startup.byteLength === ROOT_STARTUP_BYTES) throw new RootStartupError("BOOTSTRAP_UNAVAILABLE")
     if (workerData.bootstrap !== undefined) readRootStartup(workerData.startup)
+    if(workerData.bootstrap!==undefined&&typeof workerData.databaseSeed!=='string')throw new RootStartupError('ROOT_STARTUP_FAILED')
+    // Resource validation precedes recover/resolve, which may write root state.
+    const databaseSeed=workerData.databaseSeed===undefined?undefined:await loadDatabaseSeed(workerData.databaseSeed)
     const started = await startOwnedRoot({ root: workerData.root, bootstrap: workerData.bootstrap }, async root => {
       // Recovery and pointer validation have completed before this constructor.
-      works = openedWorks = new Workspaces(root, workerData.migrations)
+      works = openedWorks = new Workspaces(root, workerData.migrations,databaseSeed)
       await works.initialize()
       await works.run("inbox", async () => {
         await localTemplateLibrary.initialize()

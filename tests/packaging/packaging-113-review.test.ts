@@ -7,7 +7,7 @@ import {createRequire} from 'node:module'
 
 const project=resolve(import.meta.dirname,'../..')
 const require=createRequire(import.meta.url)
-const entries=['dist/main/index.cjs','dist/service/index.cjs','dist/preload/index.cjs','dist/preload/maintenance.cjs','dist/preload/root-relocation.cjs']
+const entries=['dist/main/index.cjs','dist/service/index.cjs','dist/preload/index.cjs','dist/preload/maintenance.cjs','dist/preload/root-relocation.cjs','dist/runtime-dependencies.json','prisma/empty-database.json','prisma/empty-database.tar.gz']
 function actualProjectFilter(){
  const config=require(join(project,'electron-builder.config.cjs')),{getMainFileMatchers}=require('app-builder-lib/out/fileMatcher.js'),debugLogger={isEnabled:false}
  const packager={info:{config,projectDir:project,buildResourcesDir:'build',isPrepackedAppAsar:false,debugLogger}}

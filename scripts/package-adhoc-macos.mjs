@@ -13,6 +13,7 @@ import {installMacMenuLocalization} from './macos-menu-localization.mjs'
 import {inspectPackagedApp,verifyPackagedDependencies} from './inspect-packaged-app.mjs'
 import {runChecked} from './macos-release.mjs'
 import {assertAdhocHost,createAdhocConfiguration,signAdhocApp,verifyAdhocDmg} from './macos-adhoc.mjs'
+import {prunePackagedDependencies,createPruneSession} from './runtime-dependencies.mjs'
 
 const project=dirname(dirname(fileURLToPath(import.meta.url)))
 const mode=assertAdhocHost(process.platform,process.arch,process.argv.slice(2))
@@ -34,6 +35,7 @@ if(mode==='preflight'){
   const release=join(project,'release'),stagingRoot=join(release,'.staging')
   await mkdir(stagingRoot,{recursive:true})
   const stage=await mkdtemp(join(stagingRoot,'adhoc-arm64-'))
+  const pruneSession=await createPruneSession(project,stage)
   const buildOutput=join(stage,'build'),volume=join(stage,'volume')
   await mkdir(volume)
   await preparePackageResources(project)
@@ -42,6 +44,7 @@ if(mode==='preflight'){
     electronDist:runtime.electronDist,
     afterPack:async context=>{
       const app=join(context.appOutDir,`${context.packager.appInfo.productFilename}.app`)
+      await prunePackagedDependencies(project,join(app,'Contents/Resources/app'),pruneSession)
       await installMacMenuLocalization(app)
       await inspectPackagedApp(project,app)
       await verifyPackagedDependencies(join(app,'Contents/Resources/app'))

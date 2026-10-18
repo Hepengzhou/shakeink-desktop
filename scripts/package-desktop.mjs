@@ -8,6 +8,7 @@ import {preparePackageResources} from './prepare-package-resources.mjs'
 import {inspectPackagedApp, verifyProjectResources, verifyPackagedDependencies} from './inspect-packaged-app.mjs'
 import {writeFile} from 'node:fs/promises'
 import {installMacMenuLocalization} from './macos-menu-localization.mjs'
+import {prunePackagedDependencies,createPruneSession} from './runtime-dependencies.mjs'
 import {mkdtemp, mkdir} from 'node:fs/promises'
 import {releaseMode, preflightMacRelease, createPackagingConfiguration, verifyMacSignature, finalizeMacRelease} from './macos-release.mjs'
 
@@ -19,25 +20,28 @@ const target = arguments_[0]?.slice(2)
 const signing = mode === 'release' ? await preflightMacRelease() : null
 const runtime = await inspectLocalRuntime(project, process.platform, process.arch)
 let staging
-if (signing) {
+{
   const stagingRoot = join(project, 'release/.staging')
   await mkdir(stagingRoot, {recursive: true})
-  staging = await mkdtemp(join(stagingRoot, `macos-${process.arch}-`))
+  staging = await mkdtemp(join(stagingRoot, `${signing?'macos':'local'}-${process.arch}-`))
 }
+const pruneSession=await createPruneSession(project,staging)
 await preparePackageResources(project)
 const require = createRequire(import.meta.url)
 const config = {
   ...createPackagingConfiguration(require(join(project, 'electron-builder.config.cjs')), {platform: process.platform, target, identity: signing?.identity, staging}),
+  directories:{...require(join(project,'electron-builder.config.cjs')).directories,output:staging},
   electronDist: runtime.electronDist,
   // This hook completes before archive targets. A missing worker/resource or
   // package-external dependency must fail instead of producing an installer.
   afterPack: async context => {
     const application = context.electronPlatformName === 'darwin' ? join(context.appOutDir, `${context.packager.appInfo.productFilename}.app`) : context.appOutDir
     const appRoot = context.electronPlatformName === 'darwin' ? join(application, 'Contents/Resources/app') : join(application, 'resources/app')
+    const runtimeDependencies=await prunePackagedDependencies(project,appRoot,pruneSession)
     if(context.electronPlatformName==='darwin')await installMacMenuLocalization(application)
     const contents = context.electronPlatformName === 'darwin' ? await inspectPackagedApp(project, application) : await verifyProjectResources(project, appRoot)
     const dependencies = await verifyPackagedDependencies(appRoot)
-    await writeFile(join(context.outDir, `package-static-${process.platform}-${process.arch}.json`), JSON.stringify({contents, dependencies, scope: 'Packaged resources under Node, not Electron/native acceptance'}, null, 2) + '\n')
+    await writeFile(join(context.outDir, `package-static-${process.platform}-${process.arch}.json`), JSON.stringify({contents, dependencies, runtimeDependencies, scope: 'Packaged resources under Node, not Electron/native acceptance'}, null, 2) + '\n')
     console.log(JSON.stringify({stage: 'after-pack-resources-verified', projectResources: contents.projectResources, platform: process.platform, arch: process.arch, pgliteClosed: dependencies.pgliteClosed, publish: 'never'}))
   },
   afterSign: async context => {
@@ -54,5 +58,5 @@ if (signing) {
   const result = await finalizeMacRelease(project, staging, {...signing, arch: process.arch, artifacts, targets: target ? [target] : ['dmg', 'zip']})
   console.log(JSON.stringify({stage: 'release-verified', directory: result.directory, manifest: join(result.directory, 'release.json')}, null, 2))
 } else {
-  console.log(JSON.stringify({stage: mode === 'local' ? 'local-directory-only' : 'packaged', artifacts}, null, 2))
+  console.log(JSON.stringify({stage: mode === 'local' ? 'local-directory-only' : 'packaged', directory:staging, artifacts}, null, 2))
 }

@@ -7,11 +7,13 @@ import {createRequire, isBuiltin} from 'node:module'
 import {fileURLToPath, pathToFileURL} from 'node:url'
 import {execFile} from 'node:child_process'
 import {promisify} from 'node:util'
+import {runtimeEntries,verifyRuntimeDependencies} from './runtime-dependencies.mjs'
+import {readDatabaseSeed} from '../desktop/shared/database-seed.ts'
 
 const execute = promisify(execFile)
 const hash = bytes => createHash('sha256').update(bytes).digest('hex')
 const inside = (root, path) => path === root || path.startsWith(root + sep)
-const entries = ['dist/main/index.cjs', 'dist/service/index.cjs', 'dist/preload/index.cjs', 'dist/preload/maintenance.cjs', 'dist/preload/root-relocation.cjs']
+const entries = runtimeEntries
 
 async function walk(root, directory = root, files = []) {
   for (const name of (await readdir(directory)).sort()) {
@@ -29,13 +31,14 @@ async function walk(root, directory = root, files = []) {
 export async function verifyProjectResources(project, appRoot) {
   const root = await realpath(appRoot)
   const packaged = (await walk(root)).map(file => relative(root, file.path).split(sep).join('/'))
-  const allowed = path => entries.includes(path) || path.startsWith('out/') || path.startsWith('prisma/migrations/') || path.startsWith('runtime-licenses/') || ['package.json', 'LICENSE', 'THIRD_PARTY_NOTICES.md'].includes(path)
+  const seedResources=['prisma/empty-database.json','prisma/empty-database.tar.gz']
+  const allowed = path => entries.includes(path) || path==='dist/runtime-dependencies.json' || seedResources.includes(path) || path.startsWith('out/') || path.startsWith('prisma/migrations/') || path.startsWith('runtime-licenses/') || ['package.json', 'LICENSE', 'THIRD_PARTY_NOTICES.md'].includes(path)
   for (const path of packaged) {
     if (path.endsWith('.map') || /(^|\/)\.env(\.|$)/.test(path) || /\.(db(?:-shm|-wal)?|sqlite3?(?:-shm|-wal)?)$/.test(path) || /(^|\/)PG_VERSION$/.test(path) || /^out\/(?:.*\/)?(?:database|backups|\.(?:xuanxiang|shakeink)(?:-storage)?)\//.test(path)) throw new Error(`包中含禁止的文件：${path}`)
     if (!path.startsWith('node_modules/') && !allowed(path)) throw new Error(`包中含禁止的项目文件：${path}`)
     if (/^node_modules\/.*\/(test|tests|__tests__|example|examples)\//.test(path)) throw new Error(`包中含依赖开发资源：${path}`)
   }
-  const expected = [...entries, 'LICENSE', 'THIRD_PARTY_NOTICES.md', 'out/index.html', 'out/fonts/noto-sans-sc/NotoSansSC-Regular.ttf.gz', 'out/brand/logo-icon-paper.svg', 'runtime-licenses/provenance.json']
+  const expected = [...entries, 'dist/runtime-dependencies.json', ...seedResources, 'LICENSE', 'THIRD_PARTY_NOTICES.md', 'out/index.html', 'out/fonts/noto-sans-sc/NotoSansSC-Regular.ttf.gz', 'out/brand/logo-icon-paper.svg', 'runtime-licenses/provenance.json']
   for (const directory of ['out', 'prisma/migrations', 'runtime-licenses']) for (const file of await walk(join(project, directory))) {
     const path = `${directory}/${relative(join(project, directory), file.path).split(sep).join('/')}`
     if (!path.endsWith('.map') && !expected.includes(path)) expected.push(path)
@@ -74,6 +77,8 @@ export async function inspectPackagedApp(project, appPath) {
   if (packagedMetadata.version !== metadata.version || packagedMetadata.main !== 'dist/main/index.cjs') throw new Error('实际包 metadata 与入口/版本不一致')
   const nativeMenu=await verifyMacMenuLocalization(app)
   const resources = await verifyProjectResources(project, appRoot)
+  const runtimeDependencies=await verifyRuntimeDependencies(appRoot)
+  if(runtimeDependencies.removed.length)throw new Error('包中含未引用的构建依赖')
   const toolRequire = createRequire(join(project, 'package.json'))
   const typescript = toolRequire('typescript')
   const externalModules = []
@@ -85,7 +90,7 @@ export async function inspectPackagedApp(project, appPath) {
       externalModules.push({entry, name, path: relative(appRoot, modulePath)})
     }
   }
-  for (const name of ['@electric-sql/pglite/dist/pglite.wasm', '@electric-sql/pglite/dist/pglite.data', '@prisma/client/runtime/query_compiler_fast_bg.postgresql.wasm-base64.js', 'sharp/LICENSE', '@electric-sql/pglite/LICENSE', 'monaco-editor/LICENSE']) {
+  for (const name of ['@electric-sql/pglite/dist/pglite.wasm', '@electric-sql/pglite/dist/pglite.data', '@prisma/client/runtime/query_compiler_fast_bg.postgresql.wasm-base64.js', 'sharp/LICENSE', '@electric-sql/pglite/LICENSE']) {
     if (!(await readFile(join(appRoot, 'node_modules', name))).length) throw new Error(`生产依赖资源空缺：${name}`)
   }
   const binaryPaths = [join(app, 'Contents/MacOS', info.CFBundleExecutable)]
@@ -107,6 +112,10 @@ export async function inspectPackagedApp(project, appPath) {
 }
 
 export async function verifyPackagedDependencies(appRoot) {
+  // Native mount helpers may return macOS /var aliases. Seal the chosen app
+  // root first; resource-file and in-app dependency link checks remain strict.
+  appRoot=await realpath(appRoot)
+  await readDatabaseSeed(join(appRoot,'prisma/empty-database.json'),join(appRoot,'node_modules/@electric-sql/pglite'))
   const temporary = await mkdtemp(join(tmpdir(), 'shakeink-package-resources-'))
   const environment = {...process.env}
   delete environment.NODE_PATH

@@ -82,7 +82,7 @@ globalThis.mountChatEmpty=(options={})=>{
   if(novel&&method==='GET'){
    const [,id,part]=novel;if(!part)return json({novel:{id,title:'合成关联作品',characters:[],settings:[],volumes:[]}});
    if(part==='story-workflow')return json({workflow:null});if(part==='scenes/factions')return json({factions:[]});if(part==='attributes')return json({definitions:[]});
-   const candPrefix='chapters/chapter/candidates/';if(part.startsWith(candPrefix))return json({candidate:{id:part.slice(candPrefix.length),chapterId:'chapter',status:'ready',content:'合成候选正文',contentHash:'a'.repeat(64),baseVersion:1,wordCount:6,checks:[]}});
+   const candPrefix='chapters/chapter/candidates/';if(part.startsWith(candPrefix)){const id=part.slice(candPrefix.length),gate=gates.get('candidate:'+id);if(gate)await gate.promise;return json({candidate:{id,chapterId:'chapter',status:'ready',content:'合成候选正文',contentHash:'a'.repeat(64),baseVersion:1,wordCount:6,checks:[]}}); }
    if(part==='chapters/chapter')return json({chapter:{id:'chapter',title:'合成章',index:1,version:1,content:'合成正文',wordCount:4,status:'DRAFT'}});
    if(['worlds','characters','items','scenes','settings'].includes(part))return json({[part]:[]});
   }
@@ -533,6 +533,80 @@ test("CES-10c switching to another card in the group keeps the group fully visib
   ces10ExpectVisible(await ces10Geometry(page), "after switching to card C and its options loading")
 }))
 
+
+// Observe the real child commit in a microtask, before ResizeObserver can
+// compensate on a later rendering opportunity. The API gate guarantees that
+// loading and the complete action rows occupy two distinct React commits.
+async function ces10ObserveDockGrowth(page: Page) {
+  await page.evaluate(`(() => {
+    const w = window; w.ces10Growth = []; w.ces10DockHeight = null;
+    w.ces10Observer = new MutationObserver(() => {
+      const panel = document.querySelector('[data-testid="candidate-action-panel"]');
+      if (!panel) { w.ces10DockHeight = null; return; }
+      const dockHeight = panel.parentElement.offsetHeight, previousDockHeight = w.ces10DockHeight;
+      w.ces10DockHeight = dockHeight;
+      if (previousDockHeight === null || dockHeight <= previousDockHeight) return;
+      const group = document.querySelector('[data-testid="candidate-draw-card"]');
+      let list = group.parentElement;
+      while (!['auto', 'scroll'].includes(getComputedStyle(list).overflowY)) list = list.parentElement;
+      const lr = list.getBoundingClientRect(), gr = group.getBoundingClientRect();
+      w.ces10Growth.push({previousDockHeight, dockHeight, listTop:lr.top, listBottom:lr.bottom, groupTop:gr.top, groupBottom:gr.bottom, scrollTop:list.scrollTop});
+    });
+    w.ces10Observer.observe(document.querySelector('.chatpane'), {subtree:true, childList:true, characterData:true});
+  })()`)
+}
+
+test("CES-10d child detail commit keeps the selected group visible before ResizeObserver and compensates once", () => scenario({}, async page => {
+  await ces10Load(page, [ces10Filler("ces10-m1", 40), ces10Filler("ces10-m2", 40), ces10Filler("ces10-m3", 40), ces10DrawMessage])
+  await page.evaluate(() => (window as any).f.defer("candidate:candidate"))
+  await ces10ObserveDockGrowth(page)
+  try {
+    await page.getByTestId("candidate-card-alpha").click()
+    await page.getByText("正在读取候选状态…", { exact: true }).waitFor()
+    const loading = await ces10Geometry(page)
+    await page.evaluate(() => (window as any).f.release("candidate:candidate"))
+    await page.getByTestId("cap-option-improve").waitFor()
+    const growth = await page.evaluate(() => (window as any).ces10Growth) as (Ces10Geometry & {previousDockHeight:number;dockHeight:number})[]
+    assert.ok(growth.length > 0, "the controlled detail response must produce a distinct growing child commit")
+    ces10ExpectVisible(growth[0], "first child growth microtask before ResizeObserver")
+    assert.ok(Math.abs(growth[0].scrollTop - loading.scrollTop - (growth[0].dockHeight - growth[0].previousDockHeight)) <= 1, "the child commit applies the original positive dock delta once")
+    await frames(page)
+    assert.ok(Math.abs((await ces10Geometry(page)).scrollTop - growth[0].scrollTop) <= 1, "the following ResizeObserver must not compensate the same growth again")
+    await page.keyboard.press("Escape")
+    await editor(page).waitFor()
+    await page.getByTestId("candidate-card-alpha").click()
+    await page.getByTestId("cap-option-improve").waitFor()
+    const reopened = await ces10Geometry(page)
+    ces10ExpectVisible(reopened, "cached panel reopening starts with a fresh dock baseline")
+    await frames(page)
+    assert.ok(Math.abs((await ces10Geometry(page)).scrollTop - reopened.scrollTop) <= 1, "a closed panel's old observer cannot replay a consumed delta")
+  } finally { await page.evaluate(() => (window as any).ces10Observer?.disconnect()) }
+}))
+
+test("CES-10e asynchronous panel growth preserves the viewport after scrolling up to read history", () => scenario({}, async page => {
+  await ces10Load(page, [ces10Filler("ces10-m1", 40), ces10Filler("ces10-m2", 40), ces10Filler("ces10-m3", 40), ces10DrawMessage])
+  await page.evaluate(() => (window as any).f.defer("candidate:candidate"))
+  await ces10ObserveDockGrowth(page)
+  try {
+    await page.getByTestId("candidate-card-alpha").click()
+    await page.getByText("正在读取候选状态…", { exact: true }).waitFor()
+    await page.evaluate(() => {
+      const group = document.querySelector('[data-testid="candidate-draw-card"]')!
+      let list = group.parentElement!
+      while (!["auto", "scroll"].includes(getComputedStyle(list).overflowY)) list = list.parentElement!
+      list.scrollTop -= 500
+    })
+    await frames(page)
+    const reading = await ces10Geometry(page)
+    await page.evaluate(() => (window as any).f.release("candidate:candidate"))
+    await page.getByTestId("cap-option-improve").waitFor()
+    const growth = await page.evaluate(() => (window as any).ces10Growth) as Ces10Geometry[]
+    assert.ok(growth.length > 0, "detail response must grow the actual panel while reading history")
+    assert.ok(Math.abs(growth[0].scrollTop - reading.scrollTop) <= 1, "child layout must preserve an upward reading position")
+    await frames(page)
+    assert.ok(Math.abs((await ces10Geometry(page)).scrollTop - reading.scrollTop) <= 1, "ResizeObserver must also preserve the upward reading position")
+  } finally { await page.evaluate(() => (window as any).ces10Observer?.disconnect()) }
+}))
 
 // --- CES-11: 问答/选卡面板选项必须立即处理（panel-answer-queue 2026-10-16） ---
 // 修复前：选卡操作面板「继续改进这张」等选项在待答问答下被 handleSendCardMessage

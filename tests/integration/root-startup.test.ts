@@ -29,7 +29,7 @@ async function launch(root: string, bootstrap: string | undefined, migrations = 
   // The initial RED deliberately uses the wire contract directly: the old
   // worker signals status only, and must not be mistaken for a complete root.
   const startup = new SharedArrayBuffer(64 * 1024), header = new Int32Array(startup, 0, 4)
-  const worker = new Worker(join(output, "index.cjs"), { workerData: { root, bootstrap, migrations, startup } })
+  const worker = new Worker(join(output, "index.cjs"), { workerData: { root, bootstrap, migrations, startup, databaseSeed:join(process.cwd(),'prisma/empty-database.json') } })
   let defaultsRequests = 0
   const rpc = new RpcPeer(worker, async method => { if (method === "model.defaults") { defaultsRequests++; return freezeTaskDefaults(defaultState.settings.agent, 0) }; throw Error("Startup must not request models or main services") })
   worker.on("error", () => rpc.dispose()); worker.on("exit", () => rpc.dispose())

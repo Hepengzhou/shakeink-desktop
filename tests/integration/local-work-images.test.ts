@@ -1,5 +1,5 @@
 import assert from "node:assert/strict"
-import {test} from "node:test"
+import {test,after} from "node:test"
 import {Worker} from "node:worker_threads"
 import {randomUUID,randomBytes} from "node:crypto"
 import {mkdtemp,mkdir,rm,readdir,readFile} from "node:fs/promises"
@@ -11,11 +11,15 @@ import {DirectoryAuthority} from "../../desktop/main/directory-authority"
 import type {LocalResponse} from "../../desktop/shared/ipc"
 import {defaultState} from "../../desktop/core/settings"
 import {freezeTaskDefaults} from "../../desktop/shared/task-defaults"
+import {buildServiceWorker} from "../fixtures/build-service-worker"
+
+const workerBuild=buildServiceWorker()
+after(async()=>{await(await workerBuild).close()})
 
 test("built worker saves original cover/scene histories into a work and serves exact local bytes after reconnect",{timeout:60000},async()=>{
- await import("../../scripts/build-desktop.mjs")
+ const {entry}=await workerBuild
  const root=await mkdtemp(join(tmpdir(),"xuanxiang-local-images-")),directory=join(root,"author-work")
- const worker=new Worker(join(process.cwd(),"dist/service/index.cjs"),{workerData:{root:join(root,"app"),migrations:join(process.cwd(),"prisma/migrations")}})
+ const worker=new Worker(entry,{workerData:{root:join(root,"app"),migrations:join(process.cwd(),"prisma/migrations")}})
  const rpc=new RpcPeer(worker,async method=>{if(method==="model.defaults")return freezeTaskDefaults(defaultState.settings.agent,0);throw Error(`Unexpected external model request ${method}`)})
  worker.on("error",()=>rpc.dispose());worker.on("exit",()=>rpc.dispose())
  async function request(path:string,body?:FormData|Record<string,unknown>){

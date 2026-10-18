@@ -18,6 +18,7 @@ import { useDesktopStore } from "@/stores/desktop"
 import { desktopFontFamily } from "@/lib/desktop/appearance"
 import { bindMonacoCommandTarget } from "@/lib/desktop/monaco-commands"
 import {bindMonacoTextContext} from '@/lib/desktop/monaco-text-context'
+import {setDesktopCatalogStatus} from '@/lib/desktop/command-runtime'
 
 /** comments 缺省时传给 useMonacoComments 的静默占位（模块级常量,保住引用稳定） */
 const NO_THREADS: ResolvedThread[] = []
@@ -61,8 +62,8 @@ export default function MonacoMarkdownEditor({
     if (!editorInstance || !platform) return
     let stopped = false, dispose: (() => void) | undefined
     void bindMonacoCommandTarget(editorInstance, platform).then(value => {
-      if (stopped) value(); else dispose = value
-    }).catch(error => console.error("MONACO_COMMAND_ADAPTER_UNAVAILABLE", error))
+      if (stopped) value(); else {dispose = value;setDesktopCatalogStatus(platform,"ready")}
+    }).catch(error => {if(!stopped)setDesktopCatalogStatus(platform,"unavailable");console.error("MONACO_COMMAND_ADAPTER_UNAVAILABLE", error)})
     return () => { stopped = true; dispose?.() }
   }, [editorInstance, platform])
 

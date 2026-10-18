@@ -2,6 +2,8 @@ import {copyFile, mkdir, readFile, writeFile} from 'node:fs/promises'
 import {join} from 'node:path'
 import {createHash} from 'node:crypto'
 import {createRequire} from 'node:module'
+import {copyBundledLicenses} from './runtime-dependencies.mjs'
+import {verifyDatabaseSeed} from './database-seed.mjs'
 
 const sha = (bytes) => createHash('sha256').update(bytes).digest('hex')
 function chunk(type, bytes) {
@@ -12,6 +14,7 @@ function chunk(type, bytes) {
 }
 
 export async function preparePackageResources(project) {
+  await verifyDatabaseSeed(project)
   const require = createRequire(join(project, 'package.json'))
   const sharp = require('sharp')
   const build = join(project, 'build'), licenses = join(project, 'runtime-licenses')
@@ -48,7 +51,7 @@ export async function preparePackageResources(project) {
     ['node_modules/electron/dist/LICENSES.chromium.html', 'Electron-Chromium-LICENSES.html'],
     ['scripts/assets/sharp-libvips-v1.2.4-THIRD-PARTY-NOTICES.md', 'Sharp-libvips-THIRD-PARTY-NOTICES.md'],
   ]
-  const resources = []
+  const resources = await copyBundledLicenses(project)
   for (const [source, name] of copies) {
     await copyFile(join(project, source), join(licenses, name))
     resources.push({source, packagedPath: `runtime-licenses/${name}`, sha256: sha(await readFile(join(project, source)))})

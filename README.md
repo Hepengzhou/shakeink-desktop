@@ -112,7 +112,7 @@ AI 功能需要自行配置模型接口与密钥；调用远程模型时，相�
 | macOS · Apple Silicon（M 系列） | DMG / ZIP | 已有 arm64 开发版运行与真实窗口截图，完整业务验收仍在推进 |
 | Windows | NSIS 安装程序 | 已配置打包目标，原生安装与运行待验收 |
 
-当前为 **0.1.0-alpha 开发版**，暂不用于真实创作数据。开发进度与验证范围见[交付进度](docs/00-delivery-status.md)及[验证记录](docs/verification-2026-10-08.md)。
+当前为 **0.1 开发版**，暂不用于真实创作数据。开发进度与验证范围见[交付进度](docs/00-delivery-status.md)及[验证记录](docs/verification-2026-10-08.md)。
 
 ## 安装与运行
 

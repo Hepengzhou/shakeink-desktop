@@ -1,5 +1,15 @@
 {
   "version": "1.0",
+  "version01Revision": {
+    "date": "2026-10-19",
+    "displayVersion": "0.1",
+    "packageVersion": "0.1.0",
+    "scope": "Current project metadata and shared version display; historical release and installation evidence retained.",
+    "verification": "docs/reviews/2026-10-19-version-0.1.md",
+    "independentReview": "docs/reviews/2026-10-19-version-0.1-review.md",
+    "newReleaseArtifactBuilt": false,
+    "allRepositoryAcceptancePassed": false
+  },
   "fullAutomatedRegression20261018Revision": {
     "date": "2026-10-18",
     "scope": "当前仓库全部活动自动化回归及本机macOS arm64新回归包首启/重开；不提升530条跨平台正式验收状态",
@@ -5057,5 +5067,61 @@
       "Intel/Windows release acceptance not executed"
     ],
     "finalEvidenceReview": "passed-scoped-dmg-delivery-evidence"
+  },
+  "releaseOptimization20261018Revision": {
+    "date": "2026-10-18",
+    "scope": "本机macOS arm64发布包依赖裁剪、Monaco启动延后、32MiB数据库缓存/纯空PG模板及本轮发现的离线查询和布局时序修复；按用户认可当前成果收尾",
+    "status": "closed-at-user-request-with-unmet-memory-target",
+    "research": "docs/220-release-optimization-research.md",
+    "plan": "docs/221-release-optimization-plan.md",
+    "cases": "docs/223-release-optimization-cases.md",
+    "implementation": "docs/226-release-optimization-implementation.md",
+    "codeReview": "docs/225-release-optimization-code-review.md",
+    "evidence": "docs/evidence/release-optimization-2026-10-18",
+    "limits": [
+      "Native validation limited to local macOS arm64; Windows/Intel/paid providers and signing/notarization are separate gates",
+      "Existing cross-platform business acceptance entries are not upgraded by startup smoke"
+    ],
+    "closedOn": "2026-10-19",
+    "userCloseoutRequest": "优化到目前已经可以了，直接收尾吧",
+    "summary": "docs/229-release-optimization-summary.md",
+    "verification": "docs/227-release-optimization-verification.md",
+    "finalEvidenceReview": "docs/228-release-optimization-final-review.md",
+    "functionalRegressionPassed": true,
+    "originalAcceptancePassed": false,
+    "results": {
+      "core": {
+        "files": 296,
+        "tests": 2240,
+        "pass": 2240
+      },
+      "browser": {
+        "files": 58,
+        "tests": 614,
+        "pass": 614
+      },
+      "package": {
+        "tests": 50,
+        "pass": 50
+      },
+      "build": "passed",
+      "typecheck": "passed",
+      "foundationTypecheck": "passed",
+      "nativeMacosArm64": "passed declared isolated functional flow; two normal quits",
+      "appReductionPercent": 52.65525366076596,
+      "zipReductionPercent": 43.63154035427185,
+      "startupNinePairs": {
+        "runs": 18,
+        "executionPassed": true,
+        "memoryGatePassed": false,
+        "baselineKiB": 861424,
+        "candidateKiB": 888592,
+        "memoryIncreasePercent": 3.153847582607394,
+        "readyReductionPercent": 10.048398927887414,
+        "longTaskReductionPercent": 42.71186440677967
+      },
+      "finalEditorThreePlusThree": "not-run; stopped at user closeout"
+    },
+    "formalReleaseAccepted": false
   }
 }

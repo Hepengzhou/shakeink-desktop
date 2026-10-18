@@ -8,7 +8,7 @@
  * 统一发送入口发固定文案（待答问答由发送入口先退出再立即执行；生成中等忙碌态仍排队，
  * 排队语义由 ChatPanel 既有处理接管）。
  */
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useLayoutEffect, useMemo, useState } from "react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { X } from "lucide-react"
 
@@ -31,7 +31,7 @@ import { usePendingAnswerMatch } from "./pending-answer"
 import { dispatchChatSendMessage } from "./ui-events"
 import { useCardSelection } from "./use-card-selection"
 
-export function CandidateActionPanel({ novelId, conversationId }: { novelId: string; conversationId: string | null }) {
+export function CandidateActionPanel({ novelId, conversationId, onLayout }: { novelId: string; conversationId: string | null; onLayout?: () => void }) {
   const queryClient = useQueryClient()
   const selection = useCardSelection((s) => s.selection)
   const clearCard = useCardSelection((s) => s.clearCard)
@@ -113,6 +113,12 @@ export function CandidateActionPanel({ novelId, conversationId }: { novelId: str
       laterChapterRefs: `后续 ${laterCount} 章正文`,
     })
   }, [active, detail, chapter, chapterTitle, label, laterCount])
+
+  // Detail/chapter queries can grow this child without rerendering ChatPanel.
+  // Let its owner consume that dock growth in the same layout commit.
+  useLayoutEffect(() => {
+    if (active) onLayout?.()
+  })
 
   if (!active || !selection) return null
 

@@ -17,7 +17,7 @@ const prefix=statements.slice(0,boundary).map(node=>node.getText(syntax)).join("
 function runStartup(outcome:{status:string;root?:string;code?:string}){
  const trace:unknown[]=[];let workerData:Record<string,unknown>|undefined
  const shared=new SharedArrayBuffer(65536)
- const start=new Function("Worker","RpcPeer","app","join","resolve","homedir","mkdirSync","Atomics","createRootStartupBuffer","waitRootStartup","prepareSessionDirectory","assertNoLegacyBackupRecovery","startupPaths","startupSelectionError",transformSync(`let dataRoot,worker,service,applicationRequests,applicationProtectedOperationId,modelService;let failedRootBeforeSession=false,serviceProtected=false,ordinaryWorkerExited=false;const applicationHandoff=null;const applicationBlocked=()=>false;const applicationRestorePreflight=()=>({bootstrap:{path:'/canonical/bootstrap',dev:1,ino:1},startup:{mode:'normal'}});class ApplicationRestoreRequests{constructor(){} };const applicationMetadata={write:run=>run(),acquire:()=>{throw Error('normal startup has no capture authority')},release:()=>{throw Error('normal startup has no capture authority')},revoke:()=>{}};const conversationDirectories={revokeAll:()=>{},workerStopped:()=>{}};const responseOwners=new Map();const send=()=>{};const bootstrapPath='/canonical/bootstrap';const __dirname='/bundle/main';${workerSource};async function launch(){${prefix};return dataRoot};return launch`,{loader:"ts"}).code)(
+ const start=new Function("Worker","RpcPeer","app","join","resolve","homedir","mkdirSync","Atomics","createRootStartupBuffer","waitRootStartup","prepareSessionDirectory","assertNoLegacyBackupRecovery","startupPaths","startupSelectionError","realpathSync",transformSync(`let dataRoot,worker,service,applicationRequests,applicationProtectedOperationId,modelService;let failedRootBeforeSession=false,serviceProtected=false,ordinaryWorkerExited=false;const applicationHandoff=null;const applicationBlocked=()=>false;const applicationRestorePreflight=()=>({bootstrap:{path:'/canonical/bootstrap',dev:1,ino:1},startup:{mode:'normal'}});class ApplicationRestoreRequests{constructor(){} };const applicationMetadata={write:run=>run(),acquire:()=>{throw Error('normal startup has no capture authority')},release:()=>{throw Error('normal startup has no capture authority')},revoke:()=>{}};const conversationDirectories={revokeAll:()=>{},workerStopped:()=>{}};const responseOwners=new Map();const send=()=>{};const bootstrapPath='/canonical/bootstrap';const __dirname='/bundle/main';${workerSource};async function launch(){${prefix};return dataRoot};return launch`,{loader:"ts"}).code)(
   class{constructor(_path:unknown,options:{workerData:Record<string,unknown>}){workerData=options.workerData;trace.push("worker")};on(){}},
   class{async call(method:string){trace.push(method);return true}},
   {hasSingleInstanceLock:()=>true,isPackaged:true,getAppPath:()=>"/bundle",setPath:(kind:string,path:string)=>trace.push({kind,path})},join,resolve,()=>"/home/author",(path:string)=>trace.push({mkdir:path}),
@@ -25,6 +25,7 @@ function runStartup(outcome:{status:string;root?:string;code?:string}){
   (root:string)=>{const path=join(root,"session");trace.push({mkdir:path});return path},
   (bootstrap:string,guard:()=>void)=>{assert.equal(bootstrap,"/canonical/bootstrap");guard()},
   {bootstrap:"/canonical/bootstrap",defaultRoot:"/selected/default-root",encryptionFamily:"current"},null,
+  (path:string)=>{assert.equal(path,'/bundle');return'/canonical/bundle'},
  ) as ()=>Promise<string>
  return{start,trace,get workerData(){return workerData}}
 }
@@ -33,6 +34,8 @@ test("main startup chooses worker's resolved canonical root before any sessionDa
  assert.equal(await r.start(),"/chosen/canonical-root")
  assert.equal(r.workerData?.bootstrap,"/canonical/bootstrap")
  assert.equal(r.workerData?.root,"/selected/default-root","worker must receive the selected default before its canonical root barrier")
+ assert.equal(r.workerData?.migrations,'/canonical/bundle/prisma/migrations')
+ assert.equal(r.workerData?.databaseSeed,'/canonical/bundle/prisma/empty-database.json')
  assert.deepEqual(r.trace,["worker","barrier",{mkdir:"/chosen/canonical-root/session"},{kind:"sessionData",path:"/chosen/canonical-root/session"},"ready"])
 })
 test("failed root resolution does not initialize a fallback session or open the application",async()=>{

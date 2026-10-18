@@ -21,6 +21,8 @@ build/icon.png
 build/icon.ico
 build/icon.icns
 runtime-licenses/
+prisma/empty-database.json
+prisma/empty-database.tar.gz
 
 # Raw native acceptance logs contain local paths and test environment metadata.
 docs/evidence/

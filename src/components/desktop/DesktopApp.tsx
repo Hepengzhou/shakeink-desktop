@@ -71,7 +71,7 @@ export default function DesktopApp() {
     if(!platform)return
     let alive=true,dispose:(()=>void)|undefined
     setDesktopCatalogStatus(platform,"loading")
-    void import("@/lib/desktop/monaco-commands").then(module=>module.initializeMonacoCommandCatalog(platform)).then(cleanup=>{
+    void import("@/lib/desktop/startup-command-catalog").then(module=>module.initializeStartupCommandCatalog(platform)).then(cleanup=>{
       if(!alive){cleanup();return}
       dispose=cleanup;setDesktopCatalogStatus(platform,"ready")
     }).catch(()=>{if(alive)setDesktopCatalogStatus(platform,"unavailable")})

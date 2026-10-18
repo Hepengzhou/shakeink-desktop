@@ -4,13 +4,14 @@ import {readFile} from 'node:fs/promises'
 import {createRequire} from 'node:module'
 const read=(path:string)=>readFile(path,'utf8')
 
-test('VS-01: package and lock declare the same valid alpha release',async()=>{
+test('VS-01: package and lock declare the same valid 0.1 release',async()=>{
  const pkg=JSON.parse(await read('package.json')),lock=JSON.parse(await read('package-lock.json'))
- assert.equal(pkg.version,'0.1.0-alpha');assert.equal(lock.version,pkg.version);assert.equal(lock.packages[''].version,pkg.version)
+ assert.equal(pkg.version,'0.1.0');assert.equal(lock.version,pkg.version);assert.equal(lock.packages[''].version,pkg.version)
  const require=createRequire(import.meta.url);assert.equal(require('semver').valid(pkg.version),pkg.version)
 })
 test('VS-01: display is derived from the installed version without freezing other releases',async()=>{
  const {displayAppVersion}=await import('../../desktop/shared/project-info')
+ assert.equal(displayAppVersion('0.1.0'),'0.1')
  assert.equal(displayAppVersion('0.1.0-alpha'),'0.1-alpha')
  assert.equal(displayAppVersion('0.10.0-alpha'),'0.10-alpha')
  for(const version of ['0.10.1-alpha','0.10.0-beta','0.11.2','1.0.0','unknown'])assert.equal(displayAppVersion(version),version)

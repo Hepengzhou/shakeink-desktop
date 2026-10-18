@@ -1,5 +1,15 @@
 {
   "sourceRepository": "mySingleLive/xuanxiang.ink",
+  "version01Revision": {
+    "date": "2026-10-19",
+    "displayVersion": "0.1",
+    "packageVersion": "0.1.0",
+    "scope": "Current project metadata and shared version display; no business migration changes or historical release rewrites.",
+    "verification": "docs/reviews/2026-10-19-version-0.1.md",
+    "independentReview": "docs/reviews/2026-10-19-version-0.1-review.md",
+    "newReleaseArtifactBuilt": false,
+    "allRepositoryAcceptancePassed": false
+  },
   "modelCatalogFixRevision": {
     "date": "2026-10-15",
     "status": "implemented-and-scoped-verified",

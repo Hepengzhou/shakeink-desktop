@@ -8,7 +8,12 @@ import { TooltipProvider } from "@/components/ui/tooltip"
 import { installTextPreviewSelection } from "@/lib/desktop/text-selection"
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  const [queryClient] = useState(() => new QueryClient())
+  // All business reads/writes use the local IPC transport. Browser network
+  // availability must not pause them before they can reach the local service.
+  const [queryClient] = useState(() => new QueryClient({defaultOptions:{
+    queries:{networkMode:"always",refetchOnReconnect:true},
+    mutations:{networkMode:"always"},
+  }}))
   useEffect(() => installTextPreviewSelection(document), [])
 
   return (

@@ -1,5 +1,5 @@
 import assert from "node:assert/strict"
-import { test } from "node:test"
+import { test, after } from "node:test"
 import { Worker } from "node:worker_threads"
 import { randomUUID } from "node:crypto"
 import { mkdtemp, mkdir, rm, readFile, writeFile, readdir } from "node:fs/promises"
@@ -10,12 +10,16 @@ import { DirectoryAuthority } from "../../desktop/main/directory-authority"
 import type { LocalResponse } from "../../desktop/shared/ipc"
 import {defaultState} from "../../desktop/core/settings"
 import {freezeTaskDefaults} from "../../desktop/shared/task-defaults"
+import {buildServiceWorker} from "../fixtures/build-service-worker"
+
+const workerBuild=buildServiceWorker()
+after(async()=>{await(await workerBuild).close()})
 
 test("IPC-01: built worker executes original local handlers with no HTTP server and retains original ownership guards", async () => {
-  // Build the actual distribution entry so bundling/worker boot failures are covered.
-  await import("../../scripts/build-desktop.mjs")
+  // Build the actual service entry in this file's isolated output directory.
+  const {entry}=await workerBuild
   const root = await mkdtemp(join(tmpdir(), "xuanxiang-worker-"))
-  const worker = new Worker(join(process.cwd(), "dist/service/index.cjs"), { workerData: { root: join(root, "app"), migrations: join(process.cwd(), "prisma/migrations") } })
+  const worker = new Worker(entry, { workerData: { root: join(root, "app"), migrations: join(process.cwd(), "prisma/migrations") } })
   const rpc = new RpcPeer(worker, async method => { if(method==="model.defaults")return freezeTaskDefaults(defaultState.settings.agent,0);throw new Error(`Unexpected main request: ${method}`) })
   worker.on("error", () => rpc.dispose()); worker.on("exit", () => rpc.dispose())
   async function request(path: string, method = "GET", data?: unknown) {
@@ -57,11 +61,11 @@ test("IPC-01: built worker executes original local handlers with no HTTP server 
 })
 
 test("DESK-D01: built worker signals fully initialized owned root while main thread is synchronously waiting", { timeout: 30000 }, async () => {
-  await import("../../scripts/build-desktop.mjs")
+  const {entry}=await workerBuild
   const root = await mkdtemp(join(tmpdir(), "xuanxiang-worker-startup-"))
   const appRoot = join(root, "app")
   const startup = new Int32Array(new SharedArrayBuffer(Int32Array.BYTES_PER_ELEMENT))
-  const worker = new Worker(join(process.cwd(), "dist/service/index.cjs"), { workerData: { root: appRoot, migrations: join(process.cwd(), "prisma/migrations"), startup: startup.buffer } })
+  const worker = new Worker(entry, { workerData: { root: appRoot, migrations: join(process.cwd(), "prisma/migrations"), startup: startup.buffer } })
   let mainRequests = 0
   const rpc = new RpcPeer(worker, async method => { mainRequests++;if(method==="model.defaults")return freezeTaskDefaults(defaultState.settings.agent,0);throw new Error(`Unexpected main request: ${method}`) })
   worker.on("error", () => rpc.dispose()); worker.on("exit", () => rpc.dispose())
@@ -88,7 +92,7 @@ test("DESK-D01: built worker signals fully initialized owned root while main thr
 })
 
 test("DESK-D01: worker startup failure signals unblock main without claiming or modifying an unrelated data root", { timeout: 30000 }, async () => {
-  await import("../../scripts/build-desktop.mjs")
+  const {entry}=await workerBuild
   const root = await mkdtemp(join(tmpdir(), "xuanxiang-worker-startup-error-"))
   try {
     for (const scenario of ["nonempty", "missing-resources"] as const) {
@@ -97,7 +101,7 @@ test("DESK-D01: worker startup failure signals unblock main without claiming or 
       const original = Buffer.from("作者原文件\n保留内容\0")
       await writeFile(join(appRoot, "author.txt"), original)
       const startup = new Int32Array(new SharedArrayBuffer(Int32Array.BYTES_PER_ELEMENT))
-      const worker = new Worker(join(process.cwd(), "dist/service/index.cjs"), { workerData: { root: appRoot, migrations: scenario === "nonempty" ? join(process.cwd(), "prisma/migrations") : join(root, "absent-migrations"), startup: startup.buffer } })
+      const worker = new Worker(entry, { workerData: { root: appRoot, migrations: scenario === "nonempty" ? join(process.cwd(), "prisma/migrations") : join(root, "absent-migrations"), startup: startup.buffer } })
       const rpc = new RpcPeer(worker, async () => { throw new Error("Unexpected startup main request") })
       worker.on("error", () => rpc.dispose()); worker.on("exit", () => rpc.dispose())
       try {

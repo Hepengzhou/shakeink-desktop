@@ -10,7 +10,8 @@ export const PROJECT_STAR_COPY = {
  about: {message:'你的每一颗 Star，都是玄印继续打磨的动力。',label:'在 GitHub 支持玄印'},
 } as const
 
-// Keep packaging SemVer intact; only zero-patch alpha releases use the short UI label.
+// Keep packaging SemVer intact; show release 0.1 and zero-patch alpha labels briefly.
 export function displayAppVersion(version: string): string {
+ if (version === '0.1.0') return '0.1'
  return version.replace(/^(\d+\.\d+)\.0(-alpha(?:\.\d+)?)$/, '$1$2')
 }

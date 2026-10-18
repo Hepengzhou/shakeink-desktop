@@ -8,9 +8,10 @@ const bundle=build({stdin:{resolveDir:process.cwd(),loader:'tsx',contents:`
 import React from 'react';import {createRoot} from 'react-dom/client';import {flushSync} from 'react-dom';
 import {SettingsDialog} from './src/components/desktop/SettingsDialog';import {OnboardingController} from './src/components/desktop/OnboardingController';
 import {useDesktopStore} from './src/stores/desktop';import {defaultState} from './desktop/core/settings';
+import {displayAppVersion} from './desktop/shared/project-info';import {version} from './package.json';
 const root=createRoot(document.getElementById('app'));globalThis.calls=0;globalThis.exits=0;globalThis.commits=0;globalThis.fail=false;globalThis.pending=false;
 window.desktop={openProjectRepository:async()=>{globalThis.calls++;if(globalThis.pending)await new Promise(resolve=>globalThis.release=resolve);if(globalThis.fail)throw Error('fixture');},onboarding:async()=>{globalThis.commits++;throw Error('No welcome commit expected');}};
-globalThis.mount=(surface,step='welcome')=>{useDesktopStore.setState({bootstrap:{...structuredClone(defaultState),platform:'win32',version:'0.10-alpha',dataRoot:'isolated',systemDark:false,onboarding:{version:1,completed:step==='welcome',step,textModelId:null,imageModelId:null,receipt:null}}});flushSync(()=>root.render(surface==='settings'?<SettingsDialog open initialSection='about' onOpenChange={()=>{}}/>:<OnboardingController key={step} request='full' suspended={false} onExit={()=>globalThis.exits++} finalFocus={()=>null}/>));};
+globalThis.mount=(surface,step='welcome')=>{useDesktopStore.setState({bootstrap:{...structuredClone(defaultState),platform:'win32',version:displayAppVersion(version),dataRoot:'isolated',systemDark:false,onboarding:{version:1,completed:step==='welcome',step,textModelId:null,imageModelId:null,receipt:null}}});flushSync(()=>root.render(surface==='settings'?<SettingsDialog open initialSection='about' onOpenChange={()=>{}}/>:<OnboardingController key={step} request='full' suspended={false} onExit={()=>globalThis.exits++} finalFocus={()=>null}/>));};
 globalThis.dispose=()=>flushSync(()=>root.unmount());
 `},bundle:true,write:false,platform:'browser',format:'iife',tsconfig:'tsconfig.json'})
 let browser:Browser
@@ -26,7 +27,7 @@ async function scenario(run:(page:Page)=>Promise<void>){
 test('VS-02/04: Settings final row is highlighted and keyboard opens only once while pending',async()=>scenario(async page=>{
  await page.evaluate(()=>(window as any).mount('settings'))
  const dialog=page.getByRole('dialog',{name:'设置',exact:true}),cta=dialog.getByRole('button',{name:'去 GitHub 点亮 Star',exact:true})
- await expect(cta).toBeVisible();await expect(dialog).toContainText('0.10-alpha')
+ await expect(cta).toBeVisible();await expect(dialog.getByText('0.1',{exact:true})).toBeVisible()
  assert.match(await dialog.locator('.desktop-settings-group > div > :last-child').getAttribute('class')??'',/desktop-project-star-settings/)
  await expect(dialog.getByRole('button',{name:'填写反馈',exact:true})).toBeVisible();await expect(dialog.getByRole('button',{name:'查看文档',exact:true})).toBeEnabled()
  await expect(dialog.getByRole('button',{name:'访问官网',exact:true})).toBeEnabled();await expect(dialog.getByRole('button',{name:'查看常见问题',exact:true})).toBeEnabled()

@@ -87,7 +87,7 @@ export class Workspaces {
   private closing = false
   private closingPromise: Promise<void> | undefined
   private readonly creationReservations = new WorkCreationReservations(run=>this.run('inbox',()=>run(getDatabaseContext().database)))
-  constructor(readonly root: string, readonly migrationsPath: string) {
+  constructor(readonly root: string, readonly migrationsPath: string,private readonly databaseSeed?:Blob) {
     this.catalog = new VersionedStore(join(root, "catalog.json"), [], value => catalogSchema.parse(value))
   }
   private serialize<T>(run: () => Promise<T>): Promise<T> { if (this.closing) return Promise.reject(new Error("正在关闭本地数据库，请稍后重试")); const pending = this.queue.then(run); this.queue = pending.catch(() => undefined); return pending }
@@ -285,17 +285,24 @@ export class Workspaces {
     try {
     const storagePath=path===join(this.root,"inbox")?connectionRoot.path:await this.dataPath(path,()=>unlock.assertHeld())
     assertRegistration?.()
+    let emptyDatabase=false
     if (!create) await this.validateDatabase(storagePath)
     else {
       try {
         const info = await lstat(join(storagePath, "database"))
         if (!info.isDirectory() || info.isSymbolicLink()) throw new Error("作品数据库路径无效")
         if ((await readdir(join(storagePath, "database"))).length) await this.validateDatabase(storagePath)
-      } catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error }
+        else emptyDatabase=true
+      } catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;emptyDatabase=true }
     }
       await unlock.assertHeld()
       assertRegistration?.()
-      engine = await PGlite.create({ dataDir: join(storagePath, "database"), relaxedDurability: false })
+      engine = await PGlite.create({
+        dataDir: join(storagePath, "database"), relaxedDurability: false,
+        // Bound each database's page cache without limiting WASM memory growth.
+        startParams: [...PGlite.defaultStartParams, "-c", "shared_buffers=32MB"],
+        ...(emptyDatabase&&this.databaseSeed?{loadDataDir:this.databaseSeed}:{}),
+      })
       assertRegistration?.();await migrateDatabase(engine, this.migrations,assertRegistration)
       assertRegistration?.()
       db = new PrismaClient({ adapter: new LocalPGliteAdapter(engine,assertLease) })

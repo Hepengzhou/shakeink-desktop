@@ -186,7 +186,8 @@ async function chooseConversationDirectory(input:{title:string;premise?:string;r
 }
 function createOrdinaryServiceWorker(){
   const startup = createRootStartupBuffer()
-  worker = new Worker(join(__dirname, "../service/index.cjs"), { workerData: { root: dataRoot, bootstrap:bootstrapPath, migrations: join(app.getAppPath(), "prisma/migrations"), startup } })
+  const applicationRoot=realpathSync(app.getAppPath())
+  worker = new Worker(join(__dirname, "../service/index.cjs"), { workerData: { root: dataRoot, bootstrap:bootstrapPath, migrations: join(applicationRoot, "prisma/migrations"), databaseSeed:join(applicationRoot, "prisma/empty-database.json"), startup } })
   service = new RpcPeer(worker, async (method, value) => {
     if (!modelService) throw new Error("模型服务尚未就绪")
     if (method === "conversation.claim") return conversationDirectories.claim(value)

@@ -24,7 +24,7 @@ async function fixture(){
  await mkdir(bootstrap);let activeWorkers=0
  async function launch(){
   await built
-  const startup=createRootStartupBuffer(),worker=new Worker(join(output,'index.cjs'),{workerData:{root,bootstrap,migrations:join(process.cwd(),'prisma/migrations'),startup}})
+  const startup=createRootStartupBuffer(),worker=new Worker(join(output,'index.cjs'),{workerData:{root,bootstrap,migrations:join(process.cwd(),'prisma/migrations'),startup,databaseSeed:join(process.cwd(),'prisma/empty-database.json')}})
   activeWorkers++
   const rpc=new RpcPeer(worker,async method=>{if(method==='model.defaults')return freezeTaskDefaults(defaultState.settings.agent,0);throw Error('No model transport or main business calls permitted in this test')})
   worker.on('error',()=>rpc.dispose());worker.on('exit',()=>{activeWorkers--;rpc.dispose()})
