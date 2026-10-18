@@ -6,8 +6,8 @@
     "src/lib/desktop/markdown-actions.ts": "d893e02377c423f2825b8516a228d0a4d1f36309a29de9647bb60ceedd0791c3",
     "src/lib/desktop/command-runtime.ts": "59a4fd8be5f990fec4d28138b5e3a30fa2797d94f587f68ea11e38e7915005ff",
     "src/lib/desktop/command-scope.ts": "1daf07e3b0cebae7567e2aeb13a7956d0683fb4fc82ecb2b8f6ab4a271d40ccd",
-    "desktop/shared/command-registry.ts": "b017552b4a377d0d28e185426d4dfe48e318d5d90b8ee8ed551649f49dbc801f",
-    "desktop/shared/commands.json": "b6735f65a88739eaecf3c407685d542530c4884a3719c473e1f24c182bf70ec7",
+    "desktop/shared/command-registry.ts": "9150c10bfd1caa11b90e5fe4a388eeeff6ace1764f90c52b246eb5a43bb1ce35",
+    "desktop/shared/commands.json": "8da2ca98aa446f1e46304dc769f8202b3b3114f6294898f12ba599f127a1fb88",
     "src/components/editor/monaco-setup.ts": "5ab96ba0fac388f98666673d0806dd8848df408d2389a53020e672f759ac6109",
     "desktop/core/shortcuts.ts": "0a6b300839ce104e071bbf7b050ce36d2c0c8c4932f445f92aff98a4d3c14ed6",
     "desktop/core/shortcut-context.ts": "0656fb3496e8d578e6a426b7ed15e4b052792961f0c4bdd400673b0f9324f569",
@@ -228,8 +228,24 @@
           "defaults": []
         },
         {
+          "id": "help.website",
+          "label": "官方网站",
+          "group": "应用菜单",
+          "scope": "global",
+          "locked": false,
+          "defaults": []
+        },
+        {
           "id": "help.docs",
           "label": "帮助文档",
+          "group": "应用菜单",
+          "scope": "global",
+          "locked": false,
+          "defaults": []
+        },
+        {
+          "id": "help.faq",
+          "label": "常见问题",
           "group": "应用菜单",
           "scope": "global",
           "locked": false,
@@ -7347,7 +7363,7 @@
           ]
         }
       ],
-      "sha256": "54811c4ba0a18be2235c4a5aed2c4499649771d7e4abd92a7a0b256a171f1aa8"
+      "sha256": "ba68e6991f4954d787a6d57f277bde29f5008db04ba8a44ac46592a0abaa32d8"
     },
     "win32": {
       "resolved": true,
@@ -7563,8 +7579,24 @@
           "defaults": []
         },
         {
+          "id": "help.website",
+          "label": "官方网站",
+          "group": "应用菜单",
+          "scope": "global",
+          "locked": false,
+          "defaults": []
+        },
+        {
           "id": "help.docs",
           "label": "帮助文档",
+          "group": "应用菜单",
+          "scope": "global",
+          "locked": false,
+          "defaults": []
+        },
+        {
+          "id": "help.faq",
+          "label": "常见问题",
           "group": "应用菜单",
           "scope": "global",
           "locked": false,
@@ -14034,7 +14066,7 @@
           ]
         }
       ],
-      "sha256": "5d8c7faac086077dbfb739bec7302ca5ac3d03d9ac17cf106fb5a7a4acf11bfa"
+      "sha256": "cfbf4cb9f58139b4c9f9d86938ad46c1653110a7bf2bc2b864b85cc097112d97"
     }
   }
 }

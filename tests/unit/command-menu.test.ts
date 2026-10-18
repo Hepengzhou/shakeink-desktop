@@ -27,5 +27,5 @@ test("OS reserved roles keep their defaults even if disk overrides were tampered
   const menu=desktopMenu("darwin",{"app.hide":[],"app.quit":["Cmd+Y"]})
   assert.equal(menu[0].items.find(item=>item.id==="app.hide")!.binding,"Cmd+H")
   assert.equal(menu[0].items.find(item=>item.id==="app.quit")!.binding,"Cmd+Q")
-  assert.equal(menu.at(-1)!.items.find(item=>item.id==="help.docs")!.enabled,false)
+  assert.equal(menu.at(-1)!.items.find(item=>item.id==="help.docs")!.enabled,true)
 })

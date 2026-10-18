@@ -60,7 +60,7 @@ import {TextContextMenus} from './text-context-menu'
 import {textContextRequestSchema} from '../shared/text-context-menu'
 import { OnboardingService } from "./onboarding-service"
 import { OnboardingError, onboardingActionSchema } from "../shared/onboarding"
-import {PROJECT_REPOSITORY_URL,displayAppVersion} from '../shared/project-info'
+import {PROJECT_REPOSITORY_URL,PROJECT_WEBSITE_URL,PROJECT_DOCS_URL,PROJECT_FAQ_URL,displayAppVersion} from '../shared/project-info'
 import { ModelCatalogRepository } from './model-catalog-repository'
 import {projectAboutHtml,installProjectAboutLinks} from './project-about'
 
@@ -697,13 +697,15 @@ async function executeCommand(id: string, fromRenderer=false) {
   if (id === "window.minimize") { window?.minimize(); return }
   if (id === "window.maximize") { if (window?.isMaximized()) window.unmaximize(); else window?.maximize(); return }
   if (id === "view.fullscreen") { window?.setFullScreen(!window.isFullScreen()); return }
-  if (id === "help.docs") return
+  if (id === "help.website") { await shell.openExternal(PROJECT_WEBSITE_URL); return }
+  if (id === "help.docs") { await shell.openExternal(PROJECT_DOCS_URL); return }
+  if (id === "help.faq") { await shell.openExternal(PROJECT_FAQ_URL); return }
   if (id === "help.feedback") { await shell.openExternal("https://github.com/mySingleLive/shakeink-desktop/issues/new/choose"); return }
   if (id === "app.about") {
     if (process.platform === "darwin") { app.setAboutPanelOptions({ applicationName: "玄印写作", applicationVersion: displayAppVersion(app.getVersion()), version: "", copyright: "GPL-3.0 · ShakeInk" }); app.showAboutPanel() }
     else {
       const theme=(await repository.read()).settings.appearance.theme
-      const about = new BrowserWindow({ width: 440, height: 380, resizable: false, minimizable: false, maximizable: false, parent: window ?? undefined, modal: true, title: "关于玄印写作", webPreferences: { sandbox: true, contextIsolation: true, nodeIntegration: false } })
+      const about = new BrowserWindow({ width: 440, height: 400, resizable: false, minimizable: false, maximizable: false, parent: window ?? undefined, modal: true, title: "关于玄印写作", webPreferences: { sandbox: true, contextIsolation: true, nodeIntegration: false } })
       installProjectAboutLinks(about.webContents,url=>shell.openExternal(url),()=>{if(!about.isDestroyed())void dialog.showMessageBox(about,{type:'error',message:'无法打开浏览器，请稍后重试。'})})
       about.setMenu(null); await about.loadURL("data:text/html;charset=utf-8," + encodeURIComponent(projectAboutHtml(displayAppVersion(app.getVersion()),theme==='ink'||theme==='system'&&nativeTheme.shouldUseDarkColors?'ink':'paper')))
     }

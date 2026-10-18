@@ -11,6 +11,12 @@
 <p align="center">桌面版 · 本地作品 · 自选 AI 模型</p>
 
 <p align="center">
+  <a href="http://shake.ink">官方网站</a> ·
+  <a href="http://shake.ink/docs/introduction">帮助文档</a> ·
+  <a href="http://shake.ink/docs/faq">常见问题</a>
+</p>
+
+<p align="center">
   <a href="#视觉展示">看看工作台</a> ·
   <a href="#核心亮点">了解亮点</a> ·
   <a href="#安装与运行">源码运行</a>

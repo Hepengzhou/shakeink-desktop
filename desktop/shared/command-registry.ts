@@ -24,7 +24,7 @@ export function desktopMenu(platform: DesktopPlatform, overrides: Record<string,
       const command=commands.find(command=>command.id===id)
       if (!command) return []
       const binding=(command.locked ? command.defaults : bindingsFor(command,overrides))[0]
-      return [{id,label:command.label,binding:binding && validShortcut(binding) ? binding : undefined,enabled:id!=="help.docs"}]
+      return [{id,label:command.label,binding:binding && validShortcut(binding) ? binding : undefined,enabled:true}]
     }) }
   })
 }

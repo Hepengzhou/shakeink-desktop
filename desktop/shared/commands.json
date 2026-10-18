@@ -221,8 +221,28 @@
       "platform": null
     },
     {
+      "id": "help.website",
+      "label": "官方网站",
+      "group": "应用菜单",
+      "scope": "global",
+      "mac": "",
+      "win": "",
+      "locked": false,
+      "platform": null
+    },
+    {
       "id": "help.docs",
       "label": "帮助文档",
+      "group": "应用菜单",
+      "scope": "global",
+      "mac": "",
+      "win": "",
+      "locked": false,
+      "platform": null
+    },
+    {
+      "id": "help.faq",
+      "label": "常见问题",
       "group": "应用菜单",
       "scope": "global",
       "mac": "",
@@ -1393,7 +1413,9 @@
       "window.close"
     ],
     "help": [
+      "help.website",
       "help.docs",
+      "help.faq",
       "help.feedback"
     ]
   }

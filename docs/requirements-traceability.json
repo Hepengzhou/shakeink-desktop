@@ -4731,5 +4731,57 @@
       "fullSuiteExecuted": false
     },
     "limits": "按用户约束仅跑目标相关测试,禁止全量;未做安装包/真实系统窗最大化按钮验证(渲染进程 resize 路径一致)。重启/跨尺寸恢复在 sidebar 像素带外仍有钳制偏差(code review P4-1,既有口径,另立议题)。"
+  },
+  "officialLinksRevision": {
+    "date": "2026-10-18",
+    "requirements": [
+      "补充官方网站地址和文档地址",
+      "官网 http://shake.ink",
+      "文档 http://shake.ink/docs/introduction",
+      "常见问题 http://shake.ink/docs/faq"
+    ],
+    "status": "implemented-scoped-verified",
+    "research": "docs/218-official-links-research.md",
+    "testIds": [
+      "OL-01",
+      "OL-02",
+      "OL-03",
+      "OL-04",
+      "OL-05"
+    ],
+    "sources": [
+      "desktop/shared/project-info.ts",
+      "desktop/shared/commands.json",
+      "desktop/shared/command-registry.ts",
+      "desktop/main/index.ts",
+      "desktop/main/project-about.ts",
+      "src/components/desktop/SettingsDialog.tsx",
+      "README.md"
+    ],
+    "tests": [
+      "tests/unit/official-links.test.ts",
+      "tests/unit/command-menu.test.ts",
+      "tests/unit/version-star.test.ts",
+      "tests/browser/version-star.test.ts"
+    ],
+    "results": {
+      "scopedUnit": {
+        "tests": 14,
+        "passed": 14,
+        "failed": 0
+      },
+      "catalogAdjacentUnit": {
+        "tests": 64,
+        "passed": 64,
+        "failed": 0
+      },
+      "browser": {
+        "tests": 3,
+        "passed": 3,
+        "failed": 0
+      },
+      "typecheck": "passed"
+    },
+    "summary": "docs/219-official-links-summary.md"
   }
 }
