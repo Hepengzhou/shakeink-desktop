@@ -11,8 +11,11 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import {
   AlertCircle,
   BookOpen,
+  BookOpenText,
   ChartNoAxesGantt,
   ChevronRight,
+  CircleHelp,
+  CircleQuestionMark,
   ClipboardCheck,
   Eye,
   FileText,
@@ -29,6 +32,7 @@ import {
   MapPin,
   MessageSquare,
   MessageCirclePlus,
+  MessageSquareWarning,
   MoreHorizontal,
   Package,
   Palette,
@@ -65,6 +69,9 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
@@ -2013,6 +2020,34 @@ export function SidebarTree({ user, onToggleSidebar, interactionPaused = false }
             <DropdownMenuItem onClick={() => { void window.desktop?.command("app.settings") }}>
               <Settings />
               设置
+            </DropdownMenuItem>
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>
+                <CircleHelp />
+                帮助
+              </DropdownMenuSubTrigger>
+              <DropdownMenuSubContent>
+                <DropdownMenuItem onClick={() => { void window.desktop?.command("help.website") }}>
+                  <Globe />
+                  官网
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => { void window.desktop?.command("help.docs") }}>
+                  <BookOpen />
+                  产品介绍
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => { void window.desktop?.command("help.guide") }}>
+                  <BookOpenText />
+                  用户指南
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => { void window.desktop?.command("help.faq") }}>
+                  <CircleQuestionMark />
+                  常见问题
+                </DropdownMenuItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
+            <DropdownMenuItem onClick={() => { void window.desktop?.command("help.feedback") }}>
+              <MessageSquareWarning />
+              问题反馈
             </DropdownMenuItem>
           </NavigationMenuContent>
         </NavigationMenu>

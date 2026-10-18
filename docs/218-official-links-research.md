@@ -6,11 +6,11 @@
 
 | 用途 | 地址 |
 | --- | --- |
-| 官网 | `http://shake.ink` |
-| 文档 | `http://shake.ink/docs/introduction` |
-| 常见问题 | `http://shake.ink/docs/faq` |
+| 官网 | `https://shake.ink` |
+| 文档 | `https://shake.ink/docs/introduction` |
+| 常见问题 | `https://shake.ink/docs/faq` |
 
-注意：三处均为 `http://`（非 https），按约束原样接入，不自行改写协议。
+注意：三处地址 2026-10-19 起按用户新约束统一为 `https://` 协议（同一要求历次修改以后者为准）。
 
 ## 现状证据
 
@@ -50,10 +50,10 @@
 ## 测试范围（仅本次目的相关）
 
 - 新增 `tests/unit/official-links.test.ts`：
-  - OL-01 三个常量逐字等于约束地址（含 `http://` 协议）。
+  - OL-01 三个常量逐字等于约束地址（含 `https://` 协议）。
   - OL-02 `commands.json` help 组含三条命令且标签正确；`desktopMenu` 两个平台全部启用、顺序正确。
   - OL-03 主进程静态契约：三条命令各自路由到对应常量（沿用 version-star 的源码正则模式）。
-  - OL-04 About HTML 含三个链接且无脚本/内联事件；白名单精确放行四个地址，拒绝仿冒域、query/hash、scheme 变体（`https://shake.ink` 不在白名单内，因为常量是 `http://`）。
+  - OL-04 About HTML 含三个链接且无脚本/内联事件；白名单精确放行四个地址，拒绝仿冒域、query/hash、scheme 变体（`http://shake.ink` 不在白名单内，因为常量是 `https://`）。
   - OL-05 设置页源码接线：`command('help.website'|'help.docs'|'help.faq')` 存在，"查看文档"不再禁用；README 含三个地址。
 - 改写 `tests/unit/command-menu.test.ts:30` 的禁用断言为启用断言。
 - 改写 `tests/browser/version-star.test.ts:31`：`查看文档` 变为可用，并断言新增按钮可见。
@@ -62,5 +62,5 @@
 ## 风险与边界
 
 - 外链仅经主进程 `shell.openExternal` 打开，渲染进程与 About 窗口不加载远程内容，离线启动要求不受影响。
-- About 白名单保持精确匹配，不放宽为前缀匹配，避免 `shake.ink.evil` 类仿冒。
+- About 白名单保持精确匹配，不放宽为前缀匹配，避免 `shake.ink.evil` 类仿冒。（2026-10-19 补充：仅容忍 Chromium 对裸域地址序列化产生的末尾 `/`，统一打开规范地址。）
 - 新命令无默认快捷键，快捷键设置页仅多两行不可绑定为空的展示项，与 `help.feedback` 现状一致。

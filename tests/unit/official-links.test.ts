@@ -5,9 +5,9 @@ const read=(path:string)=>readFile(path,'utf8')
 
 test('OL-01: official website, docs and FAQ URLs are the exact approved addresses',async()=>{
  const {PROJECT_WEBSITE_URL,PROJECT_DOCS_URL,PROJECT_FAQ_URL,PROJECT_EXTERNAL_LINKS,PROJECT_REPOSITORY_URL}=await import('../../desktop/shared/project-info')
- assert.equal(PROJECT_WEBSITE_URL,'http://shake.ink')
- assert.equal(PROJECT_DOCS_URL,'http://shake.ink/docs/introduction')
- assert.equal(PROJECT_FAQ_URL,'http://shake.ink/docs/faq')
+ assert.equal(PROJECT_WEBSITE_URL,'https://shake.ink')
+ assert.equal(PROJECT_DOCS_URL,'https://shake.ink/docs/introduction')
+ assert.equal(PROJECT_FAQ_URL,'https://shake.ink/docs/faq')
  assert.deepEqual([...PROJECT_EXTERNAL_LINKS],[PROJECT_REPOSITORY_URL,PROJECT_WEBSITE_URL,PROJECT_DOCS_URL,PROJECT_FAQ_URL])
 })
 test('OL-02: help menu offers website, docs and FAQ as enabled commands on both platforms',async()=>{
@@ -41,18 +41,21 @@ test('OL-04: standalone About lists official links and the whitelist opens exact
  const handlers=new Map<string,Function>();let popup:Function=()=>{};const opens:string[]=[]
  const contents={on:(event:string,handler:Function)=>{handlers.set(event,handler)},setWindowOpenHandler:(handler:Function)=>{popup=handler}}
  installProjectAboutLinks(contents as any,async url=>{opens.push(url)},()=>{})
- for(const url of ['https://shake.ink','http://shake.ink.evil.invalid','https://shake.ink.evil.invalid','http://shake.ink@evil.invalid',PROJECT_WEBSITE_URL+'?x=1',PROJECT_DOCS_URL+'#faq','file:///C:/shake.ink','javascript:alert(1)']){
+ for(const url of ['http://shake.ink','http://shake.ink/','http://shake.ink.evil.invalid','https://shake.ink.evil.invalid','http://shake.ink@evil.invalid',PROJECT_WEBSITE_URL+'?x=1',PROJECT_DOCS_URL+'#faq','file:///C:/shake.ink','javascript:alert(1)']){
   let prevented=false;handlers.get('will-navigate')!({preventDefault(){prevented=true}},url);assert.equal(prevented,true)
   assert.deepEqual(popup({url}),{action:'deny'})
  }
  await new Promise(resolve=>setImmediate(resolve));assert.deepEqual(opens,[])
  for(const url of PROJECT_EXTERNAL_LINKS){handlers.get('will-navigate')!({preventDefault(){}},url);assert.deepEqual(popup({url}),{action:'deny'})}
  await new Promise(resolve=>setImmediate(resolve));assert.deepEqual(opens,[...PROJECT_EXTERNAL_LINKS].flatMap(url=>[url,url]))
+ // Chromium serializes the bare-origin website URL with a trailing slash; it must still open the canonical address.
+ for(const emit of [()=>handlers.get('will-navigate')!({preventDefault(){}},PROJECT_WEBSITE_URL+'/'),()=>popup({url:PROJECT_WEBSITE_URL+'/'})])emit()
+ await new Promise(resolve=>setImmediate(resolve));assert.deepEqual(opens,[[...PROJECT_EXTERNAL_LINKS].flatMap(url=>[url,url]),PROJECT_WEBSITE_URL,PROJECT_WEBSITE_URL].flat())
 })
 test('OL-05: settings about page routes to the help commands and README lists the official links',async()=>{
  const settings=await read('src/components/desktop/SettingsDialog.tsx')
  for(const id of ['help.website','help.docs','help.faq','help.feedback'])assert.ok(settings.includes(`command('${id}')`),id)
  assert.ok(!settings.includes('官网文档上线后启用'));assert.ok(!settings.includes('帮助文档尚未上线'))
  const readme=await read('README.md')
- for(const url of ['http://shake.ink','http://shake.ink/docs/introduction','http://shake.ink/docs/faq'])assert.ok(readme.includes(url),url)
+ for(const url of ['https://shake.ink','https://shake.ink/docs/introduction','https://shake.ink/docs/faq'])assert.ok(readme.includes(url),url)
 })

@@ -61,7 +61,7 @@ import {TextContextMenus} from './text-context-menu'
 import {textContextRequestSchema} from '../shared/text-context-menu'
 import { OnboardingService } from "./onboarding-service"
 import { OnboardingError, onboardingActionSchema } from "../shared/onboarding"
-import {PROJECT_REPOSITORY_URL,PROJECT_WEBSITE_URL,PROJECT_DOCS_URL,PROJECT_FAQ_URL,displayAppVersion} from '../shared/project-info'
+import {PROJECT_REPOSITORY_URL,PROJECT_WEBSITE_URL,PROJECT_DOCS_URL,PROJECT_GUIDE_URL,PROJECT_FAQ_URL,displayAppVersion} from '../shared/project-info'
 import { ModelCatalogRepository } from './model-catalog-repository'
 import {projectAboutHtml,installProjectAboutLinks} from './project-about'
 
@@ -702,6 +702,7 @@ async function executeCommand(id: string, fromRenderer=false) {
   if (id === "help.website") { await shell.openExternal(PROJECT_WEBSITE_URL); return }
   if (id === "help.docs") { await shell.openExternal(PROJECT_DOCS_URL); return }
   if (id === "help.faq") { await shell.openExternal(PROJECT_FAQ_URL); return }
+  if (id === "help.guide") { await shell.openExternal(PROJECT_GUIDE_URL); return }
   if (id === "help.feedback") { await shell.openExternal("https://github.com/mySingleLive/shakeink-desktop/issues/new/choose"); return }
   if (id === "app.about") {
     if (process.platform === "darwin") { app.setAboutPanelOptions({ applicationName: "玄印写作", applicationVersion: displayAppVersion(app.getVersion()), version: "", copyright: "GPL-3.0 · ShakeInk" }); app.showAboutPanel() }

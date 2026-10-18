@@ -47,7 +47,7 @@ async function digestFile(path,algorithm,encoding='hex'){const hash=createHash(a
 export function releaseMode(platform,args=[]) {
  if(!Array.isArray(args)||args.length>1||args.some(arg=>!['--dir','--dmg','--zip'].includes(arg)))throw new Error('用法：[--dir|--dmg|--zip]')
  if(platform==='darwin')return args[0]==='--dir'?'local':'release'
- if(platform==='win32'){if(args[0]&&args[0]!=='--dir')throw new Error('Windows 仅支持默认 NSIS 或 --dir');return 'windows'}
+ if(platform==='win32'){if(args[0]&&!['--dir','--zip'].includes(args[0]))throw new Error('Windows 仅支持默认 NSIS、--zip 或 --dir');return 'windows'}
  throw new Error('仅支持本机 macOS 或 Windows 打包')
 }
 

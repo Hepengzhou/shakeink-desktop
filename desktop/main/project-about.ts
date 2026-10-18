@@ -10,7 +10,9 @@ html{color-scheme:${ink?'dark':'light'};background:${ink?'#1b1613':'#fffcf4'};co
 }
 
 export function installProjectAboutLinks(contents:Pick<WebContents,'on'|'setWindowOpenHandler'>,open:(url:string)=>Promise<void>,onError:()=>void):void {
- const forward=(url:string)=>{if((PROJECT_EXTERNAL_LINKS as readonly string[]).includes(url))void open(url).catch(onError)}
+ // Chromium serializes bare-origin URLs with a trailing slash (https://shake.ink -> https://shake.ink/);
+ // tolerate exactly that form and always open the canonical approved address.
+ const forward=(url:string)=>{const match=(PROJECT_EXTERNAL_LINKS as readonly string[]).find(link=>url===link||url===link+'/');if(match)void open(match).catch(onError)}
  contents.setWindowOpenHandler(({url})=>{forward(url);return {action:'deny'}})
  contents.on('will-navigate',(event,url)=>{
   event.preventDefault()

@@ -29,3 +29,6 @@ docs/evidence/
 
 # Local Windows startup registry exports are not repository source.
 /startup-backup/
+
+# local portable toolchain (not committed)
+.tools/

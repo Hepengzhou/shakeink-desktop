@@ -4,7 +4,7 @@
 
 ## 目标与约束（全部达成）
 
-- 官网 `http://shake.ink`、文档 `http://shake.ink/docs/introduction`、常见问题 `http://shake.ink/docs/faq` 三处地址逐字接入（保留 `http://` 协议），统一集中在 `desktop/shared/project-info.ts` 单一事实源。
+- 官网 `https://shake.ink`、文档 `https://shake.ink/docs/introduction`、常见问题 `https://shake.ink/docs/faq` 三处地址逐字接入（2026-10-19 起统一为 `https://` 协议），统一集中在 `desktop/shared/project-info.ts` 单一事实源。
 
 ## 代码实现
 
@@ -21,13 +21,13 @@
 
 ## 测试（仅本次目的相关）
 
-- 新增 `tests/unit/official-links.test.ts`（OL-01…OL-05）：常量逐字校验；两平台菜单命令与启用状态；主进程路由静态契约；About 链接与白名单正/负例（拒绝 `https://shake.ink`、`shake.ink.evil.invalid`、query/hash 变体等）；设置页接线与 README 链接。
+- 新增 `tests/unit/official-links.test.ts`（OL-01…OL-05）：常量逐字校验；两平台菜单命令与启用状态；主进程路由静态契约；About 链接与白名单正/负例（拒绝 `http://shake.ink`、`shake.ink.evil.invalid`、query/hash 变体等）；设置页接线与 README 链接。
 - 改写 `tests/unit/command-menu.test.ts:30`（`help.docs` 禁用→启用）与 `tests/browser/version-star.test.ts:31`（`查看文档` 禁用→启用，新增两个按钮断言）。
 - 结果：scoped 单测 14/14；命令目录相邻单测 64/64；真实 Chromium 浏览器用例 3/3；`tsc --noEmit` 通过。
 
 ## 边界说明
 
 - 外链全部经主进程 `shell.openExternal` 打开，渲染进程与 About 窗口不加载远程内容，离线启动要求不受影响。
-- About 白名单保持精确匹配（未放宽为前缀/域匹配），仿冒域与协议变体均被拦截，负例有 OL-04 覆盖。
+- About 白名单保持精确匹配（未放宽为前缀/域匹配；仅容忍 Chromium 对裸域地址序列化产生的末尾 `/`，并统一打开规范地址），仿冒域与协议变体均被拦截，OL-04 覆盖正/负例。
 - 新命令无默认快捷键，与 `help.feedback` 现状一致；快捷键设置页随之增加两个展示项，行为不变。
 - 未做安装包/真实系统级验证（本次改动为常量、菜单与静态 HTML，无平台原生路径差异）；`build/Credits.html` 保持仅 Star 单链接未动。

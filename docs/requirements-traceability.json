@@ -5123,5 +5123,56 @@
       "finalEditorThreePlusThree": "not-run; stopped at user closeout"
     },
     "formalReleaseAccepted": false
+  },
+  "sidebarHelpMenuRevision": {
+    "date": "2026-10-19",
+    "requirements": [
+      "在左侧导航栏底部的用户弹出菜单中，在[设置]下方加入新的菜单项",
+      "新菜单项：[帮助]和[问题反馈]",
+      "[帮助]菜单可以展开二级菜单：[官网]、[产品介绍]、[用户指南]和[常见问题]，点击后在浏览器中打开对应链接",
+      "[问题反馈]与设置对话框[关于]下的[问题反馈]按钮一样，链接到 GitHub 提交 issue"
+    ],
+    "status": "implemented-scoped-verified",
+    "research": "docs/230-sidebar-help-menu-research.md",
+    "product": "docs/231-sidebar-help-menu-product.md",
+    "cases": "docs/232-sidebar-help-menu-cases.md",
+    "testIds": [
+      "SH-01",
+      "SH-02",
+      "SH-03",
+      "SH-04",
+      "SH-B-01"
+    ],
+    "sources": [
+      "desktop/shared/project-info.ts",
+      "desktop/shared/commands.json",
+      "desktop/shared/command-catalogs.generated.json",
+      "desktop/main/index.ts",
+      "src/components/layout/SidebarTree.tsx"
+    ],
+    "tests": [
+      "tests/unit/sidebar-help-menu.test.ts",
+      "tests/browser/sidebar-help-menu.test.ts",
+      "tests/unit/official-links.test.ts",
+      "tests/unit/command-menu.test.ts",
+      "tests/browser/sidebar-navigation.test.ts"
+    ],
+    "results": {
+      "scopedUnit": {
+        "tests": 13,
+        "passed": 13,
+        "failed": 0
+      },
+      "browser": {
+        "tests": 21,
+        "passed": 21,
+        "failed": 0
+      },
+      "browserStableRuns": 3,
+      "catalogVerify": "passed",
+      "typecheck": "no-new-errors (pre-existing pglite-adapter fixture errors unchanged)"
+    },
+    "guideUrl": "https://shake.ink/docs/guide（2026-10-19 真实浏览器核实，页面标题 用户指南）",
+    "summary": "docs/234-sidebar-help-menu-summary.md"
   }
 }

@@ -251,6 +251,16 @@
       "platform": null
     },
     {
+      "id": "help.guide",
+      "label": "用户指南",
+      "group": "应用菜单",
+      "scope": "global",
+      "mac": "",
+      "win": "",
+      "locked": false,
+      "platform": null
+    },
+    {
       "id": "help.feedback",
       "label": "问题反馈",
       "group": "应用菜单",

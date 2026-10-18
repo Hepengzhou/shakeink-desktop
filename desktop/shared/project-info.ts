@@ -1,7 +1,8 @@
 export const PROJECT_REPOSITORY_URL = 'https://github.com/mySingleLive/shakeink-desktop'
-export const PROJECT_WEBSITE_URL = 'http://shake.ink'
-export const PROJECT_DOCS_URL = 'http://shake.ink/docs/introduction'
-export const PROJECT_FAQ_URL = 'http://shake.ink/docs/faq'
+export const PROJECT_WEBSITE_URL = 'https://shake.ink'
+export const PROJECT_DOCS_URL = 'https://shake.ink/docs/introduction'
+export const PROJECT_GUIDE_URL = 'https://shake.ink/docs/guide'
+export const PROJECT_FAQ_URL = 'https://shake.ink/docs/faq'
 export const PROJECT_EXTERNAL_LINKS = [PROJECT_REPOSITORY_URL, PROJECT_WEBSITE_URL, PROJECT_DOCS_URL, PROJECT_FAQ_URL] as const
 export const PROJECT_STAR_HINT = '将在浏览器打开 GitHub，点击仓库右上角 Star 即可支持。'
 export const PROJECT_STAR_COPY = {

@@ -22,6 +22,7 @@ test('MACREL-02 actual release policy rejects unknown/ambiguous targets and pres
   assert.equal(releaseMode('darwin',['--dir']),'local')
   assert.equal(releaseMode('win32',[]),'windows')
   assert.equal(releaseMode('win32',['--dir']),'windows')
+  assert.equal(releaseMode('win32',['--zip']),'windows')
   for(const [platform,args] of [['darwin',['--oops']],['darwin',['--dir','--zip']],['win32',['--dmg']],['linux',[]]] as const)assert.throws(()=>releaseMode(platform,[...args]))
   const base:any={publish:null,forceCodeSigning:true,mac:{hardenedRuntime:true},win:{signAndEditExecutable:true,signExecutable:false},dmg:{sign:false},directories:{output:'release'}}
   const config=createPackagingConfiguration(base,{platform:'darwin',target:'dmg',identity,staging:'/tmp/stage'})
