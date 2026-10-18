@@ -1,0 +1,25 @@
+{
+  "scope": "Native tiny unsigned DMG probe failed; no positive product/final DMG acceptance",
+  "temporary": "/private/tmp/shakeink-adhoc-container-probe-Np9rPJ",
+  "failure": "Error: Ad-hoc 工具失败：hdiutil (1)",
+  "commands": [
+    {
+      "tool": "/usr/bin/hdiutil",
+      "args": [
+        "create",
+        "-volname",
+        "玄印写作临时测试",
+        "-srcfolder",
+        "/private/tmp/shakeink-adhoc-container-probe-Np9rPJ/release/.staging/adhoc-arm64-native-container/source",
+        "-format",
+        "UDZO",
+        "-fs",
+        "HFS+",
+        "/private/tmp/shakeink-adhoc-container-probe-Np9rPJ/release/.staging/adhoc-arm64-native-container/container-probe.dmg"
+      ],
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "hdiutil: WARNING: 'hdiutil create -volname -format ...' is deprecated. Please use 'diskutil image create from/blank --volumeName --format ...' instead.\nhdiutil: create failed - 设备未配置\n"
+    }
+  ]
+}

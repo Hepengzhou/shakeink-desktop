@@ -1,0 +1,34 @@
+
+> shakeink@0.1.0-alpha test:package
+> node --import tsx --test --test-concurrency=1 --test-timeout=100000 tests/unit/packaging-config.test.ts tests/packaging/*.test.ts
+
+✔ MACREL-11 investigated damaged app fails real integrity without a Team requirement, then the new gate rejects it (49.572375ms)
+ℹ Fixed investigated main SHA256=c9da78c3c79b9e6d6714fbf2a1136c4eb4a93cc5edad0f8ccfb058d681325e7e; Info.plist SHA256=65318907738efce8f2837619ae8e363c409cad3a332f9f5d3fd9c25f9d466c44; actual no-R strict/deep exit=1: code has no resources but signature indicates they must be present
+✔ MACREL-11 investigated DMG is truly unsigned without Team filtering and rejected without mounting or mutation (3824.495834ms)
+ℹ Fixed investigated DMG SHA256=2abef4f3708c20b4dd19e09db39ddc7c0659bf6dbba154b50dc2d19a3c291cda; actual no-R strict exit=1: code object is not signed at all; final SHA256 unchanged
+✔ 实际 ZIP 全部条目 CRC 通过、路径安全且文件表与实际.app一致 (21449.406333ms)
+✔ 真实ZIP的截断拷贝必须被CRC/目录检查拒绝 (384.160375ms)
+✔ 实际 macOS app 内容、版本、入口、资源、架构与输入一致 (12359.283334ms)
+✔ 真实资源拷贝缺少 service worker 时，验包必须失败 (572.924666ms)
+✔ 实际 ICNS/ICO 各尺寸解码，原品牌与许可来源指纹不变 (106.25225ms)
+✔ 包内真实依赖零父项目回退，Sharp转码、PGlite内存查询及关闭成功 (2863.186917ms)
+Retained independent packaging fixture: /var/folders/xj/5c__pm_j6s74shtqfcbg87640000gn/T/xuanxiang-packaging-review113-bN9ZZo
+✔ PK113-R01 resource guard rejects required out/index.html even when both build input and package omitted it (7423.662042ms)
+Retained independent packaging fixture: /var/folders/xj/5c__pm_j6s74shtqfcbg87640000gn/T/xuanxiang-packaging-review113-6sY6V0
+✔ PK113-R01 resource guard rejects required out/fonts/noto-sans-sc/NotoSansSC-Regular.ttf.gz even when both build input and package omitted it (6924.423542ms)
+✔ PK113-R02 installed builder excludes project database files within the exported UI subtree (7.403167ms)
+Retained independent Windows dispatch fixture: /var/folders/xj/5c__pm_j6s74shtqfcbg87640000gn/T/xuanxiang-packaging-win-dispatch113-T5UBTc
+✔ PK113-R03 actual installed Windows dispatch edits product resources while code signing stays disabled (1892.198375ms)
+✔ MACREL-01 默认发布配置通过 v26 schema 并要求 macOS 签名公证，保持 Windows 与手动发布边界 (1837.05675ms)
+✔ MACREL-01 应用与继承签名权限仅允许 V8 JIT，不全局放宽内存或库校验 (15.270041ms)
+✔ 实际 builder 项目 matcher 保留所有必要入口与离线资源，排除作者数据和撤销入口 (422.154292ms)
+✔ 生产依赖 matcher 不删 WASM/数据/许可证，也不默认收集源码映射 (3.860458ms)
+✔ 本地 Electron 预检真实版本/架构，架构或系统不匹配在 builder 前拒绝 (1231.966958ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 63481.065958

@@ -1,0 +1,94 @@
+TAP version 13
+# Subtest: ADH-01 host/arguments are restricted before any write
+ok 1 - ADH-01 host/arguments are restricted before any write
+  ---
+  duration_ms: 4.924958
+  type: 'test'
+  ...
+# Subtest: ADH-02 derived config is dir-only and cannot weaken the original release path
+ok 2 - ADH-02 derived config is dir-only and cannot weaken the original release path
+  ---
+  duration_ms: 17.371959
+  type: 'test'
+  ...
+# Subtest: ADH-03 scans all native files and nested bundles while allowing Framework version links
+ok 3 - ADH-03 scans all native files and nested bundles while allowing Framework version links
+  ---
+  duration_ms: 13.907875
+  type: 'test'
+  ...
+# Subtest: ADH-03 scan rejects external, dangling, cyclic links and symlink roots
+ok 4 - ADH-03 scan rejects external, dangling, cyclic links and symlink roots
+  ---
+  duration_ms: 29.956417
+  type: 'test'
+  ...
+# Subtest: ADH-03/04 signing is stage-bounded and completes architecture preflight before writing
+ok 5 - ADH-03/04 signing is stage-bounded and completes architecture preflight before writing
+  ---
+  duration_ms: 8.510625
+  type: 'test'
+  ...
+# Subtest: ADH-04 signs inner code before bundles/top-level, explicitly non-runtime and no deep signing
+ok 6 - ADH-04 signs inner code before bundles/top-level, explicitly non-runtime and no deep signing
+  ---
+  duration_ms: 19.180792
+  type: 'test'
+  ...
+# Subtest: ADH-04 midway signing failure halts later signatures and independent verification
+ok 7 - ADH-04 midway signing failure halts later signatures and independent verification
+  ---
+  duration_ms: 8.179417
+  type: 'test'
+  ...
+# Subtest: ADH-05 every object is independently verified; bad identity/runtime/entitlements/seal/arch rejects at its gate
+ok 8 - ADH-05 every object is independently verified; bad identity/runtime/entitlements/seal/arch rejects at its gate
+  ---
+  duration_ms: 24.204667
+  type: 'test'
+  ...
+# Subtest: ADH-05 legal zero-resource nested Helper seal is allowed; top application still needs sealed resources
+ok 9 - ADH-05 legal zero-resource nested Helper seal is allowed; top application still needs sealed resources
+  ---
+  duration_ms: 12.459834
+  type: 'test'
+  ...
+# Subtest: ADH-04 refuses excessive signing entitlement before any mutation
+ok 10 - ADH-04 refuses excessive signing entitlement before any mutation
+  ---
+  duration_ms: 6.828791
+  type: 'test'
+  ...
+# Subtest: ADH-06/07 DMG creation stays in own stage, never overwrites and verifies UDZO without signing container
+ok 11 - ADH-06/07 DMG creation stays in own stage, never overwrites and verifies UDZO without signing container
+  ---
+  duration_ms: 6.83525
+  type: 'test'
+  ...
+# Subtest: ADH-07 inner mounted verification failure detaches, and detach failure preserves the mount directory
+ok 12 - ADH-07 inner mounted verification failure detaches, and detach failure preserves the mount directory
+  ---
+  duration_ms: 3.053208
+  type: 'test'
+  ...
+# Subtest: ADH-07 verifyAdhocDmg enters real mounted app validation and propagates failure before resource probing
+ok 13 - ADH-07 verifyAdhocDmg enters real mounted app validation and propagates failure before resource probing
+  ---
+  duration_ms: 3.199334
+  type: 'test'
+  ...
+# Subtest: ADH-06 actual container signature is read; signed or uncertain tools never report unsigned
+ok 14 - ADH-06 actual container signature is read; signed or uncertain tools never report unsigned
+  ---
+  duration_ms: 9.4405
+  type: 'test'
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 254.319542

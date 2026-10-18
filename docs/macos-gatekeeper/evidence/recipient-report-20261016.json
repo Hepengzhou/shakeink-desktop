@@ -1,0 +1,25 @@
+{
+  "reportedOn": "2026-10-16",
+  "timezone": "Asia/Shanghai",
+  "source": "User follow-up in this chat, relaying recipient-side Codex analysis",
+  "scope": "Reported recipient observations and diagnostic summary; not commands executed by this agent",
+  "recipientDmgFilename": "ShakeInk-0.1.0-alpha-mac-arm64.dmg",
+  "reportedError": "Same damaged-app alert as the first attached screenshot",
+  "settingsCheckedAfterError": "Immediately",
+  "relayedDiagnosticSummary": [
+    "“玄印写作”的签名校验失败，被 macOS 阻止启动。",
+    "应用带有微信下载来源的隔离标记"
+  ],
+  "recipientDmgSha256": null,
+  "rawCommandOutputsAndExitCodes": null,
+  "managedDeviceStatus": "Not provided",
+  "interpretation": {
+    "supports": "Quarantined recipient app was blocked following signature-validation failure, consistent with the independently checked local package defect",
+    "doesNotEstablish": [
+      "Byte-for-byte identity with the locally inspected DMG",
+      "Exact recipient-side signature validation error subtype",
+      "The definitive system-policy reason for absence of Open Anyway"
+    ],
+    "openAnywayTiming": "Immediate settings inspection does not support elapsed display-window expiry as the explanation"
+  }
+}

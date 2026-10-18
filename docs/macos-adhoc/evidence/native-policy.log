@@ -1,0 +1,39 @@
+{
+  "recorded": true,
+  "output": "/Users/dt_flys/Projects/shakeink-desktop/docs/macos-adhoc/evidence/native-policy.json",
+  "checks": [
+    {
+      "label": "host",
+      "exitCode": 0
+    },
+    {
+      "label": "Gatekeeper enabled",
+      "exitCode": 0
+    },
+    {
+      "label": "DMG actual signature display",
+      "exitCode": 1
+    },
+    {
+      "label": "Application signature display",
+      "exitCode": 0
+    },
+    {
+      "label": "Application Gatekeeper assessment",
+      "exitCode": 3
+    },
+    {
+      "label": "Application distribution assessment",
+      "exitCode": 70
+    },
+    {
+      "label": "Application notarization ticket",
+      "exitCode": 65
+    },
+    {
+      "label": "DMG notarization ticket",
+      "exitCode": 65
+    }
+  ],
+  "scope": "Read-only native policy observations; Apple trust rejection/tool failure are not integrity or startup passes"
+}

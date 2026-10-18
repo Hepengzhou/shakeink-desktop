@@ -7,6 +7,9 @@ import postcss from "postcss"
 import tailwindcss from "@tailwindcss/postcss"
 import { chromium, type Browser, type Page } from "playwright-core"
 
+const nativeSelectAll=process.platform==='darwin'?'Meta+a':'Control+a'
+const nativeUndo=process.platform==='darwin'?'Meta+z':'Control+z'
+
 // Actual React cards, handlers, stores and product CSS; only data is synthetic.
 // All queries are seeded, all external requests are blocked, and no provider,
 // user directory, OS clipboard, Electron or native packaging is involved.
@@ -307,9 +310,11 @@ test("TS-06 helper retains actual nested Button, anchor navigation and input edi
   assert.equal(await page.evaluate(() => (window as any).cardsFixture.actions.link), 1, "anchor handler must run")
   assert.equal(await page.evaluate(() => window.location.hash), "#isolated-link-target", "anchor's native default action must remain active")
   const input = page.locator("#nested-real-input")
-  await input.focus(); await page.keyboard.press("Control+a"); await page.keyboard.type("Replacement original")
+  await input.focus(); await page.keyboard.press(nativeSelectAll)
+  assert.equal(await input.evaluate(el=>(el as HTMLInputElement).selectionEnd!-(el as HTMLInputElement).selectionStart!),"Nested input original".length)
+  await page.keyboard.type("Replacement original")
   assert.equal(await input.inputValue(), "Replacement original")
-  await page.keyboard.press("Control+z"); assert.equal(await input.inputValue(), "Nested input original")
+  await page.keyboard.press(nativeUndo); assert.equal(await input.inputValue(), "Nested input original")
   assert.equal(await page.locator("#nested-controls-card").getAttribute("draggable"), "true")
 }))
 
@@ -383,15 +388,32 @@ test("CC-N2 candidate shift click on preview stays isolated and keeps the range-
   assert.match(dragged.text, /Candidate/)
   assert.equal(dragged.active, null)
   assert.equal(await cardClicks(page), 0)
-  const box = await firstTextLine(page, content)
+  const target=await page.locator(content).evaluate(element=>{
+    const selection=window.getSelection(),node=selection?.focusNode
+    if(!(node instanceof Text)||selection?.anchorNode!==node||!element.contains(node))throw Error('Shift extension requires one original preview Text node')
+    const anchorOffset=selection.anchorOffset,focusOffset=selection.focusOffset
+    const glyphOffset=Math.min(focusOffset+8,node.length-1),range=document.createRange()
+    range.setStart(node,glyphOffset);range.setEnd(node,glyphOffset+1)
+    const box=[...range.getClientRects()].find(rect=>rect.width>0&&rect.height>0)
+    if(!box)throw Error('Shift extension target glyph must be visible')
+    const x=box.x+box.width*0.75,y=box.y+box.height/2,caret=document.caretRangeFromPoint(x,y)
+    if(!caret||caret.startContainer!==node)throw Error('Shift extension target caret must belong to the same original Text node')
+    return{x,y,anchorOffset,focusOffset,targetOffset:caret.startOffset,expected:node.data.slice(anchorOffset,caret.startOffset)}
+  })
+  assert.equal(target.anchorOffset,0);assert.ok(target.focusOffset>target.anchorOffset)
+  assert.ok(target.targetOffset>target.focusOffset,'Shift click must land beyond the existing focus, extending the selection')
+  assert.ok(target.expected.startsWith(dragged.text))
   await page.keyboard.down("Shift")
-  // Land away from the drag anchor (line start) so the extended selection
-  // cannot collapse onto it.
-  await page.mouse.click(box.x + Math.min(60, box.width / 2), box.y + box.height / 2)
+  // Use a visible glyph beyond the focus; clicking inside an existing selection
+  // follows the host's native contraction/endpoint reversal rules.
+  await page.mouse.click(target.x,target.y)
   await page.keyboard.up("Shift")
   assert.equal(await cardClicks(page), 0, "shift click is a range-selection gesture and must not fire the card")
   assert.equal(await page.evaluate(() => (window as any).cardsFixture.active()), null)
   assert.match(await page.evaluate(() => window.getSelection()?.toString() ?? ""), /Candidate/, "shift click extends the drag selection from its anchor")
+  const extended=await page.locator(content).evaluate(element=>{const selection=window.getSelection();return{text:selection?.toString()??'',anchorOffset:selection?.anchorOffset,focusOffset:selection?.focusOffset,sameNode:selection?.anchorNode===selection?.focusNode&&selection?.anchorNode instanceof Text&&element.contains(selection.anchorNode)}})
+  assert.equal(extended.sameNode,true);assert.equal(extended.anchorOffset,target.anchorOffset);assert.equal(extended.focusOffset,target.targetOffset)
+  assert.equal(extended.text,target.expected);assert.ok(extended.text.length>dragged.text.length);assert.ok(extended.text.startsWith(dragged.text))
 }))
 
 test("CC-N3 candidate plain click with sub-threshold jiggle still fires the card action", () => scenario("candidate", "paper", false, async page => {

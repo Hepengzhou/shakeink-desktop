@@ -1,0 +1,24 @@
+{
+  "checkedAt": "2026-10-16T11:58:35.994Z",
+  "artifact": {
+    "name": "ShakeInk-0.1.0-alpha-mac-arm64-adhoc-test.dmg",
+    "size": 406008897,
+    "sha256": "4f503f3c46f5ed0e5b38815aa6f5a29ee2e0e43841658a902554f74e51839d68"
+  },
+  "applicationSignature": "adhoc",
+  "containerSignature": "unsigned",
+  "notarized": false,
+  "startupReport": "startup-5a328271-b9f9-41e2-8306-c4d731bd6029.json",
+  "startupPassed": true,
+  "formalReleaseAccepted": false,
+  "unverified": [
+    "clean macOS 15.7.5/M4",
+    "real WeChat download quarantine and Open Anyway",
+    "target-machine offline first launch",
+    "complete business acceptance",
+    "real WeChat download quarantine",
+    "Finder Open Anyway exception",
+    "full business UI coverage",
+    "whole-application offline first launch"
+  ]
+}

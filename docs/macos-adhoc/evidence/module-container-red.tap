@@ -1,0 +1,26 @@
+TAP version 13
+# Subtest: ADH-06 actual container signature is read; signed or uncertain tools never report unsigned
+not ok 1 - ADH-06 actual container signature is read; signed or uncertain tools never report unsigned
+  ---
+  duration_ms: 47.2225
+  type: 'test'
+  location: '/Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-adhoc.test.ts:3:15979'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  stack: |-
+    async <anonymous> (/Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-adhoc.test.ts:124:4)
+    async temporary (/Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-adhoc.test.ts:8:126)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 221.398833

@@ -7,7 +7,8 @@ import {createRequire} from 'node:module'
 import {createHash} from 'node:crypto'
 
 const project = resolve(import.meta.dirname, '../..')
-const app = join(project, 'release/mac-arm64/玄印写作.app')
+// Keep the historical damaged sample intact while checking current resources.
+const app = process.env.SHAKEINK_TEST_PACKAGE_APP !== undefined ? resolve(process.env.SHAKEINK_TEST_PACKAGE_APP) : join(project, 'release/mac-arm64/玄印写作.app')
 const require = createRequire(import.meta.url)
 
 test('实际 macOS app 内容、版本、入口、资源、架构与输入一致', {timeout: 90000}, async () => {

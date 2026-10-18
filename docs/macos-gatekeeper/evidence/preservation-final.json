@@ -1,0 +1,14 @@
+{
+  "checkedAt": "2026-10-16T10:15:00.564Z",
+  "scope": "Original bad sample and pre-existing generated modification preserved; expected packaging-source changes are separate",
+  "dmg": {
+    "expected": "2abef4f3708c20b4dd19e09db39ddc7c0659bf6dbba154b50dc2d19a3c291cda",
+    "actual": "2abef4f3708c20b4dd19e09db39ddc7c0659bf6dbba154b50dc2d19a3c291cda",
+    "equal": true
+  },
+  "preExistingCommandCatalog": {
+    "expected": "94b3b7b9264e7d5eed2d6231a8ec0d7a0ceaa7188d2c50538836914addd0592d",
+    "actual": "94b3b7b9264e7d5eed2d6231a8ec0d7a0ceaa7188d2c50538836914addd0592d",
+    "equal": true
+  }
+}

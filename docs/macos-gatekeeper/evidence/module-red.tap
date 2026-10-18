@@ -1,0 +1,244 @@
+✖ MACREL-11 real original damaged app is rejected by the new native trust gate (negative evidence only) (1.207584ms)
+✖ MACREL-11 real original DMG is rejected without mounting or changing its bytes (0.36875ms)
+✖ MACREL-02 actual release policy rejects unknown/ambiguous targets and preserves Windows (1.083292ms)
+✖ MACREL-03 identity parsing requires valid Developer ID and a unique selection (0.316792ms)
+✖ MACREL-04 preflight fails closed before build and never exposes credential error text (0.287916ms)
+✖ MACREL-05 scans all native code and executes Apple trust gates with external Team (5.842333ms)
+✖ MACREL-05 nested wrong Team, excess entitlements, architecture and OS gate failures reject (2.681625ms)
+✖ MACREL-09 raw ZIP path, duplicate, collision and link graph attacks fail before extraction (1.527209ms)
+✖ MACREL-09 local-header path disagreement and ZIP64 fail closed (1.219125ms)
+✖ MACREL-07 real final metadata and every block are independently verified (1.184208ms)
+✖ MACREL-07 metadata rejects symlink files, traversal and damaged blockmaps (2.410416ms)
+✖ MACREL-06/10 finalization only accepts Accepted and publishes after gates/final-byte metadata (1.33225ms)
+✖ MACREL-06/08/10 rejected, pending, malformed, missing target or trust error never promotes (0.860417ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 0
+ℹ fail 13
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 200.014208
+
+✖ failing tests:
+
+test at tests/packaging/macos-trust.test.ts:2:1399
+✖ MACREL-11 real original damaged app is rejected by the new native trust gate (negative evidence only) (1.207584ms)
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/dt_flys/Projects/shakeink-desktop/scripts/macos-release.mjs' imported from /Users/dt_flys/Projects/shakeink-desktop/tests/packaging/macos-trust.test.ts
+      at finalizeResolution (node:internal/modules/esm/resolve:271:11)
+      at moduleResolve (node:internal/modules/esm/resolve:865:10)
+      at defaultResolve (node:internal/modules/esm/resolve:992:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+      at nextStep (node:internal/modules/customization_hooks:189:26)
+      at resolveBaseSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)
+      at resolveDirectorySync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)
+      at resolveTsPathsSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)
+      at resolve (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832) {
+    code: 'ERR_MODULE_NOT_FOUND',
+    url: 'file:///Users/dt_flys/Projects/shakeink-desktop/scripts/macos-release.mjs'
+  }
+
+test at tests/packaging/macos-trust.test.ts:2:2017
+✖ MACREL-11 real original DMG is rejected without mounting or changing its bytes (0.36875ms)
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/dt_flys/Projects/shakeink-desktop/scripts/macos-release.mjs' imported from /Users/dt_flys/Projects/shakeink-desktop/tests/packaging/macos-trust.test.ts
+      at finalizeResolution (node:internal/modules/esm/resolve:271:11)
+      at moduleResolve (node:internal/modules/esm/resolve:865:10)
+      at defaultResolve (node:internal/modules/esm/resolve:992:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+      at nextStep (node:internal/modules/customization_hooks:189:26)
+      at resolveBaseSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)
+      at resolveDirectorySync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)
+      at resolveTsPathsSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)
+      at resolve (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832) {
+    code: 'ERR_MODULE_NOT_FOUND',
+    url: 'file:///Users/dt_flys/Projects/shakeink-desktop/scripts/macos-release.mjs'
+  }
+
+test at tests/unit/macos-release.test.ts:8:1245
+✖ MACREL-02 actual release policy rejects unknown/ambiguous targets and preserves Windows (1.083292ms)
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/dt_flys/Projects/shakeink-desktop/scripts/macos-release.mjs' imported from /Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-release.test.ts
+      at finalizeResolution (node:internal/modules/esm/resolve:271:11)
+      at moduleResolve (node:internal/modules/esm/resolve:865:10)
+      at defaultResolve (node:internal/modules/esm/resolve:992:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+      at nextStep (node:internal/modules/customization_hooks:189:26)
+      at resolveBaseSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)
+      at resolveDirectorySync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)
+      at resolveTsPathsSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)
+      at resolve (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832) {
+    code: 'ERR_MODULE_NOT_FOUND',
+    url: 'file:///Users/dt_flys/Projects/shakeink-desktop/scripts/macos-release.mjs'
+  }
+
+test at tests/unit/macos-release.test.ts:8:3078
+✖ MACREL-03 identity parsing requires valid Developer ID and a unique selection (0.316792ms)
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/dt_flys/Projects/shakeink-desktop/scripts/macos-release.mjs' imported from /Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-release.test.ts
+      at finalizeResolution (node:internal/modules/esm/resolve:271:11)
+      at moduleResolve (node:internal/modules/esm/resolve:865:10)
+      at defaultResolve (node:internal/modules/esm/resolve:992:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+      at nextStep (node:internal/modules/customization_hooks:189:26)
+      at resolveBaseSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)
+      at resolveDirectorySync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)
+      at resolveTsPathsSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)
+      at resolve (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832) {
+    code: 'ERR_MODULE_NOT_FOUND',
+    url: 'file:///Users/dt_flys/Projects/shakeink-desktop/scripts/macos-release.mjs'
+  }
+
+test at tests/unit/macos-release.test.ts:9:473
+✖ MACREL-04 preflight fails closed before build and never exposes credential error text (0.287916ms)
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/dt_flys/Projects/shakeink-desktop/scripts/macos-release.mjs' imported from /Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-release.test.ts
+      at finalizeResolution (node:internal/modules/esm/resolve:271:11)
+      at moduleResolve (node:internal/modules/esm/resolve:865:10)
+      at defaultResolve (node:internal/modules/esm/resolve:992:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+      at nextStep (node:internal/modules/customization_hooks:189:26)
+      at resolveBaseSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)
+      at resolveDirectorySync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)
+      at resolveTsPathsSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)
+      at resolve (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832) {
+    code: 'ERR_MODULE_NOT_FOUND',
+    url: 'file:///Users/dt_flys/Projects/shakeink-desktop/scripts/macos-release.mjs'
+  }
+
+test at tests/unit/macos-release.test.ts:9:1613
+✖ MACREL-05 scans all native code and executes Apple trust gates with external Team (5.842333ms)
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/dt_flys/Projects/shakeink-desktop/scripts/macos-release.mjs' imported from /Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-release.test.ts
+      at finalizeResolution (node:internal/modules/esm/resolve:271:11)
+      at moduleResolve (node:internal/modules/esm/resolve:865:10)
+      at defaultResolve (node:internal/modules/esm/resolve:992:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+      at nextStep (node:internal/modules/customization_hooks:189:26)
+      at resolveBaseSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)
+      at resolveDirectorySync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)
+      at resolveTsPathsSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)
+      at resolve (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832) {
+    code: 'ERR_MODULE_NOT_FOUND',
+    url: 'file:///Users/dt_flys/Projects/shakeink-desktop/scripts/macos-release.mjs'
+  }
+
+test at tests/unit/macos-release.test.ts:9:2811
+✖ MACREL-05 nested wrong Team, excess entitlements, architecture and OS gate failures reject (2.681625ms)
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/dt_flys/Projects/shakeink-desktop/scripts/macos-release.mjs' imported from /Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-release.test.ts
+      at finalizeResolution (node:internal/modules/esm/resolve:271:11)
+      at moduleResolve (node:internal/modules/esm/resolve:865:10)
+      at defaultResolve (node:internal/modules/esm/resolve:992:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+      at nextStep (node:internal/modules/customization_hooks:189:26)
+      at resolveBaseSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)
+      at resolveDirectorySync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)
+      at resolveTsPathsSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)
+      at resolve (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832) {
+    code: 'ERR_MODULE_NOT_FOUND',
+    url: 'file:///Users/dt_flys/Projects/shakeink-desktop/scripts/macos-release.mjs'
+  }
+
+test at tests/unit/macos-release.test.ts:9:5255
+✖ MACREL-09 raw ZIP path, duplicate, collision and link graph attacks fail before extraction (1.527209ms)
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/dt_flys/Projects/shakeink-desktop/scripts/macos-release.mjs' imported from /Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-release.test.ts
+      at finalizeResolution (node:internal/modules/esm/resolve:271:11)
+      at moduleResolve (node:internal/modules/esm/resolve:865:10)
+      at defaultResolve (node:internal/modules/esm/resolve:992:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+      at nextStep (node:internal/modules/customization_hooks:189:26)
+      at resolveBaseSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)
+      at resolveDirectorySync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)
+      at resolveTsPathsSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)
+      at resolve (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832) {
+    code: 'ERR_MODULE_NOT_FOUND',
+    url: 'file:///Users/dt_flys/Projects/shakeink-desktop/scripts/macos-release.mjs'
+  }
+
+test at tests/unit/macos-release.test.ts:9:6665
+✖ MACREL-09 local-header path disagreement and ZIP64 fail closed (1.219125ms)
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/dt_flys/Projects/shakeink-desktop/scripts/macos-release.mjs' imported from /Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-release.test.ts
+      at finalizeResolution (node:internal/modules/esm/resolve:271:11)
+      at moduleResolve (node:internal/modules/esm/resolve:865:10)
+      at defaultResolve (node:internal/modules/esm/resolve:992:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+      at nextStep (node:internal/modules/customization_hooks:189:26)
+      at resolveBaseSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)
+      at resolveDirectorySync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)
+      at resolveTsPathsSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)
+      at resolve (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832) {
+    code: 'ERR_MODULE_NOT_FOUND',
+    url: 'file:///Users/dt_flys/Projects/shakeink-desktop/scripts/macos-release.mjs'
+  }
+
+test at tests/unit/macos-release.test.ts:9:7289
+✖ MACREL-07 real final metadata and every block are independently verified (1.184208ms)
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/dt_flys/Projects/shakeink-desktop/scripts/macos-release.mjs' imported from /Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-release.test.ts
+      at finalizeResolution (node:internal/modules/esm/resolve:271:11)
+      at moduleResolve (node:internal/modules/esm/resolve:865:10)
+      at defaultResolve (node:internal/modules/esm/resolve:992:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+      at nextStep (node:internal/modules/customization_hooks:189:26)
+      at resolveBaseSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)
+      at resolveDirectorySync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)
+      at resolveTsPathsSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)
+      at resolve (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832) {
+    code: 'ERR_MODULE_NOT_FOUND',
+    url: 'file:///Users/dt_flys/Projects/shakeink-desktop/scripts/macos-release.mjs'
+  }
+
+test at tests/unit/macos-release.test.ts:9:9120
+✖ MACREL-07 metadata rejects symlink files, traversal and damaged blockmaps (2.410416ms)
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/dt_flys/Projects/shakeink-desktop/scripts/macos-release.mjs' imported from /Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-release.test.ts
+      at finalizeResolution (node:internal/modules/esm/resolve:271:11)
+      at moduleResolve (node:internal/modules/esm/resolve:865:10)
+      at defaultResolve (node:internal/modules/esm/resolve:992:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+      at nextStep (node:internal/modules/customization_hooks:189:26)
+      at resolveBaseSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)
+      at resolveDirectorySync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)
+      at resolveTsPathsSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)
+      at resolve (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832) {
+    code: 'ERR_MODULE_NOT_FOUND',
+    url: 'file:///Users/dt_flys/Projects/shakeink-desktop/scripts/macos-release.mjs'
+  }
+
+test at tests/unit/macos-release.test.ts:9:9984
+✖ MACREL-06/10 finalization only accepts Accepted and publishes after gates/final-byte metadata (1.33225ms)
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/dt_flys/Projects/shakeink-desktop/scripts/macos-release.mjs' imported from /Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-release.test.ts
+      at finalizeResolution (node:internal/modules/esm/resolve:271:11)
+      at moduleResolve (node:internal/modules/esm/resolve:865:10)
+      at defaultResolve (node:internal/modules/esm/resolve:992:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+      at nextStep (node:internal/modules/customization_hooks:189:26)
+      at resolveBaseSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)
+      at resolveDirectorySync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)
+      at resolveTsPathsSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)
+      at resolve (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832) {
+    code: 'ERR_MODULE_NOT_FOUND',
+    url: 'file:///Users/dt_flys/Projects/shakeink-desktop/scripts/macos-release.mjs'
+  }
+
+test at tests/unit/macos-release.test.ts:9:12435
+✖ MACREL-06/08/10 rejected, pending, malformed, missing target or trust error never promotes (0.860417ms)
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/dt_flys/Projects/shakeink-desktop/scripts/macos-release.mjs' imported from /Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-release.test.ts
+      at finalizeResolution (node:internal/modules/esm/resolve:271:11)
+      at moduleResolve (node:internal/modules/esm/resolve:865:10)
+      at defaultResolve (node:internal/modules/esm/resolve:992:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+      at nextStep (node:internal/modules/customization_hooks:189:26)
+      at resolveBaseSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)
+      at resolveDirectorySync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)
+      at resolveTsPathsSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)
+      at resolve (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832) {
+    code: 'ERR_MODULE_NOT_FOUND',
+    url: 'file:///Users/dt_flys/Projects/shakeink-desktop/scripts/macos-release.mjs'
+  }

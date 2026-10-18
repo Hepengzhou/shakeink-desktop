@@ -1,0 +1,20 @@
+{
+  "checkedAt": "2026-10-16T11:59:54.620Z",
+  "passed": true,
+  "hashes": {
+    "electron-builder.config.cjs": "7e0c7269eecbdf85fc05e32f439a3326f7628d3ae9d5f05d5548c2d9ccca7e1b",
+    "scripts/package-desktop.mjs": "eedcc90963c6064f843aeea8a16f45883bb96119e438375c6282b4bc59ff8346",
+    "scripts/macos-release.mjs": "9f323b808a289eb87cd47b6ae132b0787bea2810f12b963765d2f0c9bde13da5",
+    "scripts/verify-macos-release.mjs": "070dd63143e1f0f1076becf6feed80951c140da9f2e704c90c663bcef76a5137",
+    "build/entitlements.mac.plist": "40d87896d022345a513fbd9a6947815cff86630171c2c763d4caeee59b6441e1",
+    "desktop/shared/command-catalogs.generated.json": "94b3b7b9264e7d5eed2d6231a8ec0d7a0ceaa7188d2c50538836914addd0592d",
+    "release/ShakeInk-0.1.0-alpha-mac-arm64.dmg": "2abef4f3708c20b4dd19e09db39ddc7c0659bf6dbba154b50dc2d19a3c291cda"
+  },
+  "businessDiffFromHead": [
+    "desktop/shared/command-catalogs.generated.json"
+  ],
+  "preexistingUserFilePreserved": true,
+  "formalFiveFilesUnchanged": true,
+  "originalDamagedDmgPreserved": true,
+  "scope": "SHA-256 compared with before this temporary task; existing user generated catalogue diff preserved, other tracked business sources unchanged"
+}

@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-16",
+  "scope": "Read-only native signing readiness; private key material and authentication values not read or logged",
+  "developerIdApplicationValidCount": 0,
+  "certificateFilesFoundInDownloadsAndDesktop": 0,
+  "cscSelectorConfigured": false,
+  "notaryEnvironmentConfigured": false,
+  "tools": {
+    "codesign": true,
+    "notarytool": true,
+    "stapler": true
+  },
+  "nodeForBuildAndTest": "/Users/dt_flys/.nvm/versions/node/v24.18.0/bin/node",
+  "certificateSetup": "User signed in and personally accepted the basic Apple Developer Agreement. Account page visibly offers Join Apple Developer Program / Enroll Now; paid qualification is not active. Enrollment opened for user to complete; no CSR/key/certificate generated or installed.",
+  "releaseTrustAcceptance": "Cannot complete without valid Developer ID identity and notarization authorization; do not substitute ad-hoc signing",
+  "membershipStatus": "Not enrolled in paid Apple Developer Program, as shown in the signed-in account UI",
+  "recheckedAt": "2026-10-16T10:18:29.740Z",
+  "notaryProfileConfiguredInCurrentProcess": false,
+  "enrollmentProgress": "User reports individual enrollment and payment. Native Developer still shows email pending; activation unconfirmed. Agreement-signed email is not membership confirmation. Earlier native signing readiness fields retain their recorded check time."
+}

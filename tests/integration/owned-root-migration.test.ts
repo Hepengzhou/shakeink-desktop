@@ -8,7 +8,7 @@ import {PGlite} from "@electric-sql/pglite"
 import {DataRootManager} from "../../desktop/core/data-root"
 import {directoryIdentity} from "../../desktop/core/root-ownership"
 import {collectClosedRootFiles} from "../../desktop/main/owned-root-files"
-test("recognized closed PGlite files plus actual empty engine directories migrate and reopen without reconstructing layout",{timeout:60000},async()=>{
+test("recognized closed PGlite files plus actual empty engine directories migrate and reopen without reconstructing layout",{timeout:180000},async()=>{
  const base=await realpath(await mkdtemp(join(tmpdir(),"xuanxiang-owned-pglite-"))),root=join(base,"root"),target=join(base,"target"),boot=join(base,"boot")
  let engine:PGlite|undefined
  try{

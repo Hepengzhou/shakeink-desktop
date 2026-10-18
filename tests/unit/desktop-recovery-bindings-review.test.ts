@@ -46,10 +46,11 @@ function fixture(restoreSession = true, fetchLocal: typeof fetch = async () => n
   useSceneUiStore.setState({ drafts: {}, imageDrafts: {}, imageRequests: {}, submissions: {}, commitErrors: {}, action: null, reference: null })
   useStagedChangesStore.setState({ batches: {}, chips: [], sendRequest: null }); useTabsStore.setState({ tabs: [], activeTabId: null, subTabs: {}, panelFocus: null })
   const notifications: Array<{ text: string; action: { label: string; onClick(): void } }> = [], opened: boolean[] = []
+  const recoveryRef={current:false},dialogs={settings:true,templates:true,modelRequired:{code:'fixture-notice'} as unknown}
   const module = { exports: {} as { options: { restore(snapshot: DraftSnapshot | null, signal: AbortSignal): Promise<(() => void) | undefined>; installSources(): () => void } } }
-  const values = { alive: true, state: { settings: { ...defaultState.settings, general: { ...defaultState.settings.general, restoreSession } } }, storage, window: { fetch: fetchLocal }, setRecoveryOpen: (value: boolean) => opened.push(value), toast: { info: (text: string, options: { action: { label: string; onClick(): void } }) => notifications.push({ text, action: options.action }) }, restoreDesktopDraft, createRecoveryVerifier, desktopSaveCoordinator: coordinator, installDesktopDraftSources, installWorkspaceDraftSource, installRecoveryDraftSource, installCommentDraftSource }
+  const values = { alive: true, state: { settings: { ...defaultState.settings, general: { ...defaultState.settings.general, restoreSession } } }, storage, window: { fetch: fetchLocal }, recoveryRef,setSettingsOpen:(value:boolean)=>{dialogs.settings=value},setTemplatesOpen:(value:boolean)=>{dialogs.templates=value},setModelRequired:(value:unknown)=>{dialogs.modelRequired=value},setRecoveryOpen: (value: boolean) => opened.push(value), toast: { info: (text: string, options: { action: { label: string; onClick(): void } }) => notifications.push({ text, action: options.action }) }, restoreDesktopDraft, createRecoveryVerifier, desktopSaveCoordinator: coordinator, installDesktopDraftSources, installWorkspaceDraftSource, installRecoveryDraftSource, installCommentDraftSource }
   new Function("module", "exports", ...Object.keys(values), code)(module, module.exports, ...Object.values(values))
-  return { options: module.exports.options, coordinator, notifications, opened, dispose() { useChatStore.setState(original.chat); useSceneUiStore.setState(original.scene); useStagedChangesStore.setState(original.staged); useTabsStore.setState(original.tabs) } }
+  return { options: module.exports.options, coordinator, notifications, opened, recoveryRef,dialogs,dispose() { useChatStore.setState(original.chat); useSceneUiStore.setState(original.scene); useStagedChangesStore.setState(original.staged); useTabsStore.setState(original.tabs) } }
 }
 
 test("REC56-B01: current DesktopApp restore callback uses original read-only target routes and returns preserved-data viewing action", async () => {
@@ -66,7 +67,8 @@ test("REC56-B01: current DesktopApp restore callback uses original read-only tar
     assert.deepEqual(calls, [{ url: "/api/novels/n", method: "GET", body: undefined }, { url: "/api/novels/n/comments?targetType=CANDIDATE_CONTENT&targetId=k", method: "GET", body: undefined }])
     assert.equal(JSON.parse(cache.get(commentDraftStorageKey("local-author"))!)[0].content, row.content)
     assert.equal(f.notifications.length, 1); assert.equal(f.notifications[0].action.label, "查看草稿")
-    f.notifications[0].action.onClick(); assert.deepEqual(f.opened, [true])
+    assert.equal(f.recoveryRef.current,false);assert.deepEqual(f.dialogs,{settings:true,templates:true,modelRequired:{code:'fixture-notice'}})
+    f.notifications[0].action.onClick(); assert.deepEqual(f.opened, [true]);assert.equal(f.recoveryRef.current,true);assert.deepEqual(f.dialogs,{settings:false,templates:false,modelRequired:null})
   } finally { f.dispose() }
 })
 

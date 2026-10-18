@@ -1,0 +1,16 @@
+{
+  "capturedAt": "2026-10-16T10:03:55.804Z",
+  "scope": "Frozen release-change files observed during validation; use after-run comparison to identify later edits",
+  "hashes": {
+    "electron-builder.config.cjs": "7e0c7269eecbdf85fc05e32f439a3326f7628d3ae9d5f05d5548c2d9ccca7e1b",
+    "package.json": "8339e8c4275676627d3841c563ac73ce1bbf95a2b8fc4a683b29a0ff50c97426",
+    "scripts/package-desktop.mjs": "eedcc90963c6064f843aeea8a16f45883bb96119e438375c6282b4bc59ff8346",
+    "scripts/macos-release.mjs": "cc05d24dd1d1903d76fef804fc792634c5ed0bb82344e24b82ed51796c22723e",
+    "scripts/verify-macos-release.mjs": "070dd63143e1f0f1076becf6feed80951c140da9f2e704c90c663bcef76a5137",
+    "build/entitlements.mac.plist": "40d87896d022345a513fbd9a6947815cff86630171c2c763d4caeee59b6441e1",
+    "tests/unit/packaging-config.test.ts": "480cc1f49fd0aa912ed4441243896d1f05e4ea4a0882b088b85ed7e080124b38",
+    "tests/unit/macos-release.test.ts": "371d8ba3c038c1230d5003d046e4e2af8f377f0096e553cd3f7a132e58392289",
+    "tests/packaging/macos-trust.test.ts": "b23d5b43006cb5ecc3ae4c4c37b79d2e2433cf0e193803e88eab030f529a70f0",
+    "tests/packaging/package-archive.test.ts": "9ef480c94306d6ce8fb2983f60770a8f7fe25f777b58ae61796a4c3f5227720f"
+  }
+}

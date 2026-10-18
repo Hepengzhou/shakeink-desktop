@@ -25,10 +25,11 @@ function rig(){
  const dependencies={window,installDesktopTransport:()=>{},browserSessionStorage:()=>({}),DesktopDraftSession:Session,desktopSaveCoordinator:{},restoreDesktopDraft:()=>{throw Error("unexpected restore")},createRecoveryVerifier:()=>{},toast:{info(){}},installDesktopDraftSources:()=>{},installWorkspaceDraftSource:()=>{},installRecoveryDraftSource:()=>{},installCommentDraftSource:()=>{},flushDesktopSettings:()=>{},closingRef:{current:false},setClosing:(value:boolean)=>closing.push(value),setError:(value:string)=>errors.push(value),setRecoveryOpen:()=>{},drafts:{current:null},useDesktopStore:{setState:()=>{published++}},queryClient:{invalidateQueries:()=>Promise.resolve()},receiveDesktopState:()=>{},setModelRequired:()=>{},setSettingsSection:()=>{},setSettingsOpen:()=>{},useChatStore:{getState:()=>({})}}
  // Later migration UI state is a separate boundary; preserve the original
  // bootstrap-abort assertions while injecting its new setter.
- const effectDependencies={...dependencies,setMigrationPending:()=>{},setRestorePending:()=>{},leasePendingRef:{current:false},setProtectedStartup:()=>{}}
+ const migrationRef={current:true}
+ const effectDependencies={...dependencies,setMigrationPending:()=>{},migrationRef,guideRef:{current:false},recoveryRef:{current:false},startGuide:()=>{},setTemplatesOpen:()=>{},setRestorePending:()=>{},leasePendingRef:{current:false},setProtectedStartup:()=>{}}
  const effect=new Function(...Object.keys(effectDependencies),compiled+"\nreturn effect")(...Object.values(effectDependencies)) as ()=>()=>void
  const cleanup=effect()
- return{bootstrap,replies,errors,closing,send:(event:DesktopEvent)=>{assert.ok(events.listener);events.listener(event)},cleanup,counts:()=>({reads,ready,persists,sessions,published})}
+ return{bootstrap,replies,errors,closing,migrationRef,send:(event:DesktopEvent)=>{assert.ok(events.listener);events.listener(event)},cleanup,counts:()=>({reads,ready,persists,sessions,published})}
 }
 
 test("B55-05: closing before bootstrap resolves replies unchanged and blocks its late initialization",async()=>{
@@ -37,7 +38,7 @@ test("B55-05: closing before bootstrap resolves replies unchanged and blocks its
   r.send({type:"prepare-close",sessionId,id,action:"flush",retryFailures:false})
   await new Promise(setImmediate)
   assert.deepEqual(r.replies,[[sessionId,id,{status:"unmodified"}]])
-  r.send({type:"close-cancelled"})
+  assert.equal(r.migrationRef.current,true);r.send({type:"close-cancelled"});assert.equal(r.migrationRef.current,false)
   r.bootstrap.resolve({draftSessionId:sessionId});await new Promise(setImmediate)
   assert.deepEqual(r.counts(),{reads:0,ready:0,persists:0,sessions:0,published:0})
   assert.equal(r.closing.at(-1),false);assert.ok(r.errors.length>0)

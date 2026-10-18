@@ -102,10 +102,18 @@ for (const theme of ["ink", "paper"] as const) test(`DRAWER-MEASURE first/all fr
   await page.setViewportSize({ width: 1800, height: 700 }); await page.waitForTimeout(150)
   await armAllFrames(page)
   await page.getByRole("button", { name: "展开或收起左侧导航栏", exact: true }).click()
-  await page.waitForFunction(() => document.querySelector<HTMLElement>(".dashboard-shell")!.dataset.sidebarPhase === "closing")
-  await page.evaluate(() => document.querySelector<HTMLButtonElement>(".workspace-chat [data-sidebar-restore]")!.click())
+  await page.waitForFunction(() => (window as any).drawerMeasurement.frames.some((frame: any) => frame.phase === "closing"))
+  const reversal = await page.evaluate(() => {
+    const measurement = (window as any).drawerMeasurement, phase = document.querySelector<HTMLElement>(".dashboard-shell")!.dataset.sidebarPhase
+    const closing = measurement.frames.filter((frame: any) => frame.phase === "closing")
+    if (phase !== "closing" || !closing.length) throw Error("Early reversal requires a collected closing frame while the drawer is still closing")
+    const observation = { time: performance.now(), phase, firstClosingTime: closing[0].time, frameCount: measurement.frames.length, closingSamples: closing.length }
+    document.querySelector<HTMLButtonElement>(".workspace-chat [data-sidebar-restore]")!.click()
+    return observation
+  })
   const result = await page.evaluate(() => (window as any).drawerMeasurement.result)
-  await saveFrames(result, `${theme}-early-reversal`)
+  await saveFrames({ ...result, reversal }, `${theme}-early-reversal`)
+  assert.equal(reversal.phase, "closing"); assert(reversal.firstClosingTime <= reversal.time)
   assertCompleteMovingShape(result)
   assert(result.frames.some((frame: any) => frame.phase === "closing"), "Collector retains the first closing frame before reversal")
   assert(result.frames.some((frame: any) => frame.phase === "opening"), "Collector retains the reversing opening frames")

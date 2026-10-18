@@ -1,0 +1,48 @@
+
+> shakeink@0.1.0-alpha test:package
+> node --import tsx --test --test-concurrency=1 --test-timeout=100000 tests/unit/packaging-config.test.ts tests/packaging/*.test.ts
+
+✔ MACREL-11 real original damaged app is rejected by the new native trust gate (negative evidence only) (324.838875ms)
+✔ MACREL-11 real original DMG is rejected without mounting or changing its bytes (20995.523584ms)
+✖ 实际 ZIP 全部条目 CRC 通过、路径安全且文件表与实际.app一致 (90021.545417ms)
+✔ 真实ZIP的截断拷贝必须被CRC/目录检查拒绝 (1134.293708ms)
+✔ 实际 macOS app 内容、版本、入口、资源、架构与输入一致 (71456.16675ms)
+✔ 真实资源拷贝缺少 service worker 时，验包必须失败 (4389.120291ms)
+✔ 实际 ICNS/ICO 各尺寸解码，原品牌与许可来源指纹不变 (202.897333ms)
+✔ 包内真实依赖零父项目回退，Sharp转码、PGlite内存查询及关闭成功 (4040.570417ms)
+Retained independent packaging fixture: /var/folders/xj/5c__pm_j6s74shtqfcbg87640000gn/T/xuanxiang-packaging-review113-J4tnkF
+✔ PK113-R01 resource guard rejects required out/index.html even when both build input and package omitted it (17634.771583ms)
+Retained independent packaging fixture: /var/folders/xj/5c__pm_j6s74shtqfcbg87640000gn/T/xuanxiang-packaging-review113-Ww3Pc5
+✔ PK113-R01 resource guard rejects required out/fonts/noto-sans-sc/NotoSansSC-Regular.ttf.gz even when both build input and package omitted it (7343.424292ms)
+✔ PK113-R02 installed builder excludes project database files within the exported UI subtree (19.820875ms)
+Retained independent Windows dispatch fixture: /var/folders/xj/5c__pm_j6s74shtqfcbg87640000gn/T/xuanxiang-packaging-win-dispatch113-HKBUoA
+✖ PK113-R03 actual installed Windows dispatch edits product resources while code signing stays disabled (1304.944041ms)
+✔ MACREL-01 默认发布配置通过 v26 schema 并要求 macOS 签名公证，保持 Windows 与手动发布边界 (895.776334ms)
+✔ MACREL-01 应用与继承签名权限仅允许 V8 JIT，不全局放宽内存或库校验 (4.745958ms)
+✔ 实际 builder 项目 matcher 保留所有必要入口与离线资源，排除作者数据和撤销入口 (89.131417ms)
+✔ 生产依赖 matcher 不删 WASM/数据/许可证，也不默认收集源码映射 (0.659417ms)
+✔ 本地 Electron 预检真实版本/架构，架构或系统不匹配在 builder 前拒绝 (215.354ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 15
+ℹ fail 1
+ℹ cancelled 1
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 269961.484959
+
+✖ failing tests:
+
+test at tests/packaging/package-archive.test.ts:2:2211
+✖ 实际 ZIP 全部条目 CRC 通过、路径安全且文件表与实际.app一致 (90021.545417ms)
+  'test timed out after 90000ms'
+
+test at tests/packaging/packaging-113-review.test.ts:2:4969
+✖ PK113-R03 actual installed Windows dispatch edits product resources while code signing stays disabled (1304.944041ms)
+  Error: Signing is disabled (`signExecutable: false` or `signAndEditExecutable: false`) but `forceCodeSigning` is enabled. Remove one of these options.
+      at Object.signApp (/Users/dt_flys/Projects/shakeink-desktop/node_modules/app-builder-lib/src/winPackager.ts:276:13)
+      at TestContext.<anonymous> (/Users/dt_flys/Projects/shakeink-desktop/tests/packaging/packaging-113-review.test.ts:2:6032)
+      at Test.run (node:internal/test_runner/test:1332:7)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    code: 'ERR_ELECTRON_BUILDER_INVALID_CONFIGURATION'
+  }

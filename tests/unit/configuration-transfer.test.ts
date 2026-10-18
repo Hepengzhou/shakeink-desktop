@@ -222,7 +222,8 @@ test("CFG16: resolved settings commit through the existing repository CAS withou
  try{
   const local=model(),saved=await repo.saveModel(0,{name:local.name,provider:local.provider,protocol:local.protocol,modelId:local.modelId,endpoint:local.endpoint,kind:local.kind,contextWindow:0,enabled:true,thinkingLevels:local.thinkingLevels,defaultThinking:"default",apiKey:"secret-key-for-isolated-test"})
   const diskBefore=JSON.parse(await readFile(path,"utf8")),source=current();source.settings.appearance.theme="ink"
-  const plan=prepareConfigurationImport(exportConfiguration(source),saved),next=resolveConfigurationImport(plan,saved,{selectedPaths:["/appearance/theme"]})
+  const snapshot:ConfigurationSnapshot={revision:saved.revision,settings:saved.settings,models:saved.models}
+  const plan=prepareConfigurationImport(exportConfiguration(source),snapshot),next=resolveConfigurationImport(plan,snapshot,{selectedPaths:["/appearance/theme"]})
   const result=await repo.updateSettings(plan.baseRevision,next),diskAfter=JSON.parse(await readFile(path,"utf8"))
   assert.equal(result.settings.appearance.theme,"ink");assert.deepEqual(diskAfter.value.models,diskBefore.value.models);assert.equal(await repo.keyFor(saved.models[0].id,saved.models[0].authRevision),"secret-key-for-isolated-test")
   await assert.rejects(repo.updateSettings(plan.baseRevision,next),RevisionConflict);assert.equal(publishes,2)

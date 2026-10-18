@@ -1,0 +1,1 @@
+{"passed":false,"report":"/Users/dt_flys/Projects/shakeink-desktop/release/adhoc-macos-arm64-27fa8867-ecd9-4686-a30c-0851e34be0d0/startup-cc9df7cf-36d7-418e-a5dd-b47c9f92c22c.json","error":"The expression evaluated to a falsy value:\n\n  assert(blockedRendererRequests.some(request=>request.host==='shakeink-adhoc-network-probe.invalid'&&request.path==='/controlled'))\n"}

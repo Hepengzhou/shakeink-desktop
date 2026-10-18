@@ -1,5 +1,66 @@
 {
   "version": "1.0",
+  "fullAutomatedRegression20261018Revision": {
+    "date": "2026-10-18",
+    "scope": "当前仓库全部活动自动化回归及本机macOS arm64新回归包首启/重开；不提升530条跨平台正式验收状态",
+    "status": "passed",
+    "report": "docs/regression-2026-10-18.md",
+    "evidence": "docs/evidence/regression-2026-10-18/regression-summary.json",
+    "independentReview": "docs/evidence/regression-2026-10-18/final-evidence-review.md",
+    "runtime": {
+      "node": "v24.18.0",
+      "platform": "darwin",
+      "arch": "arm64",
+      "browser": "Playwright-matched Chromium 153.0.8010.12"
+    },
+    "inventory": {
+      "unit": 254,
+      "integration": 33,
+      "browser": 57,
+      "packaging": 4,
+      "totalFiles": 348
+    },
+    "results": {
+      "core": {
+        "tests": 2191,
+        "pass": 2191,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "browser": {
+        "tests": 604,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "pass": 604
+      },
+      "packaging": {
+        "tests": 49,
+        "pass": 49,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "typecheck": "passed",
+      "foundationTypecheck": "passed",
+      "productionBuild": "passed",
+      "packagedMacosLaunchReopen": "2/2 passed; normal exit 0"
+    },
+    "execution": "Core为285+1+1完整文件分组；Browser为54个整轮未变文件加28/20/10三完整文件复跑，逐测试身份和源散列核对，无遗漏/重复；原失败整轮及退出码保留，不宣称单命令全绿",
+    "changes": "仅修复过期测试fixture、宿主机编辑按键、动画/React采样同步、打包正例路径及三处迁移测试预算；产品业务源码无本轮修改。保留任务开始时已有的打包签名等工作树修改。",
+    "formalAcceptancePromotion": false,
+    "limits": [
+      "No live paid provider calls or credentials",
+      "No native Windows or clean target-machine/quarantine acceptance",
+      "Current local App regression artifact is unsigned; existing verified signed release unchanged",
+      "No whole-process network isolation claim; native default-session filter and main-process Node Server handle count observed"
+    ],
+    "codegraph": "用户授权初始化，最终sync/status成功且up-to-date；1442 files/35730 nodes/129894 edges"
+  },
   "modelResolveHealingRevision": {
     "date": "2026-10-15",
     "scope": "已配置可用模型却弹「当前任务没有可用模型/审核模型已不存在」：任务持有的失效模型记录 UUID（冻结快照/显式选择）在解析期自愈到当前配置的对应角色默认模型",
@@ -4783,5 +4844,218 @@
       "typecheck": "passed"
     },
     "summary": "docs/219-official-links-summary.md"
+  },
+  "macosReleaseTrustRevision": {
+    "date": "2026-10-16",
+    "scope": "macOS 下载后损坏提示：Developer ID 签名、公证、票据和最终 DMG/ZIP 信任验包；不改业务代码",
+    "status": "code-reviewed-scoped-tests-passed-real-release-blocked",
+    "userApproval": "用户通过问题分析，明确授权修复并要求真实 release 包全部校验通过",
+    "research": "docs/macos-gatekeeper/01-research.md",
+    "analysis": "docs/macos-gatekeeper/02-analysis.md",
+    "implementationPlan": "docs/macos-gatekeeper/04-implementation-plan.md",
+    "testCases": "docs/macos-gatekeeper/06-test-cases.md",
+    "codeReview": "docs/macos-gatekeeper/09-code-review.md",
+    "setup": "docs/macos-gatekeeper/10-signing-setup.md",
+    "testIds": [
+      "MACREL-01",
+      "MACREL-02",
+      "MACREL-03",
+      "MACREL-04",
+      "MACREL-05",
+      "MACREL-06",
+      "MACREL-07",
+      "MACREL-08",
+      "MACREL-09",
+      "MACREL-10",
+      "MACREL-11",
+      "MACREL-12",
+      "MACREL-13",
+      "MACREL-14",
+      "MACREL-15"
+    ],
+    "files": [
+      "electron-builder.config.cjs",
+      "scripts/package-desktop.mjs",
+      "scripts/macos-release.mjs",
+      "scripts/verify-macos-release.mjs",
+      "build/entitlements.mac.plist"
+    ],
+    "limits": [
+      "本轮身份提交已通过；用户确认个人注册及已付款，Developer 仍等待邮件、最新成功读取的官方账户为待处理，会员激活未确认；先前本机复核0个有效Developer ID身份，尚无公证profile",
+      "真实公证、release信任正例及干净macOS15.7.5离线首启未完成",
+      "完整core复验未通过，失败集中在本次未修改业务用例中，详见验证记录"
+    ],
+    "verification": "docs/macos-gatekeeper/11-verification.md",
+    "results": {
+      "moduleTests": {
+        "tests": 18,
+        "pass": 18
+      },
+      "packagingTestsBeforeExpandedRegistration": {
+        "tests": 17,
+        "pass": 17
+      },
+      "packagingTestsFinal": {
+        "command": "npm run test:package",
+        "tests": 33,
+        "pass": 33,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "evidence": "docs/macos-gatekeeper/evidence/package-tests-complete.tap"
+      },
+      "typecheck": "passed",
+      "codeReview": "passed-after-two-P2-test-evidence-fixes",
+      "fullCore": {
+        "testFiles": 284,
+        "tests": 2165,
+        "pass": 2147,
+        "fail": 17,
+        "cancelled": 1,
+        "skipped": 0,
+        "inputsUnchanged": true
+      },
+      "realSignedRelease": "not-completed",
+      "targetSystem": "not-executed",
+      "enrollmentSubmission": "passed-in-this-retry-after-user-iCloud-terms-reauthentication-and-app-restart; membership-pending"
+    },
+    "enrollmentReview": "docs/macos-gatekeeper/12-enrollment-review.md"
+  },
+  "macosAdhocTemporaryRevision": {
+    "date": "2026-10-16",
+    "scope": "用户明确授权生成Ad-hoc macOS arm64临时测试DMG；保持正式签名、公证门与正常业务",
+    "status": "temporary-artifact-integrity-and-local-startup-passed-target-unverified",
+    "plan": "docs/macos-adhoc/01-plan.md",
+    "planReview": "docs/macos-adhoc/02-plan-review.md",
+    "testCases": "docs/macos-adhoc/03-test-cases.md",
+    "testReview": "docs/macos-adhoc/04-test-review.md",
+    "codeReview": "docs/macos-adhoc/05-code-review.md",
+    "verification": "docs/macos-adhoc/06-verification.md",
+    "evidenceReview": "docs/macos-adhoc/07-evidence-review.md",
+    "testIds": [
+      "ADH-01",
+      "ADH-02",
+      "ADH-03",
+      "ADH-04",
+      "ADH-05",
+      "ADH-06",
+      "ADH-07",
+      "ADH-08",
+      "ADH-09",
+      "ADH-10",
+      "ADH-11",
+      "ADH-12"
+    ],
+    "artifact": {
+      "name": "ShakeInk-0.1.0-alpha-mac-arm64-adhoc-test.dmg",
+      "size": 406008897,
+      "sha256": "4f503f3c46f5ed0e5b38815aa6f5a29ee2e0e43841658a902554f74e51839d68"
+    },
+    "artifactDirectory": "release/adhoc-macos-arm64-27fa8867-ecd9-4686-a30c-0851e34be0d0",
+    "results": {
+      "signature": "adhoc-strict-26-code-objects-17-mach-o-arm64",
+      "dmg": "hdiutil-verified-unsigned-container",
+      "localStartup": "passed-first-launch-and-reopen-normal-exit-0-isolated-data-macOS27.0.1-arm64",
+      "tamperNegative": "passed-sealed-resource-invalid",
+      "rendererNetwork": "existing-default-session-protocol-filter-ERR_BLOCKED_BY_CLIENT-observed-only",
+      "scopedUnit": {
+        "tests": 35,
+        "pass": 35,
+        "fail": 0
+      },
+      "typecheck": "passed",
+      "fullCore": {
+        "testFiles": 285,
+        "tests": 2179,
+        "pass": 2162,
+        "fail": 17,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "inputsUnchanged": true
+      },
+      "legacyPackageRegression": {
+        "tests": 47,
+        "pass": 45,
+        "fail": 2,
+        "reason": "old-fixed-app-out-index-input-mismatch-after-rebuild"
+      },
+      "preservation": "formal-five-files-preexisting-user-file-and-old-damaged-dmg-seven-hashes-unchanged",
+      "businessSources": "unchanged"
+    },
+    "formalReleaseAccepted": false,
+    "notarized": false,
+    "limits": [
+      "clean macOS 15.7.5/M4",
+      "real WeChat download quarantine and Open Anyway",
+      "target-machine offline first launch",
+      "complete business acceptance",
+      "real WeChat download quarantine",
+      "Finder Open Anyway exception",
+      "full business UI coverage",
+      "whole-application offline first launch"
+    ]
+  },
+  "macosReleaseBuild20261018": {
+    "date": "2026-10-18",
+    "scope": "macOS ARM64 DMG recompile, Developer ID signing/notarization, final artifact and certificate verification",
+    "status": "dmg-signing-notarization-and-independent-verification-passed",
+    "version": "0.1.0-alpha",
+    "teamId": "738DY63GV2",
+    "artifactDirectory": "release/verified-macos-arm64-7b92b578-1156-4036-bafc-cd90e2ceb04b",
+    "artifact": {
+      "name": "ShakeInk-0.1.0-alpha-mac-arm64.dmg",
+      "size": 346533718,
+      "sha512": "GoLxsODUBEQr3V5cMyVqe38Rdbumh+1M6V6sybab5SfaoN9eHjoCfD0+hC1opvx10cL4DMCUNCsrqta7IWHYww==",
+      "sha256": "7445ea7df5f71c01e5dc676668d9d83a306d85f0e657847e712cbff7166f989d",
+      "blockmap": {
+        "name": "ShakeInk-0.1.0-alpha-mac-arm64.dmg.blockmap",
+        "size": 361207,
+        "sha256": "77356367971d6ddbb0e97526e814f61b94a6463cc450dcbbf9fab4a34f1b2a40"
+      }
+    },
+    "certificateSHA1": "369509723F1E02E6B50E2401B35800C234BBB583",
+    "notarization": {
+      "app": {
+        "id": "d821126e-01f1-441f-bf9d-97bf6ea0de96",
+        "status": "Accepted"
+      },
+      "dmg": {
+        "id": "6db0a031-5dc5-499a-a336-32d96b1117e5",
+        "status": "Accepted"
+      }
+    },
+    "results": {
+      "buildExitCode": 0,
+      "typecheckExitCode": 0,
+      "targetedTests": {
+        "pass": 23,
+        "fail": 0,
+        "skip": 0,
+        "independentCodeReview": "passed"
+      },
+      "originalPackageExitCode": 1,
+      "freshProcessRecoveryExitCode": 0,
+      "independentFinalVerifierExitCode": 0,
+      "publicCertificateAuditPassed": true,
+      "fullCore": {
+        "tests": 2192,
+        "pass": 2175,
+        "fail": 17,
+        "cancelled": 0,
+        "skipped": 0,
+        "exitCode": 1,
+        "comparison": "Failure titles all present in historical list; no independent historical source reproduction"
+      }
+    },
+    "verification": "docs/macos-gatekeeper/11-verification.md",
+    "report": "release/evidence-20261018/verification-report.json",
+    "limits": [
+      "Full business regression not green: 17 failures",
+      "Final App execution/full business UI acceptance not executed",
+      "Clean macOS 15.7.5 download/quarantine/install and offline first launch not executed",
+      "Intel/Windows release acceptance not executed"
+    ],
+    "finalEvidenceReview": "passed-scoped-dmg-delivery-evidence"
   }
 }

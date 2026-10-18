@@ -1,0 +1,10 @@
+✔ MACREL-01 默认发布配置通过 v26 schema 并要求 macOS 签名公证，保持 Windows 与手动发布边界 (321.092792ms)
+✔ MACREL-01 应用与继承签名权限仅允许 V8 JIT，不全局放宽内存或库校验 (2.004584ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 587.281375

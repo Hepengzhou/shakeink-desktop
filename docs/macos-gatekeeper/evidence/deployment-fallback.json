@@ -1,0 +1,38 @@
+[
+  {
+    "path": "Contents/Frameworks/玄印写作 Helper (GPU).app/Contents/MacOS/玄印写作 Helper (GPU)",
+    "file": "/usr/bin/xcrun",
+    "args": [
+      "vtool",
+      "-show-build",
+      "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (GPU).app/Contents/MacOS/玄印写作 Helper (GPU)"
+    ],
+    "code": 0,
+    "stdout": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (GPU).app/Contents/MacOS/玄印写作 Helper (GPU):\nLoad command 12\n      cmd LC_BUILD_VERSION\n  cmdsize 32\n platform MACOS\n    minos 13.0\n      sdk 26.5\n   ntools 1\n     tool 4\n  version 23.0\n",
+    "stderr": ""
+  },
+  {
+    "path": "Contents/Frameworks/玄印写作 Helper (Plugin).app/Contents/MacOS/玄印写作 Helper (Plugin)",
+    "file": "/usr/bin/xcrun",
+    "args": [
+      "vtool",
+      "-show-build",
+      "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Plugin).app/Contents/MacOS/玄印写作 Helper (Plugin)"
+    ],
+    "code": 0,
+    "stdout": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Plugin).app/Contents/MacOS/玄印写作 Helper (Plugin):\nLoad command 12\n      cmd LC_BUILD_VERSION\n  cmdsize 32\n platform MACOS\n    minos 13.0\n      sdk 26.5\n   ntools 1\n     tool 4\n  version 23.0\n",
+    "stderr": ""
+  },
+  {
+    "path": "Contents/Frameworks/玄印写作 Helper (Renderer).app/Contents/MacOS/玄印写作 Helper (Renderer)",
+    "file": "/usr/bin/xcrun",
+    "args": [
+      "vtool",
+      "-show-build",
+      "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Renderer).app/Contents/MacOS/玄印写作 Helper (Renderer)"
+    ],
+    "code": 0,
+    "stdout": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Renderer).app/Contents/MacOS/玄印写作 Helper (Renderer):\nLoad command 12\n      cmd LC_BUILD_VERSION\n  cmdsize 32\n platform MACOS\n    minos 13.0\n      sdk 26.5\n   ntools 1\n     tool 4\n  version 23.0\n",
+    "stderr": ""
+  }
+]

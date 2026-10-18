@@ -1,0 +1,14 @@
+{
+  "scope": "Temporary Ad-hoc module unit control flow, private Helper native probe and type/syntax checks; no final product/DMG acceptance",
+  "runtime": "/Users/dt_flys/.nvm/versions/node/v24.18.0/bin/node",
+  "red": {"tests":12,"pass":0,"fail":12,"exitCode":1,"reason":"Module did not exist","output":"module-red.tap"},
+  "helperRegressionRed":{"tests":1,"pass":0,"fail":1,"exitCode":1,"reason":"Valid nested Helper seal with files=0 was rejected","output":"module-helper-red.tap"},
+  "containerRegressionRed":{"tests":1,"pass":0,"fail":1,"exitCode":1,"reason":"Signed container was incorrectly reported as unsigned without reading its signature","output":"module-container-red.tap"},
+  "green": {"argv":["--import","tsx","--test","--test-reporter=tap","tests/unit/macos-adhoc.test.ts"],"tests":14,"pass":14,"fail":0,"exitCode":0,"output":"module-green.tap"},
+  "typecheck":{"argv":["node_modules/typescript/bin/tsc","--noEmit"],"exitCode":0,"stdoutAndStderr":"","output":"module-typecheck.log"},
+  "syntax":{"argv":["--check","scripts/macos-adhoc.mjs"],"exitCode":0},
+  "nativeHelperProbe":{"output":"module-helper-probe.json","sourceUnchanged":true,"strictDeepExitCode":0,"validResourceSealFiles":0,"scope":"Private copied Electron Helper only; no final DMG or product startup acceptance"},
+  "nativeContainerProbe":{"output":"module-container-probe.json","status":"failed before codesign","hdiutilCreateExitCode":1,"diagnostic":"create failed - 设备未配置","positiveAcceptance":false},
+  "applicationStartup":"Not executed by module implementation agent",
+  "officialReleaseFiles":"Read-only imports; no edits"
+}

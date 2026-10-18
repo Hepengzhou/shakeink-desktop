@@ -3,6 +3,7 @@ import assert from 'node:assert/strict'
 import {execFile} from 'node:child_process'
 import {promisify} from 'node:util'
 import {readFile, mkdtemp, writeFile, rm} from 'node:fs/promises'
+import {readFileSync} from 'node:fs'
 import {createHash} from 'node:crypto'
 import {join, resolve} from 'node:path'
 import {tmpdir} from 'node:os'
@@ -10,9 +11,12 @@ import JSZip from 'jszip'
 
 const execute = promisify(execFile)
 const project = resolve(import.meta.dirname, '../..')
-const releaseVersion = JSON.parse(await readFile(join(project, 'package.json'), 'utf8')).version
-const zip = join(project, `release/ShakeInk-${releaseVersion}-mac-arm64.zip`)
-const app = join(project, 'release/mac-arm64/玄印写作.app')
+const releaseVersion = JSON.parse(readFileSync(join(project, 'package.json'), 'utf8')).version
+// Positive resource/CRC checks can target a fresh build without overwriting the
+// fixed damaged artifacts used by macos-trust.test.ts. Invalid overrides fail
+// through the same real filesystem and package verifiers; never fall back.
+const zip = process.env.SHAKEINK_TEST_PACKAGE_ZIP !== undefined ? resolve(process.env.SHAKEINK_TEST_PACKAGE_ZIP) : join(project, `release/ShakeInk-${releaseVersion}-mac-arm64.zip`)
+const app = process.env.SHAKEINK_TEST_PACKAGE_APP !== undefined ? resolve(process.env.SHAKEINK_TEST_PACKAGE_APP) : join(project, 'release/mac-arm64/玄印写作.app')
 const sha = (bytes: Buffer) => createHash('sha256').update(bytes).digest('hex')
 
 test('实际 ZIP 全部条目 CRC 通过、路径安全且文件表与实际.app一致', {timeout: 90000}, async () => {

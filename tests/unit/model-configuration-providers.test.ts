@@ -108,12 +108,21 @@ test("Google cancellation during response body clears operation and never retrie
   } finally { await f.service.close() }
 })
 
-test("ByteDance authenticates the real inference catalog before supplementing dated official candidates", async () => {
-  let calls = 0; const f = fixture(async () => { calls++; return json({ data: [] }) })
+test("ByteDance authenticated empty catalogs are authoritative and never supplemented by static candidates", async () => {
+  let calls = 0; const f = fixture(async (url, init) => {
+    calls++; assert.equal(String(url), "https://ark.cn-beijing.volces.com/api/v3/models")
+    assert.equal(new Headers(init?.headers).get("authorization"), `Bearer ${secret}`)
+    return json({ data: [] })
+  })
   try {
     for (const kind of ["TEXT", "IMAGE"] as const) {
       const result = await f.service.discover("w", randomUUID(), draft("bytedance", kind)); assert.equal(result.ok, true)
-      if (result.ok) { assert.equal(result.complete, false); assert.equal(result.permission, "listed-unverified"); assert.ok(result.sources.some(s => s.includes("docs.volcengine.com"))); assert.ok(result.warnings.join(" ").includes("2026-09-28")); assert.ok(result.models.some(m => m.id === (kind === "TEXT" ? "doubao-seed-2-1-pro-260915" : "doubao-seedream-5-0-flash-260915"))) }
+      if (result.ok) {
+        assert.deepEqual(result.models, []); assert.equal(result.authoritative, true); assert.equal(result.complete, true)
+        assert.deepEqual(result.unknownCapabilityIds, []); assert.equal(result.permission, "listed-unverified")
+        assert.ok(result.sources.includes("https://docs.volcengine.com/docs/ark/model-list?lang=zh"))
+        assert.match(result.warnings.join(" "), /列出不等于有调用权限/); assert.equal(JSON.stringify(result).includes(secret), false)
+      }
     }
     assert.equal(calls, 2)
   } finally { await f.service.close() }
@@ -182,17 +191,35 @@ test("ByteDance Seedream generation respects latest single-only vs older sequent
   } finally { await f.service.close() }
 })
 
-test("ByteDance public catalog includes all 20 text and 6 image IDs from the 2026-09-28 official table, still without Key permission claims", async () => {
-  const f = fixture(async url => { assert.equal(String(url), "https://ark.cn-beijing.volces.com/api/v3/models"); return json({ data: [] }) })
+test("ByteDance classifies the 20 text and 6 image IDs explicitly returned by the authenticated catalog without Key permission claims", async () => {
+  // Explicit public fixture rows, independent from the adapter's internal ID sets.
+  const textIds = ["doubao-seed-evolving", "doubao-seed-2-1-pro-260915", "doubao-seed-2-1-lite-260915", "doubao-seed-2-1-turbo-260628", "doubao-seed-2-1-pro-260628", "doubao-seed-2-0-lite-260428", "doubao-seed-2-0-mini-260428", "doubao-seed-2-0-pro-260215", "doubao-seed-2-0-lite-260215", "doubao-seed-2-0-mini-260215", "doubao-seed-2-0-code-preview-260215", "doubao-seed-character-260628", "doubao-seed-character-251128", "doubao-seed-translation-250915", "glm-5-3-flash-260828", "glm-5-2-260617", "deepseek-v4-1-flash-260910", "deepseek-v4-pro-ga-260813", "deepseek-v4-flash-ga-260731", "deepseek-v4-pro-260425"]
+  const imageIds = ["doubao-seedream-5-0-pro-260628", "doubao-seedream-5-0-flash-260915", "doubao-seedream-5-0-260128", "doubao-seedream-5-0-lite-260128", "doubao-seedream-4-5-251128", "doubao-seedream-4-0-250828"]
+  let calls = 0
+  const f = fixture(async (url, init) => {
+    calls++; assert.equal(String(url), "https://ark.cn-beijing.volces.com/api/v3/models")
+    assert.equal(new Headers(init?.headers).get("authorization"), `Bearer ${secret}`)
+    return json({ data: [...textIds, ...imageIds].map(id => ({ id })) })
+  })
   try {
     const text = await f.service.discover("w", randomUUID(), draft("bytedance"))
     assert.equal(text.ok, true); if (!text.ok) return
     assert.equal(text.models.length, 20)
-    for (const id of ["doubao-seed-2-0-code-preview-260215", "doubao-seed-character-251128", "doubao-seed-translation-250915", "glm-5-3-flash-260828", "deepseek-v4-pro-260425"]) assert.ok(text.models.some(m => m.id === id), id)
-    assert.equal(text.complete, false); assert.equal(text.permission, "listed-unverified")
-    assert.ok(text.warnings.join(" ").includes("2026-09-28"))
+    assert.deepEqual(text.models.map(model => model.id), textIds)
+    assert.equal(text.authoritative, true); assert.equal(text.complete, true); assert.equal(text.permission, "listed-unverified")
+    assert.deepEqual(text.unknownCapabilityIds, []); assert.ok(text.models.every(model => model.kind === "TEXT" && model.permission === "listed-unverified"))
+    assert.ok(text.sources.includes("https://docs.volcengine.com/docs/ark/model-list?lang=zh"))
+    assert.match(text.warnings.join(" "), /列出不等于有调用权限/); assert.equal(JSON.stringify(text).includes(secret), false)
     const image = await f.service.discover("w", randomUUID(), draft("bytedance", "IMAGE"))
-    assert.equal(image.ok, true); if (image.ok) assert.equal(image.models.length, 6)
+    assert.equal(image.ok, true)
+    if (image.ok) {
+      assert.equal(image.models.length, 6); assert.deepEqual(image.models.map(model => model.id), imageIds)
+      assert.equal(image.authoritative, true); assert.equal(image.complete, true); assert.equal(image.permission, "listed-unverified")
+      assert.deepEqual(image.unknownCapabilityIds, []); assert.ok(image.models.every(model => model.kind === "IMAGE" && model.permission === "listed-unverified"))
+      assert.ok(image.sources.includes("https://docs.volcengine.com/docs/ark/model-list?lang=zh"))
+      assert.match(image.warnings.join(" "), /列出不等于有调用权限/); assert.equal(JSON.stringify(image).includes(secret), false)
+    }
+    assert.equal(calls, 2)
   } finally { await f.service.close() }
 })
 test("Alibaba Wan 2.6 sync overrides the four-image default with exactly one legal minimum-size image", async () => {

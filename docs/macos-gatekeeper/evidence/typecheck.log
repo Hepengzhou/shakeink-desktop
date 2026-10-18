@@ -1,0 +1,52 @@
+
+> shakeink@0.1.0-alpha typecheck
+> tsc --noEmit
+
+tests/packaging/macos-trust.test.ts(12,47): error TS2353: Object literal may only specify known properties, and 'teamId' does not exist in type '{ run?: ((tool: any, args: any, options?: {}) => Promise<{ stdout: string; stderr: string; }>) | undefined; }'.
+tests/packaging/macos-trust.test.ts(20,54): error TS2353: Object literal may only specify known properties, and 'teamId' does not exist in type '{ run?: ((tool: any, args: any, options?: {}) => Promise<{ stdout: string; stderr: string; }>) | undefined; }'.
+tests/unit/macos-release.test.ts(48,44): error TS2741: Property 'NODE_ENV' is missing in type '{}' but required in type 'ProcessEnv'.
+tests/unit/macos-release.test.ts(49,42): error TS2741: Property 'NODE_ENV' is missing in type '{ APPLE_KEYCHAIN_PROFILE: string; }' but required in type 'ProcessEnv'.
+tests/unit/macos-release.test.ts(53,44): error TS2741: Property 'NODE_ENV' is missing in type '{ APPLE_KEYCHAIN_PROFILE: string; }' but required in type 'ProcessEnv'.
+tests/unit/macos-release.test.ts(53,83): error TS2322: Type '(tool: string, args: string[]) => Promise<{ stdout: string; stderr: string; } | { stdout: string; }>' is not assignable to type '(tool: any, args: any, options?: {}) => Promise<{ stdout: string; stderr: string; }>'.
+  Type 'Promise<{ stdout: string; stderr: string; } | { stdout: string; }>' is not assignable to type 'Promise<{ stdout: string; stderr: string; }>'.
+    Type '{ stdout: string; stderr: string; } | { stdout: string; }' is not assignable to type '{ stdout: string; stderr: string; }'.
+      Property 'stderr' is missing in type '{ stdout: string; }' but required in type '{ stdout: string; stderr: string; }'.
+tests/unit/macos-release.test.ts(55,96): error TS2741: Property 'NODE_ENV' is missing in type '{ [x: string]: string; APPLE_KEYCHAIN_PROFILE: string; }' but required in type 'ProcessEnv'.
+tests/unit/macos-release.test.ts(57,44): error TS2741: Property 'NODE_ENV' is missing in type '{ APPLE_KEYCHAIN_PROFILE: string; }' but required in type 'ProcessEnv'.
+tests/unit/macos-release.test.ts(59,44): error TS2741: Property 'NODE_ENV' is missing in type '{ APPLE_KEYCHAIN_PROFILE: string; }' but required in type 'ProcessEnv'.
+tests/unit/macos-release.test.ts(64,47): error TS2353: Object literal may only specify known properties, and 'arch' does not exist in type '{ run?: ((tool: any, args: any, options?: {}) => Promise<{ stdout: string; stderr: string; }>) | undefined; }'.
+tests/unit/macos-release.test.ts(65,45): error TS2353: Object literal may only specify known properties, and 'teamId' does not exist in type '{ run?: ((tool: any, args: any, options?: {}) => Promise<{ stdout: string; stderr: string; }>) | undefined; }'.
+tests/unit/macos-release.test.ts(75,47): error TS2353: Object literal may only specify known properties, and 'teamId' does not exist in type '{ run?: ((tool: any, args: any, options?: {}) => Promise<{ stdout: string; stderr: string; }>) | undefined; }'.
+tests/unit/macos-release.test.ts(76,47): error TS2353: Object literal may only specify known properties, and 'teamId' does not exist in type '{ run?: ((tool: any, args: any, options?: {}) => Promise<{ stdout: string; stderr: string; }>) | undefined; }'.
+tests/unit/macos-release.test.ts(77,47): error TS2353: Object literal may only specify known properties, and 'teamId' does not exist in type '{ run?: ((tool: any, args: any, options?: {}) => Promise<{ stdout: string; stderr: string; }>) | undefined; }'.
+tests/unit/macos-release.test.ts(78,106): error TS2353: Object literal may only specify known properties, and 'teamId' does not exist in type '{ run?: ((tool: any, args: any, options?: {}) => Promise<{ stdout: string; stderr: string; }>) | undefined; }'.
+tests/unit/macos-release.test.ts(102,155): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'AssertPredicate'.
+tests/unit/macos-release.test.ts(129,116): error TS2322: Type '(tool: string, args: string[]) => Promise<{ stdout: string; }>' is not assignable to type '(tool: any, args: any, options?: {}) => Promise<{ stdout: string; stderr: string; }>'.
+  Type 'Promise<{ stdout: string; }>' is not assignable to type 'Promise<{ stdout: string; stderr: string; }>'.
+    Property 'stderr' is missing in type '{ stdout: string; }' but required in type '{ stdout: string; stderr: string; }'.
+tests/unit/macos-release.test.ts(129,120): error TS2322: Type '() => Promise<{ scope: string; }>' is not assignable to type '(project: any, path: any, { teamId, arch, run }?: { run?: ((tool: any, args: any, options?: {}) => Promise<{ stdout: string; stderr: string; }>) | undefined; }) => Promise<{ trust: { teamId: any; arch: any; nativeObjects: number; machOBinaries: number; scope: string; }; staticResources: { ...; }; dependencies: any; ...'.
+  Type 'Promise<{ scope: string; }>' is not assignable to type 'Promise<{ trust: { teamId: any; arch: any; nativeObjects: number; machOBinaries: number; scope: string; }; staticResources: { files: number; projectResources: number; scope: string; }; dependencies: any; format: string; }>'.
+    Type '{ scope: string; }' is missing the following properties from type '{ trust: { teamId: any; arch: any; nativeObjects: number; machOBinaries: number; scope: string; }; staticResources: { files: number; projectResources: number; scope: string; }; dependencies: any; format: string; }': trust, staticResources, dependencies, format
+tests/unit/macos-release.test.ts(131,171): error TS2322: Type '(tool: string, args: string[]) => Promise<{ stdout: string; }>' is not assignable to type '(tool: any, args: any, options?: {}) => Promise<{ stdout: string; stderr: string; }>'.
+  Type 'Promise<{ stdout: string; }>' is not assignable to type 'Promise<{ stdout: string; stderr: string; }>'.
+    Property 'stderr' is missing in type '{ stdout: string; }' but required in type '{ stdout: string; stderr: string; }'.
+tests/unit/macos-release.test.ts(132,332): error TS2353: Object literal may only specify known properties, and 'teamId' does not exist in type '{ run?: ((tool: any, args: any, options?: {}) => Promise<{ stdout: string; stderr: string; }>) | undefined; }'.
+tests/unit/macos-release.test.ts(139,111): error TS2322: Type '(_tool: string, args: string[]) => Promise<{ stdout: string; }>' is not assignable to type '(tool: any, args: any, options?: {}) => Promise<{ stdout: string; stderr: string; }>'.
+  Type 'Promise<{ stdout: string; }>' is not assignable to type 'Promise<{ stdout: string; stderr: string; }>'.
+    Property 'stderr' is missing in type '{ stdout: string; }' but required in type '{ stdout: string; stderr: string; }'.
+tests/unit/macos-release.test.ts(142,217): error TS2322: Type '() => Promise<{ stdout: string; }>' is not assignable to type '(tool: any, args: any, options?: {}) => Promise<{ stdout: string; stderr: string; }>'.
+  Type 'Promise<{ stdout: string; }>' is not assignable to type 'Promise<{ stdout: string; stderr: string; }>'.
+    Property 'stderr' is missing in type '{ stdout: string; }' but required in type '{ stdout: string; stderr: string; }'.
+tests/unit/macos-release.test.ts(147,129): error TS2322: Type '(_tool: string, args: string[]) => Promise<{ stdout: string; }>' is not assignable to type '(tool: any, args: any, options?: {}) => Promise<{ stdout: string; stderr: string; }>'.
+  Type 'Promise<{ stdout: string; }>' is not assignable to type 'Promise<{ stdout: string; stderr: string; }>'.
+    Property 'stderr' is missing in type '{ stdout: string; }' but required in type '{ stdout: string; stderr: string; }'.
+tests/unit/macos-release.test.ts(147,235): error TS2322: Type '() => Promise<{}>' is not assignable to type '(project: any, path: any, { teamId, arch, run }?: { run?: ((tool: any, args: any, options?: {}) => Promise<{ stdout: string; stderr: string; }>) | undefined; }) => Promise<{ trust: { teamId: any; arch: any; nativeObjects: number; machOBinaries: number; scope: string; }; staticResources: { ...; }; dependencies: any; ...'.
+  Type 'Promise<{}>' is not assignable to type 'Promise<{ trust: { teamId: any; arch: any; nativeObjects: number; machOBinaries: number; scope: string; }; staticResources: { files: number; projectResources: number; scope: string; }; dependencies: any; format: string; }>'.
+    Type '{}' is missing the following properties from type '{ trust: { teamId: any; arch: any; nativeObjects: number; machOBinaries: number; scope: string; }; staticResources: { files: number; projectResources: number; scope: string; }; dependencies: any; format: string; }': trust, staticResources, dependencies, format
+tests/unit/macos-release.test.ts(150,214): error TS2353: Object literal may only specify known properties, and 'teamId' does not exist in type '{ run?: ((tool: any, args: any, options?: {}) => Promise<{ stdout: string; stderr: string; }>) | undefined; }'.
+tests/unit/macos-release.test.ts(152,61): error TS2353: Object literal may only specify known properties, and 'teamId' does not exist in type '{ run?: ((tool: any, args: any, options?: {}) => Promise<{ stdout: string; stderr: string; }>) | undefined; }'.
+tests/unit/macos-release.test.ts(154,131): error TS2353: Object literal may only specify known properties, and 'teamId' does not exist in type '{ run?: ((tool: any, args: any, options?: {}) => Promise<{ stdout: string; stderr: string; }>) | undefined; }'.
+tests/unit/macos-release.test.ts(159,231): error TS2353: Object literal may only specify known properties, and 'teamId' does not exist in type '{ run?: ((tool: any, args: any, options?: {}) => Promise<{ stdout: string; stderr: string; }>) | undefined; }'.
+tests/unit/macos-release.test.ts(160,47): error TS2353: Object literal may only specify known properties, and 'teamId' does not exist in type '{ run?: ((tool: any, args: any, options?: {}) => Promise<{ stdout: string; stderr: string; }>) | undefined; }'.
+tests/unit/macos-release.test.ts(161,47): error TS2353: Object literal may only specify known properties, and 'teamId' does not exist in type '{ run?: ((tool: any, args: any, options?: {}) => Promise<{ stdout: string; stderr: string; }>) | undefined; }'.
+tests/unit/macos-release.test.ts(162,107): error TS2353: Object literal may only specify known properties, and 'teamId' does not exist in type '{ run?: ((tool: any, args: any, options?: {}) => Promise<{ stdout: string; stderr: string; }>) | undefined; }'.

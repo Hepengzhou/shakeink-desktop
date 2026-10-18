@@ -1,0 +1,15 @@
+✔ 实际 ZIP 全部条目 CRC 通过、路径安全且文件表与实际.app一致 (19100.348583ms)
+✔ 真实ZIP的截断拷贝必须被CRC/目录检查拒绝 (104.805875ms)
+✔ MACREL-01 默认发布配置通过 v26 schema 并要求 macOS 签名公证，保持 Windows 与手动发布边界 (334.560583ms)
+✔ MACREL-01 应用与继承签名权限仅允许 V8 JIT，不全局放宽内存或库校验 (1.310667ms)
+✔ 实际 builder 项目 matcher 保留所有必要入口与离线资源，排除作者数据和撤销入口 (31.143583ms)
+✔ 生产依赖 matcher 不删 WASM/数据/许可证，也不默认收集源码映射 (0.963041ms)
+✔ 本地 Electron 预检真实版本/架构，架构或系统不匹配在 builder 前拒绝 (133.761125ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 20265.268958

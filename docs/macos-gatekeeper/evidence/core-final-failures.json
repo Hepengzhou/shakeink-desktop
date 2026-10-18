@@ -1,0 +1,113 @@
+{
+  "scope": "Unresolved failures from final complete core inventory; no failing release-module test titles",
+  "failures": [
+    {
+      "title": "not ok 7 - BDC06 legacy root migration preserves real closed database content and its namespace",
+      "location": "location: '/Users/dt_flys/Projects/shakeink-desktop/tests/integration/brand-data-compatibility.test.ts:2:18992'",
+      "failure": "failureType: 'testTimeoutFailure'",
+      "error": "error: 'test timed out after 60000ms'"
+    },
+    {
+      "title": "not ok 34 - IPC-01: built worker executes original local handlers with no HTTP server and retains original ownership guards",
+      "location": "location: '/Users/dt_flys/Projects/shakeink-desktop/tests/integration/desktop-worker.test.ts:2:1463'",
+      "failure": "failureType: 'testCodeFailure'",
+      "error": "error: |-"
+    },
+    {
+      "title": "not ok 121 - /Users/dt_flys/Projects/shakeink-desktop/tests/integration/sidebar-scenario-management.test.ts",
+      "location": "location: '/Users/dt_flys/Projects/shakeink-desktop/tests/integration/sidebar-scenario-management.test.ts:2:3979'",
+      "failure": "failureType: 'hookFailed'",
+      "error": "error: |-"
+    },
+    {
+      "title": "not ok 483 - CFG58-04 actual repository credential replacement makes the reviewed public snapshot stale without importing anything",
+      "location": "location: '/Users/dt_flys/Projects/shakeink-desktop/tests/unit/configuration-transfer-review.test.ts:2:5620'",
+      "failure": "failureType: 'testCodeFailure'",
+      "error": "error: '当前设置快照无效'"
+    },
+    {
+      "title": "not ok 510 - CFG16: resolved settings commit through the existing repository CAS without changing any model credential",
+      "location": "location: '/Users/dt_flys/Projects/shakeink-desktop/tests/unit/configuration-transfer.test.ts:2:26040'",
+      "failure": "failureType: 'testCodeFailure'",
+      "error": "error: '当前设置快照无效'"
+    },
+    {
+      "title": "not ok 702 - BRUI-04 actual DesktopApp ignores removed backup/restore events while normal workbench remains mounted",
+      "location": "location: '/Users/dt_flys/Projects/shakeink-desktop/tests/unit/desktop-backup-removal-ui.test.ts:7:5621'",
+      "failure": "failureType: 'testCodeFailure'",
+      "error": "error: 'onboardingCanShow is not defined'"
+    },
+    {
+      "title": "not ok 703 - BRUI-05 actual DesktopApp still flushes normal save and retries ordinary migration cancellation",
+      "location": "location: '/Users/dt_flys/Projects/shakeink-desktop/tests/unit/desktop-backup-removal-ui.test.ts:7:6147'",
+      "failure": "failureType: 'testCodeFailure'",
+      "error": "error: 'onboardingCanShow is not defined'"
+    },
+    {
+      "title": "not ok 707 - B55-05: closing before bootstrap resolves replies unchanged and blocks its late initialization",
+      "location": "location: '/Users/dt_flys/Projects/shakeink-desktop/tests/unit/desktop-bootstrap-effect-review.test.ts:2:4625'",
+      "failure": "failureType: 'testCodeFailure'",
+      "error": "error: 'migrationRef is not defined'"
+    },
+    {
+      "title": "not ok 757 - REC56-B01: current DesktopApp restore callback uses original read-only target routes and returns preserved-data viewing action",
+      "location": "location: '/Users/dt_flys/Projects/shakeink-desktop/tests/unit/desktop-recovery-bindings-review.test.ts:2:6240'",
+      "failure": "failureType: 'testCodeFailure'",
+      "error": "error: 'recoveryRef is not defined'"
+    },
+    {
+      "title": "not ok 1073 - ByteDance authenticates the real inference catalog before supplementing dated official candidates",
+      "location": "location: '/Users/dt_flys/Projects/shakeink-desktop/tests/unit/model-configuration-providers.test.ts:2:9810'",
+      "failure": "failureType: 'testCodeFailure'",
+      "error": "error: |-"
+    },
+    {
+      "title": "not ok 1080 - ByteDance public catalog includes all 20 text and 6 image IDs from the 2026-09-28 official table, still without Key permission claims",
+      "location": "location: '/Users/dt_flys/Projects/shakeink-desktop/tests/unit/model-configuration-providers.test.ts:2:17279'",
+      "failure": "failureType: 'testCodeFailure'",
+      "error": "error: |-"
+    },
+    {
+      "title": "not ok 1113 - official candidates require authenticated discovery instead of static success",
+      "location": "location: '/Users/dt_flys/Projects/shakeink-desktop/tests/unit/model-configuration.test.ts:2:9544'",
+      "failure": "failureType: 'testCodeFailure'",
+      "error": "error: |-"
+    },
+    {
+      "title": "not ok 1114 - OpenAI catalog capabilities come from exact official IDs, unknown names are never classified by prefix",
+      "location": "location: '/Users/dt_flys/Projects/shakeink-desktop/tests/unit/model-configuration.test.ts:2:10611'",
+      "failure": "failureType: 'testCodeFailure'",
+      "error": "error: |-"
+    },
+    {
+      "title": "not ok 1132 - Zai authenticates live discovery before merging official candidates",
+      "location": "location: '/Users/dt_flys/Projects/shakeink-desktop/tests/unit/model-configuration.test.ts:2:28474'",
+      "failure": "failureType: 'testCodeFailure'",
+      "error": "error: |-"
+    },
+    {
+      "title": "not ok 1225 - model configuration: approved close button remains present beside cancel",
+      "location": "location: '/Users/dt_flys/Projects/shakeink-desktop/tests/unit/model-settings.test.ts:2:37206'",
+      "failure": "failureType: 'testCodeFailure'",
+      "error": "error: \"Cannot read properties of undefined (reading 'element')\""
+    },
+    {
+      "title": "not ok 1229 - model configuration: catalog choices replace one draft, disable duplicates and retain a failed save for retry",
+      "location": "location: '/Users/dt_flys/Projects/shakeink-desktop/tests/unit/model-settings.test.ts:2:41189'",
+      "failure": "failureType: 'testCodeFailure'",
+      "error": "error: |-"
+    },
+    {
+      "title": "not ok 1358 - IP-01/IP-05: shared settings and onboarding image editors have two providers and preserve legacy drafts",
+      "location": "location: '/Users/dt_flys/Projects/shakeink-desktop/tests/unit/onboarding-editors.test.ts:2:17436'",
+      "failure": "failureType: 'testCodeFailure'",
+      "error": "error: |-"
+    },
+    {
+      "title": "not ok 1683 - U71-02: actual DesktopApp pending-cancel branch retains its dialog on failed retry and clears only on confirmed close-cancelled event",
+      "location": "location: '/Users/dt_flys/Projects/shakeink-desktop/tests/unit/root-migration-renderer-review.test.ts:2:3078'",
+      "failure": "failureType: 'testCodeFailure'",
+      "error": "error: 'migrationRef is not defined'"
+    }
+  ]
+}

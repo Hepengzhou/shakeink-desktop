@@ -1,0 +1,7 @@
+{
+  "passed": true,
+  "report": "/Users/dt_flys/Projects/shakeink-desktop/release/adhoc-macos-arm64-27fa8867-ecd9-4686-a30c-0851e34be0d0/startup-5a328271-b9f9-41e2-8306-c4d731bd6029.json",
+  "launches": 2,
+  "network": "existing default-session protocol filter observed; whole-application offline unverified",
+  "scope": "Actual packaged app copied from DMG, isolated test data; normal native launch and existing default-session protocol filter checked in an owned blank window. Main/utility/Chromium service processes are not network-isolated. Not Finder/Gatekeeper override or clean macOS 15.7.5 acceptance."
+}

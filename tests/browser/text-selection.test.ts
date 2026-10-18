@@ -7,6 +7,11 @@ import postcss from "postcss"
 import tailwindcss from "@tailwindcss/postcss"
 import { chromium, type Browser, type Page } from "playwright-core"
 
+const nativeSelectAll=process.platform==='darwin'?'Meta+a':'Control+a'
+const nativeUndo=process.platform==='darwin'?'Meta+z':'Control+z'
+const nativeDocumentStart=process.platform==='darwin'?'Meta+ArrowUp':'Control+Home'
+const nativeSelectNextWord=process.platform==='darwin'?'Alt+Shift+ArrowRight':'Control+Shift+ArrowRight'
+
 // Product CSS and real React previews. Synthetic data only; Chromium component
 // tests are separate from the Windows Electron acceptance runner.
 const stylesheet = (async () => {
@@ -85,17 +90,17 @@ test("TS-02/03/06 nearest content/UI/input boundaries preserve mouse and keyboar
   for (const id of ["action", "action span", "label", "summary", "card", "badge", "inline-ui", "chip", "retained-chip", "check", "input-button", "editor-ui"]) assert.equal(await style(page, "#" + id), "none", id)
   const excerpt = await selection(page, "#excerpt"); assert.match(excerpt, /Candidate/); assert.ok(!excerpt.includes("UI marker"))
   assert.ok((await selection(page, "#disabled-composer")).length > 0)
-  const input = page.locator("#input"); await input.focus(); await page.keyboard.press("Control+a")
+  const input = page.locator("#input"); await input.focus(); await page.keyboard.press(nativeSelectAll)
   assert.equal(await input.evaluate(el => (el as HTMLInputElement).selectionEnd! - (el as HTMLInputElement).selectionStart!), 14)
   await page.keyboard.type("New original"); assert.equal(await input.inputValue(), "New original")
-  await page.keyboard.press("Control+z"); assert.equal(await input.inputValue(), "Editable input")
-  const readonly = page.locator("#readonly"); await readonly.focus(); await page.keyboard.press("Control+a")
+  await page.keyboard.press(nativeUndo); assert.equal(await input.inputValue(), "Editable input")
+  const readonly = page.locator("#readonly"); await readonly.focus(); await page.keyboard.press(nativeSelectAll)
   assert.equal(await readonly.evaluate(el => (el as HTMLTextAreaElement).selectionEnd - (el as HTMLTextAreaElement).selectionStart), (await readonly.inputValue()).length)
   for (const type of ["text", "search", "url", "tel", "email", "password", "number", "date", "datetime-local", "month", "week", "time"]) {
     await page.locator("#matrix").evaluate((el, type) => el.insertAdjacentHTML("beforeend", `<input id="typed" type="${type}">`), type)
     assert.equal(await style(page, "#typed"), "text", type); await page.locator("#typed").evaluate(el => el.remove())
   }
-  await page.locator("#editable").focus(); await page.keyboard.press("Control+Home"); await page.keyboard.press("Control+Shift+ArrowRight")
+  await page.locator("#editable").focus(); await page.keyboard.press(nativeDocumentStart); await page.keyboard.press(nativeSelectNextWord)
   assert.ok((await page.evaluate(() => window.getSelection()?.toString() ?? "")).length > 0)
   await page.locator("#action").evaluate(el => el.addEventListener("click", () => { (window as any).clicked = true }))
   await page.locator("#action").click(); assert.equal(await page.evaluate(() => (window as any).clicked), true)

@@ -1,0 +1,256 @@
+{
+  "checkedAt": "2026-10-16T09:13:59.340Z",
+  "commands": [
+    {
+      "file": "/usr/bin/codesign",
+      "args": [
+        "--verify",
+        "--deep",
+        "--strict",
+        "--verbose=2",
+        "/Users/dt_flys/Projects/shakeink-desktop/node_modules/electron/dist/Electron.app"
+      ],
+      "code": 1,
+      "signal": null,
+      "stdout": "",
+      "stderr": "/Users/dt_flys/Projects/shakeink-desktop/node_modules/electron/dist/Electron.app: code has no resources but signature indicates they must be present\n"
+    },
+    {
+      "file": "/usr/bin/hdiutil",
+      "args": [
+        "verify",
+        "/Users/dt_flys/Projects/shakeink-desktop/release/ShakeInk-0.1.0-alpha-mac-arm64.dmg"
+      ],
+      "code": 0,
+      "stdout": "正在检查“Protective Master Boot Record（MBR：0）”的校验和…\nProtective Master Boot Record（MBR：0）：已验证CRC32 $683A71E5\n正在检查“GPT Header（Primary GPT Header：1）”的校验和…\n    GPT Header（Primary GPT Header：1）：已验证CRC32 $D752E556\n正在检查“GPT Partition Data（Primary GPT Table：2）”的校验和…\nGPT Partition Data（Primary GPT Table：已验证CRC32 $D53DF801\n正在检查“（Apple_Free：3）”的校验和…\n                      （Apple_Free：3）：已验证CRC32 $00000000\n正在检查“disk image（Apple_HFS：4）”的校验和…\n             disk image（Apple_HFS：4）：已验证CRC32 $8E038DC2\n正在检查“（Apple_Free：5）”的校验和…\n                      （Apple_Free：5）：已验证CRC32 $00000000\n正在检查“GPT Partition Data（Backup GPT Table：6）”的校验和…\nGPT Partition Data（Backup GPT Table：：已验证CRC32 $D53DF801\n正在检查“GPT Header（Backup GPT Header：7）”的校验和…\n     GPT Header（Backup GPT Header：7）：已验证CRC32 $DF6E3240\n已验证CRC32 $09CA3B41\n",
+      "stderr": "hdiutil: verify: checksum of \"/Users/dt_flys/Projects/shakeink-desktop/release/ShakeInk-0.1.0-alpha-mac-arm64.dmg\" is VALID\n"
+    },
+    {
+      "file": "/usr/bin/codesign",
+      "args": [
+        "--display",
+        "--verbose=4",
+        "/Users/dt_flys/Projects/shakeink-desktop/release/ShakeInk-0.1.0-alpha-mac-arm64.dmg"
+      ],
+      "code": 1,
+      "signal": null,
+      "stdout": "",
+      "stderr": "/Users/dt_flys/Projects/shakeink-desktop/release/ShakeInk-0.1.0-alpha-mac-arm64.dmg: code object is not signed at all\n"
+    },
+    {
+      "file": "/usr/bin/xcrun",
+      "args": [
+        "stapler",
+        "validate",
+        "/Users/dt_flys/Projects/shakeink-desktop/release/ShakeInk-0.1.0-alpha-mac-arm64.dmg"
+      ],
+      "code": 65,
+      "signal": null,
+      "stdout": "Processing: /Users/dt_flys/Projects/shakeink-desktop/release/ShakeInk-0.1.0-alpha-mac-arm64.dmg\nShakeInk-0.1.0-alpha-mac-arm64.dmg does not have a ticket stapled to it.\n",
+      "stderr": ""
+    }
+  ],
+  "compared": [
+    {
+      "path": "Contents/Info.plist",
+      "dmg": "65318907738efce8f2837619ae8e363c409cad3a332f9f5d3fd9c25f9d466c44",
+      "unpacked": "65318907738efce8f2837619ae8e363c409cad3a332f9f5d3fd9c25f9d466c44",
+      "recordedBuild": "65318907738efce8f2837619ae8e363c409cad3a332f9f5d3fd9c25f9d466c44",
+      "equal": true
+    },
+    {
+      "path": "Contents/MacOS/玄印写作",
+      "dmg": "c9da78c3c79b9e6d6714fbf2a1136c4eb4a93cc5edad0f8ccfb058d681325e7e",
+      "unpacked": "c9da78c3c79b9e6d6714fbf2a1136c4eb4a93cc5edad0f8ccfb058d681325e7e",
+      "recordedBuild": "c9da78c3c79b9e6d6714fbf2a1136c4eb4a93cc5edad0f8ccfb058d681325e7e",
+      "equal": true
+    },
+    {
+      "path": "Contents/Resources/app/dist/main/index.cjs",
+      "dmg": "569a779dd9b86abc0710f32b1f411cbde238fb1b0f1b44a742c1ba25a2e0243f",
+      "unpacked": "569a779dd9b86abc0710f32b1f411cbde238fb1b0f1b44a742c1ba25a2e0243f",
+      "recordedBuild": "569a779dd9b86abc0710f32b1f411cbde238fb1b0f1b44a742c1ba25a2e0243f",
+      "equal": true
+    },
+    {
+      "path": "Contents/Resources/app/dist/service/index.cjs",
+      "dmg": "3f33570d2a784dd189b6dedfef8bdf968c2e75d127ea20ae8d33b674ce11e66a",
+      "unpacked": "3f33570d2a784dd189b6dedfef8bdf968c2e75d127ea20ae8d33b674ce11e66a",
+      "recordedBuild": "3f33570d2a784dd189b6dedfef8bdf968c2e75d127ea20ae8d33b674ce11e66a",
+      "equal": true
+    }
+  ],
+  "deployment": [
+    {
+      "path": "Contents/Frameworks/Electron Framework.framework/Versions/A/Electron Framework",
+      "architectures": "arm64",
+      "minos": [
+        "13.0"
+      ],
+      "signatureExit": 1
+    },
+    {
+      "path": "Contents/Frameworks/Electron Framework.framework/Versions/A/Helpers/chrome_crashpad_handler",
+      "architectures": "arm64",
+      "minos": [
+        "13.0"
+      ],
+      "signatureExit": 0
+    },
+    {
+      "path": "Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libffmpeg.dylib",
+      "architectures": "arm64",
+      "minos": [
+        "13.0"
+      ],
+      "signatureExit": 0
+    },
+    {
+      "path": "Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libvk_swiftshader.dylib",
+      "architectures": "arm64",
+      "minos": [
+        "13.0"
+      ],
+      "signatureExit": 0
+    },
+    {
+      "path": "Contents/Frameworks/Mantle.framework/Versions/A/Mantle",
+      "architectures": "arm64",
+      "minos": [
+        "13.0"
+      ],
+      "signatureExit": 1
+    },
+    {
+      "path": "Contents/Frameworks/ReactiveObjC.framework/Versions/A/ReactiveObjC",
+      "architectures": "arm64",
+      "minos": [
+        "13.0"
+      ],
+      "signatureExit": 1
+    },
+    {
+      "path": "Contents/Frameworks/Squirrel.framework/Versions/A/Resources/ShipIt",
+      "architectures": "arm64",
+      "minos": [
+        "13.0"
+      ],
+      "signatureExit": 0
+    },
+    {
+      "path": "Contents/Frameworks/Squirrel.framework/Versions/A/Squirrel",
+      "architectures": "arm64",
+      "minos": [
+        "13.0"
+      ],
+      "signatureExit": 1
+    },
+    {
+      "path": "Contents/Frameworks/玄印写作 Helper (GPU).app/Contents/MacOS/玄印写作 Helper (GPU)",
+      "architectures": "arm64",
+      "minos": [],
+      "signatureExit": 1
+    },
+    {
+      "path": "Contents/Frameworks/玄印写作 Helper (Plugin).app/Contents/MacOS/玄印写作 Helper (Plugin)",
+      "architectures": "arm64",
+      "minos": [],
+      "signatureExit": 1
+    },
+    {
+      "path": "Contents/Frameworks/玄印写作 Helper (Renderer).app/Contents/MacOS/玄印写作 Helper (Renderer)",
+      "architectures": "arm64",
+      "minos": [],
+      "signatureExit": 1
+    },
+    {
+      "path": "Contents/Frameworks/玄印写作 Helper.app/Contents/MacOS/玄印写作 Helper",
+      "architectures": "arm64",
+      "minos": [
+        "13.0"
+      ],
+      "signatureExit": 1
+    },
+    {
+      "path": "Contents/MacOS/玄印写作",
+      "architectures": "arm64",
+      "minos": [
+        "13.0"
+      ],
+      "signatureExit": 1
+    },
+    {
+      "path": "Contents/Resources/app/node_modules/@img/sharp-darwin-arm64/lib/sharp-darwin-arm64.node",
+      "architectures": "arm64",
+      "minos": [
+        "11.0"
+      ],
+      "signatureExit": 0
+    },
+    {
+      "path": "Contents/Resources/app/node_modules/@img/sharp-libvips-darwin-arm64/lib/libvips-cpp.8.17.3.dylib",
+      "architectures": "arm64",
+      "minos": [
+        "11.0"
+      ],
+      "signatureExit": 0
+    },
+    {
+      "path": "Contents/Resources/app/node_modules/@next/swc-darwin-arm64/next-swc.darwin-arm64.node",
+      "architectures": "arm64",
+      "minos": [
+        "11.0"
+      ],
+      "signatureExit": 0
+    },
+    {
+      "path": "Contents/Resources/app/node_modules/@prisma/engines/schema-engine-darwin-arm64",
+      "architectures": "arm64",
+      "minos": [
+        "11.0"
+      ],
+      "signatureExit": 0
+    }
+  ],
+  "sourceUnchanged": {
+    "electron-builder.config.cjs": {
+      "expected": "8fad167fb8e80e4e5c88bb258b59bfb09046d63e8656176a7858bad2bc5b1ad4",
+      "actual": "8fad167fb8e80e4e5c88bb258b59bfb09046d63e8656176a7858bad2bc5b1ad4",
+      "equal": true
+    },
+    "scripts/package-desktop.mjs": {
+      "expected": "8d81876526ae457794e4ae7a640d0771fc070089d8f05b09e9107fd53679b3bd",
+      "actual": "8d81876526ae457794e4ae7a640d0771fc070089d8f05b09e9107fd53679b3bd",
+      "equal": true
+    },
+    "scripts/macos-menu-localization.mjs": {
+      "expected": "0be477450ce31ecf035b8999c12328ff312377477943aea00bcc31032ca8930f",
+      "actual": "0be477450ce31ecf035b8999c12328ff312377477943aea00bcc31032ca8930f",
+      "equal": true
+    },
+    "scripts/inspect-packaged-app.mjs": {
+      "expected": "a9bbc13c285044ca1637aac030b67868194e8740cbf0dacc3c174b68dc41ec32",
+      "actual": "a9bbc13c285044ca1637aac030b67868194e8740cbf0dacc3c174b68dc41ec32",
+      "equal": true
+    },
+    "tests/unit/packaging-config.test.ts": {
+      "expected": "556afbcf7cded729260f04dd0114d7fd5929f096223ac2956bd92441da758066",
+      "actual": "556afbcf7cded729260f04dd0114d7fd5929f096223ac2956bd92441da758066",
+      "equal": true
+    },
+    "desktop/shared/command-catalogs.generated.json": {
+      "expected": "94b3b7b9264e7d5eed2d6231a8ec0d7a0ceaa7188d2c50538836914addd0592d",
+      "actual": "94b3b7b9264e7d5eed2d6231a8ec0d7a0ceaa7188d2c50538836914addd0592d",
+      "equal": true
+    }
+  },
+  "runtimeExecutable": {
+    "raw": "c9da78c3c79b9e6d6714fbf2a1136c4eb4a93cc5edad0f8ccfb058d681325e7e",
+    "packaged": "c9da78c3c79b9e6d6714fbf2a1136c4eb4a93cc5edad0f8ccfb058d681325e7e"
+  },
+  "dmgUnchanged": {
+    "bytes": 345736762,
+    "sha256": "2abef4f3708c20b4dd19e09db39ddc7c0659bf6dbba154b50dc2d19a3c291cda",
+    "equal": true
+  }
+}

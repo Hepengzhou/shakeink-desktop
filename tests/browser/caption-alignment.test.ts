@@ -25,7 +25,7 @@ visit(source); assert(header)
 assert(header.startsWith('<div ')); header = header.replace(/^<div /, '<div id="chat-header" ')
 const cssPath = resolve("src/app/globals.css")
 const stylesheet = postcss([tailwindcss()]).process(readFileSync(cssPath, "utf8"), { from: cssPath }).then(r => r.css + "\n" + readFileSync("src/app/desktop.css", "utf8"))
-const chat = `import React from 'react';import {PanelLeft,PanelRight,MessageSquare} from 'lucide-react';import {useDesktopStore} from './src/stores/desktop';
+const chat = `import React from 'react';import {PanelLeft,PanelRight,MessageSquare} from 'lucide-react';import {useDesktopStore} from './src/stores/desktop';import {NavigationLabel} from './src/components/layout/NavigationLabel';
 export function ChatPanel({sidebarHidden=true,contentHidden=true,onShowSidebar,onShowContent}) {
  const desktopBootstrap=useDesktopStore(s=>s.bootstrap),messages=[{id:'isolated'}],currentConversation={title:'隔离会话'};
  return <div className='chatpane flex h-full flex-col'>${header}<div data-chat-body>正文夹具</div></div>;
@@ -72,6 +72,7 @@ async function scenario(platform: "win32" | "darwin" | null, zoom: number, font:
     await page.addStyleTag({ content: await stylesheet }); await page.addScriptTag({ content: await bundle })
     await page.evaluate(args => (window as any).mountCaption(args), { platform, zoom, font, count, shell })
     await page.evaluate(() => new Promise<void>(r => requestAnimationFrame(() => requestAnimationFrame(() => r()))))
+    assert.deepEqual(errors, [], "Real caption fixture renders without page errors")
     await run(page); assert.deepEqual(errors, [])
   } finally { await page.close() }
 }

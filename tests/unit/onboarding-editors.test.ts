@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs"
 import { test } from "node:test"
 import { transformSync } from "esbuild"
 import { defaultState, settingsSchema, parseContextWindow, type PublicModel } from "../../desktop/core/settings"
-import { PROVIDER_PRESETS, presetsFor } from "../../desktop/shared/model-catalog"
+import { PROVIDER_PRESETS, presetsFor, type CatalogResult, type CatalogScope } from "../../desktop/shared/model-catalog"
 import { modelChoices, excludedBuiltinModel, offlineCatalog } from "../../desktop/shared/builtin-model-catalog"
 import { onboardingDialogGuard } from "../../src/lib/desktop/onboarding-flow"
 
@@ -16,13 +16,14 @@ const textModel: PublicModel = { id: "00000000-0000-4000-8000-000000000101", nam
 const imageModel: PublicModel = { ...textModel, id: "00000000-0000-4000-8000-000000000102", name: "专项图片模型", kind: "IMAGE", provider: "openai", endpoint: "https://api.openai.com/v1", modelId: "gpt-image-1" }
 function deferred<T>() { let resolve!: (value: T) => void; let reject!: (error: Error) => void; const promise = new Promise<T>((yes, no) => { resolve = yes; reject = no }); return { promise, resolve, reject } }
 function text(value: unknown): string { if (Array.isArray(value)) return value.map(text).join(""); if (value && typeof value === "object" && "props" in value) return text((value as Element).props.children); return typeof value === "string" || typeof value === "number" ? String(value) : "" }
-function editor(file: "ProfileSettings" | "ModelConfigurationDialog", exportName: string, props: Props, options: { models?: PublicModel[]; choose?: (id: string, acceptedDraftId?: string | null) => Promise<any>; cancelSelection?: (input: { sessionId: string; draftId?: string | null }) => void; discover?: (id: string) => Promise<any>; test?: (id: string) => Promise<any> } = {}) {
+function editor(file: "ProfileSettings" | "ModelConfigurationDialog", exportName: string, props: Props, options: { models?: PublicModel[]; choose?: (id: string, acceptedDraftId?: string | null) => Promise<any>; cancelSelection?: (input: { sessionId: string; draftId?: string | null }) => void; discover?: (id: string) => Promise<any>; test?: (id: string) => Promise<any>; read?: (scope: CatalogScope) => Promise<CatalogResult | null> } = {}) {
   const state = { ...structuredClone(defaultState), models: options.models ?? [] }, canceled: string[] = [], selectionCanceled: string[] = [], selectionRestores: Array<{ sessionId: string; draftId?: string | null }> = [], acceptedSelections: Array<{ sessionId: string; draftId?: string | null }> = [], saves: any[] = [], choices: string[] = [], tests: string[] = [], discoveries: string[] = []
   const oldWindow = Object.getOwnPropertyDescriptor(globalThis, "window")
   Object.defineProperty(globalThis, "window", { configurable: true, writable: true, value: { desktop: {
     chooseAvatar: async (id: string, acceptedDraftId?: string | null) => { choices.push(id); acceptedSelections.push({ sessionId: id, draftId: acceptedDraftId }); return options.choose?.(id, acceptedDraftId) ?? null }, cancelAvatar: async (id: string) => { canceled.push(id) },
     cancelAvatarSelection: async (input: { sessionId: string; draftId?: string | null }) => { selectionCanceled.push(input.sessionId); selectionRestores.push(input); options.cancelSelection?.(input) },
     discoverModels: async (id: string) => { discoveries.push(id); return options.discover?.(id) }, testModel: async (id: string) => { tests.push(id); return options.test?.(id) }, cancelModelConfiguration: async (id: string) => { canceled.push(id) },
+    ...(options.read ? { readModelCatalog: options.read } : {}),
   } } })
   const contexts = new Map<string, { hooks: Hook[]; cursor: number }>(); let current!: { hooks: Hook[]; cursor: number }; let changed = false, mounted = true; let surfaces: Array<{ element: Element; name: string; disabled: boolean }> = []
   const effects: Array<() => void> = []
@@ -143,10 +144,13 @@ test("IP-01/IP-05: shared settings and onboarding image editors have two provide
       assert.equal(ui.saves.length, 0)
     } finally { ui.finish() }
   }
-  for (const provider of ["google", "custom"]) {
-    const retained = { ...imageModel, provider, providerName: provider === "custom" ? "旧自定义供应商" : undefined }
+  for (const provider of ["google", "custom"] as const) {
+    const retained: PublicModel = { ...imageModel, provider, providerName: provider === "custom" ? "旧自定义供应商" : undefined, ...(provider === "google" ? { modelId: "gemini-3.1-flash-image", endpoint: "https://generativelanguage.googleapis.com/v1beta" } : {}) }
+    const scope: CatalogScope = { provider, kind: "IMAGE", protocol: retained.protocol, endpoint: retained.endpoint }
+    const directory: CatalogResult = { ok: true, provider, kind: "IMAGE", models: [{ id: retained.modelId, name: retained.modelId, kind: "IMAGE", permission: "unknown", source: "https://ai.google.dev/gemini-api/docs/models" }], authoritative: true, complete: true, unknownCapabilityIds: [], permission: "unknown", sources: ["https://ai.google.dev/gemini-api/docs/models"], checkedAt: "2026-10-15T00:00:00.000Z", warnings: [] }
+    const read = provider === "google" ? async (requested: CatalogScope) => { if (requested.provider !== "google") return null; assert.deepEqual(requested, scope); return directory } : undefined
     let closed = 0
-    const canceled = editor("ModelConfigurationDialog", "ModelConfigurationDialog", { kind: "IMAGE", model: retained, onClose() { closed++ } }, { models: [retained] })
+    const canceled = editor("ModelConfigurationDialog", "ModelConfigurationDialog", { kind: "IMAGE", model: retained, onClose() { closed++ } }, { models: [retained], read })
     try {
       canceled.fill("API Key", "public-fixture")
       canceled.select("供应商", "openai")
@@ -154,8 +158,9 @@ test("IP-01/IP-05: shared settings and onboarding image editors have two provide
       assert.equal(closed, 1); assert.equal(canceled.saves.length, 0)
       assert.deepEqual(canceled.state.models, [retained])
     } finally { canceled.finish() }
-    const ui = editor("ModelConfigurationDialog", "ModelConfigurationDialog", { kind: "IMAGE", model: retained, onClose() {} }, { models: [retained] })
+    const ui = editor("ModelConfigurationDialog", "ModelConfigurationDialog", { kind: "IMAGE", model: retained, onClose() {} }, { models: [retained], read })
     try {
+      await ui.settle()
       assert.deepEqual(ui.find("供应商").element.props.options.map((item: any) => item.id), ["bytedance", "openai"])
       assert.equal(ui.find("供应商").element.props.selectedOption.id, provider)
       assert.equal(ui.find("供应商").element.props.selectedOption.label, provider === "custom" ? "旧自定义供应商" : "Google")
@@ -163,7 +168,21 @@ test("IP-01/IP-05: shared settings and onboarding image editors have two provide
       assert.equal(ui.saves.length, 1)
       for (const field of ["id", "provider", "endpoint", "modelId"]) assert.equal(ui.saves[0][field], retained[field as keyof typeof retained])
       assert.equal(ui.saves[0].apiKey, "")
+      assert.deepEqual(ui.state.models, [retained]); assert.equal(ui.discoveries.length, 0)
     } finally { ui.finish() }
+    if (provider === "google") {
+      const missing = editor("ModelConfigurationDialog", "ModelConfigurationDialog", { kind: "IMAGE", model: retained, onClose() {} }, { models: [retained], read: async requested => { assert.deepEqual(requested, scope); return { ...directory, models: [] } } })
+      try {
+        await missing.settle()
+        assert.deepEqual(missing.find("供应商").element.props.options.map((item: any) => item.id), ["bytedance", "openai"])
+        assert.equal(missing.find("供应商").element.props.selectedOption.id, "google")
+        assert.equal(missing.find("可用模型").element.props.value, ""); assert.deepEqual(missing.find("可用模型").element.props.options, [])
+        assert.ok(missing.all().some(surface => surface.element.props.role === "status" && surface.name.includes("请重新选择可用模型")))
+        missing.click("保存模型"); missing.click("测试连接"); await missing.settle()
+        assert.equal(missing.saves.length, 0); assert.equal(missing.tests.length, 0); assert.equal(missing.discoveries.length, 0)
+        assert.deepEqual(missing.state.models, [retained])
+      } finally { missing.finish() }
+    }
   }
 })
 test("ONB editor: uncertain durable confirmation freezes profile fields and avatar while allowing the exact retry", async () => {

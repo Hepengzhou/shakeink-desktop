@@ -98,15 +98,21 @@ test("cursor loops/page and entry bounds are explicit failures, never complete t
     try { failure(await f.service.discover("a", randomUUID(), draft("anthropic")), "CATALOG_INCOMPLETE") } finally { await f.close() }
   }
 })
-test("official candidates require authenticated discovery instead of static success", async () => {
-  let calls = 0; const f = await fixture(async () => { calls++; return json({ data: [] }) })
+test("authenticated empty official catalogs never restore static candidates in any provider scope", async () => {
+  const calls: string[] = []; const f = await fixture(async (url, init) => {
+    calls.push(String(url)); assert.equal(new Headers(init?.headers).get("authorization"), `Bearer ${secret}`)
+    return json({ data: [] })
+  })
   try {
-    for (const [provider, kind] of [["bytedance", "TEXT"], ["bytedance", "IMAGE"]] as const) { const result = await f.service.discover("a", randomUUID(), draft(provider, kind)); assert.equal(result.ok, true); if (result.ok) { assert.equal(result.complete, false); assert.equal(result.permission, "listed-unverified") } }
-    for (const [provider, kind] of [["zai", "IMAGE"], ["minimax", "TEXT"], ["minimax", "IMAGE"]] as const) {
+    for (const [provider, kind] of [["bytedance", "TEXT"], ["bytedance", "IMAGE"], ["zai", "IMAGE"], ["minimax", "TEXT"], ["minimax", "IMAGE"]] as const) {
       const result = await f.service.discover("a", randomUUID(), draft(provider, kind)); assert.equal(result.ok, true)
-      if (result.ok) { assert.ok(result.models.length); assert.equal(result.complete, false); assert.equal(result.permission, "listed-unverified"); assert.ok(result.warnings.length) }
+      if (result.ok) {
+        assert.deepEqual(result.models, []); assert.equal(result.authoritative, true); assert.equal(result.complete, true)
+        assert.deepEqual(result.unknownCapabilityIds, []); assert.equal(result.permission, "listed-unverified")
+        assert.ok(result.sources.length); assert.equal(JSON.stringify(result).includes(secret), false)
+      }
     }
-    assert.equal(calls, 5)
+    assert.deepEqual(calls, ["https://ark.cn-beijing.volces.com/api/v3/models", "https://ark.cn-beijing.volces.com/api/v3/models", "https://open.bigmodel.cn/api/paas/v4/models", "https://api.minimax.cn/v1/models", "https://api.minimax.cn/v1/models"])
   } finally { await f.close() }
 })
 test("OpenAI catalog capabilities come from exact official IDs, unknown names are never classified by prefix", async () => {
@@ -114,9 +120,10 @@ test("OpenAI catalog capabilities come from exact official IDs, unknown names ar
   try {
     const result = await f.service.discover("a", randomUUID(), draft("openai", "IMAGE")); assert.equal(result.ok, true)
     if (!result.ok) return
+    assert.deepEqual(result.models.map(m => m.id), ["gpt-image-2.5-sunburst"])
     assert.deepEqual(result.models.filter(m => m.permission === "listed-unverified").map(m => m.id), ["gpt-image-2.5-sunburst"])
-    assert.ok(result.models.some(m => m.id === "gpt-image-2.5-flare-2026-09-08" && m.permission === "unknown"))
-    assert.deepEqual(result.unknownCapabilityIds, ["gpt-image-future", "gpt-6-private"]); assert.equal(result.complete, false)
+    assert.equal(result.models.some(m => m.id === "gpt-image-2.5-flare-2026-09-08"), false)
+    assert.deepEqual(result.unknownCapabilityIds, ["gpt-image-future", "gpt-6-private"]); assert.equal(result.complete, false); assert.equal(result.authoritative, true)
   } finally { await f.close() }
 })
 test("tests require explicit charge authorization and one model, return scope without raw response body", async () => {
@@ -310,13 +317,23 @@ test("Moonshot and Xiaomi enumerate documented live endpoints, with exact offici
     } finally { await f.close() }
   }
 })
-test("Zai authenticates live discovery before merging official candidates", async () => {
-  let calls = 0; const f = await fixture(async () => { calls++; return json({data: []}) })
-  try {
-    const result = await f.service.discover("a", randomUUID(), draft("zai")); assert.equal(result.ok, true)
-    if (result.ok) { assert.ok(result.models.some(m => m.id === "glm-5.3")); assert.equal(result.complete, false); assert.equal(result.permission, "listed-unverified") }
-    assert.equal(calls, 1)
-  } finally { await f.close() }
+test("Zai authenticated text discovery returns exactly the empty or single-row official directory", async () => {
+  for (const ids of [[], ["glm-5.3"]]) {
+    let calls = 0; const f = await fixture(async (url, init) => {
+      calls++; assert.equal(String(url), "https://open.bigmodel.cn/api/paas/v4/models")
+      assert.equal(new Headers(init?.headers).get("authorization"), `Bearer ${secret}`)
+      return json({ data: ids.map(id => ({ id })) })
+    })
+    try {
+      const result = await f.service.discover("a", randomUUID(), draft("zai")); assert.equal(result.ok, true)
+      if (result.ok) {
+        assert.deepEqual(result.models.map(m => m.id), ids); assert.equal(result.authoritative, true); assert.equal(result.complete, true)
+        assert.deepEqual(result.unknownCapabilityIds, []); assert.equal(result.permission, "listed-unverified")
+        assert.equal(JSON.stringify(result).includes(secret), false)
+      }
+      assert.equal(calls, 1)
+    } finally { await f.close() }
+  }
 })
 test("cancelled vendor requests never exhaust live operation slots, even if all upstream Promises remain pending", async () => {
   let calls = 0; const f = await fixture(async () => { calls++; return new Promise<Response>(() => undefined) }, { maxOperations: 2 })

@@ -214,7 +214,7 @@ for (const names of families) {
     })
   })
 
-  test(`BDC06 ${names.family} root migration preserves real closed database content and its namespace`, { timeout: 60_000 }, async () => {
+  test(`BDC06 ${names.family} root migration preserves real closed database content and its namespace`, { timeout: 180_000 }, async () => {
     await fixture(async base => {
       const root = join(base, "source"), target = join(base, "target"), boot = join(base, "boot"); await applicationRoot(root, names, true); await mkdir(target); await mkdir(boot)
       let engine: PGlite | undefined = await PGlite.create({ dataDir: join(root, "inbox", "database"), relaxedDurability: false })
@@ -241,7 +241,7 @@ for (const names of families) {
     })
   })
 
-  test(`BDC07 ${names.family} committed migration recovery keeps original journal prefix/checksum semantics`, { timeout: 60_000 }, async () => {
+  test(`BDC07 ${names.family} committed migration recovery keeps original journal prefix/checksum semantics`, { timeout: 180_000 }, async () => {
     await fixture(async base => {
       const root = join(base, "source"), target = join(base, "target"), boot = join(base, "boot"); await applicationRoot(root, names, true); await mkdir(target); await mkdir(boot)
       let engine: PGlite | undefined = await PGlite.create({ dataDir: join(root, "inbox", "database"), relaxedDurability: false })

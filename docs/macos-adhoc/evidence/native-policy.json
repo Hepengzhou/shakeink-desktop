@@ -1,0 +1,133 @@
+{
+  "checkedAt": "2026-10-16T11:47:14.651Z",
+  "artifact": "ShakeInk-0.1.0-alpha-mac-arm64-adhoc-test.dmg",
+  "sha256": "4f503f3c46f5ed0e5b38815aa6f5a29ee2e0e43841658a902554f74e51839d68",
+  "scope": "Read-only native policy observations; Apple trust rejection/tool failure are not integrity or startup passes",
+  "checks": [
+    {
+      "label": "host",
+      "tool": "/usr/bin/sw_vers",
+      "args": [],
+      "exitCode": 0,
+      "stdout": "ProductName:\t\tmacOS\nProductVersion:\t\t27.0.1\nBuildVersion:\t\t26A434\n",
+      "stderr": ""
+    },
+    {
+      "label": "Gatekeeper enabled",
+      "tool": "/usr/sbin/spctl",
+      "args": [
+        "--status"
+      ],
+      "exitCode": 0,
+      "stdout": "assessments enabled\n",
+      "stderr": ""
+    },
+    {
+      "label": "DMG actual signature display",
+      "tool": "/usr/bin/codesign",
+      "args": [
+        "--display",
+        "--verbose=4",
+        "<dmg>"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "killed": false,
+      "stdout": "",
+      "stderr": "<dmg>: code object is not signed at all\n"
+    },
+    {
+      "label": "Application signature display",
+      "tool": "/usr/bin/codesign",
+      "args": [
+        "--display",
+        "--verbose=4",
+        "<mounted-app>"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": "Executable=/private<mounted-app>/Contents/MacOS/玄印写作\nIdentifier=ink.shakeink.desktop\nFormat=app bundle with Mach-O thin (arm64)\nCodeDirectory v=20400 size=429 flags=0x2(adhoc) hashes=3+7 location=embedded\nVersionPlatform=1\nVersionMin=851968\nVersionSDK=1705216\nHash type=sha256 size=32\nCandidateCDHash sha256=ee6e75316e636adc5f77bf3c5fdde9ddb4a3162d\nCandidateCDHashFull sha256=ee6e75316e636adc5f77bf3c5fdde9ddb4a3162d17ccd4ba714410d3228f387d\nHash choices=sha256\nCMSDigest=ee6e75316e636adc5f77bf3c5fdde9ddb4a3162d17ccd4ba714410d3228f387d\nCMSDigestType=2\nExecutable Segment base=0\nExecutable Segment limit=16384\nExecutable Segment flags=0x1\nPage size=16384\nCDHash=ee6e75316e636adc5f77bf3c5fdde9ddb4a3162d\nSignature=adhoc\nInfo.plist entries=32\nTeamIdentifier=not set\nSealed Resources version=2 rules=13 files=26778\nInternal requirements count=0 size=12\nTotal signatures=1\nChosen signature=1\n"
+    },
+    {
+      "label": "Application Gatekeeper assessment",
+      "tool": "/usr/sbin/spctl",
+      "args": [
+        "--assess",
+        "--type",
+        "execute",
+        "--verbose=4",
+        "<mounted-app>"
+      ],
+      "exitCode": 3,
+      "signal": null,
+      "killed": false,
+      "stdout": "",
+      "stderr": "<mounted-app>: rejected\n"
+    },
+    {
+      "label": "Application distribution assessment",
+      "tool": "/usr/bin/syspolicy_check",
+      "args": [
+        "distribution",
+        "<mounted-app>"
+      ],
+      "exitCode": 70,
+      "signal": null,
+      "killed": false,
+      "stdout": "---------------------------------------------------------------\nAdhoc Signed App\n    Severity: Warning \n    Full Error: This app is adhoc signed. While it may run locally, adhoc \n        signed apps are not suitable for distribution. \n    Type: Distribution Error \n    Suggested Fix: Sign the app with a valid Developer ID certificate for \n        distribution. \n    Documentation: \n        https://developer.apple.com/documentation/security/notarizing_macos_software_before_distribution \n\nNotary Ticket Missing\n    File: 玄印写作.app \n    Severity: Fatal \n    Full Error: A Notarization ticket is not stapled to this application. \n    Type: Distribution Error \n    Suggested Fix: If this application has already been uploaded to the Apple \n        notary service, please make sure to attach the ticket with the `stapler \n        staple` command. If not, please upload to the Apple notary service \n        using Xcode or via `notarytool`. \n    Documentation: \n        https://developer.apple.com/documentation/security/notarizing_macos_software_before_distribution. \n\n---------------------------------------------------------------\n",
+      "stderr": "Only one signature found in file:///var/folders/xj/5c__pm_j6s74shtqfcbg87640000gn/T/shakeink-adhoc-mount-OKZTHo/volume/%E7%8E%84%E5%8D%B0%E5%86%99%E4%BD%9C.app, skipping dual signature check\nApp has failed one or more pre-distribution checks.\n"
+    },
+    {
+      "label": "Application notarization ticket",
+      "tool": "/usr/bin/xcrun",
+      "args": [
+        "stapler",
+        "validate",
+        "<mounted-app>"
+      ],
+      "exitCode": 65,
+      "signal": null,
+      "killed": false,
+      "stdout": "Processing: <mounted-app>\n玄印写作.app does not have a ticket stapled to it.\n",
+      "stderr": ""
+    },
+    {
+      "label": "DMG notarization ticket",
+      "tool": "/usr/bin/xcrun",
+      "args": [
+        "stapler",
+        "validate",
+        "<dmg>"
+      ],
+      "exitCode": 65,
+      "signal": null,
+      "killed": false,
+      "stdout": "Processing: <dmg>\nShakeInk-0.1.0-alpha-mac-arm64-adhoc-test.dmg does not have a ticket stapled to it.\n",
+      "stderr": ""
+    }
+  ],
+  "host": {
+    "exitCode": 0,
+    "stdout": "ProductName:\t\tmacOS\nProductVersion:\t\t27.0.1\nBuildVersion:\t\t26A434\n",
+    "stderr": ""
+  },
+  "signatureBefore": {
+    "signature": "adhoc",
+    "arch": "arm64",
+    "hardenedRuntime": false,
+    "developerIdentity": false,
+    "nativeObjects": 26,
+    "machOBinaries": 17,
+    "scope": "Ad-hoc signature/resource integrity and arm64 only; no Developer ID, notarization or Gatekeeper acceptance"
+  },
+  "signatureAfter": {
+    "signature": "adhoc",
+    "arch": "arm64",
+    "hardenedRuntime": false,
+    "developerIdentity": false,
+    "nativeObjects": 26,
+    "machOBinaries": 17,
+    "scope": "Ad-hoc signature/resource integrity and arm64 only; no Developer ID, notarization or Gatekeeper acceptance"
+  },
+  "dmgUnchanged": true
+}

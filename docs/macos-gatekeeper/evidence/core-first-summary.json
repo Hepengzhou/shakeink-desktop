@@ -1,0 +1,113 @@
+{
+  "scope": "Full core run before review follow-up; not final frozen inputs",
+  "counts": {
+    "tests": 2162,
+    "pass": 2137,
+    "fail": 19,
+    "cancelled": 6,
+    "skipped": 0
+  },
+  "evidenceWriterFailure": "Existing scripts/test-core.mjs crashed reading git spawnSync.stdout; TAP retained in core-console.log",
+  "failures": [
+    {
+      "title": "not ok 7 - BDC06 legacy root migration preserves real closed database content and its namespace",
+      "context": "not ok 7 - BDC06 legacy root migration preserves real closed database content and its namespace\n  location: '<repo>/tests/integration/brand-data-compatibility.test.ts:2:18992'\n  failureType: 'testTimeoutFailure'\n  error: 'test timed out after 60000ms'\n  code: 'ERR_TEST_FAILURE'\nnot ok 8 - BDC07 legacy committed migration recovery keeps original journal prefix/checksum semantics\n  location: '<repo>/tests/integration/brand-data-compatibility.test.ts:2:22048'\n  failureType: 'testTimeoutFailure'\n  error: 'test timed out after 60000ms'\n  code: 'ERR_TEST_FAILURE'"
+    },
+    {
+      "title": "not ok 8 - BDC07 legacy committed migration recovery keeps original journal prefix/checksum semantics",
+      "context": "not ok 8 - BDC07 legacy committed migration recovery keeps original journal prefix/checksum semantics\n  location: '<repo>/tests/integration/brand-data-compatibility.test.ts:2:22048'\n  failureType: 'testTimeoutFailure'\n  error: 'test timed out after 60000ms'\n  code: 'ERR_TEST_FAILURE'\nnot ok 10 - BDC06 current root migration preserves real closed database content and its namespace\n  location: '<repo>/tests/integration/brand-data-compatibility.test.ts:2:18992'\n  failureType: 'testTimeoutFailure'\n  error: 'test timed out after 60000ms'\n  code: 'ERR_TEST_FAILURE'"
+    },
+    {
+      "title": "not ok 10 - BDC06 current root migration preserves real closed database content and its namespace",
+      "context": "not ok 10 - BDC06 current root migration preserves real closed database content and its namespace\n  location: '<repo>/tests/integration/brand-data-compatibility.test.ts:2:18992'\n  failureType: 'testTimeoutFailure'\n  error: 'test timed out after 60000ms'\n  code: 'ERR_TEST_FAILURE'\nnot ok 11 - BDC07 current committed migration recovery keeps original journal prefix/checksum semantics\n  location: '<repo>/tests/integration/brand-data-compatibility.test.ts:2:22048'\n  failureType: 'testTimeoutFailure'\n  error: 'test timed out after 60000ms'\n  code: 'ERR_TEST_FAILURE'"
+    },
+    {
+      "title": "not ok 11 - BDC07 current committed migration recovery keeps original journal prefix/checksum semantics",
+      "context": "not ok 11 - BDC07 current committed migration recovery keeps original journal prefix/checksum semantics\n  location: '<repo>/tests/integration/brand-data-compatibility.test.ts:2:22048'\n  failureType: 'testTimeoutFailure'\n  error: 'test timed out after 60000ms'\n  code: 'ERR_TEST_FAILURE'"
+    },
+    {
+      "title": "not ok 25 - DESK-D04: real detached handler retains both databases through inflight heartbeat, checkpoint and final observation",
+      "context": "not ok 25 - DESK-D04: real detached handler retains both databases through inflight heartbeat, checkpoint and final observation\n  location: '<repo>/tests/integration/chat-detached-heartbeat.test.ts:2:10280'\n  failureType: 'testTimeoutFailure'\n  error: 'test timed out after 30000ms'\n  code: 'ERR_TEST_FAILURE'"
+    },
+    {
+      "title": "not ok 34 - IPC-01: built worker executes original local handlers with no HTTP server and retains original ownership guards",
+      "context": "not ok 34 - IPC-01: built worker executes original local handlers with no HTTP server and retains original ownership guards\n  location: '<repo>/tests/integration/desktop-worker.test.ts:2:1463'\n  failureType: 'testCodeFailure'\n  error: |-\n  code: 'ERR_ASSERTION'"
+    },
+    {
+      "title": "not ok 35 - DESK-D01: built worker signals fully initialized owned root while main thread is synchronously waiting",
+      "context": "not ok 35 - DESK-D01: built worker signals fully initialized owned root while main thread is synchronously waiting\n  location: '<repo>/tests/integration/desktop-worker.test.ts:2:5851'\n  failureType: 'testCodeFailure'\n  error: |-\n  code: 'ERR_ASSERTION'"
+    },
+    {
+      "title": "not ok 37 - IL42-PG01 real built worker refuses stale inbox lease; cancelling repair preserves every closed database file",
+      "context": "not ok 37 - IL42-PG01 real built worker refuses stale inbox lease; cancelling repair preserves every closed database file\n  location: '<repo>/tests/integration/inbox-lease-startup.test.ts:2:6400'\n  failureType: 'testCodeFailure'\n  error: |-\n  code: 'ERR_ASSERTION'"
+    },
+    {
+      "title": "not ok 93 - recognized closed PGlite files plus actual empty engine directories migrate and reopen without reconstructing layout",
+      "context": "not ok 93 - recognized closed PGlite files plus actual empty engine directories migrate and reopen without reconstructing layout\n  location: '<repo>/tests/integration/owned-root-migration.test.ts:2:1395'\n  failureType: 'testTimeoutFailure'\n  error: 'test timed out after 60000ms'\n  code: 'ERR_TEST_FAILURE'"
+    },
+    {
+      "title": "not ok 121 - <repo>/tests/integration/sidebar-scenario-management.test.ts",
+      "context": "not ok 121 - <repo>/tests/integration/sidebar-scenario-management.test.ts\n  location: '<repo>/tests/integration/sidebar-scenario-management.test.ts:2:3979'\n  failureType: 'hookFailed'\n  error: |-\n  code: 'ERR_ASSERTION'"
+    },
+    {
+      "title": "not ok 483 - CFG58-04 actual repository credential replacement makes the reviewed public snapshot stale without importing anything",
+      "context": "not ok 483 - CFG58-04 actual repository credential replacement makes the reviewed public snapshot stale without importing anything\n  location: '<repo>/tests/unit/configuration-transfer-review.test.ts:2:5620'\n  failureType: 'testCodeFailure'\n  error: '当前设置快照无效'\n  code: 'INVALID_SNAPSHOT'"
+    },
+    {
+      "title": "not ok 510 - CFG16: resolved settings commit through the existing repository CAS without changing any model credential",
+      "context": "not ok 510 - CFG16: resolved settings commit through the existing repository CAS without changing any model credential\n  location: '<repo>/tests/unit/configuration-transfer.test.ts:2:26040'\n  failureType: 'testCodeFailure'\n  error: '当前设置快照无效'\n  code: 'INVALID_SNAPSHOT'"
+    },
+    {
+      "title": "not ok 702 - BRUI-04 actual DesktopApp ignores removed backup/restore events while normal workbench remains mounted",
+      "context": "not ok 702 - BRUI-04 actual DesktopApp ignores removed backup/restore events while normal workbench remains mounted\n  location: '<repo>/tests/unit/desktop-backup-removal-ui.test.ts:7:5621'\n  failureType: 'testCodeFailure'\n  error: 'onboardingCanShow is not defined'\n  code: 'ERR_TEST_FAILURE'\nnot ok 703 - BRUI-05 actual DesktopApp still flushes normal save and retries ordinary migration cancellation"
+    },
+    {
+      "title": "not ok 703 - BRUI-05 actual DesktopApp still flushes normal save and retries ordinary migration cancellation",
+      "context": "not ok 703 - BRUI-05 actual DesktopApp still flushes normal save and retries ordinary migration cancellation\n  location: '<repo>/tests/unit/desktop-backup-removal-ui.test.ts:7:6147'\n  failureType: 'testCodeFailure'\n  error: 'onboardingCanShow is not defined'\n  code: 'ERR_TEST_FAILURE'"
+    },
+    {
+      "title": "not ok 707 - B55-05: closing before bootstrap resolves replies unchanged and blocks its late initialization",
+      "context": "not ok 707 - B55-05: closing before bootstrap resolves replies unchanged and blocks its late initialization\n  location: '<repo>/tests/unit/desktop-bootstrap-effect-review.test.ts:2:4625'\n  failureType: 'testCodeFailure'\n  error: 'migrationRef is not defined'\n  code: 'ERR_TEST_FAILURE'"
+    },
+    {
+      "title": "not ok 757 - REC56-B01: current DesktopApp restore callback uses original read-only target routes and returns preserved-data viewing action",
+      "context": "not ok 757 - REC56-B01: current DesktopApp restore callback uses original read-only target routes and returns preserved-data viewing action\n  location: '<repo>/tests/unit/desktop-recovery-bindings-review.test.ts:2:6240'\n  failureType: 'testCodeFailure'\n  error: 'recoveryRef is not defined'\n  code: 'ERR_TEST_FAILURE'"
+    },
+    {
+      "title": "not ok 1070 - ByteDance authenticates the real inference catalog before supplementing dated official candidates",
+      "context": "not ok 1070 - ByteDance authenticates the real inference catalog before supplementing dated official candidates\n  location: '<repo>/tests/unit/model-configuration-providers.test.ts:2:9810'\n  failureType: 'testCodeFailure'\n  error: |-\n  code: 'ERR_ASSERTION'"
+    },
+    {
+      "title": "not ok 1077 - ByteDance public catalog includes all 20 text and 6 image IDs from the 2026-09-28 official table, still without Key permission claims",
+      "context": "not ok 1077 - ByteDance public catalog includes all 20 text and 6 image IDs from the 2026-09-28 official table, still without Key permission claims\n  location: '<repo>/tests/unit/model-configuration-providers.test.ts:2:17279'\n  failureType: 'testCodeFailure'\n  error: |-\n  code: 'ERR_ASSERTION'"
+    },
+    {
+      "title": "not ok 1110 - official candidates require authenticated discovery instead of static success",
+      "context": "not ok 1110 - official candidates require authenticated discovery instead of static success\n  location: '<repo>/tests/unit/model-configuration.test.ts:2:9544'\n  failureType: 'testCodeFailure'\n  error: |-\n  code: 'ERR_ASSERTION'\nnot ok 1111 - OpenAI catalog capabilities come from exact official IDs, unknown names are never classified by prefix"
+    },
+    {
+      "title": "not ok 1111 - OpenAI catalog capabilities come from exact official IDs, unknown names are never classified by prefix",
+      "context": "not ok 1111 - OpenAI catalog capabilities come from exact official IDs, unknown names are never classified by prefix\n  location: '<repo>/tests/unit/model-configuration.test.ts:2:10611'\n  failureType: 'testCodeFailure'\n  error: |-\n  code: 'ERR_ASSERTION'"
+    },
+    {
+      "title": "not ok 1129 - Zai authenticates live discovery before merging official candidates",
+      "context": "not ok 1129 - Zai authenticates live discovery before merging official candidates\n  location: '<repo>/tests/unit/model-configuration.test.ts:2:28474'\n  failureType: 'testCodeFailure'\n  error: |-\n  code: 'ERR_ASSERTION'"
+    },
+    {
+      "title": "not ok 1222 - model configuration: approved close button remains present beside cancel",
+      "context": "not ok 1222 - model configuration: approved close button remains present beside cancel\n  location: '<repo>/tests/unit/model-settings.test.ts:2:37206'\n  failureType: 'testCodeFailure'\n  error: \"Cannot read properties of undefined (reading 'element')\"\n  code: 'ERR_TEST_FAILURE'"
+    },
+    {
+      "title": "not ok 1226 - model configuration: catalog choices replace one draft, disable duplicates and retain a failed save for retry",
+      "context": "not ok 1226 - model configuration: catalog choices replace one draft, disable duplicates and retain a failed save for retry\n  location: '<repo>/tests/unit/model-settings.test.ts:2:41189'\n  failureType: 'testCodeFailure'\n  error: |-\n  code: 'ERR_ASSERTION'"
+    },
+    {
+      "title": "not ok 1355 - IP-01/IP-05: shared settings and onboarding image editors have two providers and preserve legacy drafts",
+      "context": "not ok 1355 - IP-01/IP-05: shared settings and onboarding image editors have two providers and preserve legacy drafts\n  location: '<repo>/tests/unit/onboarding-editors.test.ts:2:17436'\n  failureType: 'testCodeFailure'\n  error: |-\n  code: 'ERR_ASSERTION'"
+    },
+    {
+      "title": "not ok 1680 - U71-02: actual DesktopApp pending-cancel branch retains its dialog on failed retry and clears only on confirmed close-cancelled event",
+      "context": "not ok 1680 - U71-02: actual DesktopApp pending-cancel branch retains its dialog on failed retry and clears only on confirmed close-cancelled event\n  location: '<repo>/tests/unit/root-migration-renderer-review.test.ts:2:3078'\n  failureType: 'testCodeFailure'\n  error: 'migrationRef is not defined'\n  code: 'ERR_TEST_FAILURE'"
+    }
+  ]
+}

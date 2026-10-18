@@ -1,0 +1,95 @@
+{
+  "scope": "Real codesign probe on a private copied Electron Helper; no application launch or final DMG acceptance",
+  "temporary": "/private/tmp/shakeink-adhoc-helper-probe-dFKhz7",
+  "source": "/Users/dt_flys/Projects/shakeink-desktop/node_modules/electron/dist/Electron.app/Contents/Frameworks/Electron Helper.app",
+  "sourceBefore": [
+    {
+      "path": "Contents/Info.plist",
+      "sha256": "c1d0a91da16b4ea637fc10bcc3218cd2769cd43ba1190be028d9859d3987e873"
+    },
+    {
+      "path": "Contents/MacOS/Electron Helper",
+      "sha256": "29da57f34fca4e6d9062429739785e8b0dc6f0250d7d501cf8d2da4ff652ef50"
+    },
+    {
+      "path": "Contents/PkgInfo",
+      "sha256": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0"
+    }
+  ],
+  "sourceAfter": [
+    {
+      "path": "Contents/Info.plist",
+      "sha256": "c1d0a91da16b4ea637fc10bcc3218cd2769cd43ba1190be028d9859d3987e873"
+    },
+    {
+      "path": "Contents/MacOS/Electron Helper",
+      "sha256": "29da57f34fca4e6d9062429739785e8b0dc6f0250d7d501cf8d2da4ff652ef50"
+    },
+    {
+      "path": "Contents/PkgInfo",
+      "sha256": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0"
+    }
+  ],
+  "sourceUnchanged": true,
+  "commands": [
+    {
+      "tool": "/usr/bin/codesign",
+      "args": [
+        "--force",
+        "--sign",
+        "-",
+        "--timestamp=none",
+        "--options",
+        "0",
+        "--entitlements",
+        "/Users/dt_flys/Projects/shakeink-desktop/build/entitlements.mac.plist",
+        "/private/tmp/shakeink-adhoc-helper-probe-dFKhz7/release/.staging/adhoc-arm64-native-probe/Electron Helper.app/Contents/MacOS/Electron Helper"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": "/private/tmp/shakeink-adhoc-helper-probe-dFKhz7/release/.staging/adhoc-arm64-native-probe/Electron Helper.app/Contents/MacOS/Electron Helper: replacing existing signature\n"
+    },
+    {
+      "tool": "/usr/bin/codesign",
+      "args": [
+        "--force",
+        "--sign",
+        "-",
+        "--timestamp=none",
+        "--options",
+        "0",
+        "--entitlements",
+        "/Users/dt_flys/Projects/shakeink-desktop/build/entitlements.mac.plist",
+        "/private/tmp/shakeink-adhoc-helper-probe-dFKhz7/release/.staging/adhoc-arm64-native-probe/Electron Helper.app"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": "/private/tmp/shakeink-adhoc-helper-probe-dFKhz7/release/.staging/adhoc-arm64-native-probe/Electron Helper.app: replacing existing signature\n"
+    },
+    {
+      "tool": "/usr/bin/codesign",
+      "args": [
+        "--verify",
+        "--strict",
+        "--deep",
+        "--verbose=4",
+        "/private/tmp/shakeink-adhoc-helper-probe-dFKhz7/release/.staging/adhoc-arm64-native-probe/Electron Helper.app"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": "/private/tmp/shakeink-adhoc-helper-probe-dFKhz7/release/.staging/adhoc-arm64-native-probe/Electron Helper.app: valid on disk\n/private/tmp/shakeink-adhoc-helper-probe-dFKhz7/release/.staging/adhoc-arm64-native-probe/Electron Helper.app: satisfies its Designated Requirement\n"
+    },
+    {
+      "tool": "/usr/bin/codesign",
+      "args": [
+        "--display",
+        "--verbose=4",
+        "/private/tmp/shakeink-adhoc-helper-probe-dFKhz7/release/.staging/adhoc-arm64-native-probe/Electron Helper.app"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": "Executable=/private/tmp/shakeink-adhoc-helper-probe-dFKhz7/release/.staging/adhoc-arm64-native-probe/Electron Helper.app/Contents/MacOS/Electron Helper\nIdentifier=com.github.Electron.helper\nFormat=app bundle with Mach-O thin (arm64)\nCodeDirectory v=20400 size=755 flags=0x2(adhoc) hashes=13+7 location=embedded\nVersionPlatform=1\nVersionMin=851968\nVersionSDK=1705216\nHash type=sha256 size=32\nCandidateCDHash sha256=4cc7608ddaa6364c1b66b36733675cd285c933c8\nCandidateCDHashFull sha256=4cc7608ddaa6364c1b66b36733675cd285c933c83818bb5d11accb81fd92da5d\nHash choices=sha256\nCMSDigest=4cc7608ddaa6364c1b66b36733675cd285c933c83818bb5d11accb81fd92da5d\nCMSDigestType=2\nExecutable Segment base=0\nExecutable Segment limit=163840\nExecutable Segment flags=0x1\nPage size=16384\nCDHash=4cc7608ddaa6364c1b66b36733675cd285c933c8\nSignature=adhoc\nInfo.plist entries=11\nTeamIdentifier=not set\nSealed Resources version=2 rules=13 files=0\nInternal requirements count=0 size=12\nTotal signatures=1\nChosen signature=1\n"
+    }
+  ],
+  "zeroResourceSeal": true
+}

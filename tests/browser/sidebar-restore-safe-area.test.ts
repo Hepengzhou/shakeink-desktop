@@ -26,6 +26,7 @@ const stylesheet = postcss([tailwindcss()]).process(readFileSync(cssPath, "utf8"
 const bundle = build({ stdin: { loader: "tsx", resolveDir: process.cwd(), contents: `
 import React,{useState} from 'react';import {createRoot} from 'react-dom/client';import {flushSync} from 'react-dom';
 import {PanelLeft,PanelRight,MessageSquare} from 'lucide-react';import {useDesktopStore} from './src/stores/desktop';
+import {NavigationLabel} from './src/components/layout/NavigationLabel';
 window.mountTitle=(platform='darwin',zoom=1,font=14,hidden=true,callback=true)=>{
  const calls=[];document.documentElement.style.fontSize=(16*font/14)+'px';
  const appearance=(platform,zoom)=>{document.documentElement.style.setProperty('--desktop-caption-zoom',String(zoom));document.body.dataset.platform=platform??'';useDesktopStore.setState({bootstrap:platform?{platform,settings:{appearance:{zoom}}}:null})};

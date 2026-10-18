@@ -78,7 +78,14 @@ function component(file: string, exported: string, initial: Props, dependencies:
   function query(name:string){render();return surfaces.find(surface=>["Input","Button","button","select","ModelChoiceSelect"].includes(String(surface.element.type))&&surface.name===name)}
   function find(name:string){const surface=query(name);assert.ok(surface,`Visible control: ${name}`);return surface}
   function invoke(surface:Surface,handler:string,payload?:unknown){if(surface.disabled)return;const action=surface.element.props[handler] as ((payload:unknown)=>unknown)|undefined;assert.ok(action,`${surface.name} supports ${handler}`);void action(payload);render()}
-  function dialog(title:string){render();return surfaces.find(surface=>surface.element.type==="DialogContent"&&surface.children.some(child=>child.element.type==="DialogTitle"&&child.name===title))}
+  function dialog(title:string){
+    render()
+    function ownsTitle(surface:Surface):boolean{return surface.children.some(child=>{
+      if(child.element.type==="Dialog"||child.element.type==="DialogContent")return false
+      return child.element.type==="DialogTitle"&&child.name===title||ownsTitle(child)
+    })}
+    return surfaces.find(surface=>surface.element.type==="DialogContent"&&ownsTitle(surface))
+  }
   render()
   return {
     find,query,dialog,render, all:()=>{render();return surfaces},focused:()=>focused,
@@ -420,11 +427,14 @@ test("model configuration: result identifies the tested model and endpoint and r
 })
 
 test("model configuration: approved close button remains present beside cancel",()=>{
-  const ui=configuration({model:sample()})
-  try{
-    const dialog=ui.dialog("配置模型")!
-    assert.ok(dialog.element.props.showCloseButton!==false||ui.all().some(surface=>["Button","button"].includes(String(surface.element.type))&&/关闭.*模型|模型.*关闭/.test(surface.name)),"Configuration supports its approved X dismiss action")
-  }finally{ui.finish()}
+  for(const action of ["关闭配置模型","取消"]){
+    const ui=configuration({model:sample()})
+    try{
+      assert.ok(ui.dialog("配置模型"))
+      assert.equal(ui.find("关闭配置模型").disabled,false);assert.equal(ui.find("取消").disabled,false)
+      ui.click(action);assert.equal(ui.closed(),1);assert.equal(ui.writes.length,0)
+    }finally{ui.finish()}
+  }
 })
 
 test("model picker: single selection, search and disabled choices preserve the controlled value and show unavailability",()=>{
@@ -471,15 +481,17 @@ test("IP-06: retained current choice is displayed without joining menu items; ma
 test("model configuration: catalog choices replace one draft, disable duplicates and retain a failed save for retry",async()=>{
   let fail=true
   const existing=sample({id:"00000000-0000-4000-8000-000000000002",modelId:"gpt-duplicate"})
-  const ui=configuration({models:[existing],write:async()=>{if(fail)throw new Error("模型保存失败")},discover:async()=>({ok:true,provider:"openai",kind:"TEXT",models:["gpt-first","gpt-second","gpt-duplicate"].map(id=>({id,name:id,kind:"TEXT",contextWindow:128000,thinkingLevels:["high"],defaultThinking:"high",permission:"listed-unverified",source:"catalog-fixture"})),complete:false,unknownCapabilityIds:[],permission:"listed-unverified",sources:["catalog-fixture"],checkedAt:new Date().toISOString(),warnings:[]})})
+  const ui=configuration({models:[existing],write:async()=>{if(fail)throw new Error("模型保存失败")},discover:async()=>({ok:true,provider:"openai",kind:"TEXT",models:["gpt-first","gpt-second","gpt-duplicate"].map(id=>({id,name:id,kind:"TEXT",contextWindow:128000,thinkingLevels:["high"],defaultThinking:"high",permission:"listed-unverified",source:"catalog-fixture"})),authoritative:true,complete:false,unknownCapabilityIds:["gpt-unknown-capability"],permission:"listed-unverified",sources:["catalog-fixture"],checkedAt:new Date().toISOString(),warnings:["目录含输出能力待确认型号，未按名称猜测分类"]})})
   try{
+    ui.choose("供应商","openai")
     ui.fill("API Key","key-catalog-fixture");ui.open("可用模型");await ui.settle()
     const choices=ui.find("可用模型").element.props.options as Array<{id:string;disabled:boolean}>
+    assert.deepEqual(choices.map(option=>option.id),["gpt-first","gpt-second","gpt-duplicate"])
     assert.equal(choices.find(option=>option.id==="gpt-duplicate")?.disabled,true)
     ui.choose("可用模型","gpt-duplicate");assert.equal(ui.find("可用模型").element.props.value,"")
     ui.choose("可用模型","gpt-first");ui.choose("可用模型","gpt-second")
     assert.equal(ui.find("可用模型").element.props.value,"gpt-second");assert.equal(ui.writes.length,0)
-    assert.ok(ui.all().some(surface=>surface.element.props.role==="status"&&surface.name.includes("目录尚不完整")))
+    assert.ok(ui.all().some(surface=>surface.element.props.role==="status"&&surface.name.includes("目录已更新；部分型号能力尚未确认")))
     ui.click("保存模型");await ui.settle()
     assert.equal(ui.closed(),0);assert.equal(ui.find("API Key").element.props.value,"key-catalog-fixture");assert.equal(ui.find("可用模型").element.props.value,"gpt-second")
     assert.ok(ui.all().some(surface=>surface.element.props.role==="alert"&&surface.name==="模型保存失败"))
@@ -487,11 +499,13 @@ test("model configuration: catalog choices replace one draft, disable duplicates
     assert.equal(ui.closed(),1);assert.equal(ui.writes.length,2)
     const draft=ui.writes[1] as {modelId:string;contextWindow:number;apiKey:string}
     assert.equal(draft.modelId,"gpt-second");assert.equal(draft.contextWindow,128000);assert.equal(draft.apiKey,"key-catalog-fixture")
+    assert.deepEqual(ui.writes[1],{name:"gpt-second",provider:"openai",providerName:"",protocol:"openai",endpoint:"https://api.openai.com/v1",modelId:"gpt-second",kind:"TEXT",contextWindow:128000,enabled:true,thinkingLevels:["high"],defaultThinking:"high",apiKey:"key-catalog-fixture"})
+    assert.deepEqual(ui.writes[0],ui.writes[1])
   }finally{ui.finish()}
   const image=configuration({kind:"IMAGE"})
   try{
     const ids=(image.find("供应商").element.props.options as Array<{id:string}>).map(option=>option.id)
-    assert.ok(ids.includes("custom")&&ids.includes("openai"));assert.ok(!ids.includes("anthropic")&&!ids.includes("deepseek")&&!ids.includes("moonshot"))
+    assert.deepEqual(ids,["bytedance","openai"]);assert.ok(!ids.includes("anthropic")&&!ids.includes("deepseek")&&!ids.includes("moonshot"))
   }finally{image.finish()}
 })
 

@@ -1,0 +1,46 @@
+{
+  "scope": "Failure title comparison only; not a root-cause diagnosis of unrelated business failures",
+  "previous": [
+    "<project>/tests/integration/sidebar-scenario-management.test.ts",
+    "B55-05: closing before bootstrap resolves replies unchanged and blocks its late initialization",
+    "BDC06 legacy root migration preserves real closed database content and its namespace",
+    "BRUI-04 actual DesktopApp ignores removed backup/restore events while normal workbench remains mounted",
+    "BRUI-05 actual DesktopApp still flushes normal save and retries ordinary migration cancellation",
+    "ByteDance authenticates the real inference catalog before supplementing dated official candidates",
+    "ByteDance public catalog includes all 20 text and 6 image IDs from the 2026-09-28 official table, still without Key permission claims",
+    "CFG16: resolved settings commit through the existing repository CAS without changing any model credential",
+    "CFG58-04 actual repository credential replacement makes the reviewed public snapshot stale without importing anything",
+    "IP-01/IP-05: shared settings and onboarding image editors have two providers and preserve legacy drafts",
+    "IPC-01: built worker executes original local handlers with no HTTP server and retains original ownership guards",
+    "OpenAI catalog capabilities come from exact official IDs, unknown names are never classified by prefix",
+    "REC56-B01: current DesktopApp restore callback uses original read-only target routes and returns preserved-data viewing action",
+    "U71-02: actual DesktopApp pending-cancel branch retains its dialog on failed retry and clears only on confirmed close-cancelled event",
+    "Zai authenticates live discovery before merging official candidates",
+    "model configuration: approved close button remains present beside cancel",
+    "model configuration: catalog choices replace one draft, disable duplicates and retain a failed save for retry",
+    "official candidates require authenticated discovery instead of static success"
+  ],
+  "current": [
+    "<project>/tests/integration/sidebar-scenario-management.test.ts",
+    "B55-05: closing before bootstrap resolves replies unchanged and blocks its late initialization",
+    "BRUI-04 actual DesktopApp ignores removed backup/restore events while normal workbench remains mounted",
+    "BRUI-05 actual DesktopApp still flushes normal save and retries ordinary migration cancellation",
+    "ByteDance authenticates the real inference catalog before supplementing dated official candidates",
+    "ByteDance public catalog includes all 20 text and 6 image IDs from the 2026-09-28 official table, still without Key permission claims",
+    "CFG16: resolved settings commit through the existing repository CAS without changing any model credential",
+    "CFG58-04 actual repository credential replacement makes the reviewed public snapshot stale without importing anything",
+    "IP-01/IP-05: shared settings and onboarding image editors have two providers and preserve legacy drafts",
+    "IPC-01: built worker executes original local handlers with no HTTP server and retains original ownership guards",
+    "OpenAI catalog capabilities come from exact official IDs, unknown names are never classified by prefix",
+    "REC56-B01: current DesktopApp restore callback uses original read-only target routes and returns preserved-data viewing action",
+    "U71-02: actual DesktopApp pending-cancel branch retains its dialog on failed retry and clears only on confirmed close-cancelled event",
+    "Zai authenticates live discovery before merging official candidates",
+    "model configuration: approved close button remains present beside cancel",
+    "model configuration: catalog choices replace one draft, disable duplicates and retain a failed save for retry",
+    "official candidates require authenticated discovery instead of static success"
+  ],
+  "added": [],
+  "removed": [
+    "BDC06 legacy root migration preserves real closed database content and its namespace"
+  ]
+}

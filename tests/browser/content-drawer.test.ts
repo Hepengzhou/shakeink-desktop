@@ -336,13 +336,48 @@ test("CD-07 hidden or inert content editor is excluded from commands and fallbac
   assert.equal(await page.evaluate(() => (window as any).contentFixture.editorEnabled()), true)
   assert.equal(await page.evaluate(() => (window as any).contentFixture.editorTarget()), "隔离正文草稿")
   const captured = await page.evaluate(async () => {
-    ;(window as any).contentFixture.hide()
-    await new Promise<void>(resolve => requestAnimationFrame(() => resolve()))
+    const fixture = (window as any).contentFixture, shell = document.querySelector<HTMLElement>('.dashboard-shell')!, viewport = document.querySelector<HTMLElement>('.content-drawer-viewport')!
     const input = document.querySelector('[aria-label="隔离正文草稿"]')!
-    return { phase: document.querySelector<HTMLElement>('.dashboard-shell')!.dataset.contentPhase, inert: !!input.closest('[inert]'), enabled: (window as any).contentFixture.editorEnabled() }
+    const sample = () => ({ time: performance.now(), phase: shell.dataset.contentPhase, visible: viewport.getBoundingClientRect().width, inert: !!input.closest('[inert]'), enabled: fixture.editorEnabled() as boolean })
+    type Snapshot = ReturnType<typeof sample>
+    const before = sample(), frames: Snapshot[] = []
+    return new Promise<Snapshot & { before: Snapshot; commit: Snapshot; firstVisible: Snapshot; frames: Snapshot[] }>((resolve, reject) => {
+      let commit: Snapshot | null = null, firstFrame: Snapshot | null = null, firstVisible: Snapshot | null = null, raf = 0, commitRaf = 0, finished = false
+      const cleanup = () => { finished = true; observer.disconnect(); clearTimeout(deadline); cancelAnimationFrame(raf); cancelAnimationFrame(commitRaf) }
+      const finish = () => { if (commit && firstFrame && firstVisible) { cleanup(); resolve({ ...firstFrame, before, commit, firstVisible, frames }) } }
+      // A normal Shell callback can commit after the action's first rAF. Observe
+      // that commit while retaining every earlier frame and its real geometry.
+      const observer = new MutationObserver(() => {
+        if (!commit && shell.dataset.contentPhase === "closing") {
+          commit = sample()
+          commitRaf = requestAnimationFrame(() => { firstFrame = sample(); finish() })
+        }
+      })
+      const deadline = setTimeout(() => { cleanup(); reject(Error("Closing commit and first visible content motion were not observed within 5s")) }, 5000)
+      observer.observe(shell, { attributes: true, attributeFilter: ["data-content-phase"] })
+      fixture.hide()
+      const track = () => {
+        if (finished) return
+        const frame = sample(); frames.push(frame)
+        if (!firstVisible && Math.abs(frame.visible - before.visible) > .35) firstVisible = frame
+        finish()
+        if (!finished) raf = requestAnimationFrame(track)
+      }
+      raf = requestAnimationFrame(track)
+    })
   })
   assert.equal(captured.phase, "closing"); assert.equal(captured.inert, true)
   assert.equal(captured.enabled, false, "First visible motion frame gates editor command registration")
+  assert(Math.abs(captured.commit.visible - captured.before.visible) <= .35, "Closing commit gates commands before any visible movement")
+  for (const frame of captured.frames.filter(frame => frame.time < captured.commit.time)) assert(Math.abs(frame.visible - captured.before.visible) <= .35, "A pre-commit rAF cannot expose visible movement")
+  for (const [stage, frame] of [["closing commit", captured.commit], ["first visible motion", captured.firstVisible]] as const) {
+    assert.equal(frame.phase, "closing", `${stage}: real phase is closing`)
+    assert.equal(frame.inert, true, `${stage}: content is inert`)
+    assert.equal(frame.enabled, false, `${stage}: editor commands are gated`)
+  }
+  for (const frame of captured.frames.filter(frame => Math.abs(frame.visible - captured.before.visible) > .35)) {
+    assert.equal(frame.phase, "closing"); assert.equal(frame.inert, true); assert.equal(frame.enabled, false)
+  }
   await page.waitForTimeout(520)
   assert.equal(await page.locator('[data-content-instance]').count(), 1)
   assert.equal(await page.evaluate(() => (window as any).contentFixture.editorTarget()), null)

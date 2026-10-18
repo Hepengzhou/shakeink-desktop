@@ -1,0 +1,120 @@
+TAP version 13
+# Subtest: MACREL-11 investigated damaged app fails real integrity without a Team requirement, then the new gate rejects it
+ok 1 - MACREL-11 investigated damaged app fails real integrity without a Team requirement, then the new gate rejects it
+  ---
+  duration_ms: 56.186292
+  type: 'test'
+  ...
+# Fixed investigated main SHA256=c9da78c3c79b9e6d6714fbf2a1136c4eb4a93cc5edad0f8ccfb058d681325e7e; Info.plist SHA256=65318907738efce8f2837619ae8e363c409cad3a332f9f5d3fd9c25f9d466c44; actual no-R strict/deep exit=1: code has no resources but signature indicates they must be present
+# Subtest: MACREL-11 investigated DMG is truly unsigned without Team filtering and rejected without mounting or mutation
+ok 2 - MACREL-11 investigated DMG is truly unsigned without Team filtering and rejected without mounting or mutation
+  ---
+  duration_ms: 4141.737917
+  type: 'test'
+  ...
+# Fixed investigated DMG SHA256=2abef4f3708c20b4dd19e09db39ddc7c0659bf6dbba154b50dc2d19a3c291cda; actual no-R strict exit=1: code object is not signed at all; final SHA256 unchanged
+# Subtest: MACREL-02 actual release policy rejects unknown/ambiguous targets and preserves Windows
+ok 3 - MACREL-02 actual release policy rejects unknown/ambiguous targets and preserves Windows
+  ---
+  duration_ms: 22.136917
+  type: 'test'
+  ...
+# Subtest: MACREL-03 identity parsing requires valid Developer ID and a unique selection
+ok 4 - MACREL-03 identity parsing requires valid Developer ID and a unique selection
+  ---
+  duration_ms: 0.697958
+  type: 'test'
+  ...
+# Subtest: MACREL-04 preflight fails closed before build and never exposes credential error text
+ok 5 - MACREL-04 preflight fails closed before build and never exposes credential error text
+  ---
+  duration_ms: 0.897125
+  type: 'test'
+  ...
+# Subtest: MACREL-05 scans all native code and executes Apple trust gates with external Team
+ok 6 - MACREL-05 scans all native code and executes Apple trust gates with external Team
+  ---
+  duration_ms: 11.658083
+  type: 'test'
+  ...
+# Subtest: MACREL-05 nested wrong Team, excess entitlements, architecture and OS gate failures reject
+ok 7 - MACREL-05 nested wrong Team, excess entitlements, architecture and OS gate failures reject
+  ---
+  duration_ms: 11.614416
+  type: 'test'
+  ...
+# Subtest: MACREL-09 raw ZIP path, duplicate, collision and link graph attacks fail before extraction
+ok 8 - MACREL-09 raw ZIP path, duplicate, collision and link graph attacks fail before extraction
+  ---
+  duration_ms: 11.00625
+  type: 'test'
+  ...
+# Subtest: MACREL-09 local-header path disagreement and ZIP64 fail closed
+ok 9 - MACREL-09 local-header path disagreement and ZIP64 fail closed
+  ---
+  duration_ms: 1.921834
+  type: 'test'
+  ...
+# Subtest: MACREL-07 real final metadata and every block are independently verified
+ok 10 - MACREL-07 real final metadata and every block are independently verified
+  ---
+  duration_ms: 36.291708
+  type: 'test'
+  ...
+# Subtest: MACREL-07 metadata rejects symlink files, traversal and damaged blockmaps
+ok 11 - MACREL-07 metadata rejects symlink files, traversal and damaged blockmaps
+  ---
+  duration_ms: 10.403875
+  type: 'test'
+  ...
+# Subtest: MACREL-06/10 finalization only accepts Accepted and publishes after gates/final-byte metadata
+ok 12 - MACREL-06/10 finalization only accepts Accepted and publishes after gates/final-byte metadata
+  ---
+  duration_ms: 21.798542
+  type: 'test'
+  ...
+# Subtest: MACREL-06/08/10 rejected, pending, malformed, missing target or trust error never promotes
+ok 13 - MACREL-06/08/10 rejected, pending, malformed, missing target or trust error never promotes
+  ---
+  duration_ms: 8.529
+  type: 'test'
+  ...
+# Subtest: MACREL-08 independent verification rejects manifest tampering and always reruns Apple checks
+ok 14 - MACREL-08 independent verification rejects manifest tampering and always reruns Apple checks
+  ---
+  duration_ms: 26.856875
+  type: 'test'
+  ...
+# Subtest: MACREL-05 missing timestamp/runtime/JIT, unsigned nested code, and escaping app links reject
+ok 15 - MACREL-05 missing timestamp/runtime/JIT, unsigned nested code, and escaping app links reject
+  ---
+  duration_ms: 10.705291
+  type: 'test'
+  ...
+# Subtest: MACREL-09 real ZIP CRC precedes ditto and inner trust; corrupt CRC stops before extraction
+ok 16 - MACREL-09 real ZIP CRC precedes ditto and inner trust; corrupt CRC stops before extraction
+  ---
+  duration_ms: 19.9695
+  type: 'test'
+  ...
+# Subtest: MACREL-10 DMG inner trust failure always detaches; failed detach retains its owned directory
+ok 17 - MACREL-10 DMG inner trust failure always detaches; failed detach retains its owned directory
+  ---
+  duration_ms: 10.8295
+  type: 'test'
+  ...
+# Subtest: MACREL-06/10 staple, ticket validation and actual metadata errors cannot create a successful release
+ok 18 - MACREL-06/10 staple, ticket validation and actual metadata errors cannot create a successful release
+  ---
+  duration_ms: 5.924083
+  type: 'test'
+  ...
+1..18
+# tests 18
+# suites 0
+# pass 18
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4283.792458

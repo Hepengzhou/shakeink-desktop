@@ -25,7 +25,7 @@ async function createLab(title: string, novelId = "scenario-novel-a") {
   return (await response.json()).scenario as { id: string; title: string }
 }
 before(async () => {
-  root = await mkdtemp(join(tmpdir(), "shakeink-sidebar-scenario-"))
+  root = await realpath(await mkdtemp(join(tmpdir(), "shakeink-sidebar-scenario-")))
   engine = await PGlite.create({ dataDir: join(root, "database"), relaxedDurability: false })
   await migrateDatabase(engine, await loadMigrations(join(process.cwd(), "prisma/migrations")))
   db = new PrismaClient({ adapter: new LocalPGliteAdapter(engine) })

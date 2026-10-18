@@ -1,0 +1,10 @@
+{
+  "scope": "Module tests, TypeScript boundary checks and syntax check; no signed/notarized positive acceptance",
+  "runtime": "/Users/dt_flys/.nvm/versions/node/v24.18.0/bin/node",
+  "tests": {"argv": ["--import", "tsx", "--test", "--test-reporter=tap", "tests/unit/macos-release.test.ts", "tests/packaging/macos-trust.test.ts"], "exitCode": 0, "tests": 18, "pass": 18, "fail": 0, "output": "module-green.tap"},
+  "typecheck": {"argv": ["node_modules/typescript/bin/tsc", "--noEmit"], "exitCode": 0, "stdoutAndStderr": "", "output": "module-typecheck.log"},
+  "syntax": {"argv": ["--check", "scripts/macos-release.mjs"], "exitCode": 0},
+  "nativeNegative": {"samplesBoundToInvestigatedHashes": true, "actualNoRIntegrityFailureChecked": true, "newValidatorCodesignFailureChecked": true, "dmgBytesUnchanged": true},
+  "realDeveloperIdNotarizationPositive": "Not executed; developer-account prerequisites unavailable",
+  "targetSystemRuntimeAcceptance": "Not executed"
+}

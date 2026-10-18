@@ -1,0 +1,262 @@
+TAP version 13
+# Subtest: ADH-01 host/arguments are restricted before any write
+not ok 1 - ADH-01 host/arguments are restricted before any write
+  ---
+  duration_ms: 1.376333
+  type: 'test'
+  location: '/Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-adhoc.test.ts:2:3489'
+  failureType: 'testCodeFailure'
+  error: "Cannot find module '/Users/dt_flys/Projects/shakeink-desktop/scripts/macos-adhoc.mjs' imported from /Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-adhoc.test.ts"
+  code: 'ERR_MODULE_NOT_FOUND'
+  stack: |-
+    finalizeResolution (node:internal/modules/esm/resolve:271:11)
+    moduleResolve (node:internal/modules/esm/resolve:865:10)
+    defaultResolve (node:internal/modules/esm/resolve:992:11)
+    #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+    #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+    nextStep (node:internal/modules/customization_hooks:189:26)
+    resolveBaseSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)
+    resolveDirectorySync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)
+    resolveTsPathsSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)
+    resolve (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832)
+  ...
+# Subtest: ADH-02 derived config is dir-only and cannot weaken the original release path
+not ok 2 - ADH-02 derived config is dir-only and cannot weaken the original release path
+  ---
+  duration_ms: 0.324959
+  type: 'test'
+  location: '/Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-adhoc.test.ts:2:4030'
+  failureType: 'testCodeFailure'
+  error: "Cannot find module '/Users/dt_flys/Projects/shakeink-desktop/scripts/macos-adhoc.mjs' imported from /Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-adhoc.test.ts"
+  code: 'ERR_MODULE_NOT_FOUND'
+  stack: |-
+    finalizeResolution (node:internal/modules/esm/resolve:271:11)
+    moduleResolve (node:internal/modules/esm/resolve:865:10)
+    defaultResolve (node:internal/modules/esm/resolve:992:11)
+    #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+    #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+    nextStep (node:internal/modules/customization_hooks:189:26)
+    resolveBaseSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)
+    resolveDirectorySync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)
+    resolveTsPathsSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)
+    resolve (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832)
+  ...
+# Subtest: ADH-03 scans all native files and nested bundles while allowing Framework version links
+not ok 3 - ADH-03 scans all native files and nested bundles while allowing Framework version links
+  ---
+  duration_ms: 6.418541
+  type: 'test'
+  location: '/Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-adhoc.test.ts:2:5516'
+  failureType: 'testCodeFailure'
+  error: "Cannot find module '/Users/dt_flys/Projects/shakeink-desktop/scripts/macos-adhoc.mjs' imported from /Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-adhoc.test.ts"
+  code: 'ERR_MODULE_NOT_FOUND'
+  stack: |-
+    finalizeResolution (node:internal/modules/esm/resolve:271:11)
+    moduleResolve (node:internal/modules/esm/resolve:865:10)
+    defaultResolve (node:internal/modules/esm/resolve:992:11)
+    #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+    #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+    nextStep (node:internal/modules/customization_hooks:189:26)
+    resolveBaseSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)
+    resolveDirectorySync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)
+    resolveTsPathsSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)
+    resolve (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832)
+  ...
+# Subtest: ADH-03 scan rejects external, dangling, cyclic links and symlink roots
+not ok 4 - ADH-03 scan rejects external, dangling, cyclic links and symlink roots
+  ---
+  duration_ms: 2.444041
+  type: 'test'
+  location: '/Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-adhoc.test.ts:2:6123'
+  failureType: 'testCodeFailure'
+  error: "Cannot find module '/Users/dt_flys/Projects/shakeink-desktop/scripts/macos-adhoc.mjs' imported from /Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-adhoc.test.ts"
+  code: 'ERR_MODULE_NOT_FOUND'
+  stack: |-
+    finalizeResolution (node:internal/modules/esm/resolve:271:11)
+    moduleResolve (node:internal/modules/esm/resolve:865:10)
+    defaultResolve (node:internal/modules/esm/resolve:992:11)
+    #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+    #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+    nextStep (node:internal/modules/customization_hooks:189:26)
+    resolveBaseSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)
+    resolveDirectorySync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)
+    resolveTsPathsSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)
+    resolve (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832)
+  ...
+# Subtest: ADH-03/04 signing is stage-bounded and completes architecture preflight before writing
+not ok 5 - ADH-03/04 signing is stage-bounded and completes architecture preflight before writing
+  ---
+  duration_ms: 1.158625
+  type: 'test'
+  location: '/Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-adhoc.test.ts:2:7049'
+  failureType: 'testCodeFailure'
+  error: "Cannot find module '/Users/dt_flys/Projects/shakeink-desktop/scripts/macos-adhoc.mjs' imported from /Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-adhoc.test.ts"
+  code: 'ERR_MODULE_NOT_FOUND'
+  stack: |-
+    finalizeResolution (node:internal/modules/esm/resolve:271:11)
+    moduleResolve (node:internal/modules/esm/resolve:865:10)
+    defaultResolve (node:internal/modules/esm/resolve:992:11)
+    #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+    #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+    nextStep (node:internal/modules/customization_hooks:189:26)
+    resolveBaseSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)
+    resolveDirectorySync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)
+    resolveTsPathsSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)
+    resolve (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832)
+  ...
+# Subtest: ADH-04 signs inner code before bundles/top-level, explicitly non-runtime and no deep signing
+not ok 6 - ADH-04 signs inner code before bundles/top-level, explicitly non-runtime and no deep signing
+  ---
+  duration_ms: 1.207917
+  type: 'test'
+  location: '/Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-adhoc.test.ts:2:7935'
+  failureType: 'testCodeFailure'
+  error: "Cannot find module '/Users/dt_flys/Projects/shakeink-desktop/scripts/macos-adhoc.mjs' imported from /Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-adhoc.test.ts"
+  code: 'ERR_MODULE_NOT_FOUND'
+  stack: |-
+    finalizeResolution (node:internal/modules/esm/resolve:271:11)
+    moduleResolve (node:internal/modules/esm/resolve:865:10)
+    defaultResolve (node:internal/modules/esm/resolve:992:11)
+    #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+    #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+    nextStep (node:internal/modules/customization_hooks:189:26)
+    resolveBaseSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)
+    resolveDirectorySync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)
+    resolveTsPathsSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)
+    resolve (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832)
+  ...
+# Subtest: ADH-04 midway signing failure halts later signatures and independent verification
+not ok 7 - ADH-04 midway signing failure halts later signatures and independent verification
+  ---
+  duration_ms: 1.086916
+  type: 'test'
+  location: '/Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-adhoc.test.ts:2:9608'
+  failureType: 'testCodeFailure'
+  error: "Cannot find module '/Users/dt_flys/Projects/shakeink-desktop/scripts/macos-adhoc.mjs' imported from /Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-adhoc.test.ts"
+  code: 'ERR_MODULE_NOT_FOUND'
+  stack: |-
+    finalizeResolution (node:internal/modules/esm/resolve:271:11)
+    moduleResolve (node:internal/modules/esm/resolve:865:10)
+    defaultResolve (node:internal/modules/esm/resolve:992:11)
+    #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+    #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+    nextStep (node:internal/modules/customization_hooks:189:26)
+    resolveBaseSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)
+    resolveDirectorySync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)
+    resolveTsPathsSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)
+    resolve (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832)
+  ...
+# Subtest: ADH-05 every object is independently verified; bad identity/runtime/entitlements/seal/arch rejects at its gate
+not ok 8 - ADH-05 every object is independently verified; bad identity/runtime/entitlements/seal/arch rejects at its gate
+  ---
+  duration_ms: 0.747709
+  type: 'test'
+  location: '/Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-adhoc.test.ts:2:10333'
+  failureType: 'testCodeFailure'
+  error: "Cannot find module '/Users/dt_flys/Projects/shakeink-desktop/scripts/macos-adhoc.mjs' imported from /Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-adhoc.test.ts"
+  code: 'ERR_MODULE_NOT_FOUND'
+  stack: |-
+    finalizeResolution (node:internal/modules/esm/resolve:271:11)
+    moduleResolve (node:internal/modules/esm/resolve:865:10)
+    defaultResolve (node:internal/modules/esm/resolve:992:11)
+    #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+    #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+    nextStep (node:internal/modules/customization_hooks:189:26)
+    resolveBaseSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)
+    resolveDirectorySync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)
+    resolveTsPathsSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)
+    resolve (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832)
+  ...
+# Subtest: ADH-04 refuses excessive signing entitlement before any mutation
+not ok 9 - ADH-04 refuses excessive signing entitlement before any mutation
+  ---
+  duration_ms: 2.249667
+  type: 'test'
+  location: '/Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-adhoc.test.ts:2:12047'
+  failureType: 'testCodeFailure'
+  error: "Cannot find module '/Users/dt_flys/Projects/shakeink-desktop/scripts/macos-adhoc.mjs' imported from /Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-adhoc.test.ts"
+  code: 'ERR_MODULE_NOT_FOUND'
+  stack: |-
+    finalizeResolution (node:internal/modules/esm/resolve:271:11)
+    moduleResolve (node:internal/modules/esm/resolve:865:10)
+    defaultResolve (node:internal/modules/esm/resolve:992:11)
+    #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+    #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+    nextStep (node:internal/modules/customization_hooks:189:26)
+    resolveBaseSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)
+    resolveDirectorySync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)
+    resolveTsPathsSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)
+    resolve (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832)
+  ...
+# Subtest: ADH-06/07 DMG creation stays in own stage, never overwrites and verifies UDZO without signing container
+not ok 10 - ADH-06/07 DMG creation stays in own stage, never overwrites and verifies UDZO without signing container
+  ---
+  duration_ms: 1.132667
+  type: 'test'
+  location: '/Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-adhoc.test.ts:2:12595'
+  failureType: 'testCodeFailure'
+  error: "Cannot find module '/Users/dt_flys/Projects/shakeink-desktop/scripts/macos-adhoc.mjs' imported from /Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-adhoc.test.ts"
+  code: 'ERR_MODULE_NOT_FOUND'
+  stack: |-
+    finalizeResolution (node:internal/modules/esm/resolve:271:11)
+    moduleResolve (node:internal/modules/esm/resolve:865:10)
+    defaultResolve (node:internal/modules/esm/resolve:992:11)
+    #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+    #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+    nextStep (node:internal/modules/customization_hooks:189:26)
+    resolveBaseSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)
+    resolveDirectorySync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)
+    resolveTsPathsSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)
+    resolve (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832)
+  ...
+# Subtest: ADH-07 inner mounted verification failure detaches, and detach failure preserves the mount directory
+not ok 11 - ADH-07 inner mounted verification failure detaches, and detach failure preserves the mount directory
+  ---
+  duration_ms: 0.999875
+  type: 'test'
+  location: '/Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-adhoc.test.ts:2:14003'
+  failureType: 'testCodeFailure'
+  error: "Cannot find module '/Users/dt_flys/Projects/shakeink-desktop/scripts/macos-adhoc.mjs' imported from /Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-adhoc.test.ts"
+  code: 'ERR_MODULE_NOT_FOUND'
+  stack: |-
+    finalizeResolution (node:internal/modules/esm/resolve:271:11)
+    moduleResolve (node:internal/modules/esm/resolve:865:10)
+    defaultResolve (node:internal/modules/esm/resolve:992:11)
+    #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+    #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+    nextStep (node:internal/modules/customization_hooks:189:26)
+    resolveBaseSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)
+    resolveDirectorySync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)
+    resolveTsPathsSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)
+    resolve (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832)
+  ...
+# Subtest: ADH-07 verifyAdhocDmg enters real mounted app validation and propagates failure before resource probing
+not ok 12 - ADH-07 verifyAdhocDmg enters real mounted app validation and propagates failure before resource probing
+  ---
+  duration_ms: 1.192042
+  type: 'test'
+  location: '/Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-adhoc.test.ts:2:15582'
+  failureType: 'testCodeFailure'
+  error: "Cannot find module '/Users/dt_flys/Projects/shakeink-desktop/scripts/macos-adhoc.mjs' imported from /Users/dt_flys/Projects/shakeink-desktop/tests/unit/macos-adhoc.test.ts"
+  code: 'ERR_MODULE_NOT_FOUND'
+  stack: |-
+    finalizeResolution (node:internal/modules/esm/resolve:271:11)
+    moduleResolve (node:internal/modules/esm/resolve:865:10)
+    defaultResolve (node:internal/modules/esm/resolve:992:11)
+    #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+    #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+    nextStep (node:internal/modules/customization_hooks:189:26)
+    resolveBaseSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)
+    resolveDirectorySync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)
+    resolveTsPathsSync (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)
+    resolve (file:///Users/dt_flys/Projects/shakeink-desktop/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832)
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 0
+# fail 12
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 230.625833

@@ -27,13 +27,14 @@ test("IPC-01: built worker executes original local handlers with no HTTP server 
   }
   try {
     await rpc.call("ready")
-    assert.deepEqual((await request("/api/novels")).data, { novels: [] })
+    assert.deepEqual((await request("/api/novels")).data, { novels: [], unavailableWorks: [] })
     await assert.rejects(rpc.call("start", { version: 1, id: randomUUID(), path: "/api/../state.json", method: "GET", headers: {} }))
     await assert.rejects(rpc.call("read-file", { path: "state.json" }), /未知/)
     const directory = join(root, "author-work"); await mkdir(directory)
     const grants = new DirectoryAuthority(); const grant = await grants.issue(directory, "create-work", "fixture-main")
     const created = await rpc.call<{ novel: { id: string } }>("create-work", { selection: await grants.consume(grant.id, "create-work", "fixture-main"), input: { title: "真正的原组件数据", requestId: "worker-create-fixture" } })
-    assert.equal((await request("/api/novels")).data.novels.length, 1)
+    const listed=await request("/api/novels")
+    assert.equal(listed.data.novels.length, 1);assert.deepEqual(listed.data.unavailableWorks, [])
     const theme = await request(`/api/novels/${created.novel.id}/theme`)
     assert.equal(theme.status, 200); assert.equal(theme.data.theme.title, "真正的原组件数据")
     await assert.rejects(request("/api/novels/unknown-work/theme"), /未关联/)

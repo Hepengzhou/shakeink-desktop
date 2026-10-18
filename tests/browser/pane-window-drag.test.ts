@@ -28,6 +28,7 @@ const bundle = build({ stdin: { loader: "tsx", resolveDir: process.cwd(), conten
 import React from 'react'; import {createRoot} from 'react-dom/client'; import {flushSync} from 'react-dom';
 import {QueryClient,QueryClientProvider} from '@tanstack/react-query';
 import {PanelLeft,PanelRight,MessageSquare} from 'lucide-react';
+import {NavigationLabel} from './src/components/layout/NavigationLabel';
 import {ContentTabs} from './src/components/layout/ContentTabs';
 import {SidebarWindowControls} from './src/components/desktop/WindowControls';
 import {useTabsStore} from './src/stores/tabs'; import {useDesktopStore} from './src/stores/desktop';

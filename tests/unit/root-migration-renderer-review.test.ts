@@ -34,23 +34,24 @@ test('U71-02: actual DesktopApp pending-cancel branch retains its dialog on fail
  };visit(file);assert.ok(effect);assert.equal(dialogs.length,1,'Select the actual migrationPending open expression rather than the last Dialog in the source');const dialog=dialogs[0]
  const listeners=new Set<(value:DesktopEvent)=>void>(),calls:string[]=[],errors:string[]=[],bootstrap=Promise.withResolvers<never>();let retry=Promise.withResolvers<void>()
  const bridge={bootstrap:()=>bootstrap.promise,subscribe:(callback:(value:DesktopEvent)=>void)=>{listeners.add(callback);return()=>listeners.delete(callback)},migrateRoot:async(action:string)=>{calls.push(action);return retry.promise}}
- const dependencies={window:{desktop:bridge,addEventListener(){},removeEventListener(){}},browserSessionStorage:()=>null,installDesktopTransport(){},queryClient:{},closingRef:{current:false},leasePendingRef:{current:false},drafts:{current:null},
+ const migrationRef={current:false}
+ const dependencies={window:{desktop:bridge,addEventListener(){},removeEventListener(){}},browserSessionStorage:()=>null,installDesktopTransport(){},queryClient:{},closingRef:{current:false},leasePendingRef:{current:false},migrationRef,guideRef:{current:false},recoveryRef:{current:false},startGuide(){},drafts:{current:null},
   useDesktopStore:{setState(){}},receiveDesktopState(){},toast:{error:(value:string)=>errors.push(value),info(){}},useChatStore:{getState(){return{}}},
  }
  const code=`let restorePending=false,retryingRestore=false;const setRestorePending=value=>restorePending=value,setRetryingRestore=value=>retryingRestore=value;
  let closing=false,migrationPending=false,retryingMigration=false,leasePending=false;const setClosing=value=>closing=value,setMigrationPending=value=>migrationPending=value,setRetryingMigration=value=>retryingMigration=value,setLeasePending=value=>leasePending=value;
- const setError=()=>{},setSettingsSection=()=>{},setSettingsOpen=()=>{},setRecoveryOpen=()=>{},setModelRequired=()=>{};
+ const setError=()=>{},setSettingsSection=()=>{},setSettingsOpen=()=>{},setTemplatesOpen=()=>{},setRecoveryOpen=()=>{},setModelRequired=()=>{};
  const effect=${effect};const cleanup=effect();return{view:()=>${dialog},cleanup};`
  const module={exports:{}};const compiled=transformSync(code,{loader:'tsx',jsx:'automatic',format:'cjs'}).code
  const result=new Function('module','exports','require',...Object.keys(dependencies),'Dialog','DialogContent','DialogTitle','DialogDescription','Button','Loader2',compiled)(module,module.exports,(id:string)=>{assert.equal(id,'react/jsx-runtime');return jsx},...Object.values(dependencies),'Dialog','DialogContent','DialogTitle','DialogDescription','Button','Loader2') as {view():Element;cleanup():void}
  const emit=(value:DesktopEvent)=>listeners.forEach(callback=>callback(value))
  const retryButton=()=>{const dialog=result.view(),children=dialog.props.children.props.children as Element[];return children.find(item=>item.type==='Button')!}
  try{
-  emit({type:'migration-cancel-pending'});assert.equal(result.view().props.open,true);assert.match(text(result.view()),/迁移取消尚未保存/);assert.match(text(result.view()),/取消成功前/);assert.equal(retryButton().props.disabled,false)
+  assert.equal(migrationRef.current,false);emit({type:'migration-cancel-pending'});assert.equal(migrationRef.current,true);assert.equal(result.view().props.open,true);assert.match(text(result.view()),/迁移取消尚未保存/);assert.match(text(result.view()),/取消成功前/);assert.equal(retryButton().props.disabled,false)
   const first=retryButton().props.onClick();assert.deepEqual(calls,['cancel']);assert.equal(retryButton().props.disabled,true);retry.reject(Error('private filesystem failure'));await first
   assert.equal(result.view().props.open,true);assert.equal(retryButton().props.disabled,false);assert.deepEqual(errors,['取消状态仍未保存，请检查目录权限后重试。']);assert.doesNotMatch(text(result.view()),/private filesystem failure/)
   retry=Promise.withResolvers<void>();const second=retryButton().props.onClick();retry.resolve();await second;assert.equal(result.view().props.open,true,'returned cancellation promise alone must not imply confirmed business reopen')
-  emit({type:'close-cancelled'});assert.equal(result.view().props.open,false);assert.deepEqual(calls,['cancel','cancel'])
+  emit({type:'close-cancelled'});assert.equal(migrationRef.current,false);assert.equal(result.view().props.open,false);assert.deepEqual(calls,['cancel','cancel'])
   emit({type:'work-lease-pending'});emit({type:'migration-cancel-pending'});assert.equal(result.view().props.open,false,'The work lease guard owns its separate dialog even if a migration event arrives later')
  }finally{result.cleanup();assert.equal(listeners.size,0)}
 })

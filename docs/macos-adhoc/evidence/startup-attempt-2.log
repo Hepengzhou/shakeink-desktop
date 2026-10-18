@@ -1,0 +1,1 @@
+{"passed":false,"report":"/Users/dt_flys/Projects/shakeink-desktop/release/adhoc-macos-arm64-27fa8867-ecd9-4686-a30c-0851e34be0d0/startup-33cd7ee1-7757-4337-9438-51a66a370ef8.json","error":"locator.waitFor: Timeout 90000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: '账号菜单', includeHidden: true })\u001b[22m\n"}

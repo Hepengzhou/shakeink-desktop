@@ -9,6 +9,10 @@ import postcss from 'postcss'
 import tailwindcss from '@tailwindcss/postcss'
 import {chromium,type Browser,type Page} from 'playwright-core'
 
+const nativeUndo=process.platform==='darwin'?'Meta+z':'Control+z'
+const nativeRedo=process.platform==='win32'?'Control+y':process.platform==='darwin'?'Meta+Shift+z':'Control+Shift+z'
+const nativeSelectAll=process.platform==='darwin'?'Meta+a':'Control+a'
+
 // Reuse the existing declared HTTP-only fixture, while mounting the full real
 // ChatPanel + Controller. Menu/clipboard IPC are in-memory here; real native
 // menu/clipboard acceptance is a separate Windows runner.
@@ -69,8 +73,8 @@ test('TCM10/11 full ChatPanel quote preserves old chip and native undo, no model
  assert.equal(draft,initial+'\n\n> Selected user text\n\n');assert.ok(await page.evaluate(()=>(window as any).f.sameEditor()&&(window as any).f.sameChip()))
  assert.ok(await page.getByTestId('composer-editor').evaluate(el=>el===document.activeElement))
  assert.deepEqual(await page.evaluate(()=>(window as any).f.calls.filter((call:any)=>call.method==='POST')),[])
- await page.getByTestId('composer-editor').press('Control+z');await frames(page);assert.equal(await page.evaluate(()=>(window as any).f.state().draft),initial)
- await page.getByTestId('composer-editor').press('Control+y');await frames(page);assert.equal(await page.evaluate(()=>(window as any).f.state().draft),draft)
+ await page.getByTestId('composer-editor').press(nativeUndo);await frames(page);assert.equal(await page.evaluate(()=>(window as any).f.state().draft),initial)
+ await page.getByTestId('composer-editor').press(nativeRedo);await frames(page);assert.equal(await page.evaluate(()=>(window as any).f.state().draft),draft)
 }))
 test('TCM06/07 ordinary and special real controls copy/cut/paste with React state',{timeout:180000},()=>scenario(async page=>{
  const request=await menu(page,'#text-input');assert.equal(request.kind,'input');assert.equal(request.commands['text.cut'],true)
@@ -133,7 +137,7 @@ test('TCM06/08 textarea and both contenteditable modes use native changes and hi
 }))
 test('TCM07/08 structured inputs copy their actual native selection including disabled sources',{timeout:180000},()=>scenario(async page=>{
  for(const type of ['email','number','date','datetime-local','month','week','time']){
-  const source=page.locator('#special-'+type);await source.scrollIntoViewIfNeeded();await source.focus();await page.keyboard.press('Control+a');await frames(page)
+  const source=page.locator('#special-'+type);await source.scrollIntoViewIfNeeded();await source.focus();await page.keyboard.press(nativeSelectAll);await frames(page)
   const selected=await page.evaluate(()=>document.getSelection()?.toString()??'');const before=await count(page);await source.click({button:'right',position:{x:20,y:15}});await page.waitForFunction(before=>(window as any).f.menus.length>before,before)
   const request=await page.evaluate(()=>(window as any).f.menus.at(-1));assert.equal(request.kind,'input');assert.equal(request.commands['text.copy'],!!selected,type)
   const rightSelection=await page.evaluate(()=>document.getSelection()?.toString()??'')

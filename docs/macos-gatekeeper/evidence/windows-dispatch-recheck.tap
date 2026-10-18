@@ -1,0 +1,10 @@
+Retained independent Windows dispatch fixture: /var/folders/xj/5c__pm_j6s74shtqfcbg87640000gn/T/xuanxiang-packaging-win-dispatch113-zRR05v
+✔ PK113-R03 actual installed Windows dispatch edits product resources while code signing stays disabled (747.607458ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 910.852917

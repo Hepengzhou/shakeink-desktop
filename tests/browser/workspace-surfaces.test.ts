@@ -54,6 +54,7 @@ const stylesheet = postcss([tailwindcss()]).process(readFileSync(cssPath, "utf8"
   readFileSync("node_modules/monaco-editor/esm/vs/editor/browser/viewParts/margin/margin.css", "utf8"),
 ].join("\n"))
 const chat = `import React from 'react';import {PanelLeft,PanelRight,MessageSquare} from 'lucide-react';import {useDesktopStore} from './src/stores/desktop';
+import {NavigationLabel} from './src/components/layout/NavigationLabel';
 export function ChatPanel({sidebarHidden=true,contentHidden=true,onShowSidebar,onShowContent}) {
  const desktopBootstrap=useDesktopStore(s=>s.bootstrap),messages=[],currentConversation=null;
  return <div className='chatpane flex h-full flex-col bg-chat-bg'><div data-chat-header className='contents'>${header}</div>

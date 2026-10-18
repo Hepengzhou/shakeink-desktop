@@ -9,6 +9,7 @@ import {DesktopRecoveryStore,type RecoveryItem} from '../../src/lib/desktop/draf
 import {DesktopSaveCoordinator} from '../../src/lib/desktop/save-coordinator'
 import {recoveryPreview} from '../../src/lib/desktop/recovery-preview'
 import {draftSnapshotSchema} from '../../desktop/shared/drafts'
+import {modelOnboardingNeeded,onboardingCanShow} from '../../src/lib/desktop/onboarding-flow'
 
 function ast(path:string){return ts.createSourceFile(path,readFileSync(path,'utf8'),ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX)}
 function declaration(path:string,name:string){const source=ast(path),node=source.statements.find(row=>ts.isFunctionDeclaration(row)&&row.name?.text===name);assert.ok(node);return node.getText(source).replace(/^export\s+(?:default\s+)?/,'')}
@@ -37,15 +38,18 @@ function draftFixture(){
  return{RecoveryDialog,props:{open:true,onOpenChange(){}},store,records,copied,exports,get mountedBackups(){return mountedBackups}}
 }
 function appFixture(){
+ const appPath='src/components/desktop/DesktopApp.tsx',appSource=ast(appPath),appNode=appSource.statements.find(row=>ts.isFunctionDeclaration(row)&&row.name?.text==='DesktopApp');assert.ok(appNode)
+ const refNames:string[]=[];const collectRefs=(node:ts.Node)=>{if(ts.isVariableDeclaration(node)&&node.initializer&&ts.isCallExpression(node.initializer)&&node.initializer.expression.getText(appSource)==='useRef')refNames.push(node.name.getText(appSource));ts.forEachChild(node,collectRefs)};collectRefs(appNode)
+ assert.equal(refNames.filter(name=>name==='drafts').length,1,'The actual DesktopApp has one drafts ref');const draftsIndex=refNames.indexOf('drafts')
  const states:unknown[]=[],refs:Array<{current:unknown}>=[],effects:Array<()=>unknown>=[],notifications:string[]=[],migrationCalls:string[]=[],commands:Record<string,{enabled():boolean;run():Promise<void>}>={}
  let stateIndex=0,refIndex=0,business=0,saved=0,subscriber:((event:unknown)=>void)|undefined
  const bootstrap={platform:'win32',settings:{user:{penName:'本地作者',email:''},agent:{},appearance:{}},models:[]},useDesktopStore=Object.assign((select:(value:{bootstrap:typeof bootstrap})=>unknown)=>select({bootstrap}),{getState:()=>({bootstrap}),setState(){}})
  const window={desktop:{bootstrap:()=>new Promise(()=>{}),subscribe:(listener:(event:unknown)=>void)=>{subscriber=listener;return()=>{}},migrateRoot:async(action:string)=>{migrationCalls.push(action)}},addEventListener(){},removeEventListener(){}}
- const deps={React,...primitives,useDesktopStore,window,useState(initial:unknown){const index=stateIndex++;if(!(index in states))states[index]=initial;return[states[index],(value:unknown)=>{states[index]=value}]},useRef(initial:unknown){const index=refIndex++;return refs[index]??(refs[index]={current:initial})},useEffect:(effect:()=>unknown)=>{effects.push(effect)},useTheme:()=>({setTheme(){}}),useQueryClient:()=>({invalidateQueries:async()=>{}}),useDesktopCommands:(value:typeof commands)=>Object.assign(commands,value),useTabsStore:{getState:()=>({activeTabId:'chapter'})},useChatStore:{getState:()=>({}),setState(){}},installDesktopTransport(){},browserSessionStorage:()=>null,WindowsMenuControl:()=>null,WorkLeasePendingDialog:()=>null,DesktopCommandController:()=>null,DesktopNavigation:()=>null,DashboardShell:()=>{business++;return React.createElement('main',{'data-original-workbench':true})},TemplateManagementDialog:()=>null,SettingsDialog:()=>null,ModelRequiredDialog:()=>null,RecoveryDialog:()=>null,Loader2:()=>React.createElement('svg'),toast:{error:(text:string)=>notifications.push(text),success:(text:string)=>notifications.push(text),info:(text:string)=>notifications.push(text)}}
- const App=evaluate(`return (${declaration('src/components/desktop/DesktopApp.tsx','DesktopApp')})`,deps)
+ const deps={React,...primitives,useDesktopStore,window,useState(initial:unknown){const index=stateIndex++;if(!(index in states))states[index]=initial;return[states[index],(value:unknown)=>{states[index]=value}]},useRef(initial:unknown){const index=refIndex++;return refs[index]??(refs[index]={current:initial})},useEffect:(effect:()=>unknown)=>{effects.push(effect)},useTheme:()=>({setTheme(){}}),useQueryClient:()=>({invalidateQueries:async()=>{}}),useDesktopCommands:(value:typeof commands)=>Object.assign(commands,value),useTabsStore:{getState:()=>({activeTabId:'chapter'})},useChatStore:{getState:()=>({}),setState(){}},installDesktopTransport(){},browserSessionStorage:()=>null,modelOnboardingNeeded,onboardingCanShow,OnboardingController:()=>null,WindowsMenuControl:()=>null,WorkLeasePendingDialog:()=>null,DesktopCommandController:()=>null,DesktopNavigation:()=>null,DashboardShell:()=>{business++;return React.createElement('main',{'data-original-workbench':true})},TemplateManagementDialog:()=>null,SettingsDialog:()=>null,ModelRequiredDialog:()=>null,RecoveryDialog:()=>null,Loader2:()=>React.createElement('svg'),toast:{error:(text:string)=>notifications.push(text),success:(text:string)=>notifications.push(text),info:(text:string)=>notifications.push(text)}}
+ const App=evaluate(`return (${declaration(appPath,'DesktopApp')})`,deps)
  const render=()=>{stateIndex=0;refIndex=0;effects.length=0;return App()}
  render();const cleanup=effects[1]();assert.ok(subscriber)
- return{render,notifications,migrationCalls,commands,emit:(event:unknown)=>subscriber!(event),attachDraft(){refs[1].current={flush:async()=>{saved++}}},get saved(){return saved},get business(){return business},close:()=>{if(typeof cleanup==='function')cleanup()}}
+ return{render,notifications,migrationCalls,commands,emit:(event:unknown)=>subscriber!(event),attachDraft(){assert.ok(refs[draftsIndex]);refs[draftsIndex].current={flush:async()=>{saved++}}},get saved(){return saved},get business(){return business},close:()=>{if(typeof cleanup==='function')cleanup()}}
 }
 
 test('BRUI-01 actual settings general page removes backup controls and keeps draft viewing plus directory migration',{timeout:15000},()=>{

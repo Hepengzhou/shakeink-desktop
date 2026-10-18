@@ -45,7 +45,9 @@ test('PK113-R02 installed builder excludes project database files within the exp
 })
 
 test('PK113-R03 actual installed Windows dispatch edits product resources while code signing stays disabled',async()=>{
- const config=require(join(project,'electron-builder.config.cjs')),{WinPackager}=require('app-builder-lib'),{Arch}=require('builder-util')
+ const{createPackagingConfiguration}=await import('../../scripts/macos-release.mjs')
+ const config=createPackagingConfiguration(require(join(project,'electron-builder.config.cjs')),{platform:'win32'}),{WinPackager}=require('app-builder-lib'),{Arch}=require('builder-util')
+ assert.equal(config.forceCodeSigning,false,'use the same Windows configuration branch as the packaging entry')
  const fixture=await mkdtemp(join(tmpdir(),'xuanxiang-packaging-win-dispatch113-')),file=join(fixture,'玄印写作.exe'),edited:string[]=[]
  await writeFile(file,'isolated dispatch sentinel, not a runnable PE')
  console.log('Retained independent Windows dispatch fixture:',fixture)

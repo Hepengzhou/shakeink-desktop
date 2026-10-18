@@ -54,10 +54,12 @@ test('CFG58-04 actual repository credential replacement makes the reviewed publi
  try{
   const saved=model(),{id:_id,authRevision:_revision,keyMask:_mask,...draft}=saved
   const before=await repo.saveModel(0,{...draft,apiKey:'isolated-initial'}),source=current();source.settings.appearance.theme='ink'
-  const plan=prepareConfigurationImport(exportConfiguration(source),before)
+  const beforeTransfer:ConfigurationSnapshot={revision:before.revision,settings:before.settings,models:before.models}
+  const plan=prepareConfigurationImport(exportConfiguration(source),beforeTransfer)
   await repo.saveModel(before.revision,{...draft,id:before.models[0].id,apiKey:'isolated-replacement'})
   const currentSnapshot=await repo.read(),diskBefore=await readFile(path,'utf8')
-  assert.throws(()=>resolveConfigurationImport(plan,currentSnapshot,{selectedPaths:['/appearance/theme']}),RevisionConflict)
+  const currentTransfer:ConfigurationSnapshot={revision:currentSnapshot.revision,settings:currentSnapshot.settings,models:currentSnapshot.models}
+  assert.throws(()=>resolveConfigurationImport(plan,currentTransfer,{selectedPaths:['/appearance/theme']}),RevisionConflict)
   assert.equal(await readFile(path,'utf8'),diskBefore)
   assert.equal(await repo.keyFor(currentSnapshot.models[0].id,currentSnapshot.models[0].authRevision),'isolated-replacement')
   assert.equal(currentSnapshot.settings.appearance.theme,'paper')

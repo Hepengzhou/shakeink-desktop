@@ -1,0 +1,220 @@
+TAP version 13
+# Subtest: ADH-01 host/arguments are restricted before any write
+ok 1 - ADH-01 host/arguments are restricted before any write
+  ---
+  duration_ms: 6.684834
+  type: 'test'
+  ...
+# Subtest: ADH-02 derived config is dir-only and cannot weaken the original release path
+ok 2 - ADH-02 derived config is dir-only and cannot weaken the original release path
+  ---
+  duration_ms: 24.804833
+  type: 'test'
+  ...
+# Subtest: ADH-03 scans all native files and nested bundles while allowing Framework version links
+ok 3 - ADH-03 scans all native files and nested bundles while allowing Framework version links
+  ---
+  duration_ms: 42.798833
+  type: 'test'
+  ...
+# Subtest: ADH-03 scan rejects external, dangling, cyclic links and symlink roots
+ok 4 - ADH-03 scan rejects external, dangling, cyclic links and symlink roots
+  ---
+  duration_ms: 95.365417
+  type: 'test'
+  ...
+# Subtest: ADH-03/04 signing is stage-bounded and completes architecture preflight before writing
+ok 5 - ADH-03/04 signing is stage-bounded and completes architecture preflight before writing
+  ---
+  duration_ms: 29.970583
+  type: 'test'
+  ...
+# Subtest: ADH-04 signs inner code before bundles/top-level, explicitly non-runtime and no deep signing
+ok 6 - ADH-04 signs inner code before bundles/top-level, explicitly non-runtime and no deep signing
+  ---
+  duration_ms: 47.057833
+  type: 'test'
+  ...
+# Subtest: ADH-04 midway signing failure halts later signatures and independent verification
+ok 7 - ADH-04 midway signing failure halts later signatures and independent verification
+  ---
+  duration_ms: 36.33025
+  type: 'test'
+  ...
+# Subtest: ADH-05 every object is independently verified; bad identity/runtime/entitlements/seal/arch rejects at its gate
+ok 8 - ADH-05 every object is independently verified; bad identity/runtime/entitlements/seal/arch rejects at its gate
+  ---
+  duration_ms: 102.577667
+  type: 'test'
+  ...
+# Subtest: ADH-05 legal zero-resource nested Helper seal is allowed; top application still needs sealed resources
+ok 9 - ADH-05 legal zero-resource nested Helper seal is allowed; top application still needs sealed resources
+  ---
+  duration_ms: 40.200292
+  type: 'test'
+  ...
+# Subtest: ADH-04 refuses excessive signing entitlement before any mutation
+ok 10 - ADH-04 refuses excessive signing entitlement before any mutation
+  ---
+  duration_ms: 24.781542
+  type: 'test'
+  ...
+# Subtest: ADH-06/07 DMG creation stays in own stage, never overwrites and verifies UDZO without signing container
+ok 11 - ADH-06/07 DMG creation stays in own stage, never overwrites and verifies UDZO without signing container
+  ---
+  duration_ms: 22.441917
+  type: 'test'
+  ...
+# Subtest: ADH-07 inner mounted verification failure detaches, and detach failure preserves the mount directory
+ok 12 - ADH-07 inner mounted verification failure detaches, and detach failure preserves the mount directory
+  ---
+  duration_ms: 12.651625
+  type: 'test'
+  ...
+# Subtest: ADH-07 verifyAdhocDmg enters real mounted app validation and propagates failure before resource probing
+ok 13 - ADH-07 verifyAdhocDmg enters real mounted app validation and propagates failure before resource probing
+  ---
+  duration_ms: 8.871291
+  type: 'test'
+  ...
+# Subtest: ADH-06 actual container signature is read; signed or uncertain tools never report unsigned
+ok 14 - ADH-06 actual container signature is read; signed or uncertain tools never report unsigned
+  ---
+  duration_ms: 51.153459
+  type: 'test'
+  ...
+# Subtest: MACREL-02 actual release policy rejects unknown/ambiguous targets and preserves Windows
+ok 15 - MACREL-02 actual release policy rejects unknown/ambiguous targets and preserves Windows
+  ---
+  duration_ms: 32.594125
+  type: 'test'
+  ...
+# Subtest: MACREL-03 identity parsing requires valid Developer ID and a unique selection
+ok 16 - MACREL-03 identity parsing requires valid Developer ID and a unique selection
+  ---
+  duration_ms: 1.379042
+  type: 'test'
+  ...
+# Subtest: MACREL-04 preflight fails closed before build and never exposes credential error text
+ok 17 - MACREL-04 preflight fails closed before build and never exposes credential error text
+  ---
+  duration_ms: 2.327208
+  type: 'test'
+  ...
+# Subtest: MACREL-05 scans all native code and executes Apple trust gates with external Team
+ok 18 - MACREL-05 scans all native code and executes Apple trust gates with external Team
+  ---
+  duration_ms: 19.657417
+  type: 'test'
+  ...
+# Subtest: MACREL-05 nested wrong Team, excess entitlements, architecture and OS gate failures reject
+ok 19 - MACREL-05 nested wrong Team, excess entitlements, architecture and OS gate failures reject
+  ---
+  duration_ms: 39.931584
+  type: 'test'
+  ...
+# Subtest: MACREL-09 raw ZIP path, duplicate, collision and link graph attacks fail before extraction
+ok 20 - MACREL-09 raw ZIP path, duplicate, collision and link graph attacks fail before extraction
+  ---
+  duration_ms: 17.039125
+  type: 'test'
+  ...
+# Subtest: MACREL-09 local-header path disagreement and ZIP64 fail closed
+ok 21 - MACREL-09 local-header path disagreement and ZIP64 fail closed
+  ---
+  duration_ms: 3.351125
+  type: 'test'
+  ...
+# Subtest: MACREL-07 real final metadata and every block are independently verified
+ok 22 - MACREL-07 real final metadata and every block are independently verified
+  ---
+  duration_ms: 53.219916
+  type: 'test'
+  ...
+# Subtest: MACREL-07 metadata rejects symlink files, traversal and damaged blockmaps
+ok 23 - MACREL-07 metadata rejects symlink files, traversal and damaged blockmaps
+  ---
+  duration_ms: 7.927666
+  type: 'test'
+  ...
+# Subtest: MACREL-06/10 finalization only accepts Accepted and publishes after gates/final-byte metadata
+ok 24 - MACREL-06/10 finalization only accepts Accepted and publishes after gates/final-byte metadata
+  ---
+  duration_ms: 26.726875
+  type: 'test'
+  ...
+# Subtest: MACREL-06/08/10 rejected, pending, malformed, missing target or trust error never promotes
+ok 25 - MACREL-06/08/10 rejected, pending, malformed, missing target or trust error never promotes
+  ---
+  duration_ms: 16.197417
+  type: 'test'
+  ...
+# Subtest: MACREL-08 independent verification rejects manifest tampering and always reruns Apple checks
+ok 26 - MACREL-08 independent verification rejects manifest tampering and always reruns Apple checks
+  ---
+  duration_ms: 66.381833
+  type: 'test'
+  ...
+# Subtest: MACREL-05 missing timestamp/runtime/JIT, unsigned nested code, and escaping app links reject
+ok 27 - MACREL-05 missing timestamp/runtime/JIT, unsigned nested code, and escaping app links reject
+  ---
+  duration_ms: 31.684875
+  type: 'test'
+  ...
+# Subtest: MACREL-09 real ZIP CRC precedes ditto and inner trust; corrupt CRC stops before extraction
+ok 28 - MACREL-09 real ZIP CRC precedes ditto and inner trust; corrupt CRC stops before extraction
+  ---
+  duration_ms: 31.247834
+  type: 'test'
+  ...
+# Subtest: MACREL-10 DMG inner trust failure always detaches; failed detach retains its owned directory
+ok 29 - MACREL-10 DMG inner trust failure always detaches; failed detach retains its owned directory
+  ---
+  duration_ms: 25.440083
+  type: 'test'
+  ...
+# Subtest: MACREL-06/10 staple, ticket validation and actual metadata errors cannot create a successful release
+ok 30 - MACREL-06/10 staple, ticket validation and actual metadata errors cannot create a successful release
+  ---
+  duration_ms: 21.724
+  type: 'test'
+  ...
+# Subtest: MACREL-01 默认发布配置通过 v26 schema 并要求 macOS 签名公证，保持 Windows 与手动发布边界
+ok 31 - MACREL-01 默认发布配置通过 v26 schema 并要求 macOS 签名公证，保持 Windows 与手动发布边界
+  ---
+  duration_ms: 350.795791
+  type: 'test'
+  ...
+# Subtest: MACREL-01 应用与继承签名权限仅允许 V8 JIT，不全局放宽内存或库校验
+ok 32 - MACREL-01 应用与继承签名权限仅允许 V8 JIT，不全局放宽内存或库校验
+  ---
+  duration_ms: 0.920375
+  type: 'test'
+  ...
+# Subtest: 实际 builder 项目 matcher 保留所有必要入口与离线资源，排除作者数据和撤销入口
+ok 33 - 实际 builder 项目 matcher 保留所有必要入口与离线资源，排除作者数据和撤销入口
+  ---
+  duration_ms: 37.19225
+  type: 'test'
+  ...
+# Subtest: 生产依赖 matcher 不删 WASM/数据/许可证，也不默认收集源码映射
+ok 34 - 生产依赖 matcher 不删 WASM/数据/许可证，也不默认收集源码映射
+  ---
+  duration_ms: 0.621167
+  type: 'test'
+  ...
+# Subtest: 本地 Electron 预检真实版本/架构，架构或系统不匹配在 builder 前拒绝
+ok 35 - 本地 Electron 预检真实版本/架构，架构或系统不匹配在 builder 前拒绝
+  ---
+  duration_ms: 91.628083
+  type: 'test'
+  ...
+1..35
+# tests 35
+# suites 0
+# pass 35
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 837.341416

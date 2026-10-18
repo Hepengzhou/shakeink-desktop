@@ -1,0 +1,48 @@
+✖ MACREL-01 默认发布配置通过 v26 schema 并要求 macOS 签名公证，保持 Windows 与手动发布边界 (304.782542ms)
+✖ MACREL-01 应用与继承签名权限仅允许 V8 JIT，不全局放宽内存或库校验 (0.11775ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 756.699459
+
+✖ failing tests:
+
+test at tests/unit/packaging-config.test.ts:2:1869
+✖ MACREL-01 默认发布配置通过 v26 schema 并要求 macOS 签名公证，保持 Windows 与手动发布边界 (304.782542ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + null
+  - undefined
+  
+      at TestContext.<anonymous> (/Users/dt_flys/Projects/shakeink-desktop/tests/unit/packaging-config.test.ts:2:2413)
+      at Test.run (node:internal/test_runner/test:1332:7)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: undefined,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/unit/packaging-config.test.ts:2:3137
+✖ MACREL-01 应用与继承签名权限仅允许 V8 JIT，不全局放宽内存或库校验 (0.11775ms)
+  Error: ENOENT: no such file or directory, open '/Users/dt_flys/Projects/shakeink-desktop/build/entitlements.mac.plist'
+      at readFileSync (node:fs:441:20)
+      at TestContext.<anonymous> (/Users/dt_flys/Projects/shakeink-desktop/tests/unit/packaging-config.test.ts:2:3350)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/Users/dt_flys/Projects/shakeink-desktop/build/entitlements.mac.plist'
+  }

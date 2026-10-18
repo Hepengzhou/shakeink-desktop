@@ -11,20 +11,30 @@ const {validateConfiguration} = require('app-builder-lib/out/util/config/config.
 const {getMainFileMatchers, getNodeModuleFileMatcher} = require('app-builder-lib/out/fileMatcher.js')
 const debugLogger = {isEnabled: false}
 
-test('专用安装配置通过已安装 builder schema，禁止签名、公证和自动发布', async () => {
+test('MACREL-01 默认发布配置通过 v26 schema 并要求 macOS 签名公证，保持 Windows 与手动发布边界', async () => {
   const config = load()
   await validateConfiguration(config, debugLogger)
   assert.equal(config.appId, 'ink.shakeink.desktop')
   assert.equal(config.productName, '玄印写作')
   assert.equal(config.asar, false)
   assert.equal(config.directories.output, 'release')
-  assert.equal(config.mac.identity, null)
-  assert.equal(config.mac.notarize, false)
-  assert.equal(config.forceCodeSigning, false)
-  assert.equal(config.dmg.sign, false)
+  assert.equal(config.mac.identity, undefined)
+  assert.equal(config.mac.notarize, true)
+  assert.equal(config.forceCodeSigning, process.platform === 'darwin')
+  assert.equal(config.dmg.sign, true)
+  assert.equal(config.dmg.writeUpdateInfo, false)
+  assert.equal(config.mac.hardenedRuntime, true)
+  assert.equal(config.mac.entitlements, 'build/entitlements.mac.plist')
+  assert.equal(config.mac.entitlementsInherit, 'build/entitlements.mac.plist')
   assert.equal(config.publish, null)
   assert.equal(config.win.signAndEditExecutable, true)
   assert.equal(config.win.signExecutable, false)
+})
+
+test('MACREL-01 应用与继承签名权限仅允许 V8 JIT，不全局放宽内存或库校验', () => {
+  const bytes = readFileSync(join(project, 'build/entitlements.mac.plist'), 'utf8')
+  assert.match(bytes, /<key>com\.apple\.security\.cs\.allow-jit<\/key>\s*<true\s*\/>/)
+  assert.deepEqual([...bytes.matchAll(/<key>(.*?)<\/key>/g)].map(match => match[1]), ['com.apple.security.cs.allow-jit'])
 })
 
 test('实际 builder 项目 matcher 保留所有必要入口与离线资源，排除作者数据和撤销入口', () => {

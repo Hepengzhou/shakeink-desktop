@@ -1,0 +1,63 @@
+
+> shakeink@0.1.0-alpha package:adhoc:mac
+> node scripts/package-adhoc-macos.mjs --preflight && npm run build && node scripts/package-adhoc-macos.mjs
+
+{"stage":"adhoc-preflight","platform":"darwin","arch":"arm64","electron":"44.6.0","gatekeeper":"enabled","certificate":"not-used"}
+
+> shakeink@0.1.0-alpha build
+> npm run generate && npm run build:ui && npm run build:desktop
+
+
+> shakeink@0.1.0-alpha generate
+> prisma generate --schema prisma/schema.prisma
+
+Prisma schema loaded from prisma/schema.prisma.
+
+✔ Generated Prisma Client (7.8.0) to ./src/generated/prisma in 195ms
+
+
+> shakeink@0.1.0-alpha build:ui
+> next build
+
+▲ Next.js 16.2.10 (Turbopack)
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 7.0s
+  Running TypeScript ...
+  Finished TypeScript in 20.3s ...
+  Collecting page data using 4 workers ...
+  Generating static pages using 4 workers (0/3) ...
+✓ Generating static pages using 4 workers (3/3) in 199ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+└ ○ /_not-found
+
+
+○  (Static)  prerendered as static content
+
+
+> shakeink@0.1.0-alpha build:desktop
+> node scripts/build-desktop.mjs
+
+{"stage":"adhoc-build","platform":"darwin","arch":"arm64","electron":"44.6.0","notarized":false,"publish":"never"}
+  • electron-builder  version=26.15.3 os=27.0.0
+  • author is missed in the package.json  appPackageFile=/Users/dt_flys/Projects/shakeink-desktop/package.json
+  • skipped dependencies rebuild  reason=npmRebuild is set to false
+  • packaging       platform=darwin arch=arm64 electron=44.6.0 appOutDir=release/.staging/adhoc-arm64-glMb2L/build/mac-arm64
+  • using custom unpacked Electron distribution  electronDist=node_modules/electron/dist
+  • copying unpacked Electron  source=/Users/dt_flys/Projects/shakeink-desktop/node_modules/electron/dist/Electron.app destination=/Users/dt_flys/Projects/shakeink-desktop/release/.staging/adhoc-arm64-glMb2L/build/mac-arm64/Electron.app
+  • asar usage is disabled — this is strongly not recommended  solution=enable asar and use asarUnpack to unpack files that must be externally available
+  • searching for node modules  pm=npm searchDir=/Users/dt_flys/Projects/shakeink-desktop
+  • duplicate dependency references  dependencies=["@ai-sdk/provider@4.0.24","@ai-sdk/provider-utils@5.0.56","@ai-sdk/provider@4.0.24","@ai-sdk/provider-utils@5.0.56","@ai-sdk/provider@4.0.24","@types/react@19.3.0","react-dom@19.2.4","react-dom@19.2.4","react-dom@19.2.4","@dnd-kit/utilities@3.2.2","react-dom@19.2.4","@dnd-kit/core@6.3.1","@dnd-kit/utilities@3.2.2","@emnapi/wasi-threads@1.2.1","ajv@8.20.0","monaco-editor@0.56.0","react-dom@19.2.4","@emnapi/core@1.10.0","@emnapi/runtime@1.11.3","@tybys/wasm-util@0.10.4","prisma@7.8.0","@ai-sdk/provider-utils@5.0.56","@ai-sdk/provider@4.0.24","@ai-sdk/provider-utils@5.0.56","@ai-sdk/provider@4.0.24","@types/react@19.3.0","react-dom@19.2.4","react-dom@19.2.4","sharp@0.34.5","@prisma/client@7.8.0","effect@3.20.0","ajv@8.20.0","proper-lockfile@4.1.2","@types/react@19.3.0","@types/react@19.3.0","@types/react@19.3.0","react-dom@19.2.4","@types/react@19.3.0","@types/react@19.3.0","@types/react@19.3.0","@types/react@19.3.0","@types/react@19.3.0","react-dom@19.2.4","@types/react@19.3.0","react-dom@19.2.4","@types/react@19.3.0","react-dom@19.2.4","react-redux@9.3.0","react-dom@19.2.4","@types/react@19.3.0","d3-array@3.2.4","d3-interpolate@3.0.1","d3-time@3.1.0","d3-time@3.1.0","d3-array@3.2.4","@types/react@19.3.0","react-dom@19.2.4","@types/react@19.3.0"]
+  • asar usage is disabled — this is strongly not recommended  solution=enable asar and use asarUnpack to unpack files that must be externally available
+  • skipped macOS code signing  reason=identity explicitly is set to null
+{
+  "stage": "adhoc-static-verified",
+  "directory": "/Users/dt_flys/Projects/shakeink-desktop/release/adhoc-macos-arm64-27fa8867-ecd9-4686-a30c-0851e34be0d0",
+  "dmg": "/Users/dt_flys/Projects/shakeink-desktop/release/adhoc-macos-arm64-27fa8867-ecd9-4686-a30c-0851e34be0d0/ShakeInk-0.1.0-alpha-mac-arm64-adhoc-test.dmg",
+  "sha256": "4f503f3c46f5ed0e5b38815aa6f5a29ee2e0e43841658a902554f74e51839d68",
+  "notarized": false,
+  "startup": "not-run"
+}

@@ -1,0 +1,51 @@
+{
+  "checkedAt": "2026-10-16T09:17:05.028Z",
+  "scope": "Documentation-only investigation; no product or release mutation",
+  "sourceFiles": [
+    {
+      "path": "electron-builder.config.cjs",
+      "before": "8fad167fb8e80e4e5c88bb258b59bfb09046d63e8656176a7858bad2bc5b1ad4",
+      "after": "8fad167fb8e80e4e5c88bb258b59bfb09046d63e8656176a7858bad2bc5b1ad4",
+      "equal": true
+    },
+    {
+      "path": "scripts/package-desktop.mjs",
+      "before": "8d81876526ae457794e4ae7a640d0771fc070089d8f05b09e9107fd53679b3bd",
+      "after": "8d81876526ae457794e4ae7a640d0771fc070089d8f05b09e9107fd53679b3bd",
+      "equal": true
+    },
+    {
+      "path": "scripts/macos-menu-localization.mjs",
+      "before": "0be477450ce31ecf035b8999c12328ff312377477943aea00bcc31032ca8930f",
+      "after": "0be477450ce31ecf035b8999c12328ff312377477943aea00bcc31032ca8930f",
+      "equal": true
+    },
+    {
+      "path": "scripts/inspect-packaged-app.mjs",
+      "before": "a9bbc13c285044ca1637aac030b67868194e8740cbf0dacc3c174b68dc41ec32",
+      "after": "a9bbc13c285044ca1637aac030b67868194e8740cbf0dacc3c174b68dc41ec32",
+      "equal": true
+    },
+    {
+      "path": "tests/unit/packaging-config.test.ts",
+      "before": "556afbcf7cded729260f04dd0114d7fd5929f096223ac2956bd92441da758066",
+      "after": "556afbcf7cded729260f04dd0114d7fd5929f096223ac2956bd92441da758066",
+      "equal": true
+    },
+    {
+      "path": "desktop/shared/command-catalogs.generated.json",
+      "before": "94b3b7b9264e7d5eed2d6231a8ec0d7a0ceaa7188d2c50538836914addd0592d",
+      "after": "94b3b7b9264e7d5eed2d6231a8ec0d7a0ceaa7188d2c50538836914addd0592d",
+      "equal": true
+    }
+  ],
+  "dmg": {
+    "before": "2abef4f3708c20b4dd19e09db39ddc7c0659bf6dbba154b50dc2d19a3c291cda",
+    "after": "2abef4f3708c20b4dd19e09db39ddc7c0659bf6dbba154b50dc2d19a3c291cda"
+  },
+  "gitStatus": " M desktop/shared/command-catalogs.generated.json\n?? docs/macos-gatekeeper/\n",
+  "checks": {
+    "sourceFilesUnchanged": true,
+    "dmgUnchanged": true
+  }
+}

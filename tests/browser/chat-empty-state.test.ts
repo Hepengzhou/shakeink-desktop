@@ -8,6 +8,9 @@ import tailwindcss from "@tailwindcss/postcss"
 import { chromium, type Browser, type Page } from "playwright-core"
 
 const test = Object.assign((name: string, run: () => Promise<void>) => nodeTest(name, { timeout: 180_000 }, run), { before: nodeTest.before, after: nodeTest.after })
+// Product platform fixtures do not change Chromium's host-native editing keys.
+const nativeUndo = process.platform === "darwin" ? "Meta+z" : "Control+z"
+const nativeRedo = process.platform === "win32" ? "Control+y" : process.platform === "darwin" ? "Meta+Shift+z" : "Control+Shift+z"
 
 // Full production ChatPanel, useAgentChat, composer and CreateNovelDialog run
 // together. Only HTTP responses and synthetic account data are controlled.
@@ -218,9 +221,9 @@ for (const [name, marker, body] of [
   assert.equal(await page.evaluate(() => (window as any).f.source()), state.draft)
   assert.equal(await page.evaluate(() => (window as any).f.sameEditor() && (window as any).f.sameChip()), true)
   assert.equal(await editor(page).evaluate(el => document.activeElement === el), true)
-  await editor(page).press("Control+z"); await frames(page)
+  await editor(page).press(nativeUndo); await frames(page)
   assert.equal(await page.evaluate(() => (window as any).f.state().draft), initial)
-  await editor(page).press("Control+y"); await frames(page)
+  await editor(page).press(nativeRedo); await frames(page)
   assert.equal(await page.evaluate(() => (window as any).f.state().draft), state.draft)
   await action(page, name).click(); assert.equal(await page.evaluate(() => (window as any).f.state().draft), state.draft)
   assert.equal(await editor(page).evaluate(el => document.activeElement === el), true)
@@ -301,8 +304,8 @@ test("CES-05b automatic queue retains its head without a live selected model and
   await page.evaluate(() => (window as any).f.catalog(true, true)); await page.waitForTimeout(60)
   assert.equal(await page.evaluate(() => (window as any).f.state().queuedMessages.length), 1); assert.deepEqual(await posts(page), [])
   await page.evaluate(() => (window as any).f.choose())
-  await page.waitForFunction(() => (window as any).f.calls.some((call: any) => call.path === "/api/chat" && call.method === "POST"))
-  const sent = await posts(page); assert.equal(sent.length, 1); assert.equal(sent[0].body.message, "不得丢失的合成队首")
+  await page.waitForFunction(() => !(window as any).f.state().isGenerating && (window as any).f.calls.some((call: any) => call.path === "/api/chat/conversations/fixture-sent-conversation/title" && call.method === "POST"))
+  const sent = await posts(page); assert.deepEqual(sent.map((call: any) => call.path), ["/api/chat", "/api/chat/conversations/fixture-sent-conversation/title"]); assert.equal(sent[0].body.message, "不得丢失的合成队首");assert.equal(sent[1].body,null)
   assert.equal(await page.evaluate(() => (window as any).f.state().queuedMessages.length), 0)
 }))
 
@@ -337,9 +340,9 @@ test("CES-05c inherited default stays implicit until original send; first messag
   assert.equal(await page.evaluate(() => (window as any).f.state().modelChoiceExplicit), false)
   await page.evaluate(() => { const f = (window as any).f; f.pin(); f.editor().focus() })
   assert.equal(await page.evaluate(() => (window as any).f.command("ai.send")), true)
-  await page.waitForFunction(() => (window as any).f.calls.some((call: any) => call.path === "/api/chat" && call.method === "POST"))
+  await page.waitForFunction(() => !(window as any).f.state().isGenerating && (window as any).f.calls.some((call: any) => call.path === "/api/chat/conversations/fixture-sent-conversation/title" && call.method === "POST"))
   const sent = await posts(page)
-  assert.equal(sent.length, 2); assert.equal(sent[0].path, "/api/novels"); assert.equal(sent[1].path, "/api/chat")
+  assert.deepEqual(sent.map((call: any) => call.path), ["/api/novels", "/api/chat", "/api/chat/conversations/fixture-sent-conversation/title"]);assert.equal(sent[2].body,null)
   assert.equal(sent[0].body.position.genre, "科幻"); assert.equal(sent[1].body.novelId, "fixture-created-work")
   assert.equal(Object.hasOwn(sent[1].body, "modelId"), false, "inherited model must still be captured atomically by the original backend boundary")
   assert.equal(await page.evaluate(() => (window as any).f.sameEditor()), true); assert.equal(await editor(page).count(), 1); assert.equal(await welcome(page).count(), 0)
@@ -452,16 +455,20 @@ async function ces10Load(page: Page, messages: unknown[]) {
     f.request("fixture-scroll-conv")
   }, messages as any)
   await page.getByTestId("candidate-card-alpha").waitFor()
-  // Wait until the message scroller actually overflows and the app's
-  // scroll-to-bottom-on-load has settled; under machine load layout/font
-  // metrics resolve later than the card's DOM attachment, and without this the
-  // geometry helper can read a degenerate not-yet-scrollable state.
+  // Wait only for initial font/entrance setup and the real message scroller.
+  // A transformed child can overflow an overflow-visible message wrapper;
+  // that wrapper is not the scroll viewport, even when scrollHeight is larger.
   await page.waitForFunction(() => {
     const group = document.querySelector('[data-testid="candidate-draw-card"]')
     if (!group) return false
     let s = group.parentElement as HTMLElement | null
-    while (s && s.scrollHeight - s.clientHeight < 1) s = s.parentElement
-    return !!s && s !== document.body && s !== document.documentElement && s.scrollHeight - s.clientHeight > 1 && s.scrollHeight - s.scrollTop - s.clientHeight < 40
+    while (s && !["auto", "scroll"].includes(getComputedStyle(s).overflowY)) s = s.parentElement
+    if (!s || s === document.body || s === document.documentElement || document.fonts.status !== "loaded") return false
+    for (let ancestor: Element | null = group; ancestor; ancestor = ancestor.parentElement) {
+      if (ancestor.getAnimations().some(animation => animation.pending || animation.playState === "running")) return false
+      if (ancestor === s) break
+    }
+    return s.scrollHeight - s.clientHeight > 1 && s.scrollHeight - s.scrollTop - s.clientHeight < 40
   })
   await frames(page)
 }
@@ -469,9 +476,10 @@ async function ces10Geometry(page: Page) {
   return page.evaluate(() => {
     const group = document.querySelector('[data-testid="candidate-draw-card"]')!
     let scroller = group.parentElement as HTMLElement | null
-    while (scroller && scroller.scrollHeight - scroller.clientHeight < 1) scroller = scroller.parentElement
-    const lr = scroller!.getBoundingClientRect(), tr = group.getBoundingClientRect()
-    return { listTop: lr.top, listBottom: lr.bottom, groupTop: tr.top, groupBottom: tr.bottom, scrollTop: scroller!.scrollTop }
+    while (scroller && !["auto", "scroll"].includes(getComputedStyle(scroller).overflowY)) scroller = scroller.parentElement
+    if (!scroller || scroller === document.body || scroller === document.documentElement) throw Error("CES-10 requires the real message scroll viewport")
+    const lr = scroller.getBoundingClientRect(), tr = group.getBoundingClientRect()
+    return { listTop: lr.top, listBottom: lr.bottom, groupTop: tr.top, groupBottom: tr.bottom, scrollTop: scroller.scrollTop }
   })
 }
 type Ces10Geometry = { listTop: number; listBottom: number; groupTop: number; groupBottom: number; scrollTop: number }

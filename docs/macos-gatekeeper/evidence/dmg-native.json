@@ -1,0 +1,1496 @@
+{
+  "startedAt": "2026-10-16T09:12:48.752Z",
+  "scope": "Read-only local app diagnosis; not recipient-machine reproduction",
+  "app": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app",
+  "commands": [
+    {
+      "file": "/usr/bin/sw_vers",
+      "args": [],
+      "startedAt": "2026-10-16T09:12:48.757Z",
+      "code": 0,
+      "stdout": "ProductName:\t\tmacOS\nProductVersion:\t\t27.0.1\nBuildVersion:\t\t26A434\n",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/uname",
+      "args": [
+        "-m"
+      ],
+      "startedAt": "2026-10-16T09:12:48.771Z",
+      "code": 0,
+      "stdout": "arm64\n",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/git",
+      "args": [
+        "-C",
+        "/Users/dt_flys/Projects/shakeink-desktop",
+        "rev-parse",
+        "HEAD"
+      ],
+      "startedAt": "2026-10-16T09:12:48.774Z",
+      "code": 0,
+      "stdout": "9e7cd79f0e1e4f165cab17685b5191ca48d37bb6\n",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/git",
+      "args": [
+        "-C",
+        "/Users/dt_flys/Projects/shakeink-desktop",
+        "status",
+        "--short"
+      ],
+      "startedAt": "2026-10-16T09:12:48.795Z",
+      "code": 0,
+      "stdout": " M desktop/shared/command-catalogs.generated.json\n?? docs/macos-gatekeeper/\n",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/codesign",
+      "args": [
+        "--verify",
+        "--deep",
+        "--strict",
+        "--verbose=4",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app"
+      ],
+      "startedAt": "2026-10-16T09:12:49.185Z",
+      "code": 1,
+      "signal": null,
+      "killed": false,
+      "stdout": "",
+      "stderr": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app: code has no resources but signature indicates they must be present\n",
+      "message": "Command failed: /usr/bin/codesign --verify --deep --strict --verbose=4 /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app\n/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app: code has no resources but signature indicates they must be present\n"
+    },
+    {
+      "file": "/usr/bin/codesign",
+      "args": [
+        "--display",
+        "--verbose=4",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app"
+      ],
+      "startedAt": "2026-10-16T09:12:49.210Z",
+      "code": 0,
+      "stdout": "",
+      "stderr": "Executable=/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/MacOS/玄印写作\nIdentifier=Electron\nFormat=app bundle with Mach-O thin (arm64)\nCodeDirectory v=20400 size=392 flags=0x20002(adhoc,linker-signed) hashes=9+0 location=embedded\nVersionPlatform=1\nVersionMin=851968\nVersionSDK=1705216\nHash type=sha256 size=32\nCandidateCDHash sha256=3c9110e4365191b30a78ecb8dcbf75aeb700e3a6\nCandidateCDHashFull sha256=3c9110e4365191b30a78ecb8dcbf75aeb700e3a631b1b8d1b497ca9d1baef7e5\nHash choices=sha256\nCMSDigest=3c9110e4365191b30a78ecb8dcbf75aeb700e3a631b1b8d1b497ca9d1baef7e5\nCMSDigestType=2\nExecutable Segment base=0\nExecutable Segment limit=16384\nExecutable Segment flags=0x1\nPage size=4096\nCDHash=3c9110e4365191b30a78ecb8dcbf75aeb700e3a6\nSignature=adhoc\nInfo.plist=not bound\nTeamIdentifier=not set\nSealed Resources=none\nInternal requirements=none\n"
+    },
+    {
+      "file": "/usr/bin/syspolicy_check",
+      "args": [
+        "distribution",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app"
+      ],
+      "startedAt": "2026-10-16T09:12:49.220Z",
+      "code": 70,
+      "signal": null,
+      "killed": false,
+      "stdout": "---------------------------------------------------------------\nCodesign Error\n    File: 玄印写作.app \n    Severity: Fatal \n    Full Error: Code has no resources but signature indicates they must be \n        present. Please re-sign using the latest version of macOS and codesign. \n    Type: Notary Error \n    Suggested Fix: Re-sign the application using the codesign command. \n    Documentation: \n        https://developer.apple.com/library/archive/technotes/tn2206/_index.html#//apple_ref/doc/uid/DTS40007919 \n\nAdhoc Signed App\n    Severity: Warning \n    Full Error: This app is adhoc signed. While it may run locally, adhoc \n        signed apps are not suitable for distribution. \n    Type: Distribution Error \n    Suggested Fix: Sign the app with a valid Developer ID certificate for \n        distribution. \n    Documentation: \n        https://developer.apple.com/documentation/security/notarizing_macos_software_before_distribution \n\nNotary Ticket Missing\n    File: 玄印写作.app \n    Severity: Fatal \n    Full Error: A Notarization ticket is not stapled to this application. \n    Type: Distribution Error \n    Suggested Fix: If this application has already been uploaded to the Apple \n        notary service, please make sure to attach the ticket with the `stapler \n        staple` command. If not, please upload to the Apple notary service \n        using Xcode or via `notarytool`. \n    Documentation: \n        https://developer.apple.com/documentation/security/notarizing_macos_software_before_distribution. \n\nCodesign Error\n    File: 玄印写作.app \n    Severity: Fatal \n    Full Error: The code signature does not fully cover the bundle's \n        Info.plist. \n    Type: Distribution Error \n    Suggested Fix: Re-sign the application using the codesign command after the \n        bundle is fully assembled. \n    Documentation: \n        https://developer.apple.com/library/archive/technotes/tn2206/_index.html#//apple_ref/doc/uid/DTS40007919 \n\n---------------------------------------------------------------\n",
+      "stderr": "Failed to find total signatures count in file:///private/tmp/shakeink-gatekeeper.DO2CSE/%E7%8E%84%E5%8D%B0%E5%86%99%E4%BD%9C.app\nApp has failed one or more pre-distribution checks.\n",
+      "message": "Command failed: /usr/bin/syspolicy_check distribution /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app\nFailed to find total signatures count in file:///private/tmp/shakeink-gatekeeper.DO2CSE/%E7%8E%84%E5%8D%B0%E5%86%99%E4%BD%9C.app\nApp has failed one or more pre-distribution checks.\n"
+    },
+    {
+      "file": "/usr/sbin/spctl",
+      "args": [
+        "--assess",
+        "--type",
+        "execute",
+        "--verbose=4",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app"
+      ],
+      "startedAt": "2026-10-16T09:12:58.761Z",
+      "code": 1,
+      "signal": null,
+      "killed": false,
+      "stdout": "",
+      "stderr": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app: code has no resources but signature indicates they must be present\n",
+      "message": "Command failed: /usr/sbin/spctl --assess --type execute --verbose=4 /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app\n/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app: code has no resources but signature indicates they must be present\n"
+    },
+    {
+      "file": "/usr/bin/xcrun",
+      "args": [
+        "stapler",
+        "validate",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app"
+      ],
+      "startedAt": "2026-10-16T09:12:58.980Z",
+      "code": 65,
+      "signal": null,
+      "killed": false,
+      "stdout": "Processing: /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app\n玄印写作.app does not have a ticket stapled to it.\n",
+      "stderr": "",
+      "message": "Command failed: /usr/bin/xcrun stapler validate /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app\n"
+    },
+    {
+      "file": "/usr/bin/xattr",
+      "args": [
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app"
+      ],
+      "startedAt": "2026-10-16T09:12:59.018Z",
+      "code": 0,
+      "stdout": "com.apple.provenance\n",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/plutil",
+      "args": [
+        "-convert",
+        "json",
+        "-o",
+        "-",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Info.plist"
+      ],
+      "startedAt": "2026-10-16T09:12:59.021Z",
+      "code": 0,
+      "stdout": "{\"CFBundleName\":\"玄印写作\",\"DTXcode\":\"1640\",\"DTSDKName\":\"macosx15.5\",\"NSHumanReadableCopyright\":\"Copyright © 2026 玄印写作\",\"DTSDKBuild\":\"24F74\",\"CFBundleVersion\":\"0.1.0-alpha\",\"ElectronAsarIntegrity\":{\"Resources\\/default_app.asar\":{\"hash\":\"f80143a17fad2075fe6cf176e07033a41a878dba7f31e7ab4f6f14fcc34162dc\",\"algorithm\":\"SHA256\"}},\"NSCameraUsageDescription\":\"This app needs access to the camera\",\"NSMainNibFile\":\"MainMenu\",\"CFBundlePackageType\":\"APPL\",\"CFBundleIconFile\":\"icon.icns\",\"CFBundleShortVersionString\":\"0.1.0-alpha\",\"NSBluetoothPeripheralUsageDescription\":\"This app needs access to Bluetooth\",\"NSHighResolutionCapable\":true,\"NSMicrophoneUsageDescription\":\"This app needs access to the microphone\",\"NSAppTransportSecurity\":{\"NSExceptionDomains\":{\"127.0.0.1\":{\"NSTemporaryExceptionAllowsInsecureHTTPLoads\":true,\"NSTemporaryExceptionRequiresForwardSecrecy\":false,\"NSIncludesSubdomains\":false,\"NSTemporaryExceptionMinimumTLSVersion\":\"1.0\",\"NSTemporaryExceptionAllowsInsecureHTTPSLoads\":false},\"localhost\":{\"NSTemporaryExceptionAllowsInsecureHTTPLoads\":true,\"NSTemporaryExceptionRequiresForwardSecrecy\":false,\"NSIncludesSubdomains\":false,\"NSTemporaryExceptionMinimumTLSVersion\":\"1.0\",\"NSTemporaryExceptionAllowsInsecureHTTPSLoads\":false}},\"NSAllowsArbitraryLoads\":true,\"NSAllowsLocalNetworking\":true},\"CFBundleInfoDictionaryVersion\":\"6.0\",\"CFBundleExecutable\":\"玄印写作\",\"DTCompiler\":\"com.apple.compilers.llvm.clang.1_0\",\"NSPrefersDisplaySafeAreaCompatibilityMode\":false,\"NSPrincipalClass\":\"AtomApplication\",\"CFBundleIdentifier\":\"ink.shakeink.desktop\",\"LSApplicationCategoryType\":\"public.app-category.productivity\",\"DTXcodeBuild\":\"16F6\",\"LSMinimumSystemVersion\":\"13.0\",\"CFBundleDisplayName\":\"玄印写作\",\"LSEnvironment\":{\"MallocNanoZone\":\"0\"},\"NSQuitAlwaysKeepsWindows\":false,\"NSAudioCaptureUsageDescription\":\"This app needs access to audio capture\",\"NSRequiresAquaSystemAppearance\":false,\"NSBluetoothAlwaysUsageDescription\":\"This app needs access to Bluetooth\",\"NSSupportsAutomaticGraphicsSwitching\":true}",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/lipo",
+      "args": [
+        "-archs",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Electron Framework"
+      ],
+      "startedAt": "2026-10-16T09:12:59.147Z",
+      "code": 0,
+      "stdout": "arm64\n",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/otool",
+      "args": [
+        "-l",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Electron Framework"
+      ],
+      "startedAt": "2026-10-16T09:12:59.165Z",
+      "code": 0,
+      "stdout": "      current version 0.0.0\ncompatibility version 0.0.0\n      cmd LC_BUILD_VERSION\n platform 1\n    minos 13.0\n      sdk 26.5\n  version 23.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 624.2.5\ncompatibility version 1.0.0\n      current version 2.0.0\ncompatibility version 1.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 170.0.0\ncompatibility version 2.0.0\n      current version 66.0.0\ncompatibility version 1.0.0\n      current version 1965.5.1\ncompatibility version 64.0.0\n      current version 1226.0.0\ncompatibility version 1.0.0\n      current version 3860.255.21\ncompatibility version 1.0.0\n      current version 5026.5.4\ncompatibility version 150.0.0\n      current version 228.0.0\ncompatibility version 1.0.0\n      current version 877.4.0\ncompatibility version 1.0.0\n      current version 2005.121.1\ncompatibility version 1.0.0\n      current version 1195.14.4\ncompatibility version 1.2.0\n      current version 7.0.0\ncompatibility version 1.0.1\n      current version 734.4.0\ncompatibility version 1.2.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 0.0.0\ncompatibility version 1.0.0\n      current version 61901.120.67\ncompatibility version 1.0.0\n      current version 55210.100.6\ncompatibility version 1.0.0\n      current version 3102.120.13\ncompatibility version 1.0.0\n      current version 379.0.0\ncompatibility version 1.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 0.0.0\ncompatibility version 0.0.0\n      current version 0.0.0\ncompatibility version 0.0.0\n      current version 0.0.0\ncompatibility version 0.0.0\n      current version 5026.5.4\ncompatibility version 300.0.0\n      current version 2685.60.104\ncompatibility version 45.0.0\n      current version 275.0.0\ncompatibility version 1.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 805.120.2\ncompatibility version 0.0.0\n      current version 5812.121.1\ncompatibility version 1.0.0\n      current version 1405.120.5\ncompatibility version 1.0.0\n      current version 709.0.0\ncompatibility version 1.0.0\n      current version 3320.8.5\ncompatibility version 1.0.0\n      current version 373.2.0\ncompatibility version 1.0.0\n      current version 1000.0.0\ncompatibility version 1.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 24.0.0\ncompatibility version 1.0.0\n      current version 4.0.0\ncompatibility version 1.0.0\n      current version 3320.8.5\ncompatibility version 1.0.0\n      current version 0.0.0\ncompatibility version 0.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 173.7.0\ncompatibility version 1.0.0\n      current version 195.7.0\ncompatibility version 1.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 69.0.0\ncompatibility version 1.0.0\n      current version 62.0.0\ncompatibility version 1.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 13.5.1\ncompatibility version 1.0.0\n      current version 1.0.2\ncompatibility version 1.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 3075.0.8\ncompatibility version 1.0.0\n      current version 9.5.4\ncompatibility version 1.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 0.0.0\ncompatibility version 1.0.0\n      current version 0.0.0\ncompatibility version 0.0.0\n      current version 2.14.0\ncompatibility version 2.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 2.0.0\ncompatibility version 1.0.0\n      current version 2.0.0\ncompatibility version 1.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 1356.0.0\ncompatibility version 1.0.0",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/codesign",
+      "args": [
+        "--verify",
+        "--strict",
+        "--verbose=2",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Electron Framework"
+      ],
+      "startedAt": "2026-10-16T09:13:01.267Z",
+      "code": 1,
+      "signal": null,
+      "killed": false,
+      "stdout": "",
+      "stderr": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Electron Framework: code has no resources but signature indicates they must be present\n",
+      "message": "Command failed: /usr/bin/codesign --verify --strict --verbose=2 /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Electron Framework\n/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Electron Framework: code has no resources but signature indicates they must be present\n"
+    },
+    {
+      "file": "/usr/bin/lipo",
+      "args": [
+        "-archs",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Helpers/chrome_crashpad_handler"
+      ],
+      "startedAt": "2026-10-16T09:13:01.407Z",
+      "code": 0,
+      "stdout": "arm64\n",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/otool",
+      "args": [
+        "-l",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Helpers/chrome_crashpad_handler"
+      ],
+      "startedAt": "2026-10-16T09:13:01.420Z",
+      "code": 0,
+      "stdout": "      cmd LC_BUILD_VERSION\n platform 1\n    minos 13.0\n      sdk 26.5\n  version 23.0\n      current version 5026.5.4\ncompatibility version 150.0.0\n      current version 228.0.0\ncompatibility version 1.0.0\n      current version 1965.5.1\ncompatibility version 64.0.0\n      current version 877.4.0\ncompatibility version 1.0.0\n      current version 5026.5.4\ncompatibility version 300.0.0\n      current version 61901.120.67\ncompatibility version 1.0.0\n      current version 66.0.0\ncompatibility version 1.0.0\n      current version 1226.0.0\ncompatibility version 1.0.0\n      current version 2685.60.104\ncompatibility version 45.0.0\n      current version 275.0.0\ncompatibility version 1.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 2.0.0\ncompatibility version 1.0.0\n      current version 2.0.0\ncompatibility version 1.0.0\n      current version 1356.0.0\ncompatibility version 1.0.0",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/codesign",
+      "args": [
+        "--verify",
+        "--strict",
+        "--verbose=2",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Helpers/chrome_crashpad_handler"
+      ],
+      "startedAt": "2026-10-16T09:13:01.437Z",
+      "code": 0,
+      "stdout": "",
+      "stderr": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Helpers/chrome_crashpad_handler: valid on disk\n/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Helpers/chrome_crashpad_handler: satisfies its Designated Requirement\n"
+    },
+    {
+      "file": "/usr/bin/lipo",
+      "args": [
+        "-archs",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libffmpeg.dylib"
+      ],
+      "startedAt": "2026-10-16T09:13:01.453Z",
+      "code": 0,
+      "stdout": "arm64\n",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/otool",
+      "args": [
+        "-l",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libffmpeg.dylib"
+      ],
+      "startedAt": "2026-10-16T09:13:01.465Z",
+      "code": 0,
+      "stdout": "      current version 0.0.0\ncompatibility version 0.0.0\n      cmd LC_BUILD_VERSION\n platform 1\n    minos 13.0\n      sdk 26.5\n  version 23.0\n      current version 1356.0.0\ncompatibility version 1.0.0",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/codesign",
+      "args": [
+        "--verify",
+        "--strict",
+        "--verbose=2",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libffmpeg.dylib"
+      ],
+      "startedAt": "2026-10-16T09:13:01.480Z",
+      "code": 0,
+      "stdout": "",
+      "stderr": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libffmpeg.dylib: valid on disk\n/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libffmpeg.dylib: satisfies its Designated Requirement\n"
+    },
+    {
+      "file": "/usr/bin/lipo",
+      "args": [
+        "-archs",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libvk_swiftshader.dylib"
+      ],
+      "startedAt": "2026-10-16T09:13:01.527Z",
+      "code": 0,
+      "stdout": "arm64\n",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/otool",
+      "args": [
+        "-l",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libvk_swiftshader.dylib"
+      ],
+      "startedAt": "2026-10-16T09:13:01.541Z",
+      "code": 0,
+      "stdout": "      current version 0.0.0\ncompatibility version 0.0.0\n      cmd LC_BUILD_VERSION\n platform 1\n    minos 13.0\n      sdk 26.5\n  version 23.0\n      current version 373.2.0\ncompatibility version 1.0.0\n      current version 24.0.0\ncompatibility version 1.0.0\n      current version 2685.60.104\ncompatibility version 45.0.0\n      current version 228.0.0\ncompatibility version 1.0.0\n      current version 5026.5.4\ncompatibility version 300.0.0\n      current version 1195.14.4\ncompatibility version 1.2.0\n      current version 1356.0.0\ncompatibility version 1.0.0",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/codesign",
+      "args": [
+        "--verify",
+        "--strict",
+        "--verbose=2",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libvk_swiftshader.dylib"
+      ],
+      "startedAt": "2026-10-16T09:13:01.557Z",
+      "code": 0,
+      "stdout": "",
+      "stderr": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libvk_swiftshader.dylib: valid on disk\n/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libvk_swiftshader.dylib: satisfies its Designated Requirement\n"
+    },
+    {
+      "file": "/usr/bin/lipo",
+      "args": [
+        "-archs",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Mantle.framework/Versions/A/Mantle"
+      ],
+      "startedAt": "2026-10-16T09:13:01.596Z",
+      "code": 0,
+      "stdout": "arm64\n",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/otool",
+      "args": [
+        "-l",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Mantle.framework/Versions/A/Mantle"
+      ],
+      "startedAt": "2026-10-16T09:13:01.609Z",
+      "code": 0,
+      "stdout": "      current version 0.0.0\ncompatibility version 0.0.0\n      cmd LC_BUILD_VERSION\n platform 1\n    minos 13.0\n      sdk 26.5\n  version 23.0\n      current version 1526.0.0\ncompatibility version 1.0.0\n      current version 5026.5.4\ncompatibility version 300.0.0\n      current version 5026.5.4\ncompatibility version 150.0.0\n      current version 228.0.0\ncompatibility version 1.0.0\n      current version 1356.0.0\ncompatibility version 1.0.0",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/codesign",
+      "args": [
+        "--verify",
+        "--strict",
+        "--verbose=2",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Mantle.framework/Versions/A/Mantle"
+      ],
+      "startedAt": "2026-10-16T09:13:01.624Z",
+      "code": 1,
+      "signal": null,
+      "killed": false,
+      "stdout": "",
+      "stderr": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Mantle.framework/Versions/A/Mantle: code has no resources but signature indicates they must be present\n",
+      "message": "Command failed: /usr/bin/codesign --verify --strict --verbose=2 /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Mantle.framework/Versions/A/Mantle\n/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Mantle.framework/Versions/A/Mantle: code has no resources but signature indicates they must be present\n"
+    },
+    {
+      "file": "/usr/bin/lipo",
+      "args": [
+        "-archs",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/ReactiveObjC.framework/Versions/A/ReactiveObjC"
+      ],
+      "startedAt": "2026-10-16T09:13:01.642Z",
+      "code": 0,
+      "stdout": "arm64\n",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/otool",
+      "args": [
+        "-l",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/ReactiveObjC.framework/Versions/A/ReactiveObjC"
+      ],
+      "startedAt": "2026-10-16T09:13:01.655Z",
+      "code": 0,
+      "stdout": "      current version 0.0.0\ncompatibility version 0.0.0\n      cmd LC_BUILD_VERSION\n platform 1\n    minos 13.0\n      sdk 26.5\n  version 23.0\n      current version 2685.60.104\ncompatibility version 45.0.0\n      current version 3860.255.21\ncompatibility version 1.0.0\n      current version 5026.5.4\ncompatibility version 150.0.0\n      current version 228.0.0\ncompatibility version 1.0.0\n      current version 5026.5.4\ncompatibility version 300.0.0\n      current version 1356.0.0\ncompatibility version 1.0.0",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/codesign",
+      "args": [
+        "--verify",
+        "--strict",
+        "--verbose=2",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/ReactiveObjC.framework/Versions/A/ReactiveObjC"
+      ],
+      "startedAt": "2026-10-16T09:13:01.670Z",
+      "code": 1,
+      "signal": null,
+      "killed": false,
+      "stdout": "",
+      "stderr": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/ReactiveObjC.framework/Versions/A/ReactiveObjC: code has no resources but signature indicates they must be present\n",
+      "message": "Command failed: /usr/bin/codesign --verify --strict --verbose=2 /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/ReactiveObjC.framework/Versions/A/ReactiveObjC\n/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/ReactiveObjC.framework/Versions/A/ReactiveObjC: code has no resources but signature indicates they must be present\n"
+    },
+    {
+      "file": "/usr/bin/lipo",
+      "args": [
+        "-archs",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Squirrel.framework/Versions/A/Resources/ShipIt"
+      ],
+      "startedAt": "2026-10-16T09:13:01.685Z",
+      "code": 0,
+      "stdout": "arm64\n",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/otool",
+      "args": [
+        "-l",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Squirrel.framework/Versions/A/Resources/ShipIt"
+      ],
+      "startedAt": "2026-10-16T09:13:01.697Z",
+      "code": 0,
+      "stdout": "      cmd LC_BUILD_VERSION\n platform 1\n    minos 13.0\n      sdk 26.5\n  version 23.0\n      current version 2685.60.104\ncompatibility version 45.0.0\n      current version 5026.5.4\ncompatibility version 150.0.0\n      current version 228.0.0\ncompatibility version 1.0.0\n      current version 5026.5.4\ncompatibility version 300.0.0\n      current version 275.0.0\ncompatibility version 1.0.0\n      current version 61901.120.67\ncompatibility version 1.0.0\n      current version 0.0.0\ncompatibility version 0.0.0\n      current version 0.0.0\ncompatibility version 0.0.0\n      current version 1356.0.0\ncompatibility version 1.0.0",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/codesign",
+      "args": [
+        "--verify",
+        "--strict",
+        "--verbose=2",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Squirrel.framework/Versions/A/Resources/ShipIt"
+      ],
+      "startedAt": "2026-10-16T09:13:01.712Z",
+      "code": 0,
+      "stdout": "",
+      "stderr": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Squirrel.framework/Versions/A/Resources/ShipIt: valid on disk\n/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Squirrel.framework/Versions/A/Resources/ShipIt: satisfies its Designated Requirement\n"
+    },
+    {
+      "file": "/usr/bin/lipo",
+      "args": [
+        "-archs",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Squirrel.framework/Versions/A/Squirrel"
+      ],
+      "startedAt": "2026-10-16T09:13:01.723Z",
+      "code": 0,
+      "stdout": "arm64\n",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/otool",
+      "args": [
+        "-l",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Squirrel.framework/Versions/A/Squirrel"
+      ],
+      "startedAt": "2026-10-16T09:13:01.736Z",
+      "code": 0,
+      "stdout": "      current version 0.0.0\ncompatibility version 0.0.0\n      cmd LC_BUILD_VERSION\n platform 1\n    minos 13.0\n      sdk 26.5\n  version 23.0\n      current version 2685.60.104\ncompatibility version 45.0.0\n      current version 1226.0.0\ncompatibility version 1.0.0\n      current version 3860.255.21\ncompatibility version 1.0.0\n      current version 5026.5.4\ncompatibility version 150.0.0\n      current version 228.0.0\ncompatibility version 1.0.0\n      current version 5026.5.4\ncompatibility version 300.0.0\n      current version 275.0.0\ncompatibility version 1.0.0\n      current version 61901.120.67\ncompatibility version 1.0.0\n      current version 3102.120.13\ncompatibility version 1.0.0\n      current version 0.0.0\ncompatibility version 0.0.0\n      current version 0.0.0\ncompatibility version 0.0.0\n      current version 1356.0.0\ncompatibility version 1.0.0",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/codesign",
+      "args": [
+        "--verify",
+        "--strict",
+        "--verbose=2",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Squirrel.framework/Versions/A/Squirrel"
+      ],
+      "startedAt": "2026-10-16T09:13:01.752Z",
+      "code": 1,
+      "signal": null,
+      "killed": false,
+      "stdout": "",
+      "stderr": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Squirrel.framework/Versions/A/Squirrel: code has no resources but signature indicates they must be present\n",
+      "message": "Command failed: /usr/bin/codesign --verify --strict --verbose=2 /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Squirrel.framework/Versions/A/Squirrel\n/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Squirrel.framework/Versions/A/Squirrel: code has no resources but signature indicates they must be present\n"
+    },
+    {
+      "file": "/usr/bin/lipo",
+      "args": [
+        "-archs",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (GPU).app/Contents/MacOS/玄印写作 Helper (GPU)"
+      ],
+      "startedAt": "2026-10-16T09:13:01.767Z",
+      "code": 0,
+      "stdout": "arm64\n",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/otool",
+      "args": [
+        "-l",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (GPU).app/Contents/MacOS/玄印写作 Helper (GPU)"
+      ],
+      "startedAt": "2026-10-16T09:13:01.779Z",
+      "code": 1,
+      "signal": null,
+      "killed": false,
+      "stdout": "",
+      "stderr": "error: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/otool-classic: can't open file: /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (GPU).app/Contents/MacOS/玄印写作 Helper  (No such file or directory)\n",
+      "message": "Command failed: /usr/bin/otool -l /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (GPU).app/Contents/MacOS/玄印写作 Helper (GPU)\nerror: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/otool-classic: can't open file: /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (GPU).app/Contents/MacOS/玄印写作 Helper  (No such file or directory)\n"
+    },
+    {
+      "file": "/usr/bin/codesign",
+      "args": [
+        "--verify",
+        "--strict",
+        "--verbose=2",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (GPU).app/Contents/MacOS/玄印写作 Helper (GPU)"
+      ],
+      "startedAt": "2026-10-16T09:13:01.792Z",
+      "code": 1,
+      "signal": null,
+      "killed": false,
+      "stdout": "",
+      "stderr": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (GPU).app/Contents/MacOS/玄印写作 Helper (GPU): code has no resources but signature indicates they must be present\n",
+      "message": "Command failed: /usr/bin/codesign --verify --strict --verbose=2 /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (GPU).app/Contents/MacOS/玄印写作 Helper (GPU)\n/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (GPU).app/Contents/MacOS/玄印写作 Helper (GPU): code has no resources but signature indicates they must be present\n"
+    },
+    {
+      "file": "/usr/bin/lipo",
+      "args": [
+        "-archs",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Plugin).app/Contents/MacOS/玄印写作 Helper (Plugin)"
+      ],
+      "startedAt": "2026-10-16T09:13:01.807Z",
+      "code": 0,
+      "stdout": "arm64\n",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/otool",
+      "args": [
+        "-l",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Plugin).app/Contents/MacOS/玄印写作 Helper (Plugin)"
+      ],
+      "startedAt": "2026-10-16T09:13:01.820Z",
+      "code": 1,
+      "signal": null,
+      "killed": false,
+      "stdout": "",
+      "stderr": "error: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/otool-classic: can't open file: /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Plugin).app/Contents/MacOS/玄印写作 Helper  (No such file or directory)\n",
+      "message": "Command failed: /usr/bin/otool -l /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Plugin).app/Contents/MacOS/玄印写作 Helper (Plugin)\nerror: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/otool-classic: can't open file: /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Plugin).app/Contents/MacOS/玄印写作 Helper  (No such file or directory)\n"
+    },
+    {
+      "file": "/usr/bin/codesign",
+      "args": [
+        "--verify",
+        "--strict",
+        "--verbose=2",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Plugin).app/Contents/MacOS/玄印写作 Helper (Plugin)"
+      ],
+      "startedAt": "2026-10-16T09:13:01.836Z",
+      "code": 1,
+      "signal": null,
+      "killed": false,
+      "stdout": "",
+      "stderr": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Plugin).app/Contents/MacOS/玄印写作 Helper (Plugin): code has no resources but signature indicates they must be present\n",
+      "message": "Command failed: /usr/bin/codesign --verify --strict --verbose=2 /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Plugin).app/Contents/MacOS/玄印写作 Helper (Plugin)\n/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Plugin).app/Contents/MacOS/玄印写作 Helper (Plugin): code has no resources but signature indicates they must be present\n"
+    },
+    {
+      "file": "/usr/bin/lipo",
+      "args": [
+        "-archs",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Renderer).app/Contents/MacOS/玄印写作 Helper (Renderer)"
+      ],
+      "startedAt": "2026-10-16T09:13:01.851Z",
+      "code": 0,
+      "stdout": "arm64\n",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/otool",
+      "args": [
+        "-l",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Renderer).app/Contents/MacOS/玄印写作 Helper (Renderer)"
+      ],
+      "startedAt": "2026-10-16T09:13:01.864Z",
+      "code": 1,
+      "signal": null,
+      "killed": false,
+      "stdout": "",
+      "stderr": "error: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/otool-classic: can't open file: /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Renderer).app/Contents/MacOS/玄印写作 Helper  (No such file or directory)\n",
+      "message": "Command failed: /usr/bin/otool -l /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Renderer).app/Contents/MacOS/玄印写作 Helper (Renderer)\nerror: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/otool-classic: can't open file: /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Renderer).app/Contents/MacOS/玄印写作 Helper  (No such file or directory)\n"
+    },
+    {
+      "file": "/usr/bin/codesign",
+      "args": [
+        "--verify",
+        "--strict",
+        "--verbose=2",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Renderer).app/Contents/MacOS/玄印写作 Helper (Renderer)"
+      ],
+      "startedAt": "2026-10-16T09:13:01.878Z",
+      "code": 1,
+      "signal": null,
+      "killed": false,
+      "stdout": "",
+      "stderr": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Renderer).app/Contents/MacOS/玄印写作 Helper (Renderer): code has no resources but signature indicates they must be present\n",
+      "message": "Command failed: /usr/bin/codesign --verify --strict --verbose=2 /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Renderer).app/Contents/MacOS/玄印写作 Helper (Renderer)\n/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Renderer).app/Contents/MacOS/玄印写作 Helper (Renderer): code has no resources but signature indicates they must be present\n"
+    },
+    {
+      "file": "/usr/bin/lipo",
+      "args": [
+        "-archs",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper.app/Contents/MacOS/玄印写作 Helper"
+      ],
+      "startedAt": "2026-10-16T09:13:01.893Z",
+      "code": 0,
+      "stdout": "arm64\n",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/otool",
+      "args": [
+        "-l",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper.app/Contents/MacOS/玄印写作 Helper"
+      ],
+      "startedAt": "2026-10-16T09:13:01.905Z",
+      "code": 0,
+      "stdout": "      cmd LC_BUILD_VERSION\n platform 1\n    minos 13.0\n      sdk 26.5\n  version 23.0\n      current version 0.0.0\ncompatibility version 0.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 1356.0.0\ncompatibility version 1.0.0",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/codesign",
+      "args": [
+        "--verify",
+        "--strict",
+        "--verbose=2",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper.app/Contents/MacOS/玄印写作 Helper"
+      ],
+      "startedAt": "2026-10-16T09:13:01.919Z",
+      "code": 1,
+      "signal": null,
+      "killed": false,
+      "stdout": "",
+      "stderr": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper.app/Contents/MacOS/玄印写作 Helper: code has no resources but signature indicates they must be present\n",
+      "message": "Command failed: /usr/bin/codesign --verify --strict --verbose=2 /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper.app/Contents/MacOS/玄印写作 Helper\n/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper.app/Contents/MacOS/玄印写作 Helper: code has no resources but signature indicates they must be present\n"
+    },
+    {
+      "file": "/usr/bin/lipo",
+      "args": [
+        "-archs",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/MacOS/玄印写作"
+      ],
+      "startedAt": "2026-10-16T09:13:01.933Z",
+      "code": 0,
+      "stdout": "arm64\n",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/otool",
+      "args": [
+        "-l",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/MacOS/玄印写作"
+      ],
+      "startedAt": "2026-10-16T09:13:01.945Z",
+      "code": 0,
+      "stdout": "      cmd LC_BUILD_VERSION\n platform 1\n    minos 13.0\n      sdk 26.5\n  version 23.0\n      current version 0.0.0\ncompatibility version 0.0.0\n      current version 1356.0.0\ncompatibility version 1.0.0",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/codesign",
+      "args": [
+        "--verify",
+        "--strict",
+        "--verbose=2",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/MacOS/玄印写作"
+      ],
+      "startedAt": "2026-10-16T09:13:01.959Z",
+      "code": 1,
+      "signal": null,
+      "killed": false,
+      "stdout": "",
+      "stderr": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/MacOS/玄印写作: code has no resources but signature indicates they must be present\n",
+      "message": "Command failed: /usr/bin/codesign --verify --strict --verbose=2 /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/MacOS/玄印写作\n/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/MacOS/玄印写作: code has no resources but signature indicates they must be present\n"
+    },
+    {
+      "file": "/usr/bin/lipo",
+      "args": [
+        "-archs",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@img/sharp-darwin-arm64/lib/sharp-darwin-arm64.node"
+      ],
+      "startedAt": "2026-10-16T09:13:02.078Z",
+      "code": 0,
+      "stdout": "arm64\n",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/otool",
+      "args": [
+        "-l",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@img/sharp-darwin-arm64/lib/sharp-darwin-arm64.node"
+      ],
+      "startedAt": "2026-10-16T09:13:02.091Z",
+      "code": 0,
+      "stdout": "      cmd LC_BUILD_VERSION\n platform 1\n    minos 11.0\n      sdk 15.5\n  version 1167.5\n  version 0.0\n      current version 8.17.3\ncompatibility version 8.17.3\n      current version 1900.180.0\ncompatibility version 1.0.0\n      current version 1351.0.0\ncompatibility version 1.0.0",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/codesign",
+      "args": [
+        "--verify",
+        "--strict",
+        "--verbose=2",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@img/sharp-darwin-arm64/lib/sharp-darwin-arm64.node"
+      ],
+      "startedAt": "2026-10-16T09:13:02.107Z",
+      "code": 0,
+      "stdout": "",
+      "stderr": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@img/sharp-darwin-arm64/lib/sharp-darwin-arm64.node: valid on disk\n/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@img/sharp-darwin-arm64/lib/sharp-darwin-arm64.node: satisfies its Designated Requirement\n"
+    },
+    {
+      "file": "/usr/bin/lipo",
+      "args": [
+        "-archs",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@img/sharp-libvips-darwin-arm64/lib/libvips-cpp.8.17.3.dylib"
+      ],
+      "startedAt": "2026-10-16T09:13:02.144Z",
+      "code": 0,
+      "stdout": "arm64\n",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/otool",
+      "args": [
+        "-l",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@img/sharp-libvips-darwin-arm64/lib/libvips-cpp.8.17.3.dylib"
+      ],
+      "startedAt": "2026-10-16T09:13:02.158Z",
+      "code": 0,
+      "stdout": "      current version 8.17.3\ncompatibility version 8.17.3\n      cmd LC_BUILD_VERSION\n platform 1\n    minos 11.0\n      sdk 15.5\n  version 1167.5\n  version 0.0\n      current version 1351.0.0\ncompatibility version 1.0.0\n      current version 3502.1.255\ncompatibility version 300.0.0\n      current version 3502.1.255\ncompatibility version 150.0.0\n      current version 2575.60.5\ncompatibility version 45.0.0\n      current version 7.0.0\ncompatibility version 7.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 1900.180.0\ncompatibility version 1.0.0\n      current version 1889.5.3\ncompatibility version 64.0.0\n      current version 1226.0.0\ncompatibility version 1.0.0\n      current version 844.5.0\ncompatibility version 1.0.0\n      current version 228.0.0\ncompatibility version 1.0.0",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/codesign",
+      "args": [
+        "--verify",
+        "--strict",
+        "--verbose=2",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@img/sharp-libvips-darwin-arm64/lib/libvips-cpp.8.17.3.dylib"
+      ],
+      "startedAt": "2026-10-16T09:13:02.173Z",
+      "code": 0,
+      "stdout": "",
+      "stderr": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@img/sharp-libvips-darwin-arm64/lib/libvips-cpp.8.17.3.dylib: valid on disk\n/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@img/sharp-libvips-darwin-arm64/lib/libvips-cpp.8.17.3.dylib: satisfies its Designated Requirement\n"
+    },
+    {
+      "file": "/usr/bin/lipo",
+      "args": [
+        "-archs",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@next/swc-darwin-arm64/next-swc.darwin-arm64.node"
+      ],
+      "startedAt": "2026-10-16T09:13:02.275Z",
+      "code": 0,
+      "stdout": "arm64\n",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/otool",
+      "args": [
+        "-l",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@next/swc-darwin-arm64/next-swc.darwin-arm64.node"
+      ],
+      "startedAt": "2026-10-16T09:13:02.293Z",
+      "code": 0,
+      "stdout": "      current version 0.0.0\ncompatibility version 0.0.0\n      cmd LC_BUILD_VERSION\n platform 1\n    minos 11.0\n      sdk 15.5\n  version 1167.5\n  version 0.0\n      current version 61439.120.27\ncompatibility version 1.0.0\n      current version 3502.1.255\ncompatibility version 150.0.0\n      current version 1226.0.0\ncompatibility version 1.0.0\n      current version 1351.0.0\ncompatibility version 1.0.0\n      current version 7.0.0\ncompatibility version 7.0.0",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/codesign",
+      "args": [
+        "--verify",
+        "--strict",
+        "--verbose=2",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@next/swc-darwin-arm64/next-swc.darwin-arm64.node"
+      ],
+      "startedAt": "2026-10-16T09:13:02.310Z",
+      "code": 0,
+      "stdout": "",
+      "stderr": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@next/swc-darwin-arm64/next-swc.darwin-arm64.node: valid on disk\n/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@next/swc-darwin-arm64/next-swc.darwin-arm64.node: satisfies its Designated Requirement\n"
+    },
+    {
+      "file": "/usr/bin/lipo",
+      "args": [
+        "-archs",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@prisma/engines/schema-engine-darwin-arm64"
+      ],
+      "startedAt": "2026-10-16T09:13:02.416Z",
+      "code": 0,
+      "stdout": "arm64\n",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/otool",
+      "args": [
+        "-l",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@prisma/engines/schema-engine-darwin-arm64"
+      ],
+      "startedAt": "2026-10-16T09:13:02.431Z",
+      "code": 0,
+      "stdout": "      cmd LC_BUILD_VERSION\n platform 1\n    minos 11.0\n      sdk 15.5\n  version 1167.5\n  version 0.0\n      current version 1.2.12\ncompatibility version 1.0.0\n      current version 61439.120.27\ncompatibility version 1.0.0\n      current version 3502.1.255\ncompatibility version 150.0.0\n      current version 1351.120.3\ncompatibility version 1.0.0\n      current version 7.0.0\ncompatibility version 7.0.0\n      current version 1351.0.0\ncompatibility version 1.0.0",
+      "stderr": ""
+    },
+    {
+      "file": "/usr/bin/codesign",
+      "args": [
+        "--verify",
+        "--strict",
+        "--verbose=2",
+        "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@prisma/engines/schema-engine-darwin-arm64"
+      ],
+      "startedAt": "2026-10-16T09:13:02.446Z",
+      "code": 0,
+      "stdout": "",
+      "stderr": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@prisma/engines/schema-engine-darwin-arm64: valid on disk\n/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@prisma/engines/schema-engine-darwin-arm64: satisfies its Designated Requirement\n"
+    }
+  ],
+  "sourceHashes": {
+    "electron-builder.config.cjs": "8fad167fb8e80e4e5c88bb258b59bfb09046d63e8656176a7858bad2bc5b1ad4",
+    "scripts/package-desktop.mjs": "8d81876526ae457794e4ae7a640d0771fc070089d8f05b09e9107fd53679b3bd",
+    "scripts/macos-menu-localization.mjs": "0be477450ce31ecf035b8999c12328ff312377477943aea00bcc31032ca8930f",
+    "scripts/inspect-packaged-app.mjs": "a9bbc13c285044ca1637aac030b67868194e8740cbf0dacc3c174b68dc41ec32",
+    "tests/unit/packaging-config.test.ts": "556afbcf7cded729260f04dd0114d7fd5929f096223ac2956bd92441da758066",
+    "desktop/shared/command-catalogs.generated.json": "94b3b7b9264e7d5eed2d6231a8ec0d7a0ceaa7188d2c50538836914addd0592d"
+  },
+  "binaries": [
+    {
+      "path": "Contents/Frameworks/Electron Framework.framework/Versions/A/Electron Framework",
+      "sha256": "69147ed2f3eb9c95f47c442ae864767fa5a9fc8a2a9700c5ecf86be28c099c7f",
+      "architecture": {
+        "file": "/usr/bin/lipo",
+        "args": [
+          "-archs",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Electron Framework"
+        ],
+        "startedAt": "2026-10-16T09:12:59.147Z",
+        "code": 0,
+        "stdout": "arm64\n",
+        "stderr": ""
+      },
+      "minimumOS": {
+        "file": "/usr/bin/otool",
+        "args": [
+          "-l",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Electron Framework"
+        ],
+        "startedAt": "2026-10-16T09:12:59.165Z",
+        "code": 0,
+        "stdout": "      current version 0.0.0\ncompatibility version 0.0.0\n      cmd LC_BUILD_VERSION\n platform 1\n    minos 13.0\n      sdk 26.5\n  version 23.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 624.2.5\ncompatibility version 1.0.0\n      current version 2.0.0\ncompatibility version 1.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 170.0.0\ncompatibility version 2.0.0\n      current version 66.0.0\ncompatibility version 1.0.0\n      current version 1965.5.1\ncompatibility version 64.0.0\n      current version 1226.0.0\ncompatibility version 1.0.0\n      current version 3860.255.21\ncompatibility version 1.0.0\n      current version 5026.5.4\ncompatibility version 150.0.0\n      current version 228.0.0\ncompatibility version 1.0.0\n      current version 877.4.0\ncompatibility version 1.0.0\n      current version 2005.121.1\ncompatibility version 1.0.0\n      current version 1195.14.4\ncompatibility version 1.2.0\n      current version 7.0.0\ncompatibility version 1.0.1\n      current version 734.4.0\ncompatibility version 1.2.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 0.0.0\ncompatibility version 1.0.0\n      current version 61901.120.67\ncompatibility version 1.0.0\n      current version 55210.100.6\ncompatibility version 1.0.0\n      current version 3102.120.13\ncompatibility version 1.0.0\n      current version 379.0.0\ncompatibility version 1.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 0.0.0\ncompatibility version 0.0.0\n      current version 0.0.0\ncompatibility version 0.0.0\n      current version 0.0.0\ncompatibility version 0.0.0\n      current version 5026.5.4\ncompatibility version 300.0.0\n      current version 2685.60.104\ncompatibility version 45.0.0\n      current version 275.0.0\ncompatibility version 1.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 805.120.2\ncompatibility version 0.0.0\n      current version 5812.121.1\ncompatibility version 1.0.0\n      current version 1405.120.5\ncompatibility version 1.0.0\n      current version 709.0.0\ncompatibility version 1.0.0\n      current version 3320.8.5\ncompatibility version 1.0.0\n      current version 373.2.0\ncompatibility version 1.0.0\n      current version 1000.0.0\ncompatibility version 1.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 24.0.0\ncompatibility version 1.0.0\n      current version 4.0.0\ncompatibility version 1.0.0\n      current version 3320.8.5\ncompatibility version 1.0.0\n      current version 0.0.0\ncompatibility version 0.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 173.7.0\ncompatibility version 1.0.0\n      current version 195.7.0\ncompatibility version 1.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 69.0.0\ncompatibility version 1.0.0\n      current version 62.0.0\ncompatibility version 1.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 13.5.1\ncompatibility version 1.0.0\n      current version 1.0.2\ncompatibility version 1.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 3075.0.8\ncompatibility version 1.0.0\n      current version 9.5.4\ncompatibility version 1.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 0.0.0\ncompatibility version 1.0.0\n      current version 0.0.0\ncompatibility version 0.0.0\n      current version 2.14.0\ncompatibility version 2.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 2.0.0\ncompatibility version 1.0.0\n      current version 2.0.0\ncompatibility version 1.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 1356.0.0\ncompatibility version 1.0.0",
+        "stderr": ""
+      },
+      "signature": {
+        "file": "/usr/bin/codesign",
+        "args": [
+          "--verify",
+          "--strict",
+          "--verbose=2",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Electron Framework"
+        ],
+        "startedAt": "2026-10-16T09:13:01.267Z",
+        "code": 1,
+        "signal": null,
+        "killed": false,
+        "stdout": "",
+        "stderr": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Electron Framework: code has no resources but signature indicates they must be present\n",
+        "message": "Command failed: /usr/bin/codesign --verify --strict --verbose=2 /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Electron Framework\n/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Electron Framework: code has no resources but signature indicates they must be present\n"
+      }
+    },
+    {
+      "path": "Contents/Frameworks/Electron Framework.framework/Versions/A/Helpers/chrome_crashpad_handler",
+      "sha256": "69ce980eea6847105baa2d59b1800e68a2a06b8e0d04f503dd4f129e8e05e273",
+      "architecture": {
+        "file": "/usr/bin/lipo",
+        "args": [
+          "-archs",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Helpers/chrome_crashpad_handler"
+        ],
+        "startedAt": "2026-10-16T09:13:01.407Z",
+        "code": 0,
+        "stdout": "arm64\n",
+        "stderr": ""
+      },
+      "minimumOS": {
+        "file": "/usr/bin/otool",
+        "args": [
+          "-l",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Helpers/chrome_crashpad_handler"
+        ],
+        "startedAt": "2026-10-16T09:13:01.420Z",
+        "code": 0,
+        "stdout": "      cmd LC_BUILD_VERSION\n platform 1\n    minos 13.0\n      sdk 26.5\n  version 23.0\n      current version 5026.5.4\ncompatibility version 150.0.0\n      current version 228.0.0\ncompatibility version 1.0.0\n      current version 1965.5.1\ncompatibility version 64.0.0\n      current version 877.4.0\ncompatibility version 1.0.0\n      current version 5026.5.4\ncompatibility version 300.0.0\n      current version 61901.120.67\ncompatibility version 1.0.0\n      current version 66.0.0\ncompatibility version 1.0.0\n      current version 1226.0.0\ncompatibility version 1.0.0\n      current version 2685.60.104\ncompatibility version 45.0.0\n      current version 275.0.0\ncompatibility version 1.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 2.0.0\ncompatibility version 1.0.0\n      current version 2.0.0\ncompatibility version 1.0.0\n      current version 1356.0.0\ncompatibility version 1.0.0",
+        "stderr": ""
+      },
+      "signature": {
+        "file": "/usr/bin/codesign",
+        "args": [
+          "--verify",
+          "--strict",
+          "--verbose=2",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Helpers/chrome_crashpad_handler"
+        ],
+        "startedAt": "2026-10-16T09:13:01.437Z",
+        "code": 0,
+        "stdout": "",
+        "stderr": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Helpers/chrome_crashpad_handler: valid on disk\n/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Helpers/chrome_crashpad_handler: satisfies its Designated Requirement\n"
+      }
+    },
+    {
+      "path": "Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libffmpeg.dylib",
+      "sha256": "e268d8f6dad21bf38cd2ad7d08458605c2a1e095210589a1a1b0f0da024c1542",
+      "architecture": {
+        "file": "/usr/bin/lipo",
+        "args": [
+          "-archs",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libffmpeg.dylib"
+        ],
+        "startedAt": "2026-10-16T09:13:01.453Z",
+        "code": 0,
+        "stdout": "arm64\n",
+        "stderr": ""
+      },
+      "minimumOS": {
+        "file": "/usr/bin/otool",
+        "args": [
+          "-l",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libffmpeg.dylib"
+        ],
+        "startedAt": "2026-10-16T09:13:01.465Z",
+        "code": 0,
+        "stdout": "      current version 0.0.0\ncompatibility version 0.0.0\n      cmd LC_BUILD_VERSION\n platform 1\n    minos 13.0\n      sdk 26.5\n  version 23.0\n      current version 1356.0.0\ncompatibility version 1.0.0",
+        "stderr": ""
+      },
+      "signature": {
+        "file": "/usr/bin/codesign",
+        "args": [
+          "--verify",
+          "--strict",
+          "--verbose=2",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libffmpeg.dylib"
+        ],
+        "startedAt": "2026-10-16T09:13:01.480Z",
+        "code": 0,
+        "stdout": "",
+        "stderr": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libffmpeg.dylib: valid on disk\n/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libffmpeg.dylib: satisfies its Designated Requirement\n"
+      }
+    },
+    {
+      "path": "Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libvk_swiftshader.dylib",
+      "sha256": "86939e5582081df0571049c88af1d295a53e02ab23b398f164d780b5de0e0dc1",
+      "architecture": {
+        "file": "/usr/bin/lipo",
+        "args": [
+          "-archs",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libvk_swiftshader.dylib"
+        ],
+        "startedAt": "2026-10-16T09:13:01.527Z",
+        "code": 0,
+        "stdout": "arm64\n",
+        "stderr": ""
+      },
+      "minimumOS": {
+        "file": "/usr/bin/otool",
+        "args": [
+          "-l",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libvk_swiftshader.dylib"
+        ],
+        "startedAt": "2026-10-16T09:13:01.541Z",
+        "code": 0,
+        "stdout": "      current version 0.0.0\ncompatibility version 0.0.0\n      cmd LC_BUILD_VERSION\n platform 1\n    minos 13.0\n      sdk 26.5\n  version 23.0\n      current version 373.2.0\ncompatibility version 1.0.0\n      current version 24.0.0\ncompatibility version 1.0.0\n      current version 2685.60.104\ncompatibility version 45.0.0\n      current version 228.0.0\ncompatibility version 1.0.0\n      current version 5026.5.4\ncompatibility version 300.0.0\n      current version 1195.14.4\ncompatibility version 1.2.0\n      current version 1356.0.0\ncompatibility version 1.0.0",
+        "stderr": ""
+      },
+      "signature": {
+        "file": "/usr/bin/codesign",
+        "args": [
+          "--verify",
+          "--strict",
+          "--verbose=2",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libvk_swiftshader.dylib"
+        ],
+        "startedAt": "2026-10-16T09:13:01.557Z",
+        "code": 0,
+        "stdout": "",
+        "stderr": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libvk_swiftshader.dylib: valid on disk\n/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libvk_swiftshader.dylib: satisfies its Designated Requirement\n"
+      }
+    },
+    {
+      "path": "Contents/Frameworks/Mantle.framework/Versions/A/Mantle",
+      "sha256": "c25c281d69dfcb87e480a4859968dc24eef8a362768af4748d725f6472232ed6",
+      "architecture": {
+        "file": "/usr/bin/lipo",
+        "args": [
+          "-archs",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Mantle.framework/Versions/A/Mantle"
+        ],
+        "startedAt": "2026-10-16T09:13:01.596Z",
+        "code": 0,
+        "stdout": "arm64\n",
+        "stderr": ""
+      },
+      "minimumOS": {
+        "file": "/usr/bin/otool",
+        "args": [
+          "-l",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Mantle.framework/Versions/A/Mantle"
+        ],
+        "startedAt": "2026-10-16T09:13:01.609Z",
+        "code": 0,
+        "stdout": "      current version 0.0.0\ncompatibility version 0.0.0\n      cmd LC_BUILD_VERSION\n platform 1\n    minos 13.0\n      sdk 26.5\n  version 23.0\n      current version 1526.0.0\ncompatibility version 1.0.0\n      current version 5026.5.4\ncompatibility version 300.0.0\n      current version 5026.5.4\ncompatibility version 150.0.0\n      current version 228.0.0\ncompatibility version 1.0.0\n      current version 1356.0.0\ncompatibility version 1.0.0",
+        "stderr": ""
+      },
+      "signature": {
+        "file": "/usr/bin/codesign",
+        "args": [
+          "--verify",
+          "--strict",
+          "--verbose=2",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Mantle.framework/Versions/A/Mantle"
+        ],
+        "startedAt": "2026-10-16T09:13:01.624Z",
+        "code": 1,
+        "signal": null,
+        "killed": false,
+        "stdout": "",
+        "stderr": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Mantle.framework/Versions/A/Mantle: code has no resources but signature indicates they must be present\n",
+        "message": "Command failed: /usr/bin/codesign --verify --strict --verbose=2 /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Mantle.framework/Versions/A/Mantle\n/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Mantle.framework/Versions/A/Mantle: code has no resources but signature indicates they must be present\n"
+      }
+    },
+    {
+      "path": "Contents/Frameworks/ReactiveObjC.framework/Versions/A/ReactiveObjC",
+      "sha256": "a4bdf3936ea041cc554f97314346f8e2227da9ae1db54a66077c4a63ea3a6409",
+      "architecture": {
+        "file": "/usr/bin/lipo",
+        "args": [
+          "-archs",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/ReactiveObjC.framework/Versions/A/ReactiveObjC"
+        ],
+        "startedAt": "2026-10-16T09:13:01.642Z",
+        "code": 0,
+        "stdout": "arm64\n",
+        "stderr": ""
+      },
+      "minimumOS": {
+        "file": "/usr/bin/otool",
+        "args": [
+          "-l",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/ReactiveObjC.framework/Versions/A/ReactiveObjC"
+        ],
+        "startedAt": "2026-10-16T09:13:01.655Z",
+        "code": 0,
+        "stdout": "      current version 0.0.0\ncompatibility version 0.0.0\n      cmd LC_BUILD_VERSION\n platform 1\n    minos 13.0\n      sdk 26.5\n  version 23.0\n      current version 2685.60.104\ncompatibility version 45.0.0\n      current version 3860.255.21\ncompatibility version 1.0.0\n      current version 5026.5.4\ncompatibility version 150.0.0\n      current version 228.0.0\ncompatibility version 1.0.0\n      current version 5026.5.4\ncompatibility version 300.0.0\n      current version 1356.0.0\ncompatibility version 1.0.0",
+        "stderr": ""
+      },
+      "signature": {
+        "file": "/usr/bin/codesign",
+        "args": [
+          "--verify",
+          "--strict",
+          "--verbose=2",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/ReactiveObjC.framework/Versions/A/ReactiveObjC"
+        ],
+        "startedAt": "2026-10-16T09:13:01.670Z",
+        "code": 1,
+        "signal": null,
+        "killed": false,
+        "stdout": "",
+        "stderr": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/ReactiveObjC.framework/Versions/A/ReactiveObjC: code has no resources but signature indicates they must be present\n",
+        "message": "Command failed: /usr/bin/codesign --verify --strict --verbose=2 /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/ReactiveObjC.framework/Versions/A/ReactiveObjC\n/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/ReactiveObjC.framework/Versions/A/ReactiveObjC: code has no resources but signature indicates they must be present\n"
+      }
+    },
+    {
+      "path": "Contents/Frameworks/Squirrel.framework/Versions/A/Resources/ShipIt",
+      "sha256": "8d8f2817f06456a3369afc4ff8ec7b0a1249254332bf914f9674bafd0349f91e",
+      "architecture": {
+        "file": "/usr/bin/lipo",
+        "args": [
+          "-archs",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Squirrel.framework/Versions/A/Resources/ShipIt"
+        ],
+        "startedAt": "2026-10-16T09:13:01.685Z",
+        "code": 0,
+        "stdout": "arm64\n",
+        "stderr": ""
+      },
+      "minimumOS": {
+        "file": "/usr/bin/otool",
+        "args": [
+          "-l",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Squirrel.framework/Versions/A/Resources/ShipIt"
+        ],
+        "startedAt": "2026-10-16T09:13:01.697Z",
+        "code": 0,
+        "stdout": "      cmd LC_BUILD_VERSION\n platform 1\n    minos 13.0\n      sdk 26.5\n  version 23.0\n      current version 2685.60.104\ncompatibility version 45.0.0\n      current version 5026.5.4\ncompatibility version 150.0.0\n      current version 228.0.0\ncompatibility version 1.0.0\n      current version 5026.5.4\ncompatibility version 300.0.0\n      current version 275.0.0\ncompatibility version 1.0.0\n      current version 61901.120.67\ncompatibility version 1.0.0\n      current version 0.0.0\ncompatibility version 0.0.0\n      current version 0.0.0\ncompatibility version 0.0.0\n      current version 1356.0.0\ncompatibility version 1.0.0",
+        "stderr": ""
+      },
+      "signature": {
+        "file": "/usr/bin/codesign",
+        "args": [
+          "--verify",
+          "--strict",
+          "--verbose=2",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Squirrel.framework/Versions/A/Resources/ShipIt"
+        ],
+        "startedAt": "2026-10-16T09:13:01.712Z",
+        "code": 0,
+        "stdout": "",
+        "stderr": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Squirrel.framework/Versions/A/Resources/ShipIt: valid on disk\n/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Squirrel.framework/Versions/A/Resources/ShipIt: satisfies its Designated Requirement\n"
+      }
+    },
+    {
+      "path": "Contents/Frameworks/Squirrel.framework/Versions/A/Squirrel",
+      "sha256": "3c7ca109b022361092e14876813e08053434871fb18932852322251569c35689",
+      "architecture": {
+        "file": "/usr/bin/lipo",
+        "args": [
+          "-archs",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Squirrel.framework/Versions/A/Squirrel"
+        ],
+        "startedAt": "2026-10-16T09:13:01.723Z",
+        "code": 0,
+        "stdout": "arm64\n",
+        "stderr": ""
+      },
+      "minimumOS": {
+        "file": "/usr/bin/otool",
+        "args": [
+          "-l",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Squirrel.framework/Versions/A/Squirrel"
+        ],
+        "startedAt": "2026-10-16T09:13:01.736Z",
+        "code": 0,
+        "stdout": "      current version 0.0.0\ncompatibility version 0.0.0\n      cmd LC_BUILD_VERSION\n platform 1\n    minos 13.0\n      sdk 26.5\n  version 23.0\n      current version 2685.60.104\ncompatibility version 45.0.0\n      current version 1226.0.0\ncompatibility version 1.0.0\n      current version 3860.255.21\ncompatibility version 1.0.0\n      current version 5026.5.4\ncompatibility version 150.0.0\n      current version 228.0.0\ncompatibility version 1.0.0\n      current version 5026.5.4\ncompatibility version 300.0.0\n      current version 275.0.0\ncompatibility version 1.0.0\n      current version 61901.120.67\ncompatibility version 1.0.0\n      current version 3102.120.13\ncompatibility version 1.0.0\n      current version 0.0.0\ncompatibility version 0.0.0\n      current version 0.0.0\ncompatibility version 0.0.0\n      current version 1356.0.0\ncompatibility version 1.0.0",
+        "stderr": ""
+      },
+      "signature": {
+        "file": "/usr/bin/codesign",
+        "args": [
+          "--verify",
+          "--strict",
+          "--verbose=2",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Squirrel.framework/Versions/A/Squirrel"
+        ],
+        "startedAt": "2026-10-16T09:13:01.752Z",
+        "code": 1,
+        "signal": null,
+        "killed": false,
+        "stdout": "",
+        "stderr": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Squirrel.framework/Versions/A/Squirrel: code has no resources but signature indicates they must be present\n",
+        "message": "Command failed: /usr/bin/codesign --verify --strict --verbose=2 /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Squirrel.framework/Versions/A/Squirrel\n/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/Squirrel.framework/Versions/A/Squirrel: code has no resources but signature indicates they must be present\n"
+      }
+    },
+    {
+      "path": "Contents/Frameworks/玄印写作 Helper (GPU).app/Contents/MacOS/玄印写作 Helper (GPU)",
+      "sha256": "63014c941c29c7dbed4fe29671822815174554491d516e505e81ebeb43b56eef",
+      "architecture": {
+        "file": "/usr/bin/lipo",
+        "args": [
+          "-archs",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (GPU).app/Contents/MacOS/玄印写作 Helper (GPU)"
+        ],
+        "startedAt": "2026-10-16T09:13:01.767Z",
+        "code": 0,
+        "stdout": "arm64\n",
+        "stderr": ""
+      },
+      "minimumOS": {
+        "file": "/usr/bin/otool",
+        "args": [
+          "-l",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (GPU).app/Contents/MacOS/玄印写作 Helper (GPU)"
+        ],
+        "startedAt": "2026-10-16T09:13:01.779Z",
+        "code": 1,
+        "signal": null,
+        "killed": false,
+        "stdout": "",
+        "stderr": "error: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/otool-classic: can't open file: /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (GPU).app/Contents/MacOS/玄印写作 Helper  (No such file or directory)\n",
+        "message": "Command failed: /usr/bin/otool -l /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (GPU).app/Contents/MacOS/玄印写作 Helper (GPU)\nerror: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/otool-classic: can't open file: /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (GPU).app/Contents/MacOS/玄印写作 Helper  (No such file or directory)\n"
+      },
+      "signature": {
+        "file": "/usr/bin/codesign",
+        "args": [
+          "--verify",
+          "--strict",
+          "--verbose=2",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (GPU).app/Contents/MacOS/玄印写作 Helper (GPU)"
+        ],
+        "startedAt": "2026-10-16T09:13:01.792Z",
+        "code": 1,
+        "signal": null,
+        "killed": false,
+        "stdout": "",
+        "stderr": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (GPU).app/Contents/MacOS/玄印写作 Helper (GPU): code has no resources but signature indicates they must be present\n",
+        "message": "Command failed: /usr/bin/codesign --verify --strict --verbose=2 /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (GPU).app/Contents/MacOS/玄印写作 Helper (GPU)\n/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (GPU).app/Contents/MacOS/玄印写作 Helper (GPU): code has no resources but signature indicates they must be present\n"
+      }
+    },
+    {
+      "path": "Contents/Frameworks/玄印写作 Helper (Plugin).app/Contents/MacOS/玄印写作 Helper (Plugin)",
+      "sha256": "e7dce273aac4ddf77abd23ad4777f259c759df4d7c19b84b47e5b1239315365e",
+      "architecture": {
+        "file": "/usr/bin/lipo",
+        "args": [
+          "-archs",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Plugin).app/Contents/MacOS/玄印写作 Helper (Plugin)"
+        ],
+        "startedAt": "2026-10-16T09:13:01.807Z",
+        "code": 0,
+        "stdout": "arm64\n",
+        "stderr": ""
+      },
+      "minimumOS": {
+        "file": "/usr/bin/otool",
+        "args": [
+          "-l",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Plugin).app/Contents/MacOS/玄印写作 Helper (Plugin)"
+        ],
+        "startedAt": "2026-10-16T09:13:01.820Z",
+        "code": 1,
+        "signal": null,
+        "killed": false,
+        "stdout": "",
+        "stderr": "error: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/otool-classic: can't open file: /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Plugin).app/Contents/MacOS/玄印写作 Helper  (No such file or directory)\n",
+        "message": "Command failed: /usr/bin/otool -l /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Plugin).app/Contents/MacOS/玄印写作 Helper (Plugin)\nerror: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/otool-classic: can't open file: /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Plugin).app/Contents/MacOS/玄印写作 Helper  (No such file or directory)\n"
+      },
+      "signature": {
+        "file": "/usr/bin/codesign",
+        "args": [
+          "--verify",
+          "--strict",
+          "--verbose=2",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Plugin).app/Contents/MacOS/玄印写作 Helper (Plugin)"
+        ],
+        "startedAt": "2026-10-16T09:13:01.836Z",
+        "code": 1,
+        "signal": null,
+        "killed": false,
+        "stdout": "",
+        "stderr": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Plugin).app/Contents/MacOS/玄印写作 Helper (Plugin): code has no resources but signature indicates they must be present\n",
+        "message": "Command failed: /usr/bin/codesign --verify --strict --verbose=2 /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Plugin).app/Contents/MacOS/玄印写作 Helper (Plugin)\n/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Plugin).app/Contents/MacOS/玄印写作 Helper (Plugin): code has no resources but signature indicates they must be present\n"
+      }
+    },
+    {
+      "path": "Contents/Frameworks/玄印写作 Helper (Renderer).app/Contents/MacOS/玄印写作 Helper (Renderer)",
+      "sha256": "9e095dac8f4167ead69bf53450ce4ba420c3fa4178c22dc68e2836bf133805ce",
+      "architecture": {
+        "file": "/usr/bin/lipo",
+        "args": [
+          "-archs",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Renderer).app/Contents/MacOS/玄印写作 Helper (Renderer)"
+        ],
+        "startedAt": "2026-10-16T09:13:01.851Z",
+        "code": 0,
+        "stdout": "arm64\n",
+        "stderr": ""
+      },
+      "minimumOS": {
+        "file": "/usr/bin/otool",
+        "args": [
+          "-l",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Renderer).app/Contents/MacOS/玄印写作 Helper (Renderer)"
+        ],
+        "startedAt": "2026-10-16T09:13:01.864Z",
+        "code": 1,
+        "signal": null,
+        "killed": false,
+        "stdout": "",
+        "stderr": "error: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/otool-classic: can't open file: /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Renderer).app/Contents/MacOS/玄印写作 Helper  (No such file or directory)\n",
+        "message": "Command failed: /usr/bin/otool -l /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Renderer).app/Contents/MacOS/玄印写作 Helper (Renderer)\nerror: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/otool-classic: can't open file: /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Renderer).app/Contents/MacOS/玄印写作 Helper  (No such file or directory)\n"
+      },
+      "signature": {
+        "file": "/usr/bin/codesign",
+        "args": [
+          "--verify",
+          "--strict",
+          "--verbose=2",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Renderer).app/Contents/MacOS/玄印写作 Helper (Renderer)"
+        ],
+        "startedAt": "2026-10-16T09:13:01.878Z",
+        "code": 1,
+        "signal": null,
+        "killed": false,
+        "stdout": "",
+        "stderr": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Renderer).app/Contents/MacOS/玄印写作 Helper (Renderer): code has no resources but signature indicates they must be present\n",
+        "message": "Command failed: /usr/bin/codesign --verify --strict --verbose=2 /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Renderer).app/Contents/MacOS/玄印写作 Helper (Renderer)\n/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper (Renderer).app/Contents/MacOS/玄印写作 Helper (Renderer): code has no resources but signature indicates they must be present\n"
+      }
+    },
+    {
+      "path": "Contents/Frameworks/玄印写作 Helper.app/Contents/MacOS/玄印写作 Helper",
+      "sha256": "29da57f34fca4e6d9062429739785e8b0dc6f0250d7d501cf8d2da4ff652ef50",
+      "architecture": {
+        "file": "/usr/bin/lipo",
+        "args": [
+          "-archs",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper.app/Contents/MacOS/玄印写作 Helper"
+        ],
+        "startedAt": "2026-10-16T09:13:01.893Z",
+        "code": 0,
+        "stdout": "arm64\n",
+        "stderr": ""
+      },
+      "minimumOS": {
+        "file": "/usr/bin/otool",
+        "args": [
+          "-l",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper.app/Contents/MacOS/玄印写作 Helper"
+        ],
+        "startedAt": "2026-10-16T09:13:01.905Z",
+        "code": 0,
+        "stdout": "      cmd LC_BUILD_VERSION\n platform 1\n    minos 13.0\n      sdk 26.5\n  version 23.0\n      current version 0.0.0\ncompatibility version 0.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 1356.0.0\ncompatibility version 1.0.0",
+        "stderr": ""
+      },
+      "signature": {
+        "file": "/usr/bin/codesign",
+        "args": [
+          "--verify",
+          "--strict",
+          "--verbose=2",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper.app/Contents/MacOS/玄印写作 Helper"
+        ],
+        "startedAt": "2026-10-16T09:13:01.919Z",
+        "code": 1,
+        "signal": null,
+        "killed": false,
+        "stdout": "",
+        "stderr": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper.app/Contents/MacOS/玄印写作 Helper: code has no resources but signature indicates they must be present\n",
+        "message": "Command failed: /usr/bin/codesign --verify --strict --verbose=2 /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper.app/Contents/MacOS/玄印写作 Helper\n/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Frameworks/玄印写作 Helper.app/Contents/MacOS/玄印写作 Helper: code has no resources but signature indicates they must be present\n"
+      }
+    },
+    {
+      "path": "Contents/MacOS/玄印写作",
+      "sha256": "c9da78c3c79b9e6d6714fbf2a1136c4eb4a93cc5edad0f8ccfb058d681325e7e",
+      "architecture": {
+        "file": "/usr/bin/lipo",
+        "args": [
+          "-archs",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/MacOS/玄印写作"
+        ],
+        "startedAt": "2026-10-16T09:13:01.933Z",
+        "code": 0,
+        "stdout": "arm64\n",
+        "stderr": ""
+      },
+      "minimumOS": {
+        "file": "/usr/bin/otool",
+        "args": [
+          "-l",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/MacOS/玄印写作"
+        ],
+        "startedAt": "2026-10-16T09:13:01.945Z",
+        "code": 0,
+        "stdout": "      cmd LC_BUILD_VERSION\n platform 1\n    minos 13.0\n      sdk 26.5\n  version 23.0\n      current version 0.0.0\ncompatibility version 0.0.0\n      current version 1356.0.0\ncompatibility version 1.0.0",
+        "stderr": ""
+      },
+      "signature": {
+        "file": "/usr/bin/codesign",
+        "args": [
+          "--verify",
+          "--strict",
+          "--verbose=2",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/MacOS/玄印写作"
+        ],
+        "startedAt": "2026-10-16T09:13:01.959Z",
+        "code": 1,
+        "signal": null,
+        "killed": false,
+        "stdout": "",
+        "stderr": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/MacOS/玄印写作: code has no resources but signature indicates they must be present\n",
+        "message": "Command failed: /usr/bin/codesign --verify --strict --verbose=2 /private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/MacOS/玄印写作\n/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/MacOS/玄印写作: code has no resources but signature indicates they must be present\n"
+      }
+    },
+    {
+      "path": "Contents/Resources/app/node_modules/@img/sharp-darwin-arm64/lib/sharp-darwin-arm64.node",
+      "sha256": "05dba5ee40609b0ac94e14e591c515b3d9bd813ff5939625ff9a4bb78eb7c628",
+      "architecture": {
+        "file": "/usr/bin/lipo",
+        "args": [
+          "-archs",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@img/sharp-darwin-arm64/lib/sharp-darwin-arm64.node"
+        ],
+        "startedAt": "2026-10-16T09:13:02.078Z",
+        "code": 0,
+        "stdout": "arm64\n",
+        "stderr": ""
+      },
+      "minimumOS": {
+        "file": "/usr/bin/otool",
+        "args": [
+          "-l",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@img/sharp-darwin-arm64/lib/sharp-darwin-arm64.node"
+        ],
+        "startedAt": "2026-10-16T09:13:02.091Z",
+        "code": 0,
+        "stdout": "      cmd LC_BUILD_VERSION\n platform 1\n    minos 11.0\n      sdk 15.5\n  version 1167.5\n  version 0.0\n      current version 8.17.3\ncompatibility version 8.17.3\n      current version 1900.180.0\ncompatibility version 1.0.0\n      current version 1351.0.0\ncompatibility version 1.0.0",
+        "stderr": ""
+      },
+      "signature": {
+        "file": "/usr/bin/codesign",
+        "args": [
+          "--verify",
+          "--strict",
+          "--verbose=2",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@img/sharp-darwin-arm64/lib/sharp-darwin-arm64.node"
+        ],
+        "startedAt": "2026-10-16T09:13:02.107Z",
+        "code": 0,
+        "stdout": "",
+        "stderr": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@img/sharp-darwin-arm64/lib/sharp-darwin-arm64.node: valid on disk\n/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@img/sharp-darwin-arm64/lib/sharp-darwin-arm64.node: satisfies its Designated Requirement\n"
+      }
+    },
+    {
+      "path": "Contents/Resources/app/node_modules/@img/sharp-libvips-darwin-arm64/lib/libvips-cpp.8.17.3.dylib",
+      "sha256": "ad39fe2d407fca7532326eb819af010725a1df9187ef26a6d4aba629b71f173d",
+      "architecture": {
+        "file": "/usr/bin/lipo",
+        "args": [
+          "-archs",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@img/sharp-libvips-darwin-arm64/lib/libvips-cpp.8.17.3.dylib"
+        ],
+        "startedAt": "2026-10-16T09:13:02.144Z",
+        "code": 0,
+        "stdout": "arm64\n",
+        "stderr": ""
+      },
+      "minimumOS": {
+        "file": "/usr/bin/otool",
+        "args": [
+          "-l",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@img/sharp-libvips-darwin-arm64/lib/libvips-cpp.8.17.3.dylib"
+        ],
+        "startedAt": "2026-10-16T09:13:02.158Z",
+        "code": 0,
+        "stdout": "      current version 8.17.3\ncompatibility version 8.17.3\n      cmd LC_BUILD_VERSION\n platform 1\n    minos 11.0\n      sdk 15.5\n  version 1167.5\n  version 0.0\n      current version 1351.0.0\ncompatibility version 1.0.0\n      current version 3502.1.255\ncompatibility version 300.0.0\n      current version 3502.1.255\ncompatibility version 150.0.0\n      current version 2575.60.5\ncompatibility version 45.0.0\n      current version 7.0.0\ncompatibility version 7.0.0\n      current version 1.0.0\ncompatibility version 1.0.0\n      current version 1900.180.0\ncompatibility version 1.0.0\n      current version 1889.5.3\ncompatibility version 64.0.0\n      current version 1226.0.0\ncompatibility version 1.0.0\n      current version 844.5.0\ncompatibility version 1.0.0\n      current version 228.0.0\ncompatibility version 1.0.0",
+        "stderr": ""
+      },
+      "signature": {
+        "file": "/usr/bin/codesign",
+        "args": [
+          "--verify",
+          "--strict",
+          "--verbose=2",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@img/sharp-libvips-darwin-arm64/lib/libvips-cpp.8.17.3.dylib"
+        ],
+        "startedAt": "2026-10-16T09:13:02.173Z",
+        "code": 0,
+        "stdout": "",
+        "stderr": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@img/sharp-libvips-darwin-arm64/lib/libvips-cpp.8.17.3.dylib: valid on disk\n/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@img/sharp-libvips-darwin-arm64/lib/libvips-cpp.8.17.3.dylib: satisfies its Designated Requirement\n"
+      }
+    },
+    {
+      "path": "Contents/Resources/app/node_modules/@next/swc-darwin-arm64/next-swc.darwin-arm64.node",
+      "sha256": "aa7210e2f2b4e757c68abb331a4e00fd7728fe04b2e93bff34db36ab76dbad87",
+      "architecture": {
+        "file": "/usr/bin/lipo",
+        "args": [
+          "-archs",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@next/swc-darwin-arm64/next-swc.darwin-arm64.node"
+        ],
+        "startedAt": "2026-10-16T09:13:02.275Z",
+        "code": 0,
+        "stdout": "arm64\n",
+        "stderr": ""
+      },
+      "minimumOS": {
+        "file": "/usr/bin/otool",
+        "args": [
+          "-l",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@next/swc-darwin-arm64/next-swc.darwin-arm64.node"
+        ],
+        "startedAt": "2026-10-16T09:13:02.293Z",
+        "code": 0,
+        "stdout": "      current version 0.0.0\ncompatibility version 0.0.0\n      cmd LC_BUILD_VERSION\n platform 1\n    minos 11.0\n      sdk 15.5\n  version 1167.5\n  version 0.0\n      current version 61439.120.27\ncompatibility version 1.0.0\n      current version 3502.1.255\ncompatibility version 150.0.0\n      current version 1226.0.0\ncompatibility version 1.0.0\n      current version 1351.0.0\ncompatibility version 1.0.0\n      current version 7.0.0\ncompatibility version 7.0.0",
+        "stderr": ""
+      },
+      "signature": {
+        "file": "/usr/bin/codesign",
+        "args": [
+          "--verify",
+          "--strict",
+          "--verbose=2",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@next/swc-darwin-arm64/next-swc.darwin-arm64.node"
+        ],
+        "startedAt": "2026-10-16T09:13:02.310Z",
+        "code": 0,
+        "stdout": "",
+        "stderr": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@next/swc-darwin-arm64/next-swc.darwin-arm64.node: valid on disk\n/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@next/swc-darwin-arm64/next-swc.darwin-arm64.node: satisfies its Designated Requirement\n"
+      }
+    },
+    {
+      "path": "Contents/Resources/app/node_modules/@prisma/engines/schema-engine-darwin-arm64",
+      "sha256": "59cb8708e6871db327b4b2e231846a9f6af3fdc44a5a8f2d251f79b87e4506db",
+      "architecture": {
+        "file": "/usr/bin/lipo",
+        "args": [
+          "-archs",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@prisma/engines/schema-engine-darwin-arm64"
+        ],
+        "startedAt": "2026-10-16T09:13:02.416Z",
+        "code": 0,
+        "stdout": "arm64\n",
+        "stderr": ""
+      },
+      "minimumOS": {
+        "file": "/usr/bin/otool",
+        "args": [
+          "-l",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@prisma/engines/schema-engine-darwin-arm64"
+        ],
+        "startedAt": "2026-10-16T09:13:02.431Z",
+        "code": 0,
+        "stdout": "      cmd LC_BUILD_VERSION\n platform 1\n    minos 11.0\n      sdk 15.5\n  version 1167.5\n  version 0.0\n      current version 1.2.12\ncompatibility version 1.0.0\n      current version 61439.120.27\ncompatibility version 1.0.0\n      current version 3502.1.255\ncompatibility version 150.0.0\n      current version 1351.120.3\ncompatibility version 1.0.0\n      current version 7.0.0\ncompatibility version 7.0.0\n      current version 1351.0.0\ncompatibility version 1.0.0",
+        "stderr": ""
+      },
+      "signature": {
+        "file": "/usr/bin/codesign",
+        "args": [
+          "--verify",
+          "--strict",
+          "--verbose=2",
+          "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@prisma/engines/schema-engine-darwin-arm64"
+        ],
+        "startedAt": "2026-10-16T09:13:02.446Z",
+        "code": 0,
+        "stdout": "",
+        "stderr": "/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@prisma/engines/schema-engine-darwin-arm64: valid on disk\n/private/tmp/shakeink-gatekeeper.DO2CSE/玄印写作.app/Contents/Resources/app/node_modules/@prisma/engines/schema-engine-darwin-arm64: satisfies its Designated Requirement\n"
+      }
+    }
+  ],
+  "dmg": {
+    "path": "release/ShakeInk-0.1.0-alpha-mac-arm64.dmg",
+    "bytes": 345736762,
+    "sha256": "2abef4f3708c20b4dd19e09db39ddc7c0659bf6dbba154b50dc2d19a3c291cda"
+  },
+  "completedAt": "2026-10-16T09:13:03.015Z"
+}

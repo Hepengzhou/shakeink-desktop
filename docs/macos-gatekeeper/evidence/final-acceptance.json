@@ -1,0 +1,72 @@
+{
+  "date": "2026-10-16",
+  "recordedAt": "2026-10-16T10:59:34.459Z",
+  "acceptance": "not-met",
+  "scope": "macOS release trust repair; tests and review do not substitute for real signing/notarization or target-system acceptance",
+  "packaging": {
+    "command": "npm run test:package",
+    "tests": 33,
+    "pass": 33,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "evidence": "package-tests-complete.tap"
+  },
+  "fullCore": {
+    "testFiles": 284,
+    "tests": 2165,
+    "pass": 2147,
+    "fail": 17,
+    "cancelled": 1,
+    "skipped": 0,
+    "todo": 0,
+    "exitCode": 1,
+    "timedOut": false,
+    "inputsUnchangedDuringRun": true,
+    "evidence": "core-final.json"
+  },
+  "codeReview": {
+    "status": "passed",
+    "document": "../09-code-review.md"
+  },
+  "typecheck": {
+    "status": "passed",
+    "evidence": "module-validation.json"
+  },
+  "productionFiles": {
+    "electron-builder.config.cjs": {
+      "sha256": "7e0c7269eecbdf85fc05e32f439a3326f7628d3ae9d5f05d5548c2d9ccca7e1b",
+      "equalsCoreRun": true
+    },
+    "build/entitlements.mac.plist": {
+      "sha256": "40d87896d022345a513fbd9a6947815cff86630171c2c763d4caeee59b6441e1",
+      "equalsCoreRun": true
+    },
+    "scripts/package-desktop.mjs": {
+      "sha256": "eedcc90963c6064f843aeea8a16f45883bb96119e438375c6282b4bc59ff8346",
+      "equalsCoreRun": true
+    },
+    "scripts/macos-release.mjs": {
+      "sha256": "9f323b808a289eb87cd47b6ae132b0787bea2810f12b963765d2f0c9bde13da5",
+      "equalsCoreRun": true
+    },
+    "scripts/verify-macos-release.mjs": {
+      "sha256": "070dd63143e1f0f1076becf6feed80951c140da9f2e704c90c663bcef76a5137",
+      "equalsCoreRun": true
+    }
+  },
+  "pending": [
+    "Apple Developer Program membership activation, Developer ID Application certificate and notarization authentication",
+    "Real final DMG/ZIP notarization and all native trust verification",
+    "Clean macOS 15.7.5 Apple Silicon downloaded/quarantined install and offline first launch",
+    "Unresolved full core regression failures"
+  ],
+  "enrollment": {
+    "status": "User reports individual enrollment and payment completed. Attached email confirms only Apple Developer Agreement signing. Native Developer still awaits email; active membership and certificate eligibility unconfirmed.",
+    "cause": "Incomplete iCloud terms and reauthentication were observed before failure; after user completed them and Developer restarted, the same submission passed. Individual changes not isolated and Apple backend error code unavailable.",
+    "sensitiveData": "No identity or biometric data retained in repository",
+    "documentReview": "../12-enrollment-review.md",
+    "paymentEvidence": "User report only; no order, card or billing details read or retained"
+  },
+  "report": "../11-verification.md"
+}

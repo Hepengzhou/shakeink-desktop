@@ -1,0 +1,5 @@
+
+> shakeink@0.1.0-alpha package
+> node scripts/verify-macos-release.mjs --preflight && npm run build && node scripts/package-desktop.mjs
+
+缺少 APPLE_KEYCHAIN_PROFILE 公证钥匙串配置
