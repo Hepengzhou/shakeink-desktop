@@ -1,3 +1,4 @@
+import "./console-write-guard"
 import { app, BaseWindow, BrowserWindow, ImageView, clipboard, dialog, ipcMain, Menu, MessageChannelMain, nativeImage, nativeTheme, protocol, safeStorage, screen, session, shell, type IpcMainInvokeEvent, type MenuItemConstructorOptions } from "electron"
 import { Worker } from "node:worker_threads"
 import {randomUUID} from "node:crypto"
