@@ -116,7 +116,7 @@ AI 功能需要自行配置模型接口与密钥；调用远程模型时，相�
 
 ## 安装与运行
 
-当前 [Releases](https://github.com/mySingleLive/shakeink-desktop/releases) 尚无公开发布，可先从源码构建体验。
+当前 [Releases](https://github.com/mySingleLive/shakeink-desktop/releases) 已发布 0.1 版本。
 
 准备 **Node.js 24、npm 和 Git**，在终端执行：
 
