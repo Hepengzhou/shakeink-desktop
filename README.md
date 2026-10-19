@@ -19,7 +19,7 @@
 <p align="center">
   <a href="#视觉展示">看看工作台</a> ·
   <a href="#核心亮点">了解亮点</a> ·
-  <a href="#安装与运行">源码运行</a>
+  <a href="#安装与运行">下载安装</a>
 </p>
 
 ## 项目简介
@@ -107,16 +107,31 @@ AI 功能需要自行配置模型接口与密钥；调用远程模型时，相�
 
 面向 **macOS（Apple Silicon）/ Windows**。macOS 版仅支持 Apple 芯片（M 系列），不支持 Intel 芯片。
 
-| 平台 | 安装包目标 | 当前验证状态 |
+| 平台 | 安装包 | 0.1 发布状态 |
 | --- | --- | --- |
-| macOS · Apple Silicon（M 系列） | DMG / ZIP | 已有 arm64 开发版运行与真实窗口截图，完整业务验收仍在推进 |
-| Windows | NSIS 安装程序 | 已配置打包目标，原生安装与运行待验收 |
+| macOS · Apple Silicon（M 系列） | DMG / ZIP | 已在 [0.1 Release](https://github.com/mySingleLive/shakeink-desktop/releases/tag/0.1) 发布 |
+| Windows（64 位） | NSIS 安装程序 / 便携 ZIP | 已在 [0.1 Release](https://github.com/mySingleLive/shakeink-desktop/releases/tag/0.1) 发布 |
 
-当前为 **0.1 开发版**，暂不用于真实创作数据。开发进度与验证范围见[交付进度](docs/00-delivery-status.md)及[验证记录](docs/verification-2026-10-08.md)。
+当前为 **0.1 首个公开发布版本**，建议在用于真实创作数据前先行体验与验证；欢迎通过 [Issues](https://github.com/mySingleLive/shakeink-desktop/issues) 反馈问题。开发进度与验证范围见[交付进度](docs/00-delivery-status.md)及[验证记录](docs/verification-2026-10-08.md)。
 
 ## 安装与运行
 
-当前 [Releases](https://github.com/mySingleLive/shakeink-desktop/releases) 已发布 0.1 版本。
+### 下载安装包（推荐）
+
+前往 [GitHub Releases](https://github.com/mySingleLive/shakeink-desktop/releases) 下载对应平台的安装包：
+
+| 平台 | 文件 | 说明 |
+| --- | --- | --- |
+| macOS · Apple Silicon | [ShakeInk-0.1.0-mac-arm64.dmg](https://github.com/mySingleLive/shakeink-desktop/releases/download/0.1/ShakeInk-0.1.0-mac-arm64.dmg) | DMG 安装镜像，推荐 |
+| macOS · Apple Silicon | [ShakeInk-0.1.0-mac-arm64.zip](https://github.com/mySingleLive/shakeink-desktop/releases/download/0.1/ShakeInk-0.1.0-mac-arm64.zip) | ZIP 压缩包，解压即用 |
+| Windows（64 位） | [ShakeInk-0.1.0-win-x64.exe](https://github.com/mySingleLive/shakeink-desktop/releases/download/0.1/ShakeInk-0.1.0-win-x64.exe) | NSIS 安装程序，推荐 |
+| Windows（64 位） | [ShakeInk-0.1.0-win-x64.zip](https://github.com/mySingleLive/shakeink-desktop/releases/download/0.1/ShakeInk-0.1.0-win-x64.zip) | 便携压缩包，解压即用 |
+
+当前安装包未进行代码签名与公证：Windows 安装时如遇 SmartScreen 提示，请选择"仍要运行"；macOS 首次打开如被 Gatekeeper 拦截，可在"系统设置 → 隐私与安全性"中允许打开。
+
+首次启动后选择或创建一个本地作品目录即可开始。AI 功能需要自行配置模型接口与密钥；调用远程模型时，相关请求会发送至你配置的服务。
+
+### 从源码运行
 
 准备 **Node.js 24、npm 和 Git**，在终端执行：
 
@@ -149,7 +164,7 @@ npm run package
 
 生成 macOS DMG / ZIP 或 Windows NSIS 安装程序，产物位于 `release/`。两条命令均会先重新构建应用。
 
-当前 macOS 开发产物未签名、未公证；平台验收范围见上表。已有构建与升级检查见[品牌改名验证记录](docs/reviews/130-brand-rename-verification.md)。
+自行构建的产物同样未签名、未公证；平台支持范围见上表。已有构建与升级检查见[品牌改名验证记录](docs/reviews/130-brand-rename-verification.md)。
 
 </details>
 
