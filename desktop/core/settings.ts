@@ -23,7 +23,17 @@ export const settingsSchema = z.object({
   user: z.object({ penName: z.string().trim().min(1).max(80), email: z.union([z.literal(""), z.email()]), avatarAssetId: z.string().uuid().nullable() }).strict(),
   agent: z.object({ textModelId: z.string().uuid().nullable(), mode: z.enum(["standard", "plan"]), thinking: z.string().max(30), reviewModelId: z.string().uuid().nullable(), imageModelId: z.string().uuid().nullable() }).strict(),
   appearance: appearanceSchema,
-  shortcuts: z.object({ darwin: z.record(z.string(), z.array(z.string()).max(12)), win32: z.record(z.string(), z.array(z.string()).max(12)) }).strict(),
+  shortcuts: z.object({
+    darwin: z.record(z.string(), z.array(z.string()).max(12)),
+    win32: z.record(z.string(), z.array(z.string()).max(12)),
+    // Linux is a supported host. Old state.json files predate this namespace,
+    // and versioned-store quarantines any file that fails validation, so the
+    // key must be optional on input yet materialized as an OWN key on output.
+    // Do not use .optional() (leaves it absent, so settings.shortcuts[platform]
+    // is undefined again) and do not use .catch() (silently rewrites a corrupt
+    // namespace to {} instead of letting quarantineInvalidStore fail closed).
+    linux: z.record(z.string(), z.array(z.string()).max(12)).default({}),
+  }).strict(),
 }).strict()
 export const onboardingProgressSchema = z.object({
   version: z.literal(1), completed: z.boolean(),
@@ -43,7 +53,7 @@ export const defaultState: AppState = {
     user: { penName: "作者", email: "", avatarAssetId: null },
     agent: { textModelId: null, mode: "standard", thinking: "default", reviewModelId: null, imageModelId: null },
     appearance: { theme: "paper", uiFont: "system", uiFontSize: 14, zoom: 1, bodyFont: "serif", bodyFontSize: 16, lineHeight: 1.8, lineNumbers: false, wordWrap: false },
-    shortcuts: { darwin: {}, win32: {} },
+    shortcuts: { darwin: {}, win32: {}, linux: {} },
   },
   models: [],
   onboarding: null,

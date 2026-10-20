@@ -75,11 +75,22 @@ export interface MonacoRuntimeRegistries {
   commands: { getCommand(id: string): unknown }
   contextKeyToken: unknown
 }
+/** Monaco resolves its own OperatingSystem from the host process
+ * (base/common/platform.js: Electron exposes process.platform, so a Linux
+ * renderer reports OS=3), while `platform` is this app's darwin|win32
+ * contract. Monaco's keybinding layer branches only on OS===2
+ * (keybindings.js createSimpleKeybinding), so OS 1 and OS 3 carry the
+ * identical non-macOS Ctrl/Win semantics and a win32 contract may
+ * legitimately observe either one. The set stays fail-closed: a macOS
+ * contract still rejects anything but Macintosh. */
+export function expectedMonacoOs(platform: DesktopPlatform): readonly number[] {
+  return platform === "darwin" ? [2] : [1, 3]
+}
 /** Monaco 0.56.0's internal registry and scoped context APIs. Upgrade only
  * with a reviewed adapter: a changed layout fails closed, never truncates. */
 export function monacoRuntimeFromRegistries(registries: MonacoRuntimeRegistries, platform: DesktopPlatform): MonacoRuntime {
   if (registries.version !== "0.56.0") throw new Error("MONACO_RUNTIME_VERSION_UNSUPPORTED")
-  if (registries.os !== (platform === "darwin" ? 2 : 1)) throw new Error("MONACO_RUNTIME_PLATFORM_MISMATCH")
+  if (!expectedMonacoOs(platform).includes(registries.os)) throw new Error("MONACO_RUNTIME_PLATFORM_MISMATCH")
   if (typeof registries.keys?.getDefaultKeybindings !== "function" || typeof registries.editors?.getEditorActions !== "function" || typeof registries.editors?.getEditorCommand !== "function" || typeof registries.commands?.getCommand !== "function") throw new Error("MONACO_RUNTIME_SHAPE_UNSUPPORTED")
   const runtime: MonacoRuntime = {
     version: registries.version, actions: [...registries.editors.getEditorActions()], bindings: registries.keys.getDefaultKeybindings(), keyName: registries.keyName,

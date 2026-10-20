@@ -499,7 +499,14 @@ function registerIpc() {
     if(!current||current.owner!==event.sender.id)throw new Error("草稿所属窗口已变化")
     const state=await repository.read();trusted(event)
     if(draftSession!==current)throw new Error("草稿所属窗口已变化")
-    return {...state,platform:process.platform,version:displayAppVersion(app.getVersion()),dataRoot,draftSessionId:current.id,systemDark:nativeTheme.shouldUseDarkColors}
+    // Bootstrap.platform is the renderer's darwin|win32 contract, but
+    // process.platform reports "linux" (and other POSIX values) on hosts the
+    // renderer has no namespace for: settings.shortcuts["linux"] is undefined,
+    // which crashed composer/command consumers and blanked the whole tree.
+    // Non-darwin hosts keep the win32 contract, matching the menus (:660),
+    // shortcut read (:677) and text context menu (:479) that already do this.
+    const rendererPlatform=process.platform==="darwin"?"darwin":"win32"
+    return {...state,platform:rendererPlatform,version:displayAppVersion(app.getVersion()),dataRoot,draftSessionId:current.id,systemDark:nativeTheme.shouldUseDarkColors}
   })
   businessHandle("desktop:directory", async (event, purpose) => { trusted(event); return chooseDirectory(directoryPurpose.parse(purpose), String(event.sender.id)) })
   businessHandle("desktop:model-discover", async (event, id, draft) => { trusted(event); return modelConfiguration.discover(String(event.sender.id), z.uuid().parse(id), draft) })
